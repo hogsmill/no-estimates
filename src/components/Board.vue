@@ -5,9 +5,22 @@
     </div>
     <div class="right">
       <div class="row game-board">
-        <div v-for="(column, index) in columns" :key="index">
-          <Column v-bind:column="column" v-bind:socket="socket" />
-        </div>
+        <table class="rounded">
+          <thead>
+            <tr>
+              <th v-for="(column, index) in columns" :key="index">
+                <div :class="column.name.toLowerCase()">{{column.name}}</div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td v-for="(column, index) in columns" :key="index">
+                <Column v-bind:column="column" v-bind:socket="socket" />
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
@@ -36,4 +49,7 @@ export default {
 <style>
   .left { width: 17%; }
   .right { width: 82%; }
+
+  table { width: 90%; border: 1px solid; margin-bottom: 12px; border-collapse:separate; border-spacing: 0px; }
+  th, td { border: 1px solid; }
 </style>

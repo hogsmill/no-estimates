@@ -1,22 +1,25 @@
 <template>
   <div class="col">
-    <div class="row" :class="column.name.toLowerCase()">{{column.name}}</div>
     <div class="row" v-if="column.name.toLowerCase() == 'options'">
-      <WorkCards />
-      <TeamDependencyCards />
+      <CardStack v-bind:stack="'Work Cards'" />
+      <CardStack v-bind:stack="'Dependencies'" />
     </div>
-    <div class="row" v-if="column.name.toLowerCase() != 'options'">Cards here</div>
+    <div class="row" v-if="column.name.toLowerCase() != 'options'">
+      <div v-for="(card, index) in column.cards" :key="index">
+        <WorkCard v-bind:card="card" />
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import TeamDependencyCards from "./TeamDependencyCards.vue";
-import WorkCards from "./WorkCards.vue";
+import CardStack from "./CardStack.vue";
+import WorkCard from "./WorkCard.vue";
 
 export default {
   components: {
-    TeamDependencyCards,
-    WorkCards
+    CardStack,
+    WorkCard
   },
   props: [
     'column'
@@ -32,8 +35,9 @@ export default {
 </script>
 
 <style>
-  .game-board .col { border: 1px solid #fff; width: 130px; }
+  .game-board .col { width: 130px; }
   .game-board .row { text-align: center; }
+  .game-board .row.header { text-align: center; padding: 4px; }
   .options div { border: 1px solid; display: block; }
   .options { background-color: navy; }
   .design { background-color: red; }

@@ -65,9 +65,9 @@ export default {
 </script>
 
 <style>
-  #event-card { margin: 6px; width: 140px; height: 100px; background-image: url("../../assets/img/event-card-back.jpg"); background-size: contain; }
+  #event-card { margin: 100px auto 12px auto; width: 75%; height: 90px; background-image: url("../../assets/img/event-card-back.jpg"); background-size: contain; background-repeat: no-repeat}
   #event-card.complete { opacity: 0.5; }
-  .event-card-number { width: 20px; position: relative; top: 56px; left: 62px; color: #fff; background-color: red; }
+  .event-card-number { width: 20px; position: relative; top: 50px; left: 54px; color: #fff; background-color: red; }
   .event-card-number.complete { color: red; }
   #event-card-popup { color: #444; }
 </style>

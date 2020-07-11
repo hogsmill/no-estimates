@@ -19,7 +19,7 @@ export const store = new Vuex.Store({
     ],
     columns: [
       {name: "Options", order: 1},
-      {name: "Design", order: 2},
+      {name: "Design", order: 2, cards: [1, 2]},
       {name: "Develop", order: 3},
       {name: "Test", order: 4},
       {name: "Deploy", order: 5},
@@ -48,7 +48,11 @@ export const store = new Vuex.Store({
       {number: 18, text: "Did you pair (more than one person worked on a sib=ngle card in one work stage) today? If so, tick off an extra point of work in each stage where the pairing occured (for today only)"},
       {number: 19, text: "When you have completed the MVP (cards 1 to 11), look at your estimates from earlier. How did you do? This time, try creating a probabilistic forecast for the rest of the backlog using the delivery-time data (ask the facilitator for help)."}
     ],
-    currentEventCard: 0
+    currentEventCard: 0,
+    workCards: [
+      {number: 1, design: 6, develop: 7, test: 8, deploy: 2},
+      {number: 2, design: 0, develop: 8, test: 6, deploy: 4}
+    ]
   },
   getters: {
     getShowAbout: (state) => {
@@ -91,6 +95,9 @@ export const store = new Vuex.Store({
         return false
       }
     },
+    getWorkCards: (state) => {
+      return state.workCards;
+    }
   },
   mutations: {
     updateShowAbout: (state, payload) => {

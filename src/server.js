@@ -34,7 +34,14 @@ io.on("connection", (socket) => {
     connectDebugOff || console.log(`User with socket id ${socket.id} has disconnected.`)
   })
 
-  socket.on("addMyTeam", (data) => { emit("addMyTeam", data) })
+  socket.on("addTeamName", (data) => { emit("addTeamName", data) })
+
+  socket.on("showEventCard", (data) => { emit("showEventCard", data) })
+
+  socket.on("incrementEventCard", (data) => { emit("incrementEventCard", data) })
+
+  socket.on("incrementDay", (data) => { emit("incrementDay", data) })
+
 
 });
 

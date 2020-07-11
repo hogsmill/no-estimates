@@ -1,3 +1,3 @@
 <template>
-  <div>Work Cards</div>
+  <div class="work-card">Work Card</div>
 </template>

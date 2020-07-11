@@ -8,12 +8,12 @@
     <div v-else>
       <h1>No Estimates <span v-if="team">(Team: {{team}})</span></h1>
       <MyName v-bind:socket="socket" />
-      <MyTeam v-bind:socket="socket" />
+      <TeamName v-bind:socket="socket" />
       <GameName />
       <div class="container board">
         <Roles />
-        <Day />
-        <Board />
+        <Day v-bind:socket="socket" />
+        <Board v-bind:socket="socket" />
       </div>
     </div>
   </div>
@@ -26,7 +26,7 @@ import params from './lib/params.js'
 
 import Header from "./components/Header.vue";
 import MyName from "./components/MyName.vue";
-import MyTeam from "./components/MyTeam.vue";
+import TeamName from "./components/TeamName.vue";
 import GameName from "./components/GameName.vue";
 import AboutView from "./components/about/AboutView.vue";
 import WalkThroughView from "./components/about/WalkThroughView.vue";
@@ -42,7 +42,7 @@ export default {
     AboutView,
     WalkThroughView,
     MyName,
-    MyTeam,
+    TeamName,
     GameName,
     Roles,
     Day,
@@ -59,7 +59,7 @@ export default {
       return this.$store.getters.getShowAbout;
     },
     team() {
-      return this.$store.getters.getMyTeam;
+      return this.$store.getters.getTeamName;
     }
   },
   created() {

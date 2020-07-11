@@ -88,3 +88,8 @@ input {
 .hidden {
   visibility: hidden;
 }
+
+.vm--modal {
+  color: #444;
+  padding: 12px;
+}

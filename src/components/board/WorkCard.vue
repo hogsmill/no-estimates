@@ -17,6 +17,24 @@
       <div class="work-card-column column deploy rounded-circle">D</div>
       <div v-for="n in workCard.deploy" :key="n" class="work-card-column rounded-circle"></div>
     </div>
+    <table>
+      <tr>
+        <td>EFFORT</td>
+        <td>COMMIT</td>
+      </tr>
+      <tr>
+        <td>{{totalEffort()}}</td>
+        <td>0</td>
+      </tr>
+      <tr>
+        <td>DELIVER</td>
+        <td>TIME</td>
+      </tr>
+      <tr>
+        <td>0</td>
+        <td>0</td>
+      </tr>
+    </table>
   </div>
 </template>
 
@@ -28,6 +46,12 @@ export default {
   methods: {
     effort(column) {
       return this.workCard[column]
+    },
+    totalEffort() {
+      return this.workCard.design +
+        this.workCard.develop +
+        this.workCard.test +
+        this.workCard.deploy
     }
   },
   computed: {
@@ -38,9 +62,11 @@ export default {
 }
 </script>
 <style>
-  .work-card { background-color: #fff; color: #444; margin: 6px; width: 100%; height: 100px; border: 1px solid; }
+  .work-card { background-color: #fff; color: #444; margin: 6px; width: 100%; border: 1px solid; }
   .work-card div { text-align: left; height: 14px; }
   .work-card .work-card-number { text-align: right; padding-right: 2px; }
   .work-card .work-card-effort .work-card-column.column { color: #fff; border: 0; display: inline-block; width: 11px; height: 11px; font-size: 8px; padding-left: 2px; }
   .work-card .work-card-effort .work-card-column { display: inline-block; border: 1px solid; margin-left: 2px; width: 9px; height: 9px; font-size: 8px; padding-left: 2px; }
+  .work-card table { width: 100%; margin-top: 5px; border-collapse: collapse}
+  .work-card td { font-size: 8px; }
 </style>

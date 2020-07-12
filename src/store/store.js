@@ -5,12 +5,23 @@ Vue.use(Vuex);
 
 export const store = new Vuex.Store({
   state: {
+    showAbout: false,
     host: false,
     gameName: '',
     myName: '',
     teamName: '',
     players: [],
-    teams: [],
+    teams: [
+      { name: 'Blue', members: []},
+      { name: 'Green', members: []},
+      { name: 'Green', members: []},
+      { name: 'Red', members: []}
+    ],
+    myEffort: {
+      available: 4,
+      assigned: 0,
+      role: 'Tester'
+    },
     roles: [
       {role: 'Designer', order: 1},
       {role: 'Developer', order: 2},
@@ -19,11 +30,11 @@ export const store = new Vuex.Store({
     ],
     columns: [
       {name: "Options", order: 1},
-      {name: "Design", order: 2, cards: [1, 2]},
-      {name: "Develop", order: 3},
-      {name: "Test", order: 4},
-      {name: "Deploy", order: 5},
-      {name: "Done", order: 6}
+      {name: "Design", order: 2, cards: []},
+      {name: "Develop", order: 3, cards: []},
+      {name: "Test", order: 4, cards: []},
+      {name: "Deploy", order: 5, cards: []},
+      {name: "Done", order: 6, cards: []}
     ],
     numberOfDays: 30,
     currentDay: 1,
@@ -50,9 +61,12 @@ export const store = new Vuex.Store({
     ],
     currentEventCard: 0,
     workCards: [
-      {number: 1, design: 6, develop: 7, test: 8, deploy: 2},
-      {number: 2, design: 0, develop: 8, test: 6, deploy: 4}
-    ]
+      {number: 1, design: 6, develop: 7, test: 8, deploy: 2, urgent: false, teamDependency: 0, dependentOn: '', commit: 0},
+      {number: 2, design: 0, develop: 8, test: 6, deploy: 4, urgent: false, teamDependency: 0, dependentOn: '', commit: 0},
+      {number: 3, design:10, develop: 9, test: 9, deploy: 3, urgent: true, teamDependency: 0, dependentOn: '', commit: 0},
+      {number: 4, design:4, develop: 9, test: 12, deploy: 3, urgent: false, teamDependency: 4, dependentOn: '', commit: 0}
+    ],
+    currentWorkCard: 0
   },
   getters: {
     getShowAbout: (state) => {
@@ -69,6 +83,9 @@ export const store = new Vuex.Store({
     },
     getMyName: (state) => {
       return state.myName;
+    },
+    getMyEffort: (state) => {
+      return state.myEffort;
     },
     getTeamName: (state) => {
       return state.teamName;
@@ -91,6 +108,13 @@ export const store = new Vuex.Store({
     getCurrentEventCard: (state) => {
       if (state.currentEventCard < state.eventCards.length) {
         return state.eventCards[state.currentEventCard];
+      } else {
+        return false
+      }
+    },
+    getCurrentWorkCard: (state) => {
+      if (state.currentWorkCard < state.workCards.length) {
+        return state.workCards[state.currentWorkCard];
       } else {
         return false
       }
@@ -133,7 +157,24 @@ export const store = new Vuex.Store({
       state.currentEventCard = state.currentEventCard + 1;
     },
     incrementDay: (state) => {
+
       state.currentDay = state.currentDay + 1
+    },
+    pullInNextCard: (state) => {
+      state.workCards[state.currentWorkCard].commit = state.currentDay
+      state.columns[1].cards.push(state.workCards[state.currentWorkCard])
+      state.currentWorkCard = state.currentWorkCard + 1
+    },
+    updateDependentTeam: (state, payload) => {
+      var cards = []
+      for (var i = 0; i < state.workCards.length; i++) {
+        var card = state.workCards[i]
+        if (card.number == payload.workCard.number) {
+          card.dependentOn = payload.dependentOn
+        }
+        cards.push(card)
+      }
+      state.workCards = cards
     }
   },
   actions: {
@@ -163,6 +204,12 @@ export const store = new Vuex.Store({
     },
     incrementDay: ({ commit }, payload) => {
       commit("incrementDay", payload);
+    },
+    pullInNextCard: ({ commit }, payload) => {
+      commit("pullInNextCard", payload);
+    },
+    updateDependentTeam: ({ commit }, payload) => {
+      commit("updateDependentTeam", payload);
     }
   }
 });

@@ -9,7 +9,6 @@
       <div class="text-right"><span @click="hide" class="glyphicon glyphicon-star">x</span></div>
       <h4>Enter<span v-if="teams.length"> or Select</span> Your Team Name</h4>
       <div class="set-team-name">
-        <input type="text" id="team-name" class="form-control" />
         <select :class="{ 'hidden': teams.length == 0}" id="team-name-select" class="form-control">
           <option v-for="(team, index) in teams" :key="index">{{team}}</option>
         </select>
@@ -33,9 +32,7 @@ export default {
       this.$modal.hide('set-team-name');
     },
     saveTeamName: function() {
-      var teamName = document.getElementById('team-name').value
-        ? document.getElementById('team-name').value
-        : document.getElementById('team-name-select').value
+      var teamName = document.getElementById('team-name-select').value
       this.$store.dispatch("updateTeamName", teamName)
       this.socket.emit("addTeamName", {gameName: this.gameName, team: teamName })
       this.hide()

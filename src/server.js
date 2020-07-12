@@ -42,7 +42,7 @@ io.on("connection", (socket) => {
 
   socket.on("incrementDay", (data) => { emit("incrementDay", data) })
 
-
+  socket.on("updateDependentTeam", (data) => { emit("updateDependentTeam", data) })
 });
 
 var port = process.argv[2] || 3007

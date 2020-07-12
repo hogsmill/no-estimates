@@ -5,7 +5,7 @@
     </div>
     <div class="right">
       <div class="row game-board">
-        <table class="rounded">
+        <table class="board-table rounded">
           <thead>
             <tr>
               <th v-for="(column, index) in columns" :key="index">
@@ -50,6 +50,7 @@ export default {
   .left { width: 17%; }
   .right { width: 82%; }
 
-  table { width: 90%; border: 1px solid; margin-bottom: 12px; border-collapse:separate; border-spacing: 0px; }
+  table { width: 90%; border: 1px solid; border-collapse:separate; border-spacing: 0px; }
+  .board-table { margin-bottom: 12px; }
   th, td { border: 1px solid; }
 </style>

@@ -169,6 +169,19 @@ export const store = new Vuex.Store({
     updateColumns: (state, payload) => {
       state.columns = payload.columns
     },
+    updateBlocked: (state, payload) => {
+      for (var i = 1; i < state.columns.length; i++) {
+        for (var j = 0; j < state.columns[i].cards.length; j++) {
+          for (var k = 0; k < payload.blocked.length; k++) {
+            if (state.columns[i].cards[j].number == payload.blocked[k]) {
+              state.columns[i].cards[j].blocked = true
+            } else {
+              state.columns[i].cards[j].blocked = false
+            }
+          }
+        }
+      }
+    },
     updateCurrentWorkCard: (state, payload) => {
       state.currentWorkCard = payload.currentWorkCard
     },
@@ -216,6 +229,9 @@ export const store = new Vuex.Store({
     },
     updateColumns : ({ commit }, payload) => {
       commit("updateColumns", payload);
+    },
+    updateBlocked : ({ commit }, payload) => {
+      commit("updateBlocked", payload);
     },
     updateDependentTeam: ({ commit }, payload) => {
       commit("updateDependentTeam", payload);

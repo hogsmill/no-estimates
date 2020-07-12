@@ -55,6 +55,12 @@ export default {
         this.$store.dispatch("updateColumns", data)
       }
     })
+
+    this.socket.on("updateBlocked", (data) => {
+      if (this.gameName == data.gameName && this.teamName == data.teamName) {
+        this.$store.dispatch("updateBlocked", data)
+      }
+    })
   }
 }
 </script>

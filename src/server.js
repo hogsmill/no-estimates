@@ -46,6 +46,8 @@ io.on("connection", (socket) => {
 
   socket.on("updateColumns", (data) => { emit("updateColumns", data) })
 
+  socket.on("updateBlocked", (data) => { emit("updateBlocked", data) })
+
   socket.on("updateDependentTeam", (data) => { emit("updateDependentTeam", data) })
 });
 

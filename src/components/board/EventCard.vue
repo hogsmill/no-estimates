@@ -43,6 +43,12 @@ export default {
     }
   },
   computed: {
+    gameName() {
+      return this.$store.getters.getGameName
+    },
+    teamName() {
+      return this.$store.getters.getTeamName
+    },
     currentEventCard() {
       return this.$store.getters.getCurrentEventCard;
     },
@@ -55,7 +61,6 @@ export default {
     this.socket.on("updateCurrentEventCard", (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         self.hide()
-        console.log(data)
         this.$store.dispatch("updateCurrentEventCard", data)
       }
     })

@@ -32,16 +32,25 @@ export default {
     },
     next() {
       var columns = this.columns
+      var blocked = []
       for (var i = 1; i < columns.length; i++) {
         for (var j = 0; j < columns[i].cards.length; j++) {
-          columns[i].cards[j].blocked = Math.random() < 0.5
+          if (Math.random() < 0.5) {
+            blocked.push(columns[i].cards[j].number)
+          }
         }
       }
-      this.socket.emit("updateColumns", {gameName: this.gameName, teamName: this.teamName, columns: columns})
+      this.socket.emit("updateBlocked", {gameName: this.gameName, teamName: this.teamName, blocked: blocked})
       this.socket.emit("showEventCard", {gameName: this.gameName, teamName: this.teamName})
     }
   },
   computed: {
+    gameName() {
+      return this.$store.getters.getGameName
+    },
+    teamName() {
+      return this.$store.getters.getTeamName
+    },
     numberOfDays() {
       return this.$store.getters.getNumberOfDays
     },

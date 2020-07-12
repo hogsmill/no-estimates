@@ -1,23 +1,24 @@
 <template>
-  <div class="work-card">
+  <div class="work-card" :class="{'blocked': workCard.blocked}">
+    <div v-if="workCard.blocked" class="blocked-text"><strong>BLOCKED</strong></div>
     <div class="work-card-number">
       <span v-if="workCard.urgent" class="urgent">URGENT</span>
       <strong>#{{workCard.number}}</strong>
     </div>
     <div class="work-card-effort">
-      <div class="work-card-column column design rounded-circle">A</div>
+      <div class="work-card-column column rounded-circle" :class="{'design': !workCard.blocked}">A</div>
       <div v-for="n in workCard.design" :key="n" class="work-card-column rounded-circle" @click="toggleEffort('design', n)"></div>
     </div>
     <div class="work-card-effort">
-      <div class="work-card-column column develop rounded-circle">B</div>
+      <div class="work-card-column column rounded-circle" :class="{'develop': !workCard.blocked}">B</div>
       <div v-for="n in workCard.develop" :key="n" class="work-card-column rounded-circle" @click="toggleEffort('develop', n)"></div>
     </div>
     <div class="work-card-effort">
-      <div class="work-card-column column test rounded-circle">C</div>
+      <div class="work-card-column column rounded-circle" :class="{'test': !workCard.blocked}">C</div>
       <div v-for="n in workCard.test" :key="n" class="work-card-column rounded-circle" @click="toggleEffort('test', n)"></div>
     </div>
     <div class="work-card-effort">
-      <div class="work-card-column column deploy rounded-circle">D</div>
+      <div class="work-card-column column rounded-circle" :class="{'deploy': !workCard.blocked}">D</div>
       <div v-for="n in workCard.deploy" :key="n" class="work-card-column rounded-circle" @click="toggleEffort('deploy', n)"></div>
     </div>
     <table>
@@ -41,7 +42,7 @@
         <td class="dependency" colspan="3">
           <span>TEAM: </span>
           <div class="dependency-team" @click="selectDependentTeam()" :click-prevent="selectDependentTeam"
-            :style="{'background-color': workCard.dependentOn.name.toLowerCase()}">
+            :style="{'background-color': teamClass()}">
             <strong v-if="!workCard.dependentOn">None</strong>
             <strong v-if="workCard.dependentOn">{{workCard.dependentOn.name}}</strong>
           </div>
@@ -59,6 +60,9 @@ export default {
     'socket'
   ],
   methods: {
+    teamClass() {
+      return this.workCard.dependentOn ? this.workCard.dependentOn.name.toLowerCase() : ''
+    },
     effort(column) {
       return this.workCard[column]
     },
@@ -102,6 +106,8 @@ export default {
   .work-card .work-card-effort .work-card-column { display: inline-block; border: 1px solid; margin-left: 1px; width: 8px; height: 8px; font-size: 8px; padding-left: 2px; }
   .work-card table { width: 100%; margin-top: 5px; border-collapse: collapse}
   .work-card td { font-size: 8px; }
+  .work-card.blocked { background-color: red; }
+  .work-card .blocked-text { z-index: 10; position: relative; top: 50px; left: 16px; color: #fff; font-size: large; }
   .work-card .dependency { background-color: #000; color: #fff; }
   .work-card .dependency div { display: inline-block; }
   .work-card .dependency .dependency-team { background-color: #fff; width: 40px; color: #fff; text-align: center;  }

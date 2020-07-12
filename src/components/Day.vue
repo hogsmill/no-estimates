@@ -31,7 +31,7 @@ export default {
       return days
     },
     next() {
-      this.socket.emit("incrementDay", {gameName: this.gameName, teamName: this.teamName})
+      this.socket.emit("showEventCard", {gameName: this.gameName, teamName: this.teamName})
     }
   },
   computed: {

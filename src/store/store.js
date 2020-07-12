@@ -5,6 +5,7 @@ Vue.use(Vuex);
 
 export const store = new Vuex.Store({
   state: {
+    walkThrough: false,
     showAbout: false,
     host: false,
     gameName: '',
@@ -14,7 +15,7 @@ export const store = new Vuex.Store({
     teams: [
       { name: 'Blue', members: []},
       { name: 'Green', members: []},
-      { name: 'Green', members: []},
+      { name: 'Purple', members: []},
       { name: 'Red', members: []}
     ],
     myEffort: {
@@ -61,10 +62,16 @@ export const store = new Vuex.Store({
     ],
     currentEventCard: 0,
     workCards: [
-      {number: 1, design: 6, develop: 7, test: 8, deploy: 2, urgent: false, teamDependency: 0, dependentOn: '', commit: 0},
-      {number: 2, design: 0, develop: 8, test: 6, deploy: 4, urgent: false, teamDependency: 0, dependentOn: '', commit: 0},
-      {number: 3, design:10, develop: 9, test: 9, deploy: 3, urgent: true, teamDependency: 0, dependentOn: '', commit: 0},
-      {number: 4, design:4, develop: 9, test: 12, deploy: 3, urgent: false, teamDependency: 4, dependentOn: '', commit: 0}
+      {number: 1, design: 6, develop: 7, test: 8, deploy: 2, urgent: false, teamDependency: 0, dependentOn: '', commit: 0, blocked: false},
+      {number: 2, design: 0, develop: 8, test: 6, deploy: 4, urgent: false, teamDependency: 0, dependentOn: '', commit: 0, blocked: false},
+      {number: 3, design: 10, develop: 9, test: 9, deploy: 3, urgent: true, teamDependency: 0, dependentOn: '', commit: 0, blocked: false},
+      {number: 4, design: 4, develop: 9, test: 12, deploy: 3, urgent: false, teamDependency: 4, dependentOn: '', commit: 0, blocked: false},
+      {number: 5, design: 4, develop: 10, test: 5, deploy: 2, urgent: false, teamDependency: 4, dependentOn: '', commit: 0, blocked: false},
+      {number: 6, design: 1, develop: 8, test: 2, deploy: 5, urgent: false, teamDependency: 0, dependentOn: '', commit: 0, blocked: false},
+      {number: 7, design: 1, develop: 10, test: 3, deploy: 1, urgent: false, teamDependency: 0, dependentOn: '', commit: 0, blocked: false},
+      {number: 8, design: 0, develop: 4, test: 3, deploy: 5, urgent: false, teamDependency: 0, dependentOn: '', commit: 0, blocked: false},
+      {number: 9, design: 10, develop: 4, test: 10, deploy: 6, urgent: false, teamDependency: 0, dependentOn: '', commit: 0, blocked: false},
+      {number: 10, design: 1, develop: 7, test: 10, deploy: 8, urgent: true, teamDependency: 4, dependentOn: '', commit: 0, blocked: false}
     ],
     currentWorkCard: 0
   },
@@ -157,7 +164,11 @@ export const store = new Vuex.Store({
       state.currentEventCard = state.currentEventCard + 1;
     },
     incrementDay: (state) => {
-
+      for (var i = 1; i < state.columns.length; i++) {
+        for (var j = 0; j < state.columns[i].cards.length; j++) {
+          state.columns[i].cards[j].blocked = Math.random() < 0.5 
+        }
+      }
       state.currentDay = state.currentDay + 1
     },
     pullInNextCard: (state) => {

@@ -14,14 +14,12 @@
         </button>
       </div>
       <div class="mt-4" v-if="step == 1">
-        <h4>Welcome to the Coin Game</h4>
+        <h4>Welcome to the No Estimates Game</h4>
         <div>
           <p>
-            This simulation shows the importance of focussing on value delivery
-            as the best means of satisfying customer need, and the best strategy
-            for reducing risk
+            This is isn't fininshed, obviously :-) - click on the "About" tab to see what's been implemented at the
+            current time
           </p>
-          <div class="coin-game-round"></div>
         </div>
       </div>
       <div class="buttons" v-if="step < noOfScreens()">
@@ -50,7 +48,7 @@ export default {
   },
   methods: {
     noOfScreens() {
-      return Object.keys(this.positions).length + 1
+      return 1 // Object.keys(this.positions).length + 1
     },
     setDefault() {
       var elem = document.getElementsByClassName("vm--modal")[0].getBoundingClientRect()
@@ -108,7 +106,7 @@ export default {
   },
   mounted() {
     const self = this;
-    if (params.isParam("walkThrough")) {
+    if (params.isParam("walkThrough") || params.isParam("walkThrough")) {
       self.$store.dispatch("updateWalkThrough", true);
       self.$modal.show("walk-through");
     }

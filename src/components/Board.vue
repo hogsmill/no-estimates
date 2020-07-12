@@ -69,7 +69,6 @@ export default {
   .left { width: 17%; }
   .right { width: 82%; }
 
-  table { width: 90%; border: 1px solid; border-collapse:separate; border-spacing: 0px; }
-  .board-table { margin-bottom: 12px; }
+  table.board-table { margin-bottom: 12px; width: 90%; border: 1px solid; border-collapse:separate; border-spacing: 0px; }
   th, td { border: 1px solid; vertical-align: top }
 </style>

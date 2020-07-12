@@ -1,12 +1,14 @@
 <template>
-  <div class="card-deck">
-    <div class="row roles">
-      <div class="roles">
-        <div class="role" :class="role.role.toLowerCase()" v-for="(role, index) in roles" :key="index">
-          <div class="name"><span v-if="!role.name">(Empty)</span>{{role.name}} </div>
-        </div>
-      </div>
-    </div>
+  <div>
+
+    <table class="roles">
+      <tr>
+        <td class="role" :class="role.role.toLowerCase()" v-for="(role, index) in roles" :key="index">
+          <div v-for="(name, n) in roles[index].names" :key="n">{{name}}</div>
+        </td>
+      </tr>
+    </table>
+
   </div>
 </template>
 
@@ -21,9 +23,9 @@ export default {
 </script>
 
 <style>
+  table.roles { margin-bottom: 12px; width: 90%; }
   .roles { text-align: center; width: 100%; font-weight: bold; }
-  .role { display: inline-block; height: 75px; width: 105px; margin: 6px; }
-  .role .name { background-color: #fff; color: #888; font-size: 80%; height: 18px; }
+  .role { background-color: #fff; color: #444; display: inline-block; padding-top: 76px; width: 105px; margin: 0 6px; background-repeat: no-repeat; }
   .designer { background-image: url("../assets/img/designer.png"); background-size: contain; }
   .developer { background-image: url("../assets/img/developer.png"); background-size: contain; }
   .tester { background-image: url("../assets/img/tester.png"); background-size: contain; }

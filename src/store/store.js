@@ -24,10 +24,10 @@ export const store = new Vuex.Store({
       role: 'Tester'
     },
     roles: [
-      {role: 'Designer', order: 1},
-      {role: 'Developer', order: 2},
-      {role: 'Tester', order: 3, name: 'Steve'},
-      {role: 'Deployer', order: 4}
+      {role: 'Designer', order: 1, names: []},
+      {role: 'Developer', order: 2, names: []},
+      {role: 'Tester', order: 3, names: ['Steve']},
+      {role: 'Deployer', order: 4, names: []}
     ],
     columns: [
       {name: "Options", order: 1},

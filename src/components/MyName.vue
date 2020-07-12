@@ -76,7 +76,7 @@ export default {
 </script>
 
 <style>
-  .my-name { padding-right: 2px; }
+  .my-name { padding-right: 2px; display: inline-block; }
   .my-name .effort-div { display: inline-block; }
   .my-name .effort { display: inline-block; color: #fff; width: 20px; text-align: center; margin-left: 2px; background-image: none; }
   .my-name .used { border: 1px solid; background-color: #fff; color: #444; height: 21px; }

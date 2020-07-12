@@ -10,7 +10,7 @@
       <h4>Enter<span v-if="teams.length"> or Select</span> Your Team Name</h4>
       <div class="set-team-name">
         <select :class="{ 'hidden': teams.length == 0}" id="team-name-select" class="form-control">
-          <option v-for="(team, index) in teams" :key="index">{{team}}</option>
+          <option v-for="(team, index) in teams" :key="index">{{team.name}}</option>
         </select>
         <button class="btn btn-sm btn-info" @click="saveTeamName">Save</button>
       </div>
@@ -63,12 +63,11 @@ export default {
 </script>
 
 <style>
-  .team-name { padding-right: 2px; }
+  .team-name { padding-right: 2px; display: inline-block; }
   .team-name button { font-size: smaller; background-color: #aaa; border: 1px solid #aaa; }
   .team-name button:hover { color: #aaa; background-color: #fff; }
   .set-team-name-modal { height: 120px; }
 
   #team-name { display: inline-block; width: 30%; margin-right: 6px; }
   #team-name-select { width: 50%; margin: 0 auto; }
-
 </style>

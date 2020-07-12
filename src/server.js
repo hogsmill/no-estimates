@@ -38,9 +38,13 @@ io.on("connection", (socket) => {
 
   socket.on("showEventCard", (data) => { emit("showEventCard", data) })
 
-  socket.on("incrementEventCard", (data) => { emit("incrementEventCard", data) })
+  socket.on("updateCurrentEventCard", (data) => { emit("updateCurrentEventCard", data) })
 
-  socket.on("incrementDay", (data) => { emit("incrementDay", data) })
+  socket.on("updateCurrentDay", (data) => { emit("updateCurrentDay", data) })
+
+  socket.on("updateCurrentWorkCard", (data) => { emit("updateCurrentWorkCard", data) })
+
+  socket.on("updateColumns", (data) => { emit("updateColumns", data) })
 
   socket.on("updateDependentTeam", (data) => { emit("updateDependentTeam", data) })
 });

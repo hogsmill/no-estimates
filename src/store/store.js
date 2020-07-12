@@ -121,7 +121,7 @@ export const store = new Vuex.Store({
     },
     getCurrentWorkCard: (state) => {
       if (state.currentWorkCard < state.workCards.length) {
-        return state.workCards[state.currentWorkCard];
+        return state.currentWorkCard
       } else {
         return false
       }
@@ -160,32 +160,27 @@ export const store = new Vuex.Store({
         state.teams.push(payload)
       }
     },
-    incrementEventCard: (state) => {
-      state.currentEventCard = state.currentEventCard + 1;
+    updateCurrentEventCard: (state, payload) => {
+      state.currentEventCard = payload.currentEventCard;
     },
-    incrementDay: (state) => {
-      for (var i = 1; i < state.columns.length; i++) {
-        for (var j = 0; j < state.columns[i].cards.length; j++) {
-          state.columns[i].cards[j].blocked = Math.random() < 0.5 
-        }
-      }
-      state.currentDay = state.currentDay + 1
+    updateCurrentDay: (state, payload) => {
+      state.currentDay = payload.currentDay
     },
-    pullInNextCard: (state) => {
-      state.workCards[state.currentWorkCard].commit = state.currentDay
-      state.columns[1].cards.push(state.workCards[state.currentWorkCard])
-      state.currentWorkCard = state.currentWorkCard + 1
+    updateColumns: (state, payload) => {
+      state.columns = payload.columns
+    },
+    updateCurrentWorkCard: (state, payload) => {
+      state.currentWorkCard = payload.currentWorkCard
     },
     updateDependentTeam: (state, payload) => {
-      var cards = []
-      for (var i = 0; i < state.workCards.length; i++) {
-        var card = state.workCards[i]
-        if (card.number == payload.workCard.number) {
-          card.dependentOn = payload.dependentOn
+      for (var i = 1; i < state.columns.length; i++) {
+        for (var j = 0; j < state.columns[i].cards.length; j++) {
+          var card = state.columns[i].cards[j]
+          if (card.number == payload.workCard.number) {
+            card.dependentOn = payload.dependentOn
+          }
         }
-        cards.push(card)
       }
-      state.workCards = cards
     }
   },
   actions: {
@@ -210,14 +205,17 @@ export const store = new Vuex.Store({
     addTeam: ({ commit }, payload) => {
       commit("addTeam", payload);
     },
-    incrementEventCard: ({ commit }, payload) => {
-      commit("incrementEventCard", payload);
+    updateCurrentEventCard: ({ commit }, payload) => {
+      commit("updateCurrentEventCard", payload);
     },
-    incrementDay: ({ commit }, payload) => {
-      commit("incrementDay", payload);
+    updateCurrentWorkCard: ({ commit }, payload) => {
+      commit("updateCurrentWorkCard", payload);
     },
-    pullInNextCard: ({ commit }, payload) => {
-      commit("pullInNextCard", payload);
+    updateCurrentDay: ({ commit }, payload) => {
+      commit("updateCurrentDay", payload);
+    },
+    updateColumns : ({ commit }, payload) => {
+      commit("updateColumns", payload);
     },
     updateDependentTeam: ({ commit }, payload) => {
       commit("updateDependentTeam", payload);

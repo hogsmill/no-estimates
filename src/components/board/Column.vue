@@ -1,7 +1,7 @@
 <template>
   <div class="col">
     <div class="row" v-if="column.name.toLowerCase() == 'options'">
-      <WorkCardStack />
+      <WorkCardStack v-bind:socket="socket" />
     </div>
     <div class="row" v-if="column.name.toLowerCase() != 'options'">
       <div v-for="(card, index) in column.cards" :key="index">

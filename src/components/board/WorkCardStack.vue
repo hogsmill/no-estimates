@@ -1,18 +1,27 @@
 <template>
 
-  <div class="work-card-back" :class="{'complete': !current}" @click="pullInCard()">
-    <div v-if="current" class="event-card-number rounded-circle">{{current.number}}</div>
-    <div v-if="!current" class="event-card-number rounded-circle complete">0</div>
+  <div class="work-card-back" :class="{'complete': currentWorkCard === false}" @click="pullInCard()">
+    <div v-if="currentWorkCard !== false" class="event-card-number rounded-circle">{{currentWorkCard.number}}</div>
+    <div v-if="currentWorkCard === false" class="event-card-number rounded-circle complete">0</div>
   </div>
 
 </template>
 
 <script>
 export default {
+  props: [
+    'socket'
+  ],
   methods: {
     pullInCard() {
-      if (this.current) {
-        this.$store.dispatch("pullInNextCard")
+      if (this.currentWorkCard !== false) {
+        var currentWorkCard = this.currentWorkCard
+        var workCards = this.workCards
+        var columns = this.columns
+        workCards[currentWorkCard].commit = this.currentDay
+        columns[1].cards.push(workCards[currentWorkCard])
+        this.socket.emit("updateColumns", {gameName: this.gameName, teamName: this.teamName, columns: columns})
+        this.socket.emit("updateCurrentWorkCard", {gameName: this.gameName, teamName: this.teamName, currentWorkCard: currentWorkCard + 1})
       }
     }
   },
@@ -23,9 +32,28 @@ export default {
     gameName() {
       return this.$store.getters.getGameName
     },
-    current() {
+    teamName() {
+      return this.$store.getters.getTeamName
+    },
+    currentWorkCard() {
       return this.$store.getters.getCurrentWorkCard
+    },
+    currentDay() {
+      return this.$store.getters.getCurrentDay
+    },
+    columns() {
+      return this.$store.getters.getColumns
+    },
+    workCards() {
+      return this.$store.getters.getWorkCards
     }
+  },
+  mounted() {
+    this.socket.on("updateCurrentWorkCard", (data) => {
+      if (this.gameName == data.gameName && this.teamName == data.teamName) {
+        this.$store.dispatch("updateCurrentWorkCard", data)
+      }
+    })
   }
 }
 </script>

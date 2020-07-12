@@ -39,10 +39,23 @@ export default {
     'socket'
   ],
   computed: {
+    gameName() {
+      return this.$store.getters.getGameName
+    },
+    teamName() {
+      return this.$store.getters.getTeamName
+    },
     columns() {
       return this.$store.getters.getColumns;
     }
   },
+  mounted() {
+    this.socket.on("updateColumns", (data) => {
+      if (this.gameName == data.gameName && this.teamName == data.teamName) {
+        this.$store.dispatch("updateColumns", data)
+      }
+    })
+  }
 }
 </script>
 

@@ -1,15 +1,15 @@
 <template>
   <div>
 
-    <div id="event-card" :class="{'complete': !current}" @click="show()">
-      <div v-if="current" class="event-card-number rounded-circle">{{current.number}}</div>
-      <div v-if="!current" class="event-card-number rounded-circle complete">0</div>
+    <div id="event-card" :class="{'complete': currentEventCard === false}" @click="show()">
+      <div v-if="currentEventCard !== false" class="event-card-number rounded-circle">{{currentEventCard.number}}</div>
+      <div v-if="currentEventCard === false" class="event-card-number rounded-circle complete">0</div>
     </div>
 
     <modal name="event-card-popup" class="popup" :height="240" :classes="['rounded']">
       <div class="text-right"><span @click="hide" class="glyphicon glyphicon-star">x</span></div>
-      <h4>Event Card {{current.number}}</h4>
-      <p>{{current.text}}</p>
+      <h4>Event Card {{currentEventCard.number}}</h4>
+      <p>{{currentEventCard.text}}</p>
       <div class="set-my-name">
         <button class="btn btn-sm btn-info" @click="done()">Done</button>
       </div>
@@ -37,22 +37,26 @@ export default {
       this.$modal.hide('event-card-popup');
     },
     done() {
-      this.socket.emit("incrementDay", {gameName: this.gameName, teamName: this.teamName})
-      this.socket.emit("incrementEventCard", {gameName: this.gameName, teamName: this.teamName})
+      this.socket.emit("updateCurrentDay", {gameName: this.gameName, teamName: this.teamName, currentDay: this.currentDay + 1})
+      this.socket.emit("updateCurrentEventCard", {gameName: this.gameName, teamName: this.teamName, currentEventCard: this.currentEventCard.number})
       this.hide()
     }
   },
   computed: {
-    current() {
+    currentEventCard() {
       return this.$store.getters.getCurrentEventCard;
+    },
+    currentDay() {
+      return this.$store.getters.getCurrentDay;
     }
   },
   mounted() {
     const self = this;
-    this.socket.on("incrementEventCard", (data) => {
+    this.socket.on("updateCurrentEventCard", (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         self.hide()
-        this.$store.dispatch("incrementEventCard")
+        console.log(data)
+        this.$store.dispatch("updateCurrentEventCard", data)
       }
     })
 

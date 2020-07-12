@@ -31,6 +31,13 @@ export default {
       return days
     },
     next() {
+      var columns = this.columns
+      for (var i = 1; i < columns.length; i++) {
+        for (var j = 0; j < columns[i].cards.length; j++) {
+          columns[i].cards[j].blocked = Math.random() < 0.5
+        }
+      }
+      this.socket.emit("updateColumns", {gameName: this.gameName, teamName: this.teamName, columns: columns})
       this.socket.emit("showEventCard", {gameName: this.gameName, teamName: this.teamName})
     }
   },
@@ -40,12 +47,15 @@ export default {
     },
     currentDay() {
       return this.$store.getters.getCurrentDay
+    },
+    columns() {
+      return this.$store.getters.getColumns
     }
   },
   mounted() {
-    this.socket.on("incrementDay", (data) => {
+    this.socket.on("updateCurrentDay", (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
-        this.$store.dispatch("incrementDay")
+        this.$store.dispatch("updateCurrentDay", data)
       }
     })
   }

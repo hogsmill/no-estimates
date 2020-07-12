@@ -77,12 +77,15 @@ export default {
     },
     selectDependentTeam() {
       var dependentOn = this.teams[Math.floor(Math.random() * this.teams.length)]
-      this.socket.emit("updateDependentTeam", {gameName: this.gameName, workCard: this.workCard, dependentOn: dependentOn})
+      this.socket.emit("updateDependentTeam", {gameName: this.gameName, teamName: this.teamName, workCard: this.workCard, dependentOn: dependentOn})
     }
   },
   computed: {
     gameName() {
       return this.$store.getters.getGameName
+    },
+    teamName() {
+      return this.$store.getters.getTeamName
     },
     teams() {
       return this.$store.getters.getTeams
@@ -90,7 +93,7 @@ export default {
   },
   mounted() {
     this.socket.on("updateDependentTeam", (data) => {
-      if (this.gameName == data.gameName) {
+      if (this.gameName == data.gameName && this.teamName == data.teamName) {
         this.$store.dispatch("updateDependentTeam", data)
       }
     })

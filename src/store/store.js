@@ -10,6 +10,7 @@ export const store = new Vuex.Store({
     host: false,
     gameName: '',
     myName: '',
+    myRole: '',
     teamName: '',
     players: [],
     teams: [
@@ -91,6 +92,9 @@ export const store = new Vuex.Store({
     getMyName: (state) => {
       return state.myName;
     },
+    getMyRole: (state) => {
+      return state.myRole;
+    },
     getMyEffort: (state) => {
       return state.myEffort;
     },
@@ -152,7 +156,7 @@ export const store = new Vuex.Store({
     addTeam: (state, payload) => {
       var found = false
       for (var i = 0; i < state.teams.length; i++) {
-        if (state.teams[i] == payload) {
+        if (state.teams[i] == payload.teamName) {
           found = true
         }
       }

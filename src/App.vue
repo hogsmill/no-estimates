@@ -9,6 +9,7 @@
       <h1>No Estimates <span v-if="team">(Team: {{team}})</span></h1>
       <MyName v-bind:socket="socket" />
       <TeamName v-bind:socket="socket" />
+      <MyRole v-bind:socket="socket" />
       <GameName />
       <div class="container board">
         <Roles />
@@ -26,6 +27,7 @@ import params from './lib/params.js'
 
 import Header from "./components/Header.vue";
 import MyName from "./components/MyName.vue";
+import MyRole from "./components/MyRole.vue";
 import TeamName from "./components/TeamName.vue";
 import GameName from "./components/GameName.vue";
 import AboutView from "./components/about/AboutView.vue";
@@ -43,6 +45,7 @@ export default {
     WalkThroughView,
     MyName,
     TeamName,
+    MyRole,
     GameName,
     Roles,
     Day,

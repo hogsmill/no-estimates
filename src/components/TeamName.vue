@@ -34,7 +34,7 @@ export default {
     saveTeamName: function() {
       var teamName = document.getElementById('team-name-select').value
       this.$store.dispatch("updateTeamName", teamName)
-      this.socket.emit("addTeamName", {gameName: this.gameName, team: teamName })
+      this.socket.emit("addTeamName", {gameName: this.gameName, teamName: teamName })
       this.hide()
     }
   },
@@ -55,7 +55,7 @@ export default {
   mounted() {
     this.socket.on("addTeamName", (data) => {
       if (this.gameName == data.gameName) {
-        this.$store.dispatch("addTeam", data.team)
+        this.$store.dispatch("addTeam", data)
       }
     })
   }
@@ -63,7 +63,7 @@ export default {
 </script>
 
 <style>
-  .team-name { padding-right: 2px; display: inline-block; }
+  .team-name { padding: 0 6px; display: inline-block; }
   .team-name button { font-size: smaller; background-color: #aaa; border: 1px solid #aaa; }
   .team-name button:hover { color: #aaa; background-color: #fff; }
   .set-team-name-modal { height: 120px; }

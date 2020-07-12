@@ -44,7 +44,7 @@ export default {
 </script>
 
 <style>
-  .game-name { padding-right: 2px; display: inline-block; }
+  .game-name { padding: 0 6px; display: inline-block; }
   .game-name button { font-size: smaller; background-color: #aaa; border: 1px solid #aaa; }
   .game-name button:hover { color: #aaa; background-color: #fff; }
   .set-game-name-modal { height: 120px; }

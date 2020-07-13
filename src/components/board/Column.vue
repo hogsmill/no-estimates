@@ -5,7 +5,7 @@
     </div>
     <div class="row" v-if="column.name.toLowerCase() != 'options'">
       <div v-for="(card, index) in column.cards" :key="index">
-        <WorkCard v-bind:workCard="card" v-bind:socket="socket" />
+        <WorkCard v-bind:column="column.name.toLowerCase()" v-bind:workCard="card" v-bind:socket="socket" />
       </div>
     </div>
   </div>

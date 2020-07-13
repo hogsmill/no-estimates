@@ -36,6 +36,8 @@ io.on("connection", (socket) => {
 
   socket.on("addTeamName", (data) => { emit("addTeamName", data) })
 
+  socket.on("updateRole", (data) => { emit("updateRole", data) })
+
   socket.on("showEventCard", (data) => { emit("showEventCard", data) })
 
   socket.on("updateCurrentEventCard", (data) => { emit("updateCurrentEventCard", data) })
@@ -47,6 +49,8 @@ io.on("connection", (socket) => {
   socket.on("updateColumns", (data) => { emit("updateColumns", data) })
 
   socket.on("updateBlocked", (data) => { emit("updateBlocked", data) })
+  
+  socket.on("resetEffort", (data) => { emit("resetEffort", data) })
 
   socket.on("updateDependentTeam", (data) => { emit("updateDependentTeam", data) })
 });

@@ -1,7 +1,7 @@
 <template>
   <div class="role-name" v-if="!showAbout">
     <div class="role-name text-right">
-      <button class="btn btn-sm btn-info" v-if="!myRole" @click="show">Set My Speciality</button>
+      <button class="btn btn-sm btn-info" v-if="!myRole" @click="show" :disabled="!myName">Set My Speciality</button>
       <span v-if="myRole" @click="show">My Role is: {{myRole}}</span>
     </div>
 
@@ -32,8 +32,9 @@ export default {
       this.$modal.hide('set-role');
     },
     saveMyRole: function() {
-      var role = document.getElementById('role-select').value
-      this.socket.emit("updateRole", {gameName: this.gameName, teamName: this.teamName, myName: this.myName, role: role })
+      var myRole = document.getElementById('role-select').value
+      this.$store.dispatch("updateMyRole", myRole)
+      this.socket.emit("updateRole", {gameName: this.gameName, teamName: this.teamName, name: this.myName, role: myRole })
       this.hide()
     }
   },
@@ -58,11 +59,11 @@ export default {
     }
   },
   mounted() {
-    //this.socket.on("addTeamName", (data) => {
-    //  if (this.gameName == data.gameName) {
-    //    this.$store.dispatch("addTeam", data.team)
-    //  }
-    //})
+    this.socket.on("updateRole", (data) => {
+      if (this.gameName == data.gameName && this.teamName == data.teamName) {
+        this.$store.dispatch("updateRole", data)
+      }
+    })
   }
 }
 </script>

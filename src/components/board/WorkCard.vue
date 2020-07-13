@@ -6,20 +6,20 @@
       <strong>#{{workCard.number}}</strong>
     </div>
     <div class="work-card-effort">
-      <div class="work-card-column column rounded-circle" :class="{'design': !workCard.blocked}">A</div>
-      <div v-for="n in workCard.design" :key="n" class="work-card-column rounded-circle" @click="toggleEffort('design', n)"></div>
+      <div class="work-card-column column rounded-circle" :class="{'design': !workCard.blocked}" @click="addEffort('design')">A</div>
+      <div v-for="n in workCard.design" :key="n" :class="{'assigned' : n <= workCard.effort.design}" class="work-card-column rounded-circle"></div>
     </div>
     <div class="work-card-effort">
-      <div class="work-card-column column rounded-circle" :class="{'develop': !workCard.blocked}">B</div>
-      <div v-for="n in workCard.develop" :key="n" class="work-card-column rounded-circle" @click="toggleEffort('develop', n)"></div>
+      <div class="work-card-column column rounded-circle" :class="{'develop': !workCard.blocked}" @click="addEffort('develop')">B</div>
+      <div v-for="n in workCard.develop" :key="n" :class="{'assigned' : n <= workCard.effort.develop}" class="work-card-column rounded-circle"></div>
     </div>
     <div class="work-card-effort">
-      <div class="work-card-column column rounded-circle" :class="{'test': !workCard.blocked}">C</div>
-      <div v-for="n in workCard.test" :key="n" class="work-card-column rounded-circle" @click="toggleEffort('test', n)"></div>
+      <div class="work-card-column column rounded-circle" :class="{'test': !workCard.blocked}" @click="addEffort('test')">C</div>
+      <div v-for="n in workCard.test" :key="n" :class="{'assigned' : n <= workCard.effort.test}" class="work-card-column rounded-circle"></div>
     </div>
     <div class="work-card-effort">
-      <div class="work-card-column column rounded-circle" :class="{'deploy': !workCard.blocked}">D</div>
-      <div v-for="n in workCard.deploy" :key="n" class="work-card-column rounded-circle" @click="toggleEffort('deploy', n)"></div>
+      <div class="work-card-column column rounded-circle" :class="{'deploy': !workCard.blocked}" @click="addEffort('deploy')">D</div>
+      <div v-for="n in workCard.deploy" :key="n" :class="{'assigned' : n <= workCard.effort.deploy}" class="work-card-column rounded-circle"></div>
     </div>
     <table>
       <tr>
@@ -56,6 +56,7 @@
 <script>
 export default {
   props: [
+    'column',
     'workCard',
     'socket'
   ],
@@ -72,8 +73,21 @@ export default {
         this.workCard.test +
         this.workCard.deploy
     },
-    toggleEffort(role, n) {
-      console.log(role, n)
+    addEffort(column) {
+      if (this.column == column) {
+        if (this.myEffort.available == 0) {
+          console.log('can\'t assign - all effort assigned')
+        } else {
+          this.workCard.effort[column] = this.workCard.effort[column] + 1
+          if (column == this.myRole.replace(/er$/, '').toLowerCase()) {
+            this.$store.dispatch("updateMyAssignedEffort", 1)
+          } else {
+            this.$store.dispatch("updateMyAssignedEffort", 2)
+          }
+        }
+      } else {
+        console.log('can\'t assign - wrong column')
+      }
     },
     selectDependentTeam() {
       var dependentOn = this.teams[Math.floor(Math.random() * this.teams.length)]
@@ -83,6 +97,12 @@ export default {
   computed: {
     gameName() {
       return this.$store.getters.getGameName
+    },
+    myRole() {
+      return this.$store.getters.getMyRole
+    },
+    myEffort() {
+      return this.$store.getters.getMyEffort
     },
     teamName() {
       return this.$store.getters.getTeamName
@@ -106,6 +126,7 @@ export default {
   .work-card .urgent { text-align: left; padding: 0 6px; margin-right: 14px; background-color: red; font-weight: bold; color: #fff; }
   .work-card .work-card-number { text-align: right; padding-right: 2px; }
   .work-card .work-card-effort .work-card-column.column { color: #fff; border: 0; display: inline-block; width: 11px; height: 11px; font-size: 8px; padding-left: 2px; }
+  .work-card .work-card-effort .assigned { background-color: #000; }
   .work-card .work-card-effort .work-card-column { display: inline-block; border: 1px solid; margin-left: 1px; width: 8px; height: 8px; font-size: 8px; padding-left: 2px; }
   .work-card table { width: 100%; margin-top: 5px; border-collapse: collapse}
   .work-card td { font-size: 8px; }

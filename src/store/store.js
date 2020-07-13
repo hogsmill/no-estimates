@@ -22,12 +22,12 @@ export const store = new Vuex.Store({
     myEffort: {
       available: 4,
       assigned: 0,
-      role: 'Tester'
+      role: ''
     },
     roles: [
       {role: 'Designer', order: 1, names: []},
       {role: 'Developer', order: 2, names: []},
-      {role: 'Tester', order: 3, names: ['Steve']},
+      {role: 'Tester', order: 3, names: []},
       {role: 'Deployer', order: 4, names: []}
     ],
     columns: [
@@ -63,16 +63,16 @@ export const store = new Vuex.Store({
     ],
     currentEventCard: 0,
     workCards: [
-      {number: 1, design: 6, develop: 7, test: 8, deploy: 2, urgent: false, teamDependency: 0, dependentOn: '', commit: 0, blocked: false},
-      {number: 2, design: 0, develop: 8, test: 6, deploy: 4, urgent: false, teamDependency: 0, dependentOn: '', commit: 0, blocked: false},
-      {number: 3, design: 10, develop: 9, test: 9, deploy: 3, urgent: true, teamDependency: 0, dependentOn: '', commit: 0, blocked: false},
-      {number: 4, design: 4, develop: 9, test: 12, deploy: 3, urgent: false, teamDependency: 4, dependentOn: '', commit: 0, blocked: false},
-      {number: 5, design: 4, develop: 10, test: 5, deploy: 2, urgent: false, teamDependency: 4, dependentOn: '', commit: 0, blocked: false},
-      {number: 6, design: 1, develop: 8, test: 2, deploy: 5, urgent: false, teamDependency: 0, dependentOn: '', commit: 0, blocked: false},
-      {number: 7, design: 1, develop: 10, test: 3, deploy: 1, urgent: false, teamDependency: 0, dependentOn: '', commit: 0, blocked: false},
-      {number: 8, design: 0, develop: 4, test: 3, deploy: 5, urgent: false, teamDependency: 0, dependentOn: '', commit: 0, blocked: false},
-      {number: 9, design: 10, develop: 4, test: 10, deploy: 6, urgent: false, teamDependency: 0, dependentOn: '', commit: 0, blocked: false},
-      {number: 10, design: 1, develop: 7, test: 10, deploy: 8, urgent: true, teamDependency: 4, dependentOn: '', commit: 0, blocked: false}
+      {number: 1, design: 6, develop: 7, test: 8, deploy: 2, urgent: false, teamDependency: 0, dependentOn: '', commit: 0, blocked: false, effort: {design: 0, develop: 0, test: 0, deploy: 0}},
+      {number: 2, design: 0, develop: 8, test: 6, deploy: 4, urgent: false, teamDependency: 0, dependentOn: '', commit: 0, blocked: false, effort: {design: 0, develop: 0, test: 0, deploy: 0}},
+      {number: 3, design: 10, develop: 9, test: 9, deploy: 3, urgent: true, teamDependency: 0, dependentOn: '', commit: 0, blocked: false, effort: {design: 0, develop: 0, test: 0, deploy: 0}},
+      {number: 4, design: 4, develop: 9, test: 12, deploy: 3, urgent: false, teamDependency: 4, dependentOn: '', commit: 0, blocked: false, effort: {design: 0, develop: 0, test: 0, deploy: 0}},
+      {number: 5, design: 4, develop: 10, test: 5, deploy: 2, urgent: false, teamDependency: 4, dependentOn: '', commit: 0, blocked: false, effort: {design: 0, develop: 0, test: 0, deploy: 0}},
+      {number: 6, design: 1, develop: 8, test: 2, deploy: 5, urgent: false, teamDependency: 0, dependentOn: '', commit: 0, blocked: false, effort: {design: 0, develop: 0, test: 0, deploy: 0}},
+      {number: 7, design: 1, develop: 10, test: 3, deploy: 1, urgent: false, teamDependency: 0, dependentOn: '', commit: 0, blocked: false, effort: {design: 0, develop: 0, test: 0, deploy: 0}},
+      {number: 8, design: 0, develop: 4, test: 3, deploy: 5, urgent: false, teamDependency: 0, dependentOn: '', commit: 0, blocked: false, effort: {design: 0, develop: 0, test: 0, deploy: 0}},
+      {number: 9, design: 10, develop: 4, test: 10, deploy: 6, urgent: false, teamDependency: 0, dependentOn: '', commit: 0, blocked: false, effort: {design: 0, develop: 0, test: 0, deploy: 0}},
+      {number: 10, design: 1, develop: 7, test: 10, deploy: 8, urgent: true, teamDependency: 4, dependentOn: '', commit: 0, blocked: false, effort: {design: 0, develop: 0, test: 0, deploy: 0}}
     ],
     currentWorkCard: 0
   },
@@ -150,6 +150,28 @@ export const store = new Vuex.Store({
     updateMyName: (state, payload) => {
       state.myName = payload;
     },
+    updateMyRole: (state, payload) => {
+      state.myRole = payload;
+      state.myEffort.role = payload;
+    },
+    updateMyAssignedEffort: (state, payload) => {
+      state.myEffort.available = state.myEffort.available - payload;
+      state.myEffort.assigned = state.myEffort.assigned + payload;
+    },
+    updateRole: (state, payload) => {
+      for (var i = 0; i < state.roles.length; i++) {
+        var names = []
+        for (var j = 0; j < state.roles[i].names.length; j++) {
+          if (state.roles[i].names[j] != payload.name) {
+            names.push(state.roles[i].names[j])
+          }
+        }
+        if (state.roles[i].role == payload.role) {
+          names.push(payload.name)
+        }
+        state.roles[i].names = names
+      }
+    },
     updateTeamName: (state, payload) => {
       state.teamName = payload;
     },
@@ -169,6 +191,8 @@ export const store = new Vuex.Store({
     },
     updateCurrentDay: (state, payload) => {
       state.currentDay = payload.currentDay
+      state.myEffort.available = 4
+      state.myEffort.assigned = 0
     },
     updateColumns: (state, payload) => {
       state.columns = payload.columns
@@ -215,6 +239,15 @@ export const store = new Vuex.Store({
     },
     updateMyName: ({ commit }, payload) => {
       commit("updateMyName", payload);
+    },
+    updateMyRole: ({ commit }, payload) => {
+      commit("updateMyRole", payload);
+    },
+    updateMyAssignedEffort: ({ commit }, payload) => {
+      commit("updateMyAssignedEffort", payload);
+    },
+    updateRole: ({ commit }, payload) => {
+      commit("updateRole", payload);
     },
     updateTeamName: ({ commit }, payload) => {
       commit("updateTeamName", payload);

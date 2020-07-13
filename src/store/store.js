@@ -210,6 +210,15 @@ export const store = new Vuex.Store({
         }
       }
     },
+    updateEffort: (state, payload) => {
+      for (var i = 1; i < state.columns.length; i++) {
+        for (var j = 0; j < state.columns[i].cards.length; j++) {
+          if (state.columns[i].cards[j].number == payload.workCard.number) {
+            state.columns[i].cards[j].effort = payload.workCard.effort
+          }
+        }
+      }
+    },
     updateCurrentWorkCard: (state, payload) => {
       state.currentWorkCard = payload.currentWorkCard
     },
@@ -266,6 +275,9 @@ export const store = new Vuex.Store({
     },
     updateColumns : ({ commit }, payload) => {
       commit("updateColumns", payload);
+    },
+    updateEffort : ({ commit }, payload) => {
+      commit("updateEffort", payload);
     },
     updateBlocked : ({ commit }, payload) => {
       commit("updateBlocked", payload);

@@ -50,17 +50,38 @@
         </td>
       </tr>
     </table>
+
+    <modal class="work-card-popup" name="work-card-popup" :height="150" :classes="['rounded']">
+      <div class="text-right"><span @click="hide" class="glyphicon glyphicon-star">x</span></div>
+      <h4>Unable to Assign Effort</h4>
+      <p>{{message}}</p>
+      <div class="button">
+        <button class="btn btn-sm btn-info" @click="hide()">Save</button>
+      </div>
+    </modal>
   </div>
 </template>
 
 <script>
 export default {
+  data() {
+    return {
+      message: ''
+    }
+  },
   props: [
     'column',
     'workCard',
     'socket'
   ],
   methods: {
+    show () {
+      this.$modal.show('work-card-popup');
+    },
+    hide () {
+      this.message = ''
+      this.$modal.hide('work-card-popup');
+    },
     teamClass() {
       return this.workCard.dependentOn ? this.workCard.dependentOn.name.toLowerCase() : ''
     },
@@ -74,9 +95,12 @@ export default {
         this.workCard.deploy
     },
     addEffort(column) {
-      if (this.column == column) {
+      this.message = ''
+      if (this.workCard.blocked) {
+        this.message = "Can't assign - card is blocked"
+      } else if (this.column == column) {
         if (this.myEffort.available == 0) {
-          console.log('can\'t assign - all effort assigned')
+          this.message = "Can't assign - all effort assigned"
         } else {
           this.workCard.effort[column] = this.workCard.effort[column] + 1
           if (column == this.myRole.replace(/er$/, '').toLowerCase()) {
@@ -85,8 +109,13 @@ export default {
             this.$store.dispatch("updateMyAssignedEffort", 2)
           }
         }
+      } else if (this.column != column) {
+        this.message = "Can't assign - wrong column"
+      }
+      if (this.message) {
+        this.show()
       } else {
-        console.log('can\'t assign - wrong column')
+        this.socket.emit("updateEffort", {gameName: this.gameName, teamName: this.teamName, workCard: this.workCard})
       }
     },
     selectDependentTeam() {
@@ -117,10 +146,18 @@ export default {
         this.$store.dispatch("updateDependentTeam", data)
       }
     })
+
+    this.socket.on("updateEffort", (data) => {
+      if (this.gameName == data.gameName && this.teamName == data.teamName) {
+        this.$store.dispatch("updateEffort", data)
+      }
+    })
   }
 }
 </script>
 <style>
+  .work-card-popup * { text-align: center; }
+  .work-card-popup .button { text-align: center; }
   .work-card { background-color: #fff; color: #444; margin: 6px; width: 122px; border: 1px solid; }
   .work-card div { text-align: left; height: 14px; }
   .work-card .urgent { text-align: left; padding: 0 6px; margin-right: 14px; background-color: red; font-weight: bold; color: #fff; }

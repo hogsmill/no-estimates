@@ -115,6 +115,7 @@ export default {
       if (this.message) {
         this.show()
       } else {
+        this.socket.emit("updatePersonEffort", {gameName: this.gameName, teamName: this.teamName, workCard: this.workCard, name: this.myName, column: column})
         this.socket.emit("updateEffort", {gameName: this.gameName, teamName: this.teamName, workCard: this.workCard})
       }
     },
@@ -126,6 +127,9 @@ export default {
   computed: {
     gameName() {
       return this.$store.getters.getGameName
+    },
+    myName() {
+      return this.$store.getters.getMyName
     },
     myRole() {
       return this.$store.getters.getMyRole

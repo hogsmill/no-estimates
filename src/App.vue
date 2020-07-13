@@ -11,6 +11,7 @@
       <TeamName v-bind:socket="socket" />
       <MyRole v-bind:socket="socket" />
       <GameName />
+      <Status v-bind:socket="socket" />
       <div class="container board">
         <Roles />
         <Day v-bind:socket="socket" />
@@ -30,6 +31,7 @@ import MyName from "./components/MyName.vue";
 import MyRole from "./components/MyRole.vue";
 import TeamName from "./components/TeamName.vue";
 import GameName from "./components/GameName.vue";
+import Status from "./components/Status.vue";
 import AboutView from "./components/about/AboutView.vue";
 import WalkThroughView from "./components/about/WalkThroughView.vue";
 
@@ -47,6 +49,7 @@ export default {
     TeamName,
     MyRole,
     GameName,
+    Status,
     Roles,
     Day,
     Board

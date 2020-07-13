@@ -48,6 +48,8 @@ io.on("connection", (socket) => {
 
   socket.on("updateColumns", (data) => { emit("updateColumns", data) })
 
+  socket.on("updatePersonEffort", (data) => { emit("updatePersonEffort", data) })
+
   socket.on("updateEffort", (data) => { emit("updateEffort", data) })
 
   socket.on("updateBlocked", (data) => { emit("updateBlocked", data) })

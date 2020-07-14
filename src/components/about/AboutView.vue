@@ -6,10 +6,10 @@
     </p>
     <p><span class="new">&#9733;</span> = New</p>
     <ul class="text-left">
+      <li><span class="new">&#9733;</span><strong>Report</strong> mainly built. Can save estimates and calculates value</li>
       <li><span class="new">&#9733;</span><strong>Event Card extras</strong> implemented (an architecture for and) the first function - pizza adds one to capacity</li>
       <li><span class="new">&#9733;</span><strong>Time and Delivery Date</strong> calculated automatically</li>
       <li><span class="new">&#9733;</span><strong>Moving cards to next column</strong> works if card has column effort completed and is not blocked</li>
-      <li><span class="new">&#9733;</span><strong>Report</strong> working, but needs testing :-) </li>
       <li><span class="new">&#9733;</span><strong>Event cards</strong> now in right order. There are 2 from the original images not in the new list (see below)</li>
       <li><strong>Pick team member name</strong> Once you set your name, your available effort appears top right. This is updated to 4 each day</li>
       <li><strong>Pick Team name</strong> once selected, team members see state changes for that team </li>

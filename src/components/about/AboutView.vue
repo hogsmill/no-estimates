@@ -1,10 +1,12 @@
 <template>
-  <div class="container">
+  <div class="container about">
     <h1>No Estimates</h1>
     <p class="text-left">
-      Functionality so far, note - it all works across all connected browsers, e.g. when an event card comes up, everyone sees t:
+      Functionality so far, note - it all works across all connected browsers, e.g. when an event card comes up, everyone sees it.
     </p>
+    <p><span class="new">&#9733;</span> = New</p>
     <ul class="text-left">
+      <li><span class="new">&#9733;</span><strong>Event cards</strong> now in right order. There are 2 from the original images not in the new list (see below)</li>
       <li><strong>Pick team member name</strong> Once you set your name, your available effort appears top right. This is updated to 4 each day</li>
       <li><strong>Pick Team name</strong> once selected, team members see state changes for that team </li>
       <li><strong>Pick team member speciality</strong> Once you set your name, you can set your speciality</li>
@@ -20,5 +22,16 @@
       <li>Move cards to the next column(s)</li>
       <li>Create and populate the graphs and reports, etc.</li>
     </ul>
+
+    <p>Missing event cards:</p>
+    <ol class="text-left">
+      <li>If you decided yesterday to automate deployments, when you complete the delivery automation, you will no longer have to roll the die when you deploy.</li>
+      <li>Would you like to restructure your team? Feel free to change role specialities or negotiate with other teams to bring on new members.</li>
+    </ol>
   </div>
 </template>
+
+<style>
+  .about p { text-align: left; }
+  .about .new { color: darkorange; padding: 0 3px; }
+</style>

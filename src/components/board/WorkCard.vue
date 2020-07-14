@@ -1,9 +1,10 @@
 <template>
   <div class="work-card" :class="{'blocked': workCard.blocked}">
     <div v-if="workCard.blocked" class="blocked-text"><strong>BLOCKED</strong></div>
-    <div class="work-card-number">
-      <span v-if="workCard.urgent" class="urgent">URGENT</span>
-      <strong>#{{workCard.number}}</strong>
+    <div class="urgent" v-if="workCard.urgent">URGENT</div>
+    <div class="work-card-header">
+      <div class="card-number">#{{workCard.number}}</div>
+      <div class="card-effort">Effort: {{totalEffort()}}</div>
     </div>
     <div class="work-card-effort">
       <div class="work-card-column column rounded-circle" :class="{'design': !workCard.blocked}" @click="addEffort('design')">A</div>
@@ -23,18 +24,12 @@
     </div>
     <table>
       <tr>
-        <td>EFFORT</td>
         <td>COMMIT</td>
-      </tr>
-      <tr>
-        <td>{{totalEffort()}}</td>
-        <td>{{workCard.commit}}</td>
-      </tr>
-      <tr>
         <td>DELIVER</td>
         <td>TIME</td>
       </tr>
       <tr>
+        <td>{{workCard.commit}}</td>
         <td>0</td>
         <td>0</td>
       </tr>
@@ -56,7 +51,7 @@
       <h4>Unable to Assign Effort</h4>
       <p>{{message}}</p>
       <div class="button">
-        <button class="btn btn-sm btn-info" @click="hide()">Save</button>
+        <button class="btn btn-sm btn-info" @click="hide()">OK</button>
       </div>
     </modal>
   </div>
@@ -95,12 +90,14 @@ export default {
         this.workCard.deploy
     },
     addEffort(column) {
-      this.message = ''
+      var message = ''
       if (this.workCard.blocked) {
-        this.message = "Can't assign - card is blocked"
+        message = "Can't assign - card is blocked"
       } else if (this.column == column) {
         if (this.myEffort.available == 0) {
-          this.message = "Can't assign - all effort assigned"
+          message = "Can't assign - all effort assigned"
+        } else if (this.workCard.effort[column] == this.workCard[column]) {
+          message = "Can't assign - all work completed"
         } else {
           this.workCard.effort[column] = this.workCard.effort[column] + 1
           if (column == this.myRole.replace(/er$/, '').toLowerCase()) {
@@ -110,9 +107,10 @@ export default {
           }
         }
       } else if (this.column != column) {
-        this.message = "Can't assign - wrong column"
+        message = "Can't assign - wrong column"
       }
-      if (this.message) {
+      if (message) {
+        this.message = message
         this.show()
       } else {
         this.socket.emit("updatePersonEffort", {gameName: this.gameName, teamName: this.teamName, workCard: this.workCard, name: this.myName, column: column})
@@ -162,14 +160,19 @@ export default {
 <style>
   .work-card-popup * { text-align: center; }
   .work-card-popup .button { text-align: center; }
-  .work-card { background-color: #fff; color: #444; margin: 6px; width: 122px; border: 1px solid; }
+  .work-card { background-color: #fff; color: #444; margin: 6px; width: 122px; }
   .work-card div { text-align: left; height: 14px; }
-  .work-card .urgent { text-align: left; padding: 0 6px; margin-right: 14px; background-color: red; font-weight: bold; color: #fff; }
-  .work-card .work-card-number { text-align: right; padding-right: 2px; }
+  .work-card .urgent { height: 22px; text-align: center; padding: 0 6px; background-color: red; font-weight: bold; color: #fff; }
+
+  .work-card .work-card-header { text-align: right; padding-right: 2px; font-weight: bold; margin-bottom: 4px; }
+  .work-card .work-card-header .card-number { padding-left: 2px; width: 20%; display: inline-block; }
+  .work-card .work-card-header .card-effort { padding-right: 2px; width: 80%; display: inline-block; text-align: right; }
+
   .work-card .work-card-effort .work-card-column.column { color: #fff; border: 0; display: inline-block; width: 11px; height: 11px; font-size: 8px; padding-left: 2px; }
   .work-card .work-card-effort .assigned { background-color: #000; }
   .work-card .work-card-effort .work-card-column { display: inline-block; border: 1px solid; margin-left: 1px; width: 8px; height: 8px; font-size: 8px; padding-left: 2px; }
-  .work-card table { width: 100%; margin-top: 5px; border-collapse: collapse}
+
+  .work-card table { width: 100%; margin-top: 10px; border-collapse: collapse}
   .work-card td { font-size: 8px; }
   .work-card.blocked { background-color: red; }
   .work-card .blocked-text { z-index: 10; position: relative; top: 50px; left: 16px; color: #fff; font-size: large; }

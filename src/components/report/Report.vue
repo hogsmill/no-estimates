@@ -5,11 +5,25 @@
 
     <modal class="report-modal" name="report-modal" :height="500" :classes="['rounded']">
       <div class="text-right"><span @click="hide" class="glyphicon glyphicon-star">x</span></div>
-      <h4>Status (Day: {{currentDay}})</h4>
-      <div>
-        <button class="btn btn-sm btn-info" @click="hide()">OK</button>
-      </div>
+      <h4>Status (Day: {{currentDay}}) <button class="btn btn-sm btn-info" @click="hide()">Close</button></h4>
       <div class="scroller">
+      <table class="estimates">
+        <tr>
+          <td>Estimate for Total Project: </td>
+          <td><input type="text" id="project-estimate" class="form-control" /></td>
+          <td><button class="btn btn-sm btn-info" @click="saveTotalProject">Save</button></td>
+        </tr>
+        <tr>
+          <td>Estimate for MVP (#1-11): </td>
+          <td><input type="text" id="mvp-estimate" class="form-control" /></td>
+          <td><button class="btn btn-sm btn-info" @click="saveMVP">Save</button></td>
+        </tr>
+        <tr>
+          <td>Re-estimate for Total project: </td>
+          <td><input type="text" id="re-estimate" class="form-control" /></td>
+          <td><button class="btn btn-sm btn-info" @click="saveReEstimate">Save</button></td>
+        </tr>
+      </table>
       <table>
         <thead>
           <tr>
@@ -57,6 +71,15 @@ export default {
         t= ''
       }
       return t
+    },
+    saveTotalProject() {
+
+    },
+    saveMVP() {
+
+    },
+    saveReEstimate() {
+
     }
   },
   computed: {
@@ -82,8 +105,13 @@ export default {
 <style>
   .report { width: 80px; }
   .report button { text-align: left; margin-top: 6px;  }
+
   .report-modal .scroller { overflow-y: auto; height: 390px; }
-  .report-modal table { margin-top: 6px; font-size: small; }
+  .report-modal input { width: 50px; height: 24px; margin: 6px; }
+  .report-modal button { height: 24px; line-height: 12px; margin: 6px; }
+  .report-modal table { margin-top: 6px auto; font-size: small; }
   .report-modal th { padding: 4px;  }
-  .report-modal td { padding: 0 4px;  }
+  .report-modal td { padding: 0 4px; vertical-align: middle; text-align: center;  }
+
+  .estimates { width: 80%; margin: 0 auto; }
 </style>

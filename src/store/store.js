@@ -33,7 +33,7 @@ function moveCard(state, card, n) {
     }
   }
   fromCol.cards = cards
-  if (toCol.name == 'Done') {
+  if (toCol.name == 'done') {
     card.done = true
     card.delivery = state.currentDay
     card.time = card.delivery - card.commit
@@ -71,19 +71,19 @@ export const store = new Vuex.Store({
       {role: 'Deployer', order: 4, names: []}
     ],
     columns: [
-      {name: "Options", order: 1},
-      {name: "Design", order: 2, cards: []},
-      {name: "Develop", order: 3, cards: []},
-      {name: "Test", order: 4, cards: []},
-      {name: "Deploy", order: 5, cards: []},
-      {name: "Done", order: 6, cards: []}
+      {name: "options", order: 1},
+      {name: "design", order: 2, cards: []},
+      {name: "develop", order: 3, cards: []},
+      {name: "test", order: 4, cards: []},
+      {name: "deploy", order: 5, cards: []},
+      {name: "done", order: 6, cards: []}
     ],
     numberOfDays: 30,
     currentDay: 1,
     eventCards: [
       {number: 1, text: "Good Luck!"},
       {number: 2, text: "Remember to roll the die when you attempt to deploy a completed card to see if the deployment was succesful."},
-      {number: 3, function: 'Add Points To Everyones Capacity', text: "Pizza inspires your team to greatness! Add one to each person's capacity tomorrow."},
+      {number: 3, function: 'Add 1 Point To Everyones Capacity', text: "Pizza inspires your team to greatness! Add one to each person's capacity tomorrow."},
       {number: 4, text: "Did you remember that people can work in areas outside their speciality? They require two effort points to make one effort point in another area."},
       {number: 5, function: 'Add 8 points to Deploy', text: "You read that automating deployments can lead to better quality and more predictable delivery. If you'd like to invest in that, you'll need to spend 8 effort points in Deploy (you can do this over multiple sprints)"},
       {number: 6, function: 'Pairing', text: "Would someone like to learn a new skill? If so, give this card to that person. After that person spends five days pairing with someone in a work stage different from his or her speciality, the person will be able to work in that state at a 1:1 effort ratio."},
@@ -219,6 +219,9 @@ export const store = new Vuex.Store({
       state.myEffort.available = state.myEffort.available - payload;
       state.myEffort.assigned = state.myEffort.assigned + payload;
     },
+    updateEffortPerDay: (state, payload) => {
+      state.effortPerDay = payload;
+    },
     updateRole: (state, payload) => {
       for (var i = 0; i < state.roles.length; i++) {
         var names = []
@@ -252,7 +255,7 @@ export const store = new Vuex.Store({
     },
     updateCurrentDay: (state, payload) => {
       state.currentDay = payload.currentDay
-      state.myEffort.available = 4
+      state.myEffort.available = payload.capacity ? payload.capacity : 4
       state.myEffort.assigned = 0
     },
     updateColumns: (state, payload) => {
@@ -275,7 +278,7 @@ export const store = new Vuex.Store({
       // Update completed
       for (i = 1; i < state.columns.length - 1; i++) {
         var column = state.columns[i]
-        var colName = column.name.toLowerCase()
+        var colName = column.name
         for (j = 0; j < column.cards.length; j++) {
           var card = column.cards[j]
           if (!card.blocked && card[colName] == card.effort[colName]) {
@@ -329,6 +332,9 @@ export const store = new Vuex.Store({
     },
     updateMyAssignedEffort: ({ commit }, payload) => {
       commit("updateMyAssignedEffort", payload);
+    },
+    updateEffortPerDay: ({ commit }, payload) => {
+      commit("updateEffortPerDay", payload);
     },
     updateRole: ({ commit }, payload) => {
       commit("updateRole", payload);

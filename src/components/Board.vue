@@ -9,7 +9,7 @@
           <thead>
             <tr>
               <th v-for="(column, index) in columns" :key="index">
-                <div :class="column.name.toLowerCase()">{{column.name}}</div>
+                <div :class="column.name">{{columnDisplayName(column.name)}}</div>
               </th>
             </tr>
           </thead>
@@ -27,6 +27,8 @@
 </template>
 
 <script>
+import stringFuns from '../lib/stringFuns.js'
+
 import EventCard from "./board/EventCard.vue";
 import Column from "./board/Column.vue";
 
@@ -38,6 +40,11 @@ export default {
   props: [
     'socket'
   ],
+  methods: {
+    columnDisplayName(s) {
+      return stringFuns.properCase(s)
+    }
+  },
   computed: {
     gameName() {
       return this.$store.getters.getGameName

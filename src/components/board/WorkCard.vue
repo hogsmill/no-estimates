@@ -102,6 +102,9 @@ export default {
         } else if (this.workCard.effort[column] == this.workCard[column]) {
           message = "Can't assign - all work completed"
         } else {
+          //
+          // Check if only one left and it's a 2 pointer...
+          //
           this.workCard.effort[column] = this.workCard.effort[column] + 1
           if (column == this.myRole.replace(/er$/, '').toLowerCase()) {
             this.$store.dispatch("updateMyAssignedEffort", 1)

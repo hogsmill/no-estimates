@@ -6,6 +6,7 @@
     </p>
     <p><span class="new">&#9733;</span> = New</p>
     <ul class="text-left">
+      <li><span class="new">&#9733;</span><strong>Event Card extras</strong> implemented (an architecture for and) the first function - pizza adds one to capacity</li>
       <li><span class="new">&#9733;</span><strong>Time and Delivery Date</strong> calculated automatically</li>
       <li><span class="new">&#9733;</span><strong>Moving cards to next column</strong> works if card has column effort completed and is not blocked</li>
       <li><span class="new">&#9733;</span><strong>Report</strong> working, but needs testing :-) </li>

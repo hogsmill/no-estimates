@@ -34,19 +34,31 @@ export default {
   methods: {
     show() {
       this.socket.emit("showEventCard", {gameName: this.gameName, teamName: this.teamName})
-
     },
     hide() {
       this.$modal.hide('event-card-popup');
     },
-    done() {
-      this.socket.emit("updateCurrentDay", {gameName: this.gameName, teamName: this.teamName, currentDay: this.currentDay + 1})
+    done(data) {
+      var updateData = {gameName: this.gameName, teamName: this.teamName, currentDay: this.currentDay + 1}
+      if (data) {
+        for (var key in data) {
+          updateData[key] = data[key]
+        }
+      }
+      this.socket.emit("updateCurrentDay", updateData)
       this.socket.emit("updateCurrentEventCard", {gameName: this.gameName, teamName: this.teamName, currentEventCard: this.currentEventCard.number})
       this.hide()
     },
     doFunction() {
-      console.log("Doing '" + this.currentEventCard.function + "'")
-      this.done()
+      var data
+      switch(this.currentEventCard.function) {
+        case 'Add 1 Point To Everyones Capacity':
+          data = {capacity: 5}
+          break
+        default:
+          console.log("Doing '" + this.currentEventCard.function + "' (not implemented)")
+      }
+      this.done(data)
     }
   },
   computed: {

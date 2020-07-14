@@ -4,9 +4,10 @@
       <button class="btn btn-sm btn-info" v-if="!myName" @click="show">Set My Name</button>
       <span v-if="myName" @click="show">I am: {{myName}}</span>
       <div class="effort-div" v-if="myName">
-        <div v-for="n in [1, 2, 3, 4]" :key="n" class="effort rounded-circle"
+        <div v-for="n in myEffort.available" :key="n" class="effort rounded-circle"
           :class="getClass(n)">{{n}}</div>
       </div>
+      <div v-for="n in myEffort.assigned" :key="n" class="effort rounded-circle used">0</div>
     </div>
 
     <modal name="set-my-name" :height="120" :classes="['rounded']">
@@ -79,7 +80,7 @@ export default {
   .my-name { padding: 0 6px; display: inline-block; }
   .my-name .effort-div { display: inline-block; }
   .my-name .effort { display: inline-block; color: #fff; width: 20px; text-align: center; margin-left: 2px; background-image: none; }
-  .my-name .used { border: 1px solid; background-color: #fff; color: #444; height: 21px; }
+  .my-name .used { border: 1px solid #aaa; background-color: #fff; color: #fff; height: 21px; }
   .my-name .no-role { background-color: #aaa; }
   .my-name .designer { background-color: #b10018; }
   .my-name .developer { background-color: #76a001; }

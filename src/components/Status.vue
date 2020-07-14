@@ -3,6 +3,8 @@
 </template>
 
 <script>
+import stringFuns from '../lib/stringFuns.js'
+
 export default {
   props: [
     'socket'
@@ -29,7 +31,7 @@ export default {
     const self = this
     this.socket.on("updatePersonEffort", (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
-        var column = data.column.charAt(0).toUpperCase() + data.column.slice(1)
+        var column = stringFuns.properCase(data.column)
         self.setStatus(data.name + ' has added effort to card #' + data.workCard.number + ' in ' + column)
       }
     })

@@ -13,7 +13,7 @@
       <GameName />
       <Status v-bind:socket="socket" />
       <div class="container board">
-        <Report />
+        <Report v-bind:socket="socket" />
         <Roles />
         <Day v-bind:socket="socket" />
         <Board v-bind:socket="socket" />

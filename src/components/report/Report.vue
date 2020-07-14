@@ -10,17 +10,17 @@
       <table class="estimates">
         <tr>
           <td>Estimate for Total Project: </td>
-          <td><input type="text" id="project-estimate" class="form-control" /></td>
+          <td><input type="text" id="project-estimate" class="form-control" :value="projectEstimate" /></td>
           <td><button class="btn btn-sm btn-info" @click="saveTotalProject">Save</button></td>
         </tr>
         <tr>
           <td>Estimate for MVP (#1-11): </td>
-          <td><input type="text" id="mvp-estimate" class="form-control" /></td>
+          <td><input type="text" id="mvp-estimate" class="form-control" :value="mvpEstimate" /></td>
           <td><button class="btn btn-sm btn-info" @click="saveMVP">Save</button></td>
         </tr>
         <tr>
           <td>Re-estimate for Total project: </td>
-          <td><input type="text" id="re-estimate" class="form-control" /></td>
+          <td><input type="text" id="re-estimate" class="form-control" :value="reEstimate" /></td>
           <td><button class="btn btn-sm btn-info" @click="saveReEstimate">Save</button></td>
         </tr>
       </table>
@@ -54,6 +54,9 @@
 
 <script>
 export default {
+  props: [
+    'socket'
+  ],
   methods: {
     show () {
       this.$modal.show('report-modal');
@@ -73,13 +76,16 @@ export default {
       return t
     },
     saveTotalProject() {
-
+      var estimate = document.getElementById("project-estimate").value
+      this.socket.emit("updateProjectEstimate", {gameName: this.gameName, teamName: this.teamName, estimate: estimate})
     },
     saveMVP() {
-
+      var estimate = document.getElementById("mvp-estimate").value
+      this.socket.emit("updateMVPEstimate", {gameName: this.gameName, teamName: this.teamName, estimate: estimate})
     },
     saveReEstimate() {
-
+      var estimate = document.getElementById("re-estimate").value
+      this.socket.emit("updateReEstimate", {gameName: this.gameName, teamName: this.teamName, estimate: estimate})
     }
   },
   computed: {
@@ -97,7 +103,33 @@ export default {
     },
     currentDay() {
       return this.$store.getters.getCurrentDay
-    }
+    },
+    projectEstimate() {
+      return this.$store.getters.getProjectEstimate
+    },
+    mvpEstimate() {
+      return this.$store.getters.getMVPEstimate
+    },
+    reEstimate() {
+      return this.$store.getters.getReEstimate
+    },
+  },
+  mounted() {
+    this.socket.on("updateProjectEstimate", (data) => {
+      if (this.gameName == data.gameName && this.teamName == data.teamName) {
+        this.$store.dispatch("updateProjectEstimate", data.estimate)
+      }
+    })
+    this.socket.on("updateMVPEstimate", (data) => {
+      if (this.gameName == data.gameName && this.teamName == data.teamName) {
+        this.$store.dispatch("updateMVPEstimate", data.estimate)
+      }
+    })
+    this.socket.on("updateReEstimate", (data) => {
+      if (this.gameName == data.gameName && this.teamName == data.teamName) {
+        this.$store.dispatch("updateReEstimate", data.estimate)
+      }
+    })
   }
 }
 </script>
@@ -107,7 +139,7 @@ export default {
   .report button { text-align: left; margin-top: 6px;  }
 
   .report-modal .scroller { overflow-y: auto; height: 390px; }
-  .report-modal input { width: 50px; height: 24px; margin: 6px; }
+  .report-modal input { width: 50px; height: 24px; margin: 6px; text-align: right; }
   .report-modal button { height: 24px; line-height: 12px; margin: 6px; }
   .report-modal table { margin-top: 6px auto; font-size: small; }
   .report-modal th { padding: 4px;  }

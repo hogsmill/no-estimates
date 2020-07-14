@@ -132,7 +132,10 @@ export const store = new Vuex.Store({
       {number: 24, design: 0, develop: 6, test: 4, deploy: 6, urgent: false, teamDependency: 0, dependentOn: '', commit: 0, blocked: false, effort: {design: 0, develop: 0, test: 0, deploy: 0}},
       {number: 25, design: 3, develop: 2, test: 2, deploy: 4, urgent: false, teamDependency: 0, dependentOn: '', commit: 0, blocked: false, effort: {design: 0, develop: 0, test: 0, deploy: 0}}
     ],
-    currentWorkCard: 0
+    currentWorkCard: 0,
+    projectEstimate: 0,
+    mvpEstimate: 0,
+    reEstimate: 0
   },
   getters: {
     getShowAbout: (state) => {
@@ -193,6 +196,15 @@ export const store = new Vuex.Store({
     },
     getWorkCards: (state) => {
       return state.workCards;
+    },
+    getProjectEstimate: (state) => {
+      return state.projectEstimate;
+    },
+    getMVPEstimate: (state) => {
+      return state.mvpEstimate;
+    },
+    getReEstimate: (state) => {
+      return state.reEstimate;
     }
   },
   mutations: {
@@ -309,7 +321,16 @@ export const store = new Vuex.Store({
           }
         }
       }
-    }
+    },
+    updateProjectEstimate: (state, payload) => {
+      state.projectEstimate = payload
+    },
+    updateMVPEstimate: (state, payload) => {
+      state.mvpEstimate = payload
+    },
+    updateReEstimate: (state, payload) => {
+      state.reEstimate = payload
+    },
   },
   actions: {
     updateShowAbout: ({ commit }, payload) => {
@@ -365,6 +386,15 @@ export const store = new Vuex.Store({
     },
     updateDependentTeam: ({ commit }, payload) => {
       commit("updateDependentTeam", payload);
+    },
+    updateProjectEstimate: ({ commit }, payload) => {
+      commit("updateProjectEstimate", payload);
+    },
+    updateMVPEstimate: ({ commit }, payload) => {
+      commit("updateMVPEstimate", payload);
+    },
+    updateReEstimate: ({ commit }, payload) => {
+      commit("updateReEstimate", payload);
     }
   }
 });

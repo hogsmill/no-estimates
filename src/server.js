@@ -57,6 +57,14 @@ io.on("connection", (socket) => {
   socket.on("resetEffort", (data) => { emit("resetEffort", data) })
 
   socket.on("updateDependentTeam", (data) => { emit("updateDependentTeam", data) })
+
+  socket.on("updateProjectEstimate", (data) => { emit("updateProjectEstimate", data) })
+
+  socket.on("updateMVPEstimate", (data) => { emit("updateMVPEstimate", data) })
+  
+  socket.on("updateReEstimate", (data) => { emit("updateReEstimate", data) })
+
+
 });
 
 var port = process.argv[2] || 3007

@@ -40,7 +40,7 @@ export default {
           }
         }
       }
-      this.socket.emit("updateBlocked", {gameName: this.gameName, teamName: this.teamName, blocked: blocked})
+      this.socket.emit("updateQueues", {gameName: this.gameName, teamName: this.teamName, blocked: blocked})
       this.socket.emit("showEventCard", {gameName: this.gameName, teamName: this.teamName})
     }
   },

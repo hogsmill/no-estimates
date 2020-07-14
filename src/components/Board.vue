@@ -56,9 +56,9 @@ export default {
       }
     })
 
-    this.socket.on("updateBlocked", (data) => {
+    this.socket.on("updateQueues", (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
-        this.$store.dispatch("updateBlocked", data)
+        this.$store.dispatch("updateQueues", data)
       }
     })
   }

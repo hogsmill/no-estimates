@@ -30,8 +30,8 @@
       </tr>
       <tr>
         <td>{{workCard.commit}}</td>
-        <td>0</td>
-        <td :class="{'not-done': column != 'Done'}">{{time()}}</td>
+        <td>{{workCard.delivery}}</td>
+        <td :class="{'not-done': !workCard.done}">{{time()}}</td>
       </tr>
       <tr v-if="workCard.teamDependency">
         <td class="dependency" colspan="3">

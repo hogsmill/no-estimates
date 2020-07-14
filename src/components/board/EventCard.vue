@@ -11,7 +11,10 @@
       <h4>Event Card {{currentEventCard.number}}</h4>
       <p>{{currentEventCard.text}}</p>
       <div class="set-my-name">
-        <button class="btn btn-sm btn-info" @click="done()">Done</button>
+        <button v-if="!currentEventCard.function" class="btn btn-sm btn-info" @click="done()">Done</button>
+        <button v-if="currentEventCard.function" class="btn btn-sm btn-info" @click="doFunction()">Yes</button>
+        <button v-if="currentEventCard.function" class="btn btn-sm btn-info" @click="done()">No</button>
+
       </div>
     </modal>
 
@@ -40,6 +43,10 @@ export default {
       this.socket.emit("updateCurrentDay", {gameName: this.gameName, teamName: this.teamName, currentDay: this.currentDay + 1})
       this.socket.emit("updateCurrentEventCard", {gameName: this.gameName, teamName: this.teamName, currentEventCard: this.currentEventCard.number})
       this.hide()
+    },
+    doFunction() {
+      console.log("Doing '" + this.currentEventCard.function + "'")
+      this.done()
     }
   },
   computed: {

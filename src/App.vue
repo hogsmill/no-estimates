@@ -13,6 +13,7 @@
       <GameName />
       <Status v-bind:socket="socket" />
       <div class="container board">
+        <Report />
         <Roles />
         <Day v-bind:socket="socket" />
         <Board v-bind:socket="socket" />
@@ -27,6 +28,7 @@ import io from "socket.io-client";
 import params from './lib/params.js'
 
 import Header from "./components/Header.vue";
+import Report from "./components/report/Report.vue";
 import MyName from "./components/MyName.vue";
 import MyRole from "./components/MyRole.vue";
 import TeamName from "./components/TeamName.vue";
@@ -50,6 +52,7 @@ export default {
     MyRole,
     GameName,
     Status,
+    Report,
     Roles,
     Day,
     Board

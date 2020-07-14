@@ -52,7 +52,7 @@ io.on("connection", (socket) => {
 
   socket.on("updateEffort", (data) => { emit("updateEffort", data) })
 
-  socket.on("updateBlocked", (data) => { emit("updateBlocked", data) })
+  socket.on("updateQueues", (data) => { emit("updateQueues", data) })
 
   socket.on("resetEffort", (data) => { emit("resetEffort", data) })
 

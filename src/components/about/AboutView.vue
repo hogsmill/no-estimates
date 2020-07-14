@@ -22,9 +22,9 @@
 
     <p>Next steps...</p>
     <ul class="text-left">
-      <li>Move cards to the next column(s)</li>
       <li>Do other teams work...</li>
-      <li>Create and populate the graphs and other reports, etc.</li>
+      <li>Do the extras on event cards; add effort for pizza, 8 points for deploy, etc. </li>
+      <li>Create and populate the graphs</li>
     </ul>
 
     <p>Missing event cards:</p>

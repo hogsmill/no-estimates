@@ -31,7 +31,7 @@
       <tr>
         <td>{{workCard.commit}}</td>
         <td>0</td>
-        <td>0</td>
+        <td :class="{'not-done': column != 'Done'}">{{time()}}</td>
       </tr>
       <tr v-if="workCard.teamDependency">
         <td class="dependency" colspan="3">
@@ -89,6 +89,9 @@ export default {
         this.workCard.test +
         this.workCard.deploy
     },
+    time() {
+      return this.currentDay - this.workCard.commit
+    },
     addEffort(column) {
       var message = ''
       if (this.workCard.blocked) {
@@ -140,6 +143,9 @@ export default {
     },
     teams() {
       return this.$store.getters.getTeams
+    },
+    currentDay() {
+      return this.$store.getters.getCurrentDay
     }
   },
   mounted() {
@@ -174,6 +180,7 @@ export default {
 
   .work-card table { width: 100%; margin-top: 10px; border-collapse: collapse}
   .work-card td { font-size: 8px; }
+  .work-card td.not-done { color: #fff; font-weight: bold; background-color: red; }
   .work-card.blocked { background-color: red; }
   .work-card .blocked-text { z-index: 10; position: relative; top: 50px; left: 16px; color: #fff; font-size: large; }
   .work-card .dependency { background-color: #000; color: #fff; }

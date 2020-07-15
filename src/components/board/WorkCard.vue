@@ -138,7 +138,7 @@ export default {
       }
       var index = teams[Math.floor(Math.random() * teams.length)]
       var dependentOn = this.teams[index]
-      this.socket.emit("updateDependentTeam", {gameName: this.gameName, teamName: this.teamName, workCard: this.workCard, dependentOn: dependentOn})
+      this.socket.emit("updateDependentTeam", {gameName: this.gameName, workCard: this.workCard, dependentOn: dependentOn})
     }
   },
   computed: {
@@ -165,12 +165,6 @@ export default {
     }
   },
   mounted() {
-    this.socket.on("updateDependentTeam", (data) => {
-      if (this.gameName == data.gameName && this.teamName == data.teamName) {
-        this.$store.dispatch("updateDependentTeam", data)
-      }
-    })
-
     this.socket.on("updateEffort", (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         this.$store.dispatch("updateEffort", data)
@@ -184,7 +178,7 @@ export default {
   .work-card-popup .button { text-align: center; }
   .work-card { background-color: #fff; color: #444; margin: 6px; width: 122px; }
   .work-card div { text-align: left; height: 14px; }
-  .work-card .urgent { height: 22px; text-align: center; padding: 0 6px; background-color: red; font-weight: bold; color: #fff; }
+  .urgent { height: 22px; text-align: center; padding: 0 6px; background-color: red; font-weight: bold; color: #fff; }
 
   .work-card .work-card-header { text-align: right; padding-right: 2px; font-weight: bold; margin-bottom: 4px; }
   .work-card .work-card-header .card-number { padding-left: 2px; width: 20%; display: inline-block; }

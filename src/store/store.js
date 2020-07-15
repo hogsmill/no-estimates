@@ -54,10 +54,10 @@ export const store = new Vuex.Store({
     teamName: '',
     players: [],
     teams: [
-      { name: 'Blue', members: []},
-      { name: 'Green', members: []},
-      { name: 'Purple', members: []},
-      { name: 'Red', members: []}
+      { name: 'Blue', members: [], otherCards: []},
+      { name: 'Green', members: [], otherCards: []},
+      { name: 'Purple', members: [], otherCards: []},
+      { name: 'Red', members: [], otherCards: []}
     ],
     myEffort: {
       available: 4,
@@ -284,7 +284,6 @@ export const store = new Vuex.Store({
           var card = column.cards[j]
           if (!card.blocked && card[colName] == card.effort[colName]) {
             moveCard(state, card, i)
-            //console.log('Moving card #' + card.number + ' to column ' + state.columns[i + 1].name)
           }
         }
       }
@@ -308,6 +307,19 @@ export const store = new Vuex.Store({
           if (card.number == payload.workCard.number) {
             card.dependentOn = payload.dependentOn
           }
+        }
+      }
+      for (i = 0; i < state.teams.length; i++) {
+        var otherCards = []
+        for (j = 0; j < state.teams[i].otherCards; j++) {
+          if (state.teams[i].otherCards[j].number != payload.workCard.number) {
+            otherCards.push(state.teams[i].otherCards[j])
+          }
+        }
+        state.teams[i].otherCards = otherCards
+        if (state.teams[i].name == payload.dependentOn.name) {
+          payload.workCard.team = payload.dependentOn.name
+          state.teams[i].otherCards.push(payload.workCard)
         }
       }
     },

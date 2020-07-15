@@ -68,6 +68,12 @@ export default {
         this.$store.dispatch("updateQueues", data)
       }
     })
+
+    this.socket.on("updateDependentTeam", (data) => {
+      if (this.gameName == data.gameName) {
+        this.$store.dispatch("updateDependentTeam", data)
+      }
+    })
   }
 }
 </script>

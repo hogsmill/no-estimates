@@ -41,7 +41,7 @@
             <strong v-if="!workCard.dependentOn">None</strong>
             <strong v-if="workCard.dependentOn">{{workCard.dependentOn.name}}</strong>
           </div>
-          <div v-for="n in workCard.teamDependency" :key="n" class="dependency-column rounded-circle" @click="toggleEffort('teamDependency', n)"></div>
+          <div v-for="n in workCard.teamDependency" :key="n" class="dependency-column rounded-circle"></div>
         </td>
       </tr>
     </table>
@@ -124,13 +124,24 @@ export default {
       }
     },
     selectDependentTeam() {
-      var dependentOn = this.teams[Math.floor(Math.random() * this.teams.length)]
+      // Make sure we don't pick our own team...
+      var teams = []
+      for (var i = 0; i < this.teams.length; i++) {
+        if (this.teams[i].name != this.teamName) {
+          teams.push(i)
+        }
+      }
+      var index = teams[Math.floor(Math.random() * teams.length)]
+      var dependentOn = this.teams[index]
       this.socket.emit("updateDependentTeam", {gameName: this.gameName, teamName: this.teamName, workCard: this.workCard, dependentOn: dependentOn})
     }
   },
   computed: {
     gameName() {
       return this.$store.getters.getGameName
+    },
+    teamName() {
+      return this.$store.getters.getTeamName
     },
     myName() {
       return this.$store.getters.getMyName
@@ -140,9 +151,6 @@ export default {
     },
     myEffort() {
       return this.$store.getters.getMyEffort
-    },
-    teamName() {
-      return this.$store.getters.getTeamName
     },
     teams() {
       return this.$store.getters.getTeams

@@ -2,6 +2,7 @@
   <div class="col">
     <div class="row" v-if="column.name == 'options'">
       <WorkCardStack v-bind:socket="socket" />
+      <OtherTeams />
     </div>
     <div class="row" v-if="column.name != 'options'">
       <div v-for="(card, index) in column.cards" :key="index">
@@ -12,12 +13,14 @@
 </template>
 
 <script>
+import OtherTeams from "./OtherTeams.vue";
 import WorkCardStack from "./WorkCardStack.vue";
 import WorkCard from "./WorkCard.vue";
 
 export default {
   components: {
     WorkCardStack,
+    OtherTeams,
     WorkCard
   },
   props: [

@@ -251,17 +251,6 @@ export const store = new Vuex.Store({
     updateTeamName: (state, payload) => {
       state.teamName = payload;
     },
-    addTeam: (state, payload) => {
-      var found = false
-      for (var i = 0; i < state.teams.length; i++) {
-        if (state.teams[i] == payload.teamName) {
-          found = true
-        }
-      }
-      if (!found) {
-        state.teams.push(payload)
-      }
-    },
     updateCurrentEventCard: (state, payload) => {
       state.currentEventCard = payload.currentEventCard;
     },
@@ -362,9 +351,6 @@ export const store = new Vuex.Store({
     },
     updateTeamName: ({ commit }, payload) => {
       commit("updateTeamName", payload);
-    },
-    addTeam: ({ commit }, payload) => {
-      commit("addTeam", payload);
     },
     updateCurrentEventCard: ({ commit }, payload) => {
       commit("updateCurrentEventCard", payload);

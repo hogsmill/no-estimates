@@ -34,8 +34,6 @@ io.on("connection", (socket) => {
     connectDebugOff || console.log(`User with socket id ${socket.id} has disconnected.`)
   })
 
-  socket.on("addTeamName", (data) => { emit("addTeamName", data) })
-
   socket.on("updateRole", (data) => { emit("updateRole", data) })
 
   socket.on("showEventCard", (data) => { emit("showEventCard", data) })
@@ -61,7 +59,7 @@ io.on("connection", (socket) => {
   socket.on("updateProjectEstimate", (data) => { emit("updateProjectEstimate", data) })
 
   socket.on("updateMVPEstimate", (data) => { emit("updateMVPEstimate", data) })
-  
+
   socket.on("updateReEstimate", (data) => { emit("updateReEstimate", data) })
 
 

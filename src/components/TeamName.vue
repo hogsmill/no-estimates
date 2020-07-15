@@ -34,7 +34,6 @@ export default {
     saveTeamName: function() {
       var teamName = document.getElementById('team-name-select').value
       this.$store.dispatch("updateTeamName", teamName)
-      this.socket.emit("addTeamName", {gameName: this.gameName, teamName: teamName })
       this.hide()
     }
   },
@@ -51,13 +50,6 @@ export default {
     teams() {
       return this.$store.getters.getTeams
     }
-  },
-  mounted() {
-    this.socket.on("addTeamName", (data) => {
-      if (this.gameName == data.gameName) {
-        this.$store.dispatch("addTeam", data)
-      }
-    })
   }
 }
 </script>

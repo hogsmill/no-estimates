@@ -58,6 +58,8 @@
 </template>
 
 <script>
+import stringFuns from '../../lib/stringFuns.js'
+
 export default {
   data() {
     return {
@@ -102,14 +104,16 @@ export default {
         } else if (this.workCard.effort[column] == this.workCard[column]) {
           message = "Can't assign - all work completed"
         } else {
-          //
-          // Check if only one left and it's a 2 pointer...
-          //
-          this.workCard.effort[column] = this.workCard.effort[column] + 1
-          if (column == this.myRole.replace(/er$/, '').toLowerCase()) {
+          if (column == stringFuns.roleToColumn(this.myRole)) {
+            this.workCard.effort[column] = this.workCard.effort[column] + 1
             this.$store.dispatch("updateMyAssignedEffort", 1)
           } else {
-            this.$store.dispatch("updateMyAssignedEffort", 2)
+            if (this.myEffort.available < 2) {
+              message = "Can't assign - you only have one effort point left"
+            } else {
+              this.workCard.effort[column] = this.workCard.effort[column] + 1
+              this.$store.dispatch("updateMyAssignedEffort", 2)
+            }
           }
         }
       } else if (this.column != column) {
@@ -117,7 +121,8 @@ export default {
       }
       if (message) {
         this.message = message
-        this.show()
+        var self = this
+        setTimeout(function() { self.show()}, 100)
       } else {
         this.socket.emit("updatePersonEffort", {gameName: this.gameName, teamName: this.teamName, workCard: this.workCard, name: this.myName, column: column})
         this.socket.emit("updateEffort", {gameName: this.gameName, teamName: this.teamName, workCard: this.workCard})

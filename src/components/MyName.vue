@@ -77,6 +77,9 @@ export default {
 </script>
 
 <style lang="scss">
+
+  @import '../assets/colours.scss';
+
   .my-name {
     padding: 0 6px;
     display: inline-block;
@@ -106,16 +109,16 @@ export default {
     }
 
     .designer {
-      background-color: #b10018;
+      background-color: $design;
     }
     .developer {
-      background-color: #76a001;
+      background-color: $develop;
     }
     .tester {
-      background-color: #0067b1;
+      background-color: $test;
     }
     .deployer {
-      background-color: #4f0384;
+      background-color: $deploy;
     }
 
     button {

@@ -87,7 +87,30 @@ export default {
 }
 </script>
 
-<style>
-  .not-host { height: 0px; visibility: hidden; }
-  .board { background-color: blue; margin-top: 6px; color: #fff; }
+<style lang="scss">
+  .not-host {
+    height: 0px;
+    visibility: hidden;
+  }
+
+  .board {
+    //background-color: blue;
+
+    //
+    // Gradient - do we want this? :-)
+    //
+    /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#7db9e8+0,207cca+44,0000ff+100 */
+    background: #7db9e8; /* Old browsers */
+    background: -moz-radial-gradient(center, ellipse cover,  #7db9e8 0%, #207cca 44%, #0000ff 100%); /* FF3.6-15 */
+    background: -webkit-radial-gradient(center, ellipse cover,  #7db9e8 0%,#207cca 44%,#0000ff 100%); /* Chrome10-25,Safari5.1-6 */
+    background: radial-gradient(ellipse at center,  #7db9e8 0%,#207cca 44%,#0000ff 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#7db9e8', endColorstr='#0000ff',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+    //
+    // End Gradient
+    //
+
+    margin-top: 6px;
+    color: #fff;
+  }
+
 </style>

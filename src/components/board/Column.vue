@@ -2,7 +2,7 @@
   <div class="col">
     <div class="row" v-if="column.name == 'options'">
       <WorkCardStack v-bind:socket="socket" />
-      <OtherTeams />
+      <OtherTeams v-bind:socket="socket" />
     </div>
     <div class="row" v-if="column.name != 'options'">
       <div v-for="(card, index) in column.cards" :key="index">
@@ -36,6 +36,9 @@ export default {
 </script>
 
 <style lang="scss">
+
+  @import '../../assets/colours.scss';
+
   .game-board {
 
     .col {
@@ -62,18 +65,18 @@ export default {
   }
 
   .design {
-    background-color: #b10018;
+    background-color: $design;
   }
   .develop {
-    background-color: #76a001;
+    background-color: $develop;
   }
   .test {
-    background-color: #0067b1;
+    background-color: $test;
   }
   .deploy {
-    background-color: #4f0384;
+    background-color: $deploy;
   }
   .done {
-    background-color: navy;
+    background-color: $done;
   }
 </style>

@@ -10,7 +10,7 @@
             <div class="card-team"><span :style="{ 'background-color': card.team.toLowerCase()}">{{card.team}}</span></div>
           </div>
           <div class="other-work-card-effort">
-            <div class="other-work-card-column column rounded-circle" @click="addEffort()">X</div>
+            <div class="other-work-card-column column rounded-circle" @click="addEffort(card)">X</div>
             <div v-for="n in card.effort" :key="n" :class="{'assigned' : n <= card.assigned}" class="other-work-card-column rounded-circle"></div>
           </div>
         </div>
@@ -21,12 +21,24 @@
 
 <script>
 export default {
+  props: [
+    'socket'
+  ],
+  methods: {
+    addEffort(workCard) {
+      console.log(workCard)
+      this.socket.emit("addEffortToOthersCard", {gameName: this.gameName, teamName: this.teamName, workCard: workCard, myName: this.myName})
+    }
+  },
   computed: {
     gameName() {
       return this.$store.getters.getGameName
     },
     teamName() {
       return this.$store.getters.getTeamName
+    },
+    myName() {
+      return this.$store.getters.getMyName
     },
     teams() {
       return this.$store.getters.getTeams

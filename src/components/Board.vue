@@ -1,5 +1,5 @@
 <template>
-  <div class="board row">
+  <div class="row">
     <div class="left">
       <EventCard v-bind:socket="socket" />
     </div>

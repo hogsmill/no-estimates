@@ -76,6 +76,7 @@ export default {
     text-align: center;
     width: 100%;
     font-weight: bold;
+    margin-bottom: 4px; 
   }
 
   .days-label {
@@ -101,5 +102,5 @@ export default {
       margin: 4px;
     }
   }
-  
+
 </style>

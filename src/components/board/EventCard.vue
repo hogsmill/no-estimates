@@ -96,8 +96,8 @@ export default {
 <style lang="scss">
 
   #event-card {
-    margin: 26px auto 26px auto;
-    width: 75%;
+    margin: 30px auto 26px auto;
+    width: 85%;
     height: 90px;
     background-image: url("../../assets/img/event-card-back.jpg");
     background-size: contain;

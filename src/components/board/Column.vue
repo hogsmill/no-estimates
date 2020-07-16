@@ -35,15 +35,45 @@ export default {
 }
 </script>
 
-<style>
-  .game-board .col { width: 130px; }
-  .game-board .row { text-align: center; }
-  .game-board .row.header { text-align: center; padding: 4px; }
-  .options div { border: 1px solid; display: block; }
-  .options { background-color: navy; }
-  .design { background-color: #b10018; }
-  .develop { background-color: #76a001; }
-  .test { background-color: #0067b1; }
-  .deploy { background-color: #4f0384; }
-  .done { background-color: navy; }
+<style lang="scss">
+  .game-board {
+
+    .col {
+      width: 130px;
+    }
+
+    .row {
+      text-align: center;
+
+      &.header {
+        text-align: center;
+        padding: 4px;
+      }
+    }
+  }
+
+  .options {
+    background-color: navy;
+
+    div {
+      border: 1px solid;
+      display: block;
+    }
+  }
+
+  .design {
+    background-color: #b10018;
+  }
+  .develop {
+    background-color: #76a001;
+  }
+  .test {
+    background-color: #0067b1;
+  }
+  .deploy {
+    background-color: #4f0384;
+  }
+  .done {
+    background-color: navy;
+  }
 </style>

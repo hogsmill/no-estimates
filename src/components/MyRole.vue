@@ -68,11 +68,31 @@ export default {
 }
 </script>
 
-<style>
-  .role-name {padding: 0 6px; display: inline-block; }
-  .role-name button { font-size: smaller; background-color: #aaa; border: 1px solid #aaa; }
-  .role-name button:hover { color: #aaa; background-color: #fff; }
-  .set-role-modal { height: 120px; }
+<style lang="scss">
 
-  #role-select { width: 50%; margin: 0 auto; }
+  .role-name {
+    padding: 0 6px;
+    display: inline-block;
+
+    button {
+      font-size: smaller;
+      background-color: #aaa;
+      border: 1px solid #aaa;
+
+      &:hover {
+        color: #aaa;
+        background-color: #fff;
+      }
+    }
+  }
+
+  .set-role-modal {
+    height: 120px;
+  }
+
+  #role-select {
+    width: 50%;
+    margin: 0 auto;
+  }
+  
 </style>

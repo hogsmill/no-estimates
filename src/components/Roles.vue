@@ -22,12 +22,38 @@ export default {
 }
 </script>
 
-<style>
-  table.roles { margin-bottom: 12px; width: 90%; }
-  .roles { text-align: center; width: 100%; font-weight: bold; }
-  .role { background-color: #fff; color: #444; display: inline-block; padding-top: 76px; width: 105px; margin: 0 6px; background-repeat: no-repeat; }
-  .designer { background-image: url("../assets/img/designer.png"); background-size: contain; }
-  .developer { background-image: url("../assets/img/developer.png"); background-size: contain; }
-  .tester { background-image: url("../assets/img/tester.png"); background-size: contain; }
-  .deployer { background-image: url("../assets/img/deployer.png"); background-size: contain; }
+<style lang="scss">
+
+  table.roles {
+    margin-bottom: 12px;
+    width: 90%;
+    text-align: center;
+    width: 100%;
+    font-weight: bold;
+  }
+
+  .role {
+    background-color: #fff;
+    color: #444;
+    display: inline-block;
+    padding-top: 76px;
+    width: 105px;
+    margin: 0 6px;
+    background-repeat: no-repeat;
+    background-size: contain;
+
+    &.designer {
+      background-image: url("../assets/img/designer.png");
+    }
+    &.developer {
+      background-image: url("../assets/img/developer.png");
+    }
+    &.tester {
+      background-image: url("../assets/img/tester.png");
+    }
+    &.deployer {
+      background-image: url("../assets/img/deployer.png");
+    }
+  }
+  
 </style>

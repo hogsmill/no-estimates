@@ -39,6 +39,8 @@ export default {
 }
 </script>
 
-<style>
-  .status { height: 20px; }
+<style lang="scss">
+  .status {
+    height: 20px;
+  }
 </style>

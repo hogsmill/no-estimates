@@ -43,11 +43,31 @@ export default {
 }
 </script>
 
-<style>
-  .game-name { padding: 0 6px; display: inline-block; }
-  .game-name button { font-size: smaller; background-color: #aaa; border: 1px solid #aaa; }
-  .game-name button:hover { color: #aaa; background-color: #fff; }
-  .set-game-name-modal { height: 120px; }
+<style lang="scss">
 
-  #game-name { display: inline-block; width: 30%; margin-right: 6px; }
+  .game-name {
+    padding: 0 6px;
+    display: inline-block;
+
+    button {
+      font-size: smaller;
+      background-color: #aaa;
+      border: 1px solid #aaa;
+
+      &:hover {
+        color: #aaa;
+        background-color: #fff;
+      }
+    }
+  }
+  .set-game-name-modal {
+    height: 120px;
+  }
+
+  #game-name {
+    display: inline-block;
+    width: 30%;
+    margin-right: 6px;
+  }
+
 </style>

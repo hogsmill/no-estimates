@@ -71,11 +71,35 @@ export default {
 }
 </script>
 
-<style>
-  .days { text-align: center; width: 100%; font-weight: bold; }
-  .days-label { display: inline; padding-right: 12px; color: #fff; }
-  .day { display: inline-block; width: 20px; }
-  .day.passed { color: #888; }
-  .day.current { background-color: #fff; color: blue; }
-  .days button { margin: 4px; }
+<style lang="scss">
+  .days {
+    text-align: center;
+    width: 100%;
+    font-weight: bold;
+  }
+
+  .days-label {
+    display: inline;
+    padding-right: 12px;
+    color: #fff;
+  }
+
+  .day {
+    display: inline-block;
+    width: 20px;
+
+    &.passed {
+      color: #888;
+    }
+
+    &.current {
+      background-color: #fff;
+      color: blue;
+    }
+
+    button {
+      margin: 4px;
+    }
+  }
+  
 </style>

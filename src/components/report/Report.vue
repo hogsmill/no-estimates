@@ -134,16 +134,54 @@ export default {
 }
 </script>
 
-<style>
-  .report { width: 80px; }
-  .report button { text-align: left; margin-top: 6px;  }
+<style lang="scss">
+  .report {
+    width: 80px;
 
-  .report-modal .scroller { overflow-y: auto; height: 390px; }
-  .report-modal input { width: 50px; height: 24px; margin: 6px; text-align: right; }
-  .report-modal button { height: 24px; line-height: 12px; margin: 6px; }
-  .report-modal table { margin-top: 6px auto; font-size: small; }
-  .report-modal th { padding: 4px;  }
-  .report-modal td { padding: 0 4px; vertical-align: middle; text-align: center;  }
+    button {
+      text-align: left;
+      margin-top: 6px;
+    }
+  }
 
-  .estimates { width: 80%; margin: 0 auto; }
+  .report-modal {
+
+    .scroller {
+      overflow-y: auto;
+      height: 390px;
+    }
+
+    input {
+      width: 50px;
+      height: 24px;
+      margin: 6px;
+      text-align: right;
+    }
+
+    button {
+      height: 24px;
+      line-height: 12px;
+      margin: 6px;
+    }
+
+    table {
+      margin-top: 6px auto;
+      font-size: small;
+    }
+
+    th {
+      padding: 4px;
+    }
+
+    td {
+      padding: 0 4px;
+      vertical-align: middle;
+      text-align: center;
+    }
+  }
+
+  .estimates {
+    width: 80%;
+    margin: 0 auto;
+  }
 </style>

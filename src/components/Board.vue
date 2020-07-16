@@ -1,5 +1,5 @@
 <template>
-  <div class="row">
+  <div class="board row">
     <div class="left">
       <EventCard v-bind:socket="socket" />
     </div>
@@ -78,10 +78,29 @@ export default {
 }
 </script>
 
-<style>
-  .left { width: 17%; }
-  .right { width: 82%; }
+<style lang="scss">
+  .board {
 
-  table.board-table { margin-bottom: 12px; width: 90%; border: 1px solid; border-collapse:separate; border-spacing: 0px; }
-  th, td { border: 1px solid; vertical-align: top }
+    .left {
+      width: 17%;
+    }
+
+    .right {
+      width: 82%;
+    }
+  }
+
+  table.board-table {
+    margin-bottom: 12px;
+    width: 90%;
+    border: 1px solid;
+    border-collapse:separate;
+    border-spacing: 0px;
+  }
+
+  th, td {
+    border: 1px solid;
+    vertical-align: top
+  }
+
 </style>

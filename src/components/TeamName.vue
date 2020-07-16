@@ -7,7 +7,7 @@
 
     <modal name="set-team-name" :height="180" :classes="['rounded']">
       <div class="text-right"><span @click="hide" class="glyphicon glyphicon-star">x</span></div>
-      <h4>Enter<span v-if="teams.length"> or Select</span> Your Team Name</h4>
+      <h4>Select Your Team Name</h4>
       <div class="set-team-name">
         <select :class="{ 'hidden': teams.length == 0}" id="team-name-select" class="form-control">
           <option v-for="(team, index) in teams" :key="index">{{team.name}}</option>
@@ -54,12 +54,27 @@ export default {
 }
 </script>
 
-<style>
-  .team-name { padding: 0 6px; display: inline-block; }
-  .team-name button { font-size: smaller; background-color: #aaa; border: 1px solid #aaa; }
-  .team-name button:hover { color: #aaa; background-color: #fff; }
-  .set-team-name-modal { height: 120px; }
+<style lang="scss">
+  .team-name {
+    padding: 0 6px;
+    display: inline-block;
 
-  #team-name { display: inline-block; width: 30%; margin-right: 6px; }
-  #team-name-select { width: 50%; margin: 0 auto; }
+    button {
+      font-size: smaller;
+      background-color: #aaa;
+      border: 1px solid #aaa;
+
+      &:hover {
+        color: #aaa;
+        background-color: #fff;
+      }
+    }
+  }
+
+  .set-team-name {
+    select {
+      width: 50%; margin: 0 auto;
+    }
+  }
+
 </style>

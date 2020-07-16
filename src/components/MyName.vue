@@ -76,19 +76,68 @@ export default {
 }
 </script>
 
-<style>
-  .my-name { padding: 0 6px; display: inline-block; }
-  .my-name .effort-div { display: inline-block; }
-  .my-name .effort { display: inline-block; color: #fff; width: 20px; text-align: center; margin-left: 2px; background-image: none; }
-  .my-name .used { border: 1px solid #aaa; background-color: #fff; color: #fff; height: 21px; }
-  .my-name .no-role { background-color: #aaa; }
-  .my-name .designer { background-color: #b10018; }
-  .my-name .developer { background-color: #76a001; }
-  .my-name .tester { background-color: #0067b1; }
-  .my-name .deployer { background-color: #4f0384; }
-  .my-name button { font-size: smaller; background-color: #aaa; border: 1px solid #aaa; }
-  .my-name button:hover { color: #aaa; background-color: #fff; }
-  .set-my-name-modal { height: 120px; }
+<style lang="scss">
+  .my-name {
+    padding: 0 6px;
+    display: inline-block;
 
-  #my-name { display: inline-block; width: 30%; margin-right: 6px; }
+    .effort-div {
+      display: inline-block;
+
+      .no-role {
+        background-color: #aaa;
+      }
+    }
+
+    .effort {
+      display: inline-block;
+      color: #fff;
+      width: 20px;
+      text-align: center;
+      margin-left: 2px;
+      background-image: none;
+
+      &.used {
+        border: 1px solid #aaa;
+        background-color: #fff;
+        color: #fff;
+        height: 21px;
+      }
+    }
+
+    .designer {
+      background-color: #b10018;
+    }
+    .developer {
+      background-color: #76a001;
+    }
+    .tester {
+      background-color: #0067b1;
+    }
+    .deployer {
+      background-color: #4f0384;
+    }
+
+    button {
+      font-size: smaller;
+      background-color: #aaa;
+      border: 1px solid #aaa;
+
+      &:hover {
+        color: #aaa;
+        background-color: #fff;
+      }
+    }
+  }
+
+  .set-my-name-modal {
+    height: 120px;
+  }
+
+  #my-name {
+    display: inline-block;
+    width: 30%;
+    margin-right: 6px;
+  }
+
 </style>

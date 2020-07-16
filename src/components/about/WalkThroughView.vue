@@ -114,12 +114,18 @@ export default {
 };
 </script>
 
-<style>
-.buttons {
-  padding: 6px;
-}
-#walk-through p {
-  margin-left: 8px;
-  margin-right: 8px;
-}
+<style lang="scss">
+
+  .buttons {
+    padding: 6px;
+  }
+
+  #walk-through {
+
+    p {
+      margin-left: 8px;
+      margin-right: 8px;
+    }
+ }
+ 
 </style>

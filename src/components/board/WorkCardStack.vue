@@ -1,8 +1,8 @@
 <template>
 
   <div class="work-card-back" :class="{'complete': currentWorkCard === false}" @click="pullInCard()">
-    <div v-if="currentWorkCard !== false" class="work-card-stack-number rounded-circle">{{currentWorkCard + 1}}</div>
-    <div v-if="currentWorkCard === false" class="work-card-stack-number rounded-circle complete">0</div>
+    <div v-if="currentWorkCard !== false" class="stack-number rounded-circle">{{currentWorkCard + 1}}</div>
+    <div v-if="currentWorkCard === false" class="stack-number rounded-circle complete">0</div>
   </div>
 
 </template>
@@ -58,9 +58,30 @@ export default {
 }
 </script>
 
-<style>
-  .work-card-back { margin: 6px; width: 100%; height: 100px; background-image: url("../../assets/img/work-card-back.png"); background-size: contain; background-repeat: no-repeat; }
-  .work-card-back.complete { opacity: 0.5; }
-  .work-card-stack-number { width: 20px; position: relative; top: 50px; left: 50px; color: #fff; background-color: red; }
-  .work-card-stack-number.complete { color: red; }
+<style lang="scss">
+
+  .work-card-back {
+    margin: 6px;
+    width: 100%;
+    height: 100px;
+    background-image: url("../../assets/img/work-card-back.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+
+    &.complete {
+      opacity: 0.5;
+    }
+    .stack-number {
+      width: 20px;
+      position: relative;
+      top: 50px;
+      left: 50px;
+      color: #fff;
+      background-color: red;
+
+      &.complete {
+        color: red;
+      }
+    }
+  }
 </style>

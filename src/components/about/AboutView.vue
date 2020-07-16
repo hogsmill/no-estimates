@@ -36,7 +36,18 @@
   </div>
 </template>
 
-<style>
-  .about p { text-align: left; }
-  .about .new { color: darkorange; padding: 0 3px; }
+<style lang="scss">
+
+  .about {
+
+    p {
+      text-align: left;
+    }
+
+    .new {
+      color: darkorange;
+      padding: 0 3px;
+    }
+  }
+  
 </style>

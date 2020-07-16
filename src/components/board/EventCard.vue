@@ -94,8 +94,8 @@ export default {
 </script>
 
 <style>
-  #event-card { margin: 26px auto 26px auto; width: 75%; height: 90px; background-image: url("../../assets/img/event-card-back.jpg"); background-size: contain; background-repeat: no-repeat}
   #event-card.complete { opacity: 0.5; }
+  #event-card { margin: 26px auto 26px auto; width: 75%; height: 90px; background-image: url("../../assets/img/event-card-back.jpg"); background-size: contain; background-repeat: no-repeat}
   .event-card-number { width: 20px; position: relative; top: 50px; left: 54px; color: #fff; background-color: red; }
   .event-card-number.complete { color: red; }
   #event-card-popup { color: #444; }

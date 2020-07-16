@@ -173,30 +173,140 @@ export default {
   }
 }
 </script>
-<style>
-  .work-card-popup * { text-align: center; }
-  .work-card-popup .button { text-align: center; }
-  .work-card { background-color: #fff; color: #444; margin: 6px; width: 122px; }
-  .work-card div { text-align: left; height: 14px; }
-  .urgent { height: 22px; text-align: center; padding: 0 6px; background-color: red; font-weight: bold; color: #fff; }
 
-  .work-card .work-card-header { text-align: right; padding-right: 2px; font-weight: bold; margin-bottom: 4px; }
-  .work-card .work-card-header .card-number { padding-left: 2px; width: 20%; display: inline-block; }
-  .work-card .work-card-header .card-effort { padding-right: 2px; width: 80%; display: inline-block; text-align: right; }
+<style lang="scss">
 
-  .work-card .work-card-effort .work-card-column.column { color: #fff; border: 0; display: inline-block; width: 11px; height: 11px; font-size: 8px; padding-left: 2px; }
-  .work-card .work-card-effort .assigned { background-color: #000; }
-  .work-card .work-card-effort .work-card-column { display: inline-block; border: 1px solid; margin-left: 1px; width: 8px; height: 8px; font-size: 8px; padding-left: 2px; }
+  .work-card-popup {
+    * {
+      text-align: center;
+    }
+    .button {
+      text-align: center;
+    }
+  }
 
-  .work-card table { width: 100%; margin-top: 10px; border-collapse: collapse}
-  .work-card td { font-size: 8px; }
-  .work-card td.not-done { color: #fff; font-weight: bold; background-color: red; }
-  .work-card.blocked { background-color: red; }
-  .work-card .blocked-text { z-index: 10; position: relative; top: 50px; left: 16px; color: #fff; font-size: large; }
-  .work-card .dependency { background-color: #000; color: #fff; }
-  .work-card .dependency div { display: inline-block; }
-  .work-card .dependency .dependency-team { background-color: #fff; width: 40px; color: #fff; text-align: center;  }
-  .work-card .dependency-column { display: inline-block; border: 1px solid; margin-left: 1px; width: 8px; height: 8px; font-size: 8px; padding-left: 2px; }
+  .work-card {
+    background-color: #fff;
+    color: #444;
+    margin: 6px;
+    width: 122px;
 
-  .set-dependent-team { text-align: center; }
+    &.blocked {
+      background-color: red;
+    }
+
+    .blocked-text {
+      z-index: 10;
+      position: relative;
+      top: 50px;
+      left: 16px;
+      color: #fff;
+      font-size: large;
+    }
+
+    div {
+      text-align: left;
+      height: 14px;
+    }
+
+    .urgent {
+      height: 22px;
+      text-align: center;
+      padding: 0 6px;
+      background-color: red;
+      font-weight: bold;
+      color: #fff;
+    }
+
+    .work-card-header {
+      text-align: right;
+      padding-right: 2px;
+      font-weight: bold;
+      margin-bottom: 4px;
+
+      .card-number {
+        padding-left: 2px;
+        width: 20%;
+        display: inline-block;
+      }
+
+      .card-effort {
+        padding-right: 2px;
+        width: 80%;
+        display: inline-block;
+        text-align: right;
+      }
+    }
+
+    .work-card-effort {
+
+      .work-card-column {
+        display: inline-block;
+        border: 1px solid;
+        margin-left: 1px;
+        width: 8px;
+        height: 8px;
+        font-size: 8px;
+        padding-left: 2px;
+
+        &.column {
+          color: #fff;
+          border: 0;
+          display: inline-block;
+          width: 11px;
+          height: 11px;
+          font-size: 8px;
+          padding-left: 2px;
+        }
+      }
+
+      .assigned {
+        background-color: #000;
+      }
+    }
+
+    .dependency {
+      background-color: #000;
+      color: #fff;
+
+      div {
+        display: inline-block;
+      }
+
+      .dependency-team {
+        background-color: #fff;
+        width: 40px;
+        color: #fff;
+        text-align: center;
+      }
+
+      .dependency-column {
+        display: inline-block;
+        border: 1px solid;
+        margin-left: 1px;
+        width: 8px;
+        height: 8px;
+        font-size: 8px;
+        padding-left: 2px;
+      }
+    }
+
+    table {
+      width: 100%;
+      margin-top: 10px;
+      border-collapse: collapse
+    }
+
+    td {
+      font-size: 8px;
+
+      &.not-done {
+        color: #fff;
+        font-weight: bold;
+        background-color: red;
+      }
+    }
+
+  }
+
 </style>

@@ -1,27 +1,23 @@
 <template>
-  <div class="row">
-    <div class="left">
-      <EventCard v-bind:socket="socket" />
-    </div>
-    <div class="right">
-      <div class="row game-board">
-        <table class="board-table rounded">
-          <thead>
-            <tr>
-              <th v-for="(column, index) in columns" :key="index">
-                <div :class="column.name">{{columnDisplayName(column.name)}}</div>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td v-for="(column, index) in columns" :key="index">
-                <Column v-bind:column="column" v-bind:socket="socket" />
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+  <div>
+    <EventCard v-bind:socket="socket" />
+    <div class="row game-board">
+      <table class="board-table rounded">
+        <thead>
+          <tr>
+            <th v-for="(column, index) in columns" :key="index">
+              <div :class="column.name">{{columnDisplayName(column.name)}}</div>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td v-for="(column, index) in columns" :key="index">
+              <Column v-bind:column="column" v-bind:socket="socket" />
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </template>
@@ -79,19 +75,9 @@ export default {
 </script>
 
 <style lang="scss">
-  .board {
-
-    .left {
-      width: 17%;
-    }
-
-    .right {
-      width: 82%;
-    }
-  }
 
   table.board-table {
-    margin-bottom: 12px;
+    margin: 6px auto 18px auto;
     width: 90%;
     border: 1px solid;
     border-collapse:separate;

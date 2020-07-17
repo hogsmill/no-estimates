@@ -32,7 +32,6 @@
             <th>Delivery Day</th>
             <th>Delivery Time</th>
             <th  v-html="currency"></th>
-            <th>Prob. Forecast (50%/85%)</th>
           </tr>
         </thead>
         <tbody>
@@ -42,7 +41,6 @@
             <td>{{card.delivery}}</td>
             <td>{{time(card)}}</td>
             <td>{{card.value}}</td>
-            <td></td>
           </tr>
         </tbody>
       </table>
@@ -165,8 +163,9 @@ export default {
     }
 
     table {
-      margin-top: 6px auto;
+      margin: 6px auto;
       font-size: small;
+      width: 98%;
     }
 
     th {

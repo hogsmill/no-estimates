@@ -189,7 +189,6 @@ export default {
     background-color: #fff;
     color: #444;
     margin: 6px;
-    width: 122px;
 
     &.blocked {
       background-color: red;
@@ -275,7 +274,7 @@ export default {
 
       .dependency-team {
         background-color: #fff;
-        width: 40px;
+        width: 32px;
         color: #fff;
         text-align: center;
       }

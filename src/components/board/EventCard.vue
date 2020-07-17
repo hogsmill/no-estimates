@@ -1,24 +1,16 @@
 <template>
-  <div>
 
-    <div id="event-card" :class="{'complete': currentEventCard === false}">
-      <div v-if="currentEventCard !== false" class="event-card-number rounded-circle">{{currentEventCard.number}}</div>
-      <div v-if="currentEventCard === false" class="event-card-number rounded-circle complete">0</div>
+  <modal name="event-card-popup" class="popup" :height="240" :classes="['rounded']">
+    <div class="text-right"><span @click="hide" class="glyphicon glyphicon-star">x</span></div>
+    <h4>Event Card {{currentEventCard.number}}</h4>
+    <p>{{currentEventCard.text}}</p>
+    <div>
+      <button v-if="!currentEventCard.function" class="btn btn-sm btn-info" @click="done()">Done</button>
+      <button v-if="currentEventCard.function" class="btn btn-sm btn-info" @click="doFunction()">Yes</button>
+      <button v-if="currentEventCard.function" class="btn btn-sm btn-info" @click="done()">No</button>
     </div>
+  </modal>
 
-    <modal name="event-card-popup" class="popup" :height="240" :classes="['rounded']">
-      <div class="text-right"><span @click="hide" class="glyphicon glyphicon-star">x</span></div>
-      <h4>Event Card {{currentEventCard.number}}</h4>
-      <p>{{currentEventCard.text}}</p>
-      <div>
-        <button v-if="!currentEventCard.function" class="btn btn-sm btn-info" @click="done()">Done</button>
-        <button v-if="currentEventCard.function" class="btn btn-sm btn-info" @click="doFunction()">Yes</button>
-        <button v-if="currentEventCard.function" class="btn btn-sm btn-info" @click="done()">No</button>
-
-      </div>
-    </modal>
-
-  </div>
 </template>
 
 <script>
@@ -94,32 +86,6 @@ export default {
 </script>
 
 <style lang="scss">
-
-  #event-card {
-    margin: 30px auto 26px auto;
-    width: 85%;
-    height: 90px;
-    background-image: url("../../assets/img/event-card-back.jpg");
-    background-size: contain;
-    background-repeat: no-repeat;
-
-    &.complete {
-      opacity: 0.5;
-    }
-  }
-
-  .event-card-number {
-    width: 20px;
-    position: relative;
-    top: 50px;
-    left: 54px;
-    color: #fff;
-    background-color: red;
-
-    &.complete {
-      color: red;
-    }
-  }
 
   #event-card-popup {
     color: #444;

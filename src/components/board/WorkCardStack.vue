@@ -74,8 +74,8 @@ export default {
     .stack-number {
       width: 20px;
       position: relative;
-      top: 50px;
-      left: 50px;
+      top: 40px;
+      left: 36px;
       color: #fff;
       background-color: red;
 

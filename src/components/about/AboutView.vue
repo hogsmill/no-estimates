@@ -25,9 +25,9 @@
 
     <p>Next steps...</p>
     <ul class="text-left">
-      <li>Do other teams work...</li>
-      <li>Do the extras on event cards; add effort for pizza, 8 points for deploy, etc. </li>
-      <li>Create and populate the graphs</li>
+      <li>Random re-work when moving to deploy (<em>a la "Blocked" functionality</em>)</li>
+      <li>Assign effort on other teams cards</li>
+      <li>Do the extras on event cards; 8 points for deploy, etc. </li>
     </ul>
 
     <p>Missing event cards:</p>

@@ -22,7 +22,7 @@
       <div class="work-card-column column rounded-circle" :class="{'deploy': !workCard.blocked}" @click="addEffort('deploy')">D</div>
       <div v-for="n in workCard.deploy" :key="n" :class="{'assigned' : n <= workCard.effort.deploy}" class="work-card-column rounded-circle"></div>
     </div>
-    <table>
+    <table class="delivery">
       <tr>
         <td>COMMIT</td>
         <td>DELIVER</td>
@@ -264,17 +264,24 @@ export default {
       }
     }
 
+    .delivery {
+      td {
+        border: 1px solid #444;
+      }
+    }
+
     .dependency {
       background-color: #000;
       color: #fff;
+      vertical-align: middle;
 
       div {
         display: inline-block;
+        width: 33%;
       }
 
       .dependency-team {
         background-color: #fff;
-        width: 32px;
         color: #fff;
         text-align: center;
       }

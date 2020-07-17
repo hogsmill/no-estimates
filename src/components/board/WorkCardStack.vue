@@ -62,11 +62,11 @@ export default {
 
   .work-card-back {
     margin: 6px;
-    width: 100%;
     height: 100px;
     background-image: url("../../assets/img/work-card-back.png");
     background-size: contain;
     background-repeat: no-repeat;
+    background-position-x: center;
 
     &.complete {
       opacity: 0.5;
@@ -74,8 +74,8 @@ export default {
     .stack-number {
       width: 20px;
       position: relative;
-      top: 40px;
-      left: 36px;
+      top: 58px;
+      margin: 0 auto;
       color: #fff;
       background-color: red;
 

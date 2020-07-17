@@ -24,7 +24,7 @@
           <td><button class="btn btn-sm btn-info" @click="saveReEstimate">Save</button></td>
         </tr>
       </table>
-      <table>
+      <table class="results">
         <thead>
           <tr>
             <th>Card #</th>
@@ -170,12 +170,14 @@ export default {
 
     th {
       padding: 4px;
+      border: 1px solid;
     }
 
     td {
       padding: 0 4px;
       vertical-align: middle;
       text-align: center;
+      border: 1px solid;
     }
   }
 
@@ -183,4 +185,11 @@ export default {
     width: 80%;
     margin: 0 auto;
   }
+
+  .results {
+    th {
+      width: 20%; 
+    }
+  }
+
 </style>

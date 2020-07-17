@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div class="board-container">
     <EventCard v-bind:socket="socket" />
-    <div class="row game-board">
+    <div class="game-board">
       <table class="board-table rounded">
         <thead>
           <tr>
@@ -76,17 +76,22 @@ export default {
 
 <style lang="scss">
 
+  .board-container {
+    padding-bottom: 12px;
+  }
+
   table.board-table {
     margin: 6px auto 18px auto;
     width: 90%;
     border: 1px solid;
     border-collapse:separate;
     border-spacing: 0px;
-  }
 
-  th, td {
-    border: 1px solid;
-    vertical-align: top
+    th, td {
+      border: 1px solid;
+      vertical-align: top;
+      width: 16%;
+    }
   }
 
 </style>

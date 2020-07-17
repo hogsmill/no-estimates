@@ -4,7 +4,7 @@
       <div class="days">
         <div class="days-label">Day</div>
         <div class="day rounded-circle" :class="getClass(day)" v-for="(day, index) in days()" :key="index">{{day}}</div>
-        <button class="btn btn-sm btn-info" @click="next()">Next</button>
+        <button class="btn btn-sm btn-info next" @click="next()">Next</button>
       </div>
     </div>
   </div>
@@ -76,7 +76,7 @@ export default {
     text-align: center;
     width: 100%;
     font-weight: bold;
-    margin-bottom: 4px; 
+    margin-bottom: 4px;
   }
 
   .days-label {
@@ -101,6 +101,10 @@ export default {
     button {
       margin: 4px;
     }
+  }
+
+  .next {
+    margin-left: 12px; 
   }
 
 </style>

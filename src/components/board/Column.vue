@@ -1,10 +1,10 @@
 <template>
-  <div class="col">
-    <div class="row" v-if="column.name == 'options'">
+  <div>
+    <div v-if="column.name == 'options'">
       <WorkCardStack v-bind:socket="socket" />
       <OtherTeams v-bind:socket="socket" />
     </div>
-    <div class="row" v-if="column.name != 'options'">
+    <div v-if="column.name != 'options'">
       <div v-for="(card, index) in column.cards" :key="index">
         <WorkCard v-bind:column="column.name" v-bind:workCard="card" v-bind:socket="socket" />
       </div>

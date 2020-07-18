@@ -6,6 +6,7 @@
     </p>
     <p><span class="new">&#9733;</span> = New</p>
     <ul class="text-left">
+      <li><span class="new">&#9733;</span><strong>Auto deploy</strong> implemented (go to day 5! :-) ) - you can add effort to get to auto deploy</li>
       <li><span class="new">&#9733;</span><strong>Improved styling</strong> on board and report</li>
       <li><span class="new">&#9733;</span><strong>Event Card</strong> removed, as automatically displayed on day change</li>
       <li><strong>Report</strong> mainly built. Can save estimates and calculates value</li>

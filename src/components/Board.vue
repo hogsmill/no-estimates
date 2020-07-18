@@ -6,7 +6,10 @@
         <thead>
           <tr>
             <th v-for="(column, index) in columns" :key="index">
-              <div :class="column.name">{{columnDisplayName(column.name)}}</div>
+              <div :class="column.name">
+                {{columnDisplayName(column.name)}}
+                <span class="autoDeploy" v-if="showAutoDeploy(column)">&#9733;</span>
+              </div>
             </th>
           </tr>
         </thead>
@@ -39,6 +42,9 @@ export default {
   methods: {
     columnDisplayName(s) {
       return stringFuns.properCase(s)
+    },
+    showAutoDeploy(column) {
+      return this.teamName && this.myTeam.autoDeploy.done && column.name == 'deploy'
     }
   },
   computed: {
@@ -47,6 +53,9 @@ export default {
     },
     teamName() {
       return this.$store.getters.getTeamName
+    },
+    myTeam() {
+      return this.$store.getters.getMyTeam
     },
     columns() {
       return this.$store.getters.getColumns;
@@ -91,6 +100,10 @@ export default {
       border: 1px solid;
       vertical-align: top;
       width: 16%;
+    }
+
+    .autoDeploy {
+      color: gold;
     }
   }
 

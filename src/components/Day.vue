@@ -33,14 +33,26 @@ export default {
     next() {
       var columns = this.columns
       var blocked = []
-      for (var i = 1; i < columns.length; i++) {
-        for (var j = 0; j < columns[i].cards.length; j++) {
-          if (Math.random() < 0.5) {
-            blocked.push(columns[i].cards[j].number)
+      var failed = []
+      var i, j
+      for (i = 1; i < columns.length; i++) {
+        if (columns[i].name != 'Deploy') {
+          // Block a percentege of cards
+          for (j = 0; j < columns[i].cards.length; j++) {
+            if (Math.random() < this.percsentageBlocked) {
+              blocked.push(columns[i].cards[j].number)
+            }
+          }
+        }
+        if (columns[i].name == 'Deploy') {
+          for (j = 0; j < columns[i].cards.length; j++) {
+            if (Math.random() < this.percentageDeployFail) {
+              failed.push(columns[i].cards[j].number)
+            }
           }
         }
       }
-      this.socket.emit("updateQueues", {gameName: this.gameName, teamName: this.teamName, blocked: blocked})
+      this.socket.emit("updateQueues", {gameName: this.gameName, teamName: this.teamName, blocked: blocked, failed: failed})
       this.socket.emit("showEventCard", {gameName: this.gameName, teamName: this.teamName})
     }
   },
@@ -59,6 +71,9 @@ export default {
     },
     columns() {
       return this.$store.getters.getColumns
+    },
+    percentageBlocked() {
+      return this.$store.getters.getPercentageBlocked
     }
   },
   mounted() {
@@ -104,7 +119,7 @@ export default {
   }
 
   .next {
-    margin-left: 12px; 
+    margin-left: 12px;
   }
 
 </style>

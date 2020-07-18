@@ -1,6 +1,7 @@
 <template>
   <div class="work-card" :class="{'blocked': workCard.blocked}">
     <div v-if="workCard.blocked" class="blocked-text"><strong>BLOCKED</strong></div>
+    <div v-if="workCard.failed" class="failed-text"><strong>FAILED<br />DEPLOY</strong></div>
     <div class="urgent" v-if="workCard.urgent">URGENT</div>
     <div class="work-card-header">
       <div class="card-number">#{{workCard.number}}</div>
@@ -120,9 +121,9 @@ export default {
         message = "Can't assign - wrong column"
       }
       if (message) {
-        this.message = message
+        this.show()
         var self = this
-        setTimeout(function() { self.show()}, 100)
+        setTimeout(function() { self.message = message }, 100)
       } else {
         this.socket.emit("updatePersonEffort", {gameName: this.gameName, teamName: this.teamName, workCard: this.workCard, name: this.myName, column: column})
         this.socket.emit("updateEffort", {gameName: this.gameName, teamName: this.teamName, workCard: this.workCard})
@@ -190,11 +191,11 @@ export default {
     color: #444;
     margin: 6px;
 
-    &.blocked {
+    &.blocked, &.failed {
       background-color: red;
     }
 
-    .blocked-text {
+    .blocked-text, .failed-text {
       z-index: 10;
       position: relative;
       top: 50px;

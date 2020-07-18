@@ -47,6 +47,9 @@ export default {
         case 'Add 1 Point To Everyones Capacity':
           data = {capacity: 5}
           break
+        case 'Add 8 points to Deploy':
+          data = {autoDeploy: true}
+          break
         default:
           console.log("Doing '" + this.currentEventCard.function + "' (not implemented)")
       }

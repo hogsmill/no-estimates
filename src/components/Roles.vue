@@ -30,6 +30,10 @@ export default {
     text-align: center;
     width: 100%;
     font-weight: bold;
+
+    td {
+      vertical-align: top;
+    }
   }
 
   .role {
@@ -55,5 +59,5 @@ export default {
       background-image: url("../assets/img/deployer.png");
     }
   }
-  
+
 </style>

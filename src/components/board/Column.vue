@@ -5,6 +5,7 @@
       <OtherTeams v-bind:socket="socket" />
     </div>
     <div v-if="column.name != 'options'">
+      <AutoDeploy v-if="showAutoDeploy(column)" v-bind:socket="socket" />
       <div v-for="(card, index) in column.cards" :key="index">
         <WorkCard v-bind:column="column.name" v-bind:workCard="card" v-bind:socket="socket" />
       </div>
@@ -16,18 +17,34 @@
 import OtherTeams from "./OtherTeams.vue";
 import WorkCardStack from "./WorkCardStack.vue";
 import WorkCard from "./WorkCard.vue";
+import AutoDeploy from "./AutoDeploy.vue";
 
 export default {
   components: {
     WorkCardStack,
     OtherTeams,
-    WorkCard
+    WorkCard,
+    AutoDeploy
   },
   props: [
     'column',
     'socket'
   ],
+  methods: {
+    showAutoDeploy(column) {
+      return this.teamName && this.myTeam.autoDeploy.doing && column.name == 'deploy'
+    }
+  },
   computed: {
+    gameName() {
+      return this.$store.getters.getGameName
+    },
+    teamName() {
+      return this.$store.getters.getTeamName
+    },
+    myTeam() {
+      return this.$store.getters.getMyTeam
+    },
     nColumns() {
       return this.$store.getters.getColumns.length;
     }

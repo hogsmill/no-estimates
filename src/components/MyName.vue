@@ -10,7 +10,7 @@
       <div v-for="n in myEffort.assigned" :key="n" class="effort rounded-circle used">0</div>
     </div>
 
-    <modal name="set-my-name" :height="120" :classes="['rounded']">
+    <modal name="set-my-name" :height="120" :classes="['rounded', 'set-my-name']">
       <div class="text-right"><span @click="hide" class="glyphicon glyphicon-star">x</span></div>
       <h4>Enter Your Name</h4>
       <div class="set-my-name">
@@ -133,14 +133,14 @@ export default {
     }
   }
 
-  .set-my-name-modal {
+  .set-my-name {
     height: 120px;
-  }
 
-  #my-name {
-    display: inline-block;
-    width: 30%;
-    margin-right: 6px;
+    #my-name {
+      display: inline-block;
+      width: 30%;
+      margin-right: 6px;
+    }
   }
 
 </style>

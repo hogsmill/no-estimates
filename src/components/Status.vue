@@ -35,6 +35,11 @@ export default {
         self.setStatus(data.name + ' has added effort to card #' + data.workCard.number + ' in ' + column)
       }
     })
+    this.socket.on("updatePersonAutoDeployEffort", (data) => {
+      if (this.gameName == data.gameName && this.teamName == data.teamName) {
+        self.setStatus(data.name + ' has added Auto Deploy effort')
+      }
+    })
   }
 }
 </script>

@@ -54,10 +54,10 @@ export const store = new Vuex.Store({
     teamName: '',
     players: [],
     teams: [
-      { name: 'Blue', members: [], otherCards: []},
-      { name: 'Green', members: [], otherCards: []},
-      { name: 'Purple', members: [], otherCards: []},
-      { name: 'Red', members: [], otherCards: []}
+      { name: 'Blue', members: [], otherCards: [], autoDeploy: { doing: false, effort: 0, done: false } },
+      { name: 'Green', members: [], otherCards: [], autoDeploy: { doing: false, effort: 0, done: false } },
+      { name: 'Purple', members: [], otherCards: [], autoDeploy: { doing: false, effort: 0, done: false } },
+      { name: 'Red', members: [], otherCards: [], autoDeploy: { doing: false, effort: 0, done: false } }
     ],
     myEffort: {
       available: 4,
@@ -104,6 +104,8 @@ export const store = new Vuex.Store({
       //{number: 6, text: "If you decided yesterday to automate deployments, when you complete the delivery automation, you will no longer have to roll the die when you deploy."},
       //{number: 15, text: "Would you like to restructure your team? Feel free to change role specialities or negotiate with other teams to bring on new members."},
     ],
+    pecrentageBlocked: 0.5,
+    percentageDeployFail: 0.5,
     currentEventCard: 0,
     workCards: [
       {number: 1, design: 6, develop: 7, test: 8, deploy: 2, urgent: false, teamDependency: 0, dependentOn: '', commit: 0, blocked: false, effort: {design: 0, develop: 0, test: 0, deploy: 0}},
@@ -165,6 +167,15 @@ export const store = new Vuex.Store({
     getTeamName: (state) => {
       return state.teamName;
     },
+    getMyTeam: (state) => {
+      var team
+      for (var i = 0; i < state.teams.length; i++) {
+        if (state.teamName == state.teams[i].name) {
+          team = state.teams[i]
+        }
+      }
+      return team
+    },
     getTeams: (state) => {
       return state.teams;
     },
@@ -196,6 +207,12 @@ export const store = new Vuex.Store({
     },
     getWorkCards: (state) => {
       return state.workCards;
+    },
+    getPercentageBlocked: (state) => {
+      return state.percentageBlocked;
+    },
+    getPercentageDeployFail: (state) => {
+      return state.percentageDeployFail;
     },
     getProjectEstimate: (state) => {
       return state.projectEstimate;
@@ -258,19 +275,45 @@ export const store = new Vuex.Store({
       state.currentDay = payload.currentDay
       state.myEffort.available = payload.capacity ? payload.capacity : 4
       state.myEffort.assigned = 0
+
+      if (payload.autoDeploy) {
+        for (var i = 0; i < state.teams.length; i++) {
+          if (state.teams[i].name == payload.teamName) {
+            state.teams[i].autoDeploy.doing = true
+          }
+        }
+      }
     },
     updateColumns: (state, payload) => {
       state.columns = payload.columns
     },
+    incrementAutoDeploy: (state, payload) => {
+      for (var i = 0; i < state.teams.length; i++) {
+        if (state.teams[i].name == payload.teamName) {
+          state.teams[i].autoDeploy.effort = state.teams[i].autoDeploy.effort + 1
+          if (state.teams[i].autoDeploy.effort == 8) {
+            state.teams[i].autoDeploy.doing = false
+            state.teams[i].autoDeploy.done = true
+          }
+        }
+      }
+    },
     updateQueues: (state, payload) => {
-      // Updated blocked//
-      for (var i = 1; i < state.columns.length; i++) {
-        for (var j = 0; j < state.columns[i].cards.length; j++) {
-          for (var k = 0; k < payload.blocked.length; k++) {
+      // Updated blocked and failed
+      var i, j, k
+      for (i = 1; i < state.columns.length; i++) {
+        for (j = 0; j < state.columns[i].cards.length; j++) {
+          for (k = 0; k < payload.blocked.length; k++) {
             if (state.columns[i].cards[j].number == payload.blocked[k]) {
               state.columns[i].cards[j].blocked = true
             } else {
               state.columns[i].cards[j].blocked = false
+            }
+          }
+          for (k = 0; k < payload.failed.length; k++) {
+            if (state.columns[i].cards[j].number == payload.failed[k]) {
+              state.columns[i].cards[j].failed = true
+              state.columns[i].cards[j].effort.deploy = 0
             }
           }
         }
@@ -381,6 +424,9 @@ export const store = new Vuex.Store({
     },
     updateQueues : ({ commit }, payload) => {
       commit("updateQueues", payload);
+    },
+    incrementAutoDeploy : ({ commit }, payload) => {
+      commit("incrementAutoDeploy", payload);
     },
     updateDependentTeam: ({ commit }, payload) => {
       commit("updateDependentTeam", payload);

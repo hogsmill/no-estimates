@@ -48,6 +48,8 @@ io.on("connection", (socket) => {
 
   socket.on("updatePersonEffort", (data) => { emit("updatePersonEffort", data) })
 
+  socket.on("updatePersonAutoDeployEffort", (data) => { emit("updatePersonAutoDeployEffort", data) })
+
   socket.on("updateEffort", (data) => { emit("updateEffort", data) })
 
   socket.on("updateQueues", (data) => { emit("updateQueues", data) })
@@ -55,7 +57,7 @@ io.on("connection", (socket) => {
   socket.on("resetEffort", (data) => { emit("resetEffort", data) })
 
   socket.on("updateDependentTeam", (data) => { emit("updateDependentTeam", data) })
-  
+
   socket.on("addEffortToOthersCard", (data) => { emit("addEffortToOthersCard", data) })
 
   socket.on("updateProjectEstimate", (data) => { emit("updateProjectEstimate", data) })
@@ -63,6 +65,10 @@ io.on("connection", (socket) => {
   socket.on("updateMVPEstimate", (data) => { emit("updateMVPEstimate", data) })
 
   socket.on("updateReEstimate", (data) => { emit("updateReEstimate", data) })
+
+  socket.on("incrementAutoDeploy", (data) => { emit("incrementAutoDeploy", data) })
+
+
 
 
 });

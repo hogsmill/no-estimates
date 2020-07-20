@@ -1,8 +1,8 @@
 <template>
   <div class="work-card" :class="{'blocked': workCard.blocked}">
     <div v-if="workCard.blocked" class="blocked-text"><strong>BLOCKED</strong></div>
-    <div v-if="workCard.failed" class="failed-text"><strong>FAILED<br />DEPLOY</strong></div>
-    <div class="urgent" v-if="workCard.urgent">URGENT</div>
+    <div v-if="workCard.failed && column == 'deploy'" class="failed">FAILED</div>
+    <div v-if="workCard.urgent" class="urgent">URGENT</div>
     <div class="work-card-header">
       <div class="card-number">#{{workCard.number}}</div>
       <div class="card-effort">Effort: {{totalEffort()}}</div>
@@ -191,11 +191,11 @@ export default {
     color: #444;
     margin: 6px;
 
-    &.blocked, &.failed {
+    &.blocked {
       background-color: red;
     }
 
-    .blocked-text, .failed-text {
+    .blocked-text {
       z-index: 10;
       position: relative;
       top: 50px;
@@ -209,13 +209,20 @@ export default {
       height: 14px;
     }
 
-    .urgent {
+    .urgent, .failed {
       height: 22px;
       text-align: center;
       padding: 0 6px;
-      background-color: red;
       font-weight: bold;
       color: #fff;
+    }
+
+    .urgent {
+      background-color: red;
+    }
+
+    .failed {
+      background-color: #888;
     }
 
     .work-card-header {

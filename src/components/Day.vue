@@ -35,16 +35,19 @@ export default {
       var blocked = []
       var failed = []
       var i, j
+
+      console.log(this.percentageBlocked,  this.percentageDeployFail)
       for (i = 1; i < columns.length; i++) {
-        if (columns[i].name != 'Deploy') {
+        if (columns[i].name != 'deploy') {
           // Block a percentege of cards
           for (j = 0; j < columns[i].cards.length; j++) {
-            if (Math.random() < this.percsentageBlocked) {
+            if (Math.random() < this.percentageBlocked) {
               blocked.push(columns[i].cards[j].number)
             }
           }
         }
-        if (columns[i].name == 'Deploy') {
+        // Fail a percentage of deploys if not-auto-deploying
+        if (!this.myTeam.autoDeploy.done && this.columns[i].name == 'deploy') {
           for (j = 0; j < columns[i].cards.length; j++) {
             if (Math.random() < this.percentageDeployFail) {
               failed.push(columns[i].cards[j].number)
@@ -63,6 +66,9 @@ export default {
     teamName() {
       return this.$store.getters.getTeamName
     },
+    myTeam() {
+      return this.$store.getters.getMyTeam
+    },
     numberOfDays() {
       return this.$store.getters.getNumberOfDays
     },
@@ -74,6 +80,9 @@ export default {
     },
     percentageBlocked() {
       return this.$store.getters.getPercentageBlocked
+    },
+    percentageDeployFail() {
+      return this.$store.getters.getPercentageDeployFail
     }
   },
   mounted() {

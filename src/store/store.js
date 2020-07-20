@@ -82,7 +82,7 @@ export const store = new Vuex.Store({
     currentDay: 1,
     eventCards: [
       {number: 1, text: "Good Luck!"},
-      {number: 2, text: "Remember to roll the die when you attempt to deploy a completed card to see if the deployment was succesful."},
+      {number: 2, text: "Remember that manual deploymnts will fail a certian percentage of the time. In this case, you will need to re-do the deployment effort."},
       {number: 3, function: 'Add 1 Point To Everyones Capacity', text: "Pizza inspires your team to greatness! Add one to each person's capacity tomorrow."},
       {number: 4, text: "Did you remember that people can work in areas outside their speciality? They require two effort points to make one effort point in another area."},
       {number: 5, function: 'Add 8 points to Deploy',autoDeployCard: true, text: "You read that automating deployments can lead to better quality and more predictable delivery. If you'd like to invest in that, you'll need to spend 8 effort points in Deploy (you can do this over multiple sprints)\n\n(You can do this later by clicking the '?' in the Deploy Column header)"},
@@ -104,7 +104,7 @@ export const store = new Vuex.Store({
       //{number: 6, text: "If you decided yesterday to automate deployments, when you complete the delivery automation, you will no longer have to roll the die when you deploy."},
       //{number: 15, text: "Would you like to restructure your team? Feel free to change role specialities or negotiate with other teams to bring on new members."},
     ],
-    pecrentageBlocked: 0.5,
+    percentageBlocked: 0.5,
     percentageDeployFail: 0.5,
     currentEventCard: 0,
     workCards: [

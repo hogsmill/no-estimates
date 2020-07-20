@@ -59,6 +59,8 @@ io.on("connection", (socket) => {
   socket.on("updateDependentTeam", (data) => { emit("updateDependentTeam", data) })
 
   socket.on("addEffortToOthersCard", (data) => { emit("addEffortToOthersCard", data) })
+  
+  socket.on("updateOtherTeamEffort", (data) => { emit("updateOtherTeamEffort", data) })
 
   socket.on("updateProjectEstimate", (data) => { emit("updateProjectEstimate", data) })
 

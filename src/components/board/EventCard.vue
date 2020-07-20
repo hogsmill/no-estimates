@@ -3,7 +3,7 @@
   <modal name="event-card-popup" class="popup" :height="240" :classes="['rounded']">
     <div class="text-right"><span @click="hide" class="glyphicon glyphicon-star">x</span></div>
     <h4>Event Card {{currentEventCard.number}}</h4>
-    <p>{{currentEventCard.text}}</p>
+    <p v-html="currentEventCard.text"></p>
     <div>
       <button v-if="!currentEventCard.function" class="btn btn-sm btn-info" @click="done()">Done</button>
       <button v-if="currentEventCard.function" class="btn btn-sm btn-info" @click="doFunction()">Yes</button>

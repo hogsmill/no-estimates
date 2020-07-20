@@ -42,7 +42,7 @@
             <strong v-if="!workCard.dependentOn">None</strong>
             <strong v-if="workCard.dependentOn">{{workCard.dependentOn.name}}</strong>
           </div>
-          <div v-for="n in workCard.teamDependency" :key="n" class="dependency-column rounded-circle"></div>
+          <div v-for="n in workCard.teamDependency" :key="n" :class="{'assigned' : n <= workCard.dependencyDone}" class="dependency-column rounded-circle"></div>
         </td>
       </tr>
     </table>
@@ -55,6 +55,7 @@
         <button class="btn btn-sm btn-info" @click="hide()">OK</button>
       </div>
     </modal>
+
   </div>
 </template>
 
@@ -302,6 +303,10 @@ export default {
         height: 8px;
         font-size: 8px;
         padding-left: 2px;
+
+        &.assigned {
+          background-color: #fff;
+        }
       }
     }
 

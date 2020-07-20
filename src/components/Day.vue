@@ -36,7 +36,6 @@ export default {
       var failed = []
       var i, j
 
-      console.log(this.percentageBlocked,  this.percentageDeployFail)
       for (i = 1; i < columns.length; i++) {
         if (columns[i].name != 'deploy') {
           // Block a percentege of cards

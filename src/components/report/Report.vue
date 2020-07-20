@@ -31,7 +31,7 @@
             <th>Commit Day</th>
             <th>Delivery Day</th>
             <th>Delivery Time</th>
-            <th  v-html="currency"></th>
+            <th v-html="currency"></th>
           </tr>
         </thead>
         <tbody>
@@ -188,7 +188,7 @@ export default {
 
   .results {
     th {
-      width: 20%; 
+      width: 20%;
     }
   }
 

@@ -151,6 +151,10 @@ export default {
           height: 11px;
           font-size: 8px;
           padding-left: 2px;
+
+          &:hover {
+            cursor: pointer;
+          }
         }
       }
 

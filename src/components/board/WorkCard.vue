@@ -257,6 +257,10 @@ export default {
         font-size: 8px;
         padding-left: 2px;
 
+        &:hover {
+          cursor: pointer;
+        }
+
         &.column {
           color: #fff;
           border: 0;
@@ -293,6 +297,10 @@ export default {
         background-color: #fff;
         color: #fff;
         text-align: center;
+
+        &:hover {
+          cursor: pointer;
+        }
       }
 
       .dependency-column {

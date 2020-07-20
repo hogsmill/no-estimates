@@ -68,6 +68,10 @@ export default {
     background-repeat: no-repeat;
     background-position-x: center;
 
+    &:hover {
+      cursor: pointer;
+    }
+
     &.complete {
       opacity: 0.5;
     }

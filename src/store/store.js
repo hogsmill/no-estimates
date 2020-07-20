@@ -54,10 +54,10 @@ export const store = new Vuex.Store({
     teamName: '',
     players: [],
     teams: [
-      { name: 'Blue', members: [], otherCards: [], autoDeploy: { doing: false, effort: 0, done: false } },
-      { name: 'Green', members: [], otherCards: [], autoDeploy: { doing: false, effort: 0, done: false } },
-      { name: 'Purple', members: [], otherCards: [], autoDeploy: { doing: false, effort: 0, done: false } },
-      { name: 'Red', members: [], otherCards: [], autoDeploy: { doing: false, effort: 0, done: false } }
+      { name: 'Blue', members: [], otherCards: [], canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
+      { name: 'Green', members: [], otherCards: [], canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
+      { name: 'Purple', members: [], otherCards: [], canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
+      { name: 'Red', members: [], otherCards: [], canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } }
     ],
     myEffort: {
       available: 4,
@@ -85,7 +85,7 @@ export const store = new Vuex.Store({
       {number: 2, text: "Remember to roll the die when you attempt to deploy a completed card to see if the deployment was succesful."},
       {number: 3, function: 'Add 1 Point To Everyones Capacity', text: "Pizza inspires your team to greatness! Add one to each person's capacity tomorrow."},
       {number: 4, text: "Did you remember that people can work in areas outside their speciality? They require two effort points to make one effort point in another area."},
-      {number: 5, function: 'Add 8 points to Deploy', text: "You read that automating deployments can lead to better quality and more predictable delivery. If you'd like to invest in that, you'll need to spend 8 effort points in Deploy (you can do this over multiple sprints)"},
+      {number: 5, function: 'Add 8 points to Deploy',autoDeployCard: true, text: "You read that automating deployments can lead to better quality and more predictable delivery. If you'd like to invest in that, you'll need to spend 8 effort points in Deploy (you can do this over multiple sprints)\n\n(You can do this later by clicking the '?' in the Deploy Column header)"},
       {number: 6, function: 'Pairing', text: "Would someone like to learn a new skill? If so, give this card to that person. After that person spends five days pairing with someone in a work stage different from his or her speciality, the person will be able to work in that state at a 1:1 effort ratio."},
       {number: 7, text: "Perhaps you have delivered at least one card? If so, are you able to forecast when you might deliver the Minimum Viable Product, which the Product Owner has defined as cards #1-11 "},
       {number: 8, text: "In this game, you may have been committing to work on an individual work-item basis. Now a new Scrum Master has joined the comapny, and she wants you to do batch commitment (i.e. pull in as many stories at once as you belive you can accomplish in a week). Will you do this?"},
@@ -276,16 +276,26 @@ export const store = new Vuex.Store({
       state.myEffort.available = payload.capacity ? payload.capacity : 4
       state.myEffort.assigned = 0
 
-      if (payload.autoDeploy) {
-        for (var i = 0; i < state.teams.length; i++) {
-          if (state.teams[i].name == payload.teamName) {
+      for (var i = 0; i < state.teams.length; i++) {
+        if (state.teams[i].name == payload.teamName) {
+          if (payload.autoDeploy) {
             state.teams[i].autoDeploy.doing = true
+          }
+          if (payload.canStartAutoDeploy) {
+            state.teams[i].canStartAutoDeploy = true
           }
         }
       }
     },
     updateColumns: (state, payload) => {
       state.columns = payload.columns
+    },
+    startAutoDeploy: (state, payload) => {
+      for (var i = 0; i < state.teams.length; i++) {
+        if (state.teams[i].name == payload.teamName) {
+          state.teams[i].autoDeploy.doing = true
+        }
+      }
     },
     incrementAutoDeploy: (state, payload) => {
       for (var i = 0; i < state.teams.length; i++) {
@@ -424,6 +434,9 @@ export const store = new Vuex.Store({
     },
     updateQueues : ({ commit }, payload) => {
       commit("updateQueues", payload);
+    },
+    startAutoDeploy : ({ commit }, payload) => {
+      commit("startAutoDeploy", payload);
     },
     incrementAutoDeploy : ({ commit }, payload) => {
       commit("incrementAutoDeploy", payload);

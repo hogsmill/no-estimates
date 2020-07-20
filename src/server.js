@@ -66,6 +66,8 @@ io.on("connection", (socket) => {
 
   socket.on("updateReEstimate", (data) => { emit("updateReEstimate", data) })
 
+  socket.on("startAutoDeploy", (data) => { emit("startAutoDeploy", data) })
+
   socket.on("incrementAutoDeploy", (data) => { emit("incrementAutoDeploy", data) })
 
 

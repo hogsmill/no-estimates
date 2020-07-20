@@ -8,7 +8,8 @@
             <th v-for="(column, index) in columns" :key="index">
               <div :class="column.name">
                 {{columnDisplayName(column.name)}}
-                <span class="autoDeploy" v-if="showAutoDeploy(column)">&#9733;</span>
+                <span class="autoDeploy" v-if="showAutoDeploy(column)">&#10004;</span>
+                <span class="canStartAutoDeploy rounded-circle" v-if="canStartAutoDeploy(column)" @click="startAutoDeploy()">&#10033;</span>
               </div>
             </th>
           </tr>
@@ -45,6 +46,12 @@ export default {
     },
     showAutoDeploy(column) {
       return this.teamName && this.myTeam.autoDeploy.done && column.name == 'deploy'
+    },
+    canStartAutoDeploy(column) {
+      return this.teamName && !this.myTeam.autoDeploy.doing && !this.myTeam.autoDeploy.done && this.myTeam.canStartAutoDeploy && column.name == 'deploy'
+    },
+    startAutoDeploy() {
+      this.socket.emit("startAutoDeploy", {gameName: this.gameName, teamName: this.teamName})
     }
   },
   computed: {
@@ -79,6 +86,12 @@ export default {
         this.$store.dispatch("updateDependentTeam", data)
       }
     })
+
+    this.socket.on("startAutoDeploy", (data) => {
+      if (this.gameName == data.gameName && this.teamName == data.teamName) {
+        this.$store.dispatch("startAutoDeploy", data)
+      }
+    })
   }
 }
 </script>
@@ -104,6 +117,13 @@ export default {
 
     .autoDeploy {
       color: gold;
+    }
+
+    .canStartAutoDeploy {
+      background-color: #fff;
+      color: purple;
+      font-weight: bold;
+      padding: 1px 4px;
     }
   }
 

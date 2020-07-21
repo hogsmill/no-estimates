@@ -1,18 +1,24 @@
 <template>
   <div class="team-name" v-if="!showAbout">
     <div class="team-name text-right">
-      <button class="btn btn-sm btn-info" v-if="!teamName" @click="show">Set My Team</button>
-      <span v-if="teamName" @click="show">My Team is: {{teamName}}</span>
+      <button class="btn btn-sm btn-secondary smaller-font" v-if="!teamName" @click="show">Set My Team</button>
+      <span v-if="teamName" @click="show" class="mr-2 mt-2 pointer p-2 bg-light">My Team is: {{teamName}}</span>
     </div>
 
     <modal name="set-team-name" :height="180" :classes="['rounded']">
-      <div class="text-right"><span @click="hide" class="glyphicon glyphicon-star">x</span></div>
-      <h4>Select Your Team Name</h4>
-      <div class="set-team-name">
-        <select :class="{ 'hidden': teams.length == 0}" id="team-name-select" class="form-control">
-          <option v-for="(team, index) in teams" :key="index">{{team.name}}</option>
-        </select>
-        <button class="btn btn-sm btn-info" @click="saveTeamName">Save</button>
+      <div class="float-right mr-2 mt-1">
+        <button type="button" class="close" @click="hide" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="mt-4">
+        <h4>Select Your Team Name</h4>
+        <div class="set-team-name">
+          <select :class="{ 'hidden': teams.length == 0}" id="team-name-select" class="form-control col-md-6 offset-md-2 mr-2">
+            <option v-for="(team, index) in teams" :key="index">{{team.name}}</option>
+          </select>
+          <button class="btn btn-sm btn-secondary smaller-font" @click="saveTeamName">Save</button>
+        </div>
       </div>
     </modal>
 
@@ -58,23 +64,10 @@ export default {
   .team-name {
     padding: 0 6px;
     display: inline-block;
-
-    button {
-      font-size: smaller;
-      background-color: #aaa;
-      border: 1px solid #aaa;
-
-      &:hover {
-        color: #aaa;
-        background-color: #fff;
-      }
-    }
   }
 
   .set-team-name {
-    select {
-      width: 50%; margin: 0 auto;
-    }
+    display: flex;
   }
 
 </style>

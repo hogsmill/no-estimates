@@ -1,8 +1,8 @@
 <template>
   <div class="my-name" v-if="!showAbout">
     <div class="my-name text-right">
-      <button class="btn btn-sm btn-info" v-if="!myName" @click="show">Set My Name</button>
-      <span v-if="myName" @click="show">I am: {{myName}}</span>
+      <button class="btn btn-sm btn-secondary smaller-font" v-if="!myName" @click="show">Set My Name</button>
+      <span v-if="myName" @click="show" class="mr-2 mt-2 pointer p-2 bg-light">I am: {{myName}}</span>
       <div class="effort-div" v-if="myName">
         <div v-for="n in myEffort.available" :key="n" class="effort rounded-circle"
           :class="getClass(n)">{{n}}</div>
@@ -11,11 +11,17 @@
     </div>
 
     <modal name="set-my-name" :height="120" :classes="['rounded', 'set-my-name']">
-      <div class="text-right"><span @click="hide" class="glyphicon glyphicon-star">x</span></div>
-      <h4>Enter Your Name</h4>
-      <div class="set-my-name">
-        <input type="text" id="my-name" class="form-control" />
-        <button class="btn btn-sm btn-info" @click="saveMyName">Save</button>
+      <div class="float-right mr-2 mt-1">
+        <button type="button" class="close" @click="hide" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="mt-4">
+        <h4>Enter Your Name</h4>
+        <div class="set-my-name">
+          <input type="text" id="my-name" class="form-control" />
+          <button class="btn btn-sm btn-secondary smaller-font" @click="saveMyName">Save</button>
+        </div>
       </div>
     </modal>
 
@@ -121,17 +127,7 @@ export default {
       background-color: $deploy;
     }
 
-    button {
-      font-size: smaller;
-      background-color: #aaa;
-      border: 1px solid #aaa;
-
-      &:hover {
-        color: #aaa;
-        background-color: #fff;
-      }
     }
-  }
 
   .set-my-name {
     height: 120px;

@@ -1,27 +1,32 @@
 <template>
 
   <div class="report">
-    <button class="btn btn-sm btn-info" @click="show()">Report</button>
+    <button class="btn btn-sm btn-site-primary" @click="show()">Report</button>
 
     <modal class="report-modal" name="report-modal" :height="500" :classes="['rounded']">
-      <div class="text-right"><span @click="hide" class="glyphicon glyphicon-star">x</span></div>
-      <h4>Status (Day: {{currentDay}}) <button class="btn btn-sm btn-info" @click="hide()">Close</button></h4>
+      <div class="float-right mr-2 mt-1">
+        <button type="button" class="close" @click="hide" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="mt-4">
+      <h4>Status (Day: {{currentDay}}) <button class="btn btn-sm btn-site-primary" @click="hide()">Close</button></h4>
       <div class="scroller">
       <table class="estimates">
         <tr>
           <td>Estimate for Total Project: </td>
           <td><input type="text" id="project-estimate" class="form-control" :value="projectEstimate" /></td>
-          <td><button class="btn btn-sm btn-info" @click="saveTotalProject">Save</button></td>
+          <td><button class="btn btn-sm btn-site-primary" @click="saveTotalProject">Save</button></td>
         </tr>
         <tr>
           <td>Estimate for MVP (#1-11): </td>
           <td><input type="text" id="mvp-estimate" class="form-control" :value="mvpEstimate" /></td>
-          <td><button class="btn btn-sm btn-info" @click="saveMVP">Save</button></td>
+          <td><button class="btn btn-sm btn-site-primary" @click="saveMVP">Save</button></td>
         </tr>
         <tr>
           <td>Re-estimate for Total project: </td>
           <td><input type="text" id="re-estimate" class="form-control" :value="reEstimate" /></td>
-          <td><button class="btn btn-sm btn-info" @click="saveReEstimate">Save</button></td>
+          <td><button class="btn btn-sm btn-site-primary" @click="saveReEstimate">Save</button></td>
         </tr>
       </table>
       <table class="results">
@@ -44,6 +49,7 @@
           </tr>
         </tbody>
       </table>
+      </div>
       </div>
     </modal>
 

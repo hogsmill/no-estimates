@@ -235,7 +235,8 @@ export const store = new Vuex.Store({
       state.host = payload;
     },
     updateGameName: (state, payload) => {
-      state.gameName = payload;
+      console.log('updateGameName', payload)
+      state.gameName = payload.gameName;
     },
     updateMyName: (state, payload) => {
       state.myName = payload;

@@ -3,6 +3,9 @@ const http = require("http").createServer(app);
 const io = require("socket.io")(http);
 const os = require('os')
 
+var MongoClient = require('mongodb').MongoClient;
+var url = "mongodb://localhost:27017/";
+
 var prod = os.hostname() == "agilesimulations" ? true : false
 
 var connectDebugOff = prod
@@ -11,11 +14,32 @@ var debugOn = !prod
 var connections = {}
 var maxConnections = 20
 
-function emit(event, data) {
+function emit(event, data, persist) {
   if (debugOn) {
     console.log(event, data);
   }
-  io.emit(event, data)
+  if (persist) {
+    persistAndEmit(event, data)
+  } else {
+    io.emit(event, data)
+  }
+}
+
+function persistAndEmit(event, data) {
+
+  MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
+    if (err) throw err;
+
+    var db = client.db('db');
+
+    db.collection(data.gameName).findOne(function(err, res) {
+      if (err) throw err;
+      console.log(res);
+      client.close();
+      io.emit(event, data)
+    });
+  })
+
 }
 
 io.on("connection", (socket) => {
@@ -33,6 +57,8 @@ io.on("connection", (socket) => {
     connections[connection] = connections[connection] - 1
     connectDebugOff || console.log(`User with socket id ${socket.id} has disconnected.`)
   })
+
+  socket.on("updateGameName", (data) => { emit("updateGameName", data, true) })
 
   socket.on("updateRole", (data) => { emit("updateRole", data) })
 
@@ -59,7 +85,7 @@ io.on("connection", (socket) => {
   socket.on("updateDependentTeam", (data) => { emit("updateDependentTeam", data) })
 
   socket.on("addEffortToOthersCard", (data) => { emit("addEffortToOthersCard", data) })
-  
+
   socket.on("updateOtherTeamEffort", (data) => { emit("updateOtherTeamEffort", data) })
 
   socket.on("updateProjectEstimate", (data) => { emit("updateProjectEstimate", data) })
@@ -71,9 +97,6 @@ io.on("connection", (socket) => {
   socket.on("startAutoDeploy", (data) => { emit("startAutoDeploy", data) })
 
   socket.on("incrementAutoDeploy", (data) => { emit("incrementAutoDeploy", data) })
-
-
-
 
 });
 

@@ -6,11 +6,12 @@
       <AboutView />
     </div>
     <div v-else>
+      <button @click="testSave()">Test Save</button>
       <h1>No Estimates <span v-if="team">(Team: {{team}})</span></h1>
       <MyName v-bind:socket="socket" />
       <TeamName v-bind:socket="socket" />
       <MyRole v-bind:socket="socket" />
-      <GameName />
+      <GameName v-bind:socket="socket" />
       <Status v-bind:socket="socket" />
       <div class="container board">
         <Report v-bind:socket="socket" />
@@ -56,6 +57,11 @@ export default {
     Roles,
     Day,
     Board
+  },
+  methods: {
+    testSave() {
+      this.socket.emit("saveState", { gameName: 'test' })
+    }
   },
   computed: {
     isHost() {

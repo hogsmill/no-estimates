@@ -4,9 +4,9 @@ const io = require("socket.io")(http);
 const os = require('os')
 
 var MongoClient = require('mongodb').MongoClient;
-var url = "mongodb://localhost:27017/";
 
 var prod = os.hostname() == "agilesimulations" ? true : false
+var url = prod ?  "mongodb://127.0.0.1:27017/" : "mongodb://localhost:27017/"
 
 var connectDebugOff = prod
 var debugOn = !prod

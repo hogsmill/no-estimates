@@ -52,6 +52,7 @@ module.exports = {
         db.collection('games').insertOne(game, function(err, res) {
           if (err) throw err;
           io.emit("loadGame", game)
+          updateRoles(err, client, db, io, data)
           client.close();
         })
       }

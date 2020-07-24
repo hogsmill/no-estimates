@@ -40,6 +40,7 @@ export default {
     saveMyRole: function() {
       var myRole = document.getElementById('role-select').value
       this.$store.dispatch("updateMyRole", myRole)
+      localStorage.setItem("myRole", myRole);
       this.socket.emit("updateRole", {gameName: this.gameName, teamName: this.teamName, name: this.myName, role: myRole })
       this.hide()
     }
@@ -63,18 +64,12 @@ export default {
     roles() {
       return this.$store.getters.getRoles
     }
-  },
-  mounted() {
-    this.socket.on("updateRole", (data) => {
-      if (this.gameName == data.gameName && this.teamName == data.teamName) {
-        this.$store.dispatch("updateRole", data)
-      }
-    })
   }
 }
 </script>
 
 <style lang="scss">
+
   .role-name {
     padding: 0 6px;
     display: inline-block;
@@ -87,5 +82,5 @@ export default {
   .set-role {
     display: flex;
   }
-  
+
 </style>

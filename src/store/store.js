@@ -52,12 +52,11 @@ export const store = new Vuex.Store({
     myName: '',
     myRole: '',
     teamName: '',
-    players: [],
     teams: [
-      { name: 'Blue', members: [], otherCards: [], canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
-      { name: 'Green', members: [], otherCards: [], canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
-      { name: 'Purple', members: [], otherCards: [], canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
-      { name: 'Red', members: [], otherCards: [], canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } }
+      { name: 'Blue', otherCards: [], canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
+      { name: 'Green', otherCards: [], canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
+      { name: 'Purple', otherCards: [], canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
+      { name: 'Red', otherCards: [], canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } }
     ],
     myEffort: {
       available: 4,
@@ -234,14 +233,21 @@ export const store = new Vuex.Store({
     updateHost: (state, payload) => {
       state.host = payload;
     },
+    loadGame: (state, payload) => {
+      state.teams = payload.teams;
+      state.columns = payload.columns;
+      state.currentDay = payload.currentDay;
+      state.currentEventCard = payload.currentEventCard;
+      state.currentWorkCard = payload.currentWorkCard;
+    },
     updateGameName: (state, payload) => {
-      console.log('updateGameName', payload)
-      state.gameName = payload.gameName;
+      state.gameName = payload;
     },
     updateMyName: (state, payload) => {
       state.myName = payload;
     },
     updateMyRole: (state, payload) => {
+      console.log('updateMyRole', payload)
       state.myRole = payload;
       state.myEffort.role = payload;
     },
@@ -252,19 +258,10 @@ export const store = new Vuex.Store({
     updateEffortPerDay: (state, payload) => {
       state.effortPerDay = payload;
     },
-    updateRole: (state, payload) => {
-      for (var i = 0; i < state.roles.length; i++) {
-        var names = []
-        for (var j = 0; j < state.roles[i].names.length; j++) {
-          if (state.roles[i].names[j] != payload.name) {
-            names.push(state.roles[i].names[j])
-          }
-        }
-        if (state.roles[i].role == payload.role) {
-          names.push(payload.name)
-        }
-        state.roles[i].names = names
-      }
+    updateRoles: (state, payload) => {
+      state.roles = payload.roles
+      state.myRole = payload.role
+      state.myEffort.role = payload.role
     },
     updateTeamName: (state, payload) => {
       state.teamName = payload;
@@ -420,6 +417,9 @@ export const store = new Vuex.Store({
     updateHost: ({ commit }, payload) => {
       commit("updateHost", payload);
     },
+    loadGame: ({ commit }, payload) => {
+      commit("loadGame", payload);
+    },
     updateGameName: ({ commit }, payload) => {
       commit("updateGameName", payload);
     },
@@ -434,6 +434,9 @@ export const store = new Vuex.Store({
     },
     updateEffortPerDay: ({ commit }, payload) => {
       commit("updateEffortPerDay", payload);
+    },
+    updateRoles: ({ commit }, payload) => {
+      commit("updateRoles", payload);
     },
     updateRole: ({ commit }, payload) => {
       commit("updateRole", payload);

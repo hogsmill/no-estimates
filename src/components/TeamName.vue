@@ -27,6 +27,11 @@
 
 <script>
 export default {
+  data() {
+    return {
+      myTeamName: ''
+    }
+  },
   props: [
     'socket'
   ],
@@ -40,6 +45,7 @@ export default {
     saveTeamName: function() {
       var teamName = document.getElementById('team-name-select').value
       this.$store.dispatch("updateTeamName", teamName)
+      localStorage.setItem("teamName", teamName);
       this.hide()
     }
   },

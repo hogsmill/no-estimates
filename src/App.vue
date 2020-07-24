@@ -6,13 +6,14 @@
       <AboutView />
     </div>
     <div v-else>
-      <h1>No Estimates <span v-if="team">(Team: {{team}})</span></h1>
+      <h1>No Estimates <span v-if="teamName">(Team: {{teamName}})</span></h1>
+      <h3 class="setup-header" v-if="!isSetUp()">Before we start the game, please set your name, team, speciality and game</h3>
       <MyName v-bind:socket="socket" />
       <TeamName v-bind:socket="socket" />
       <MyRole v-bind:socket="socket" />
       <GameName v-bind:socket="socket" />
       <Status v-bind:socket="socket" />
-      <div class="container board">
+      <div v-if="isSetUp()" class="container board">
         <Report v-bind:socket="socket" />
         <Roles />
         <Day v-bind:socket="socket" />
@@ -57,9 +58,25 @@ export default {
     Day,
     Board
   },
+  data() {
+    return {
+      setup: false
+    }
+  },
   methods: {
-    testSave() {
-      this.socket.emit("saveState", { gameName: 'test' })
+    isSetUp() {
+      var setUp = this.myName && this.teamName && this.myRole && this.gameName
+      if (setUp && !this.setUp) {
+        this.setUp = true
+        localStorage.setItem("myName", this.myName)
+        localStorage.setItem("teamName", this.teamName)
+        localStorage.setItem("myRole", this.myRole)
+        localStorage.setItem("gameName", this.gameName)
+        this.socket.emit("updateRole", {gameName: this.gameName, teamName: this.teamName, name: this.myName, role: this.myRole})
+        this.socket.emit("loadGame", {gameName: this.gameName, teamName: this.teamName})
+        console.log("updating game db", this.myRole)
+      }
+      return setUp
     }
   },
   computed: {
@@ -72,9 +89,18 @@ export default {
     showAbout() {
       return this.$store.getters.getShowAbout;
     },
-    team() {
+    teamName() {
       return this.$store.getters.getTeamName;
-    }
+    },
+    gameName() {
+      return this.$store.getters.getGameName
+    },
+    myName() {
+      return this.$store.getters.getMyName
+    },
+    myRole() {
+      return this.$store.getters.getMyRole
+    },
   },
   created() {
     var host = "77.68.122.69"
@@ -88,6 +114,39 @@ export default {
     if (params.isParam("host")) {
       this.$store.dispatch("updateHost", true)
     }
+
+    var myName = localStorage.getItem("myName")
+    if (myName) {
+      this.$store.dispatch("updateMyName", myName)
+    }
+
+    var teamName = localStorage.getItem("teamName")
+    if (teamName) {
+      this.$store.dispatch("updateTeamName", teamName)
+    }
+
+    var myRole = localStorage.getItem("myRole")
+    if (myRole) {
+      console.log('myRole', myRole)
+      this.$store.dispatch("updateMyRole", myRole)
+    }
+
+    var gameName = localStorage.getItem("gameName")
+    if (gameName) {
+      this.$store.dispatch("updateGameName", gameName)
+    }
+
+    this.socket.on("loadGame", (data) => {
+      if (this.gameName == data.gameName) {
+        this.$store.dispatch("loadGame", data)
+      }
+    })
+
+    this.socket.on("updateRoles", (data) => {
+      if (this.gameName == data.gameName && this.teamName == data.teamName) {
+        this.$store.dispatch("updateRoles", data)
+      }
+    })
   },
 }
 </script>
@@ -98,11 +157,18 @@ export default {
     visibility: hidden;
   }
 
-  .board {
-    //background-color: blue;
+  h1 {
+    margin-bottom: 16px;
+  }
 
+  .setup-header {
+    width: 550px;
+    margin: 0 auto 16px auto;
+  }
+
+  .board {
     //
-    // Gradient - do we want this? :-)
+    // Gradient
     //
     /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#7db9e8+0,207cca+44,0000ff+100 */
     background: #7db9e8; /* Old browsers */

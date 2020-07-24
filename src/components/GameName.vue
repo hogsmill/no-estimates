@@ -25,11 +25,6 @@
 
 <script>
 export default {
-  data() {
-    return {
-      myGameName: ''
-    }
-  },
   props: [
     'socket'
   ],
@@ -42,8 +37,7 @@ export default {
     },
     saveGameName: function() {
       var gameName = document.getElementById('game-name').value
-      this.myGameName = gameName
-      this.socket.emit("updateGameName", {gameName: gameName})
+      this.$store.dispatch("updateGameName", gameName)
       localStorage.setItem("gameName", gameName);
       this.hide()
     }
@@ -54,20 +48,6 @@ export default {
     },
     gameName() {
       return this.$store.getters.getGameName
-    }
-  },
-  mounted() {
-    const self = this
-    this.socket.on("updateGameName", (data) => {
-      if (self.myGameName == data.gameName && this.teamName == data.teamName) {
-        this.$store.dispatch("updateGameName", data)
-      }
-    })
-
-    var gameName = localStorage.getItem("gameName")
-    if (gameName) {
-      self.myGameName = gameName
-      self.socket.emit("updateGameName", {gameName: gameName})
     }
   }
 }

@@ -54,6 +54,7 @@ export default {
     saveMyName: function() {
       var myName = document.getElementById('my-name').value
       this.$store.dispatch("updateMyName", myName)
+      localStorage.setItem("myName", myName);
       this.socket.emit("addMyNameAsAPlayer", {gameName: this.gameName, player: myName })
       this.hide()
     }

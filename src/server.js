@@ -3,6 +3,8 @@ const http = require("http").createServer(app);
 const io = require("socket.io")(http);
 const os = require('os')
 
+var dbStore = require('./store/dbStore.js')
+
 var MongoClient = require('mongodb').MongoClient;
 
 var prod = os.hostname() == "agilesimulations" ? true : false
@@ -18,28 +20,64 @@ function emit(event, data, persist) {
   if (debugOn) {
     console.log(event, data);
   }
-  if (persist) {
-    persistAndEmit(event, data)
-  } else {
-    io.emit(event, data)
-  }
+  io.emit(event, data)
 }
 
-function persistAndEmit(event, data) {
+function loadGame(data) {
+  MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
+    if (err) throw err;
+    var db = client.db('db');
+    dbStore.loadGame(err, client, db, io, data)
+  })
+}
+
+function updateRole(data) {
+  MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
+    if (err) throw err;
+    var db = client.db('db');
+    dbStore.updateRole(err, client, db, io, data)
+  })
+}
+
+function updateCurrentDay(data) {
+  MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
+    if (err) throw err;
+    var db = client.db('db');
+    dbStore.updateCurrentDay(err, client, db, io, data)
+  })
+}
+
+function updateCurrentWorkCard(data) {
+
+  MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
+    if (err) throw err;
+    var db = client.db('db');
+
+    db.collection('games').findAndModify({gameName: data.gameName, teamName: data.teamName}, {}, {$set: {currentWorkCard: data.currentWorkCard}}, {upsert: true}, function(err, res) {
+      if (err) throw err;
+      if (res) {
+        io.emit("updateCurrentWorkCard", data)
+        client.close();
+      }
+    })
+  })
+}
+
+function updateColumns(data) {
 
   MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
     if (err) throw err;
 
     var db = client.db('db');
 
-    db.collection(data.gameName).findOne(function(err, res) {
+    db.collection('games').findAndModify({gameName: data.gameName, teamName: data.teamName}, {}, {$set: {columns: data.columns}}, {upsert: true}, function(err, res) {
       if (err) throw err;
-      console.log(res);
-      client.close();
-      io.emit(event, data)
-    });
+      if (res) {
+        io.emit("updateColumns", data)
+        client.close();
+      }
+    })
   })
-
 }
 
 io.on("connection", (socket) => {
@@ -58,19 +96,19 @@ io.on("connection", (socket) => {
     connectDebugOff || console.log(`User with socket id ${socket.id} has disconnected.`)
   })
 
-  socket.on("updateGameName", (data) => { emit("updateGameName", data, true) })
+  socket.on("loadGame", (data) => { loadGame(data) })
 
-  socket.on("updateRole", (data) => { emit("updateRole", data) })
+  socket.on("updateRole", (data) => { updateRole(data) })
 
   socket.on("showEventCard", (data) => { emit("showEventCard", data) })
 
   socket.on("updateCurrentEventCard", (data) => { emit("updateCurrentEventCard", data) })
 
-  socket.on("updateCurrentDay", (data) => { emit("updateCurrentDay", data) })
+  socket.on("updateCurrentDay", (data) => { updateCurrentDay(data) })
 
-  socket.on("updateCurrentWorkCard", (data) => { emit("updateCurrentWorkCard", data) })
+  socket.on("updateCurrentWorkCard", (data) => { updateCurrentWorkCard(data) })
 
-  socket.on("updateColumns", (data) => { emit("updateColumns", data) })
+  socket.on("updateColumns", (data) => { updateColumns(data) })
 
   socket.on("updatePersonEffort", (data) => { emit("updatePersonEffort", data) })
 

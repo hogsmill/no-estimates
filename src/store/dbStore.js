@@ -233,8 +233,7 @@ module.exports = {
         }
         db.collection('games').updateOne({"_id": res._id}, {$set: {columns: columns, workCards: workCards}}, function(err, res) {
           if (err) throw err;
-          io.emit("updateColumns", data)
-          client.close();
+          io.emit("updateColumns", columns)
         })
       }
     })
@@ -308,4 +307,42 @@ module.exports = {
       }
     })
   },
+
+  addEffortToOthersCard: function(err, client, db, io, data) {
+
+    db.collection('games').find({gameName: data.gameName}).toArray(function(err, res) {
+      if (err) throw err;
+      if (res.length) {
+        team = res[0]
+        var i, j, columns = team.columns, teams = team.teams
+        for (i = 1; i < columns.length; i++) {
+          for (j = 0; j < columns[i].cards.length; j++) {
+            if (columns[i].cards[j].number == data.card.number) {
+              columns[i].cards[j].dependencyDone = columns[i].cards[j].dependencyDone + 1
+            }
+          }
+        }
+        for (i = 0; i < teams.length; i++) {
+          for (j = 0; j < teams[i].otherCards.length; j++) {
+            if (teams[i].otherCards[j].number ==  data.card.number) {
+              teams[i].otherCards[j].dependencyDone = teams[i].otherCards[j].dependencyDone + 1
+            }
+          }
+        }
+        for (var r = 0; r < res.length; r++) {
+          if (typeof(res[r]) != "undefined") {
+            data.teamName = res[r].teamName
+            data.teams = teams
+            io.emit("updateTeams", data)
+            data.columns = columns
+            io.emit("updateColumns", data)
+            db.collection('games').updateOne({"_id": res[r]._id}, {$set: {teams: teams, columns: columns}}, function(err, res) {
+              if (err) throw err;
+            })
+          }
+        }
+      }
+    })
+  }
+
 }

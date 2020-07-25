@@ -95,6 +95,14 @@ function updateEffort(data) {
   })
 }
 
+function addEffortToOthersCard(data) {
+  MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
+    if (err) throw err;
+    var db = client.db('db');
+    dbStore.addEffortToOthersCard(err, client, db, io, data)
+  })
+}
+
 io.on("connection", (socket) => {
   var connection = socket.handshake.headers.host
   connections[connection] = connections[connection] ? connections[connection] + 1 : 1
@@ -137,7 +145,7 @@ io.on("connection", (socket) => {
 
   socket.on("updateDependentTeam", (data) => { updateDependentTeam(data) })
 
-  socket.on("addEffortToOthersCard", (data) => { emit("addEffortToOthersCard", data) })
+  socket.on("addEffortToOthersCard", (data) => { addEffortToOthersCard(data) })
 
   socket.on("updateOtherTeamEffort", (data) => { emit("updateOtherTeamEffort", data) })
 

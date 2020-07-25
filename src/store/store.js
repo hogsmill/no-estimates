@@ -267,23 +267,6 @@ export const store = new Vuex.Store({
         }
       }
     },
-    addEffortToOthersCard: (state, payload) => {
-      var i, j
-      for (i = 1; i < state.columns.length; i++) {
-        for (j = 0; j < state.columns[i].cards.length; j++) {
-          if (state.columns[i].cards[j].number == payload.card.number) {
-            state.columns[i].cards[j].dependencyDone = state.columns[i].cards[j].dependencyDone + 1
-          }
-        }
-      }
-      for (i = 0; i < state.teams.length; i++) {
-        for (j = 0; j < state.teams[i].otherCards.length; j++) {
-          if (state.teams[i].otherCards[j].number ==  payload.card.number) {
-            state.teams[i].otherCards[j].dependencyDone = state.teams[i].otherCards[j].dependencyDone + 1
-          }
-        }
-      }
-    },
     updateCurrentWorkCard: (state, payload) => {
       state.currentWorkCard = payload.currentWorkCard
     },
@@ -348,9 +331,6 @@ export const store = new Vuex.Store({
     },
     updateColumns : ({ commit }, payload) => {
       commit("updateColumns", payload);
-    },
-    addEffortToOthersCard: ({ commit }, payload) => {
-      commit("addEffortToOthersCard", payload);
     },
     startAutoDeploy : ({ commit }, payload) => {
       commit("startAutoDeploy", payload);

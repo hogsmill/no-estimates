@@ -3,45 +3,6 @@ import Vuex from "vuex";
 
 Vue.use(Vuex);
 
-//function cardValue(state, card) {
-//  if (!card.urgent) {
-//    if (card.delivery < 3) {
-//      card.value = 700
-//    } else if (card.delivery < 6) {
-//      card.value = 400
-//    } else {
-//      card.value = 200
-//    }
-//  } else {
-//    card.value = -100 * card.delivery
-//  }
-//  for (var i = 0; i < state.workCards.length; i++) {
-//    if (state.workCards[i].number == card.number) {
-//      state.workCards[i].delivery = card.delivery
-//      state.workCards[i].value = card.value
-//    }
-//  }
-//}
-
-//function moveCard(state, card, n) {
-//  var fromCol = state.columns[n]
-//  var toCol = state.columns[n + 1]
-//  var i, cards = []
-//  for (i = 0; i < fromCol.cards.length; i++) {
-//    if (fromCol.cards[i].number != card.number) {
-//      cards.push(fromCol.cards[i])
-//    }
-//  }
-//  fromCol.cards = cards
-//  if (toCol.name == 'done') {
-//    card.done = true
-//    card.delivery = state.currentDay
-//    card.time = card.delivery - card.commit
-//    cardValue(state, card)
-//  }
-//  toCol.cards.push(card)
-//}
-
 export const store = new Vuex.Store({
   state: {
     walkThrough: false,
@@ -306,48 +267,6 @@ export const store = new Vuex.Store({
         }
       }
     },
-    //updateQueues: (state, payload) => {
-      // Updated blocked and failed
-    //  var i, j, k
-    //  for (i = 1; i < state.columns.length; i++) {
-    //    for (j = 0; j < state.columns[i].cards.length; j++) {
-    //      for (k = 0; k < payload.blocked.length; k++) {
-    //        if (state.columns[i].cards[j].number == payload.blocked[k]) {
-    //          state.columns[i].cards[j].blocked = true
-    //        } else {
-    //          state.columns[i].cards[j].blocked = false
-    //        }
-    //      }
-    //      for (k = 0; k < payload.failed.length; k++) {
-    //        if (state.columns[i].cards[j].number == payload.failed[k]) {
-    //          state.columns[i].cards[j].failed = true
-    //          state.columns[i].cards[j].effort.deploy = 0
-    //        }
-    //      }
-    //    }
-    //  }
-
-      // Update completed
-      //for (i = 1; i < state.columns.length - 1; i++) {
-      //  var column = state.columns[i]
-      //  var colName = column.name
-      //  for (j = 0; j < column.cards.length; j++) {
-      //    var card = column.cards[j]
-      //    if (!card.blocked && card[colName] == card.effort[colName]) {
-      //      moveCard(state, card, i)
-      //    }
-      //  }
-      //}
-    //},
-    //updateEffort: (state, payload) => {
-    //  for (var i = 1; i < state.columns.length; i++) {
-    //    for (var j = 0; j < state.columns[i].cards.length; j++) {
-    //      if (state.columns[i].cards[j].number == payload.workCard.number) {
-    //        state.columns[i].cards[j].effort = payload.workCard.effort
-    //      }
-    //    }
-    //  }
-    //},
     addEffortToOthersCard: (state, payload) => {
       var i, j
       for (i = 1; i < state.columns.length; i++) {
@@ -368,35 +287,6 @@ export const store = new Vuex.Store({
     updateCurrentWorkCard: (state, payload) => {
       state.currentWorkCard = payload.currentWorkCard
     },
-    //updateDependentTeam: (state, payload) => {
-    //  for (var i = 1; i < state.columns.length; i++) {
-    //    for (var j = 0; j < state.columns[i].cards.length; j++) {
-    //      var card = state.columns[i].cards[j]
-    //      if (card.number == payload.workCard.number) {
-    //        card.dependentOn = payload.dependentOn
-    //      }
-    //    }
-    //  }
-    //  for (i = 0; i < state.teams.length; i++) {
-    //    var otherCards
-    //    for (j = 0; j < state.teams[i].otherCards; j++) {
-    //      // Delete card from other teams queues
-    //      if (state.teams[i].name != payload.dependentOn.name) {
-    //        otherCards = []
-    //        for (j = 0; j < state.teams[i].otherCards.length; j++) {
-    //          if (state.teams[i].otherCards[j].number != payload.workCard.number) {
-    //            otherCards.push(state.teams[i].otherCards[j])
-    //          }
-    //        }
-    //        state.teams[i].otherCards = otherCards
-    //      }
-    //    }
-    //    if (state.teams[i].name == payload.dependentOn.name) {
-    //      payload.workCard.team = payload.dependentOn.name
-    //      state.teams[i].otherCards.push(payload.workCard)
-    //    }
-    //  }
-    //},
     updateProjectEstimate: (state, payload) => {
       state.projectEstimate = payload
     },
@@ -459,24 +349,15 @@ export const store = new Vuex.Store({
     updateColumns : ({ commit }, payload) => {
       commit("updateColumns", payload);
     },
-    //updateEffort : ({ commit }, payload) => {
-    //  commit("updateEffort", payload);
-    //},
     addEffortToOthersCard: ({ commit }, payload) => {
       commit("addEffortToOthersCard", payload);
     },
-    //updateQueues : ({ commit }, payload) => {
-    //  commit("updateQueues", payload);
-    //},
     startAutoDeploy : ({ commit }, payload) => {
       commit("startAutoDeploy", payload);
     },
     incrementAutoDeploy : ({ commit }, payload) => {
       commit("incrementAutoDeploy", payload);
     },
-    //updateDependentTeam: ({ commit }, payload) => {
-    //  commit("updateDependentTeam", payload);
-    //},
     updateProjectEstimate: ({ commit }, payload) => {
       commit("updateProjectEstimate", payload);
     },

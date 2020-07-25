@@ -165,14 +165,7 @@ export default {
     currentDay() {
       return this.$store.getters.getCurrentDay
     }
-  },
-  //mounted() {
-  //  this.socket.on("updateEffort", (data) => {
-  //    if (this.gameName == data.gameName && this.teamName == data.teamName) {
-  //      this.$store.dispatch("updateEffort", data)
-  //    }
-  //  })
-  //}
+  }
 }
 </script>
 

@@ -140,7 +140,7 @@ export default {
       }
       var index = teams[Math.floor(Math.random() * teams.length)]
       var dependentOn = this.teams[index]
-      this.socket.emit("updateDependentTeam", {gameName: this.gameName, workCard: this.workCard, dependentOn: dependentOn})
+      this.socket.emit("updateDependentTeam", {gameName: this.gameName, teamName: this.teamName, workCard: this.workCard, dependentOn: dependentOn})
     }
   },
   computed: {
@@ -166,13 +166,13 @@ export default {
       return this.$store.getters.getCurrentDay
     }
   },
-  mounted() {
-    this.socket.on("updateEffort", (data) => {
-      if (this.gameName == data.gameName && this.teamName == data.teamName) {
-        this.$store.dispatch("updateEffort", data)
-      }
-    })
-  }
+  //mounted() {
+  //  this.socket.on("updateEffort", (data) => {
+  //    if (this.gameName == data.gameName && this.teamName == data.teamName) {
+  //      this.$store.dispatch("updateEffort", data)
+  //    }
+  //  })
+  //}
 }
 </script>
 

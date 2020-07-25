@@ -74,7 +74,6 @@ export default {
         localStorage.setItem("gameName", this.gameName)
         this.socket.emit("updateRole", {gameName: this.gameName, teamName: this.teamName, name: this.myName, role: this.myRole})
         this.socket.emit("loadGame", {gameName: this.gameName, teamName: this.teamName})
-        console.log("updating game db", this.myRole)
       }
       return setUp
     }
@@ -127,7 +126,6 @@ export default {
 
     var myRole = localStorage.getItem("myRole")
     if (myRole) {
-      console.log('myRole', myRole)
       this.$store.dispatch("updateMyRole", myRole)
     }
 
@@ -137,7 +135,7 @@ export default {
     }
 
     this.socket.on("loadGame", (data) => {
-      if (this.gameName == data.gameName) {
+      if (this.gameName == data.gameName && this.teamName == data.teamName) {
         this.$store.dispatch("loadGame", data)
       }
     })
@@ -145,6 +143,18 @@ export default {
     this.socket.on("updateRoles", (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         this.$store.dispatch("updateRoles", data)
+      }
+    })
+
+    this.socket.on("updateColumns", (data) => {
+      if (this.gameName == data.gameName && this.teamName == data.teamName) {
+        this.$store.dispatch("updateColumns", data)
+      }
+    })
+
+    this.socket.on("updateTeams", (data) => {
+      if (this.gameName == data.gameName && this.teamName == data.teamName) {
+        this.$store.dispatch("updateTeams", data)
       }
     })
   },

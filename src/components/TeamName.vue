@@ -45,6 +45,7 @@ export default {
     saveTeamName: function() {
       var teamName = document.getElementById('team-name-select').value
       this.$store.dispatch("updateTeamName", teamName)
+      this.socket.emit("loadGame", {gameName: this.gameName, teamName: teamName})
       localStorage.setItem("teamName", teamName);
       this.hide()
     }

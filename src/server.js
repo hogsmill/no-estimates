@@ -47,36 +47,51 @@ function updateCurrentDay(data) {
   })
 }
 
-function updateCurrentWorkCard(data) {
-
+function updateCurrentEventCard(data) {
   MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
     if (err) throw err;
     var db = client.db('db');
+    dbStore.updateCurrentEventCard(err, client, db, io, data)
+  })
+}
 
-    db.collection('games').findAndModify({gameName: data.gameName, teamName: data.teamName}, {}, {$set: {currentWorkCard: data.currentWorkCard}}, {upsert: true}, function(err, res) {
-      if (err) throw err;
-      if (res) {
-        io.emit("updateCurrentWorkCard", data)
-        client.close();
-      }
-    })
+function updateCurrentWorkCard(data) {
+  MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
+    if (err) throw err;
+    var db = client.db('db');
+    dbStore.updateCurrentWorkCard(err, client, db, io, data)
   })
 }
 
 function updateColumns(data) {
-
   MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
     if (err) throw err;
-
     var db = client.db('db');
+    dbStore.updateColumns(err, client, db, io, data)
+  })
+}
 
-    db.collection('games').findAndModify({gameName: data.gameName, teamName: data.teamName}, {}, {$set: {columns: data.columns}}, {upsert: true}, function(err, res) {
-      if (err) throw err;
-      if (res) {
-        io.emit("updateColumns", data)
-        client.close();
-      }
-    })
+function updateQueues(data) {
+  MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
+    if (err) throw err;
+    var db = client.db('db');
+    dbStore.updateQueues(err, client, db, io, data)
+  })
+}
+
+function updateDependentTeam(data) {
+  MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
+    if (err) throw err;
+    var db = client.db('db');
+    dbStore.updateDependentTeam(err, client, db, io, data)
+  })
+}
+
+function updateEffort(data) {
+  MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
+    if (err) throw err;
+    var db = client.db('db');
+    dbStore.updateEffort(err, client, db, io, data)
   })
 }
 
@@ -102,7 +117,7 @@ io.on("connection", (socket) => {
 
   socket.on("showEventCard", (data) => { emit("showEventCard", data) })
 
-  socket.on("updateCurrentEventCard", (data) => { emit("updateCurrentEventCard", data) })
+  socket.on("updateCurrentEventCard", (data) => { updateCurrentEventCard(data) })
 
   socket.on("updateCurrentDay", (data) => { updateCurrentDay(data) })
 
@@ -110,17 +125,17 @@ io.on("connection", (socket) => {
 
   socket.on("updateColumns", (data) => { updateColumns(data) })
 
+  socket.on("updateQueues", (data) => { updateQueues(data) })
+
   socket.on("updatePersonEffort", (data) => { emit("updatePersonEffort", data) })
 
   socket.on("updatePersonAutoDeployEffort", (data) => { emit("updatePersonAutoDeployEffort", data) })
 
-  socket.on("updateEffort", (data) => { emit("updateEffort", data) })
-
-  socket.on("updateQueues", (data) => { emit("updateQueues", data) })
+  socket.on("updateEffort", (data) => { updateEffort(data) })
 
   socket.on("resetEffort", (data) => { emit("resetEffort", data) })
 
-  socket.on("updateDependentTeam", (data) => { emit("updateDependentTeam", data) })
+  socket.on("updateDependentTeam", (data) => { updateDependentTeam(data) })
 
   socket.on("addEffortToOthersCard", (data) => { emit("addEffortToOthersCard", data) })
 

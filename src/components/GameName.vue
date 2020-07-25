@@ -3,6 +3,7 @@
     <div class="game-name text-right">
       <button class="btn btn-sm btn-secondary smaller-font" v-if="!gameName" @click="show">Set Game Name</button>
       <span v-if="gameName" @click="show" class="mr-2 mt-2 pointer p-2 bg-light">Game: {{gameName}}</span>
+      <span v-if="gameName" alt="Restart" @click="restart">&#8635;</span>
     </div>
 
     <modal name="set-game-name" :height="120" :classes="['rounded']">
@@ -40,6 +41,10 @@ export default {
       this.$store.dispatch("updateGameName", gameName)
       localStorage.setItem("gameName", gameName);
       this.hide()
+    },
+    restart() {
+     alert('Not implemented yet')
+      //this.socket.emit("restartGame", {gameName: this.gameName})
     }
   },
   computed: {

@@ -53,6 +53,14 @@ export default {
     gameName() {
       return this.$store.getters.getGameName
     }
+  },
+  mounted() {
+    this.socket.on("restartGame", (data) => {
+      if (this.gameName == data.gameName) {
+        //alert('Game has been re-started')
+        location.reload()
+      }
+    })
   }
 }
 </script>

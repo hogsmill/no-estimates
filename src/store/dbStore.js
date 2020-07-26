@@ -144,6 +144,7 @@ module.exports = {
   restartGame: function(err, client, db, io, data) {
     db.collection('games').deleteMany({gameName: data.gameName}, function(err, res) {
       _loadGame(err, client, db, io, data)
+      io.emit("restartGame", data)
     })
   },
 

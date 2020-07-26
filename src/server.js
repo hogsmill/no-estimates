@@ -31,6 +31,14 @@ function loadGame(data) {
   })
 }
 
+function restartGame(data) {
+  MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
+    if (err) throw err;
+    var db = client.db('db');
+    dbStore.restartGame(err, client, db, io, data)
+  })
+}
+
 function updateRole(data) {
   MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
     if (err) throw err;
@@ -103,6 +111,22 @@ function addEffortToOthersCard(data) {
   })
 }
 
+function incrementAutoDeploy(data) {
+  MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
+    if (err) throw err;
+    var db = client.db('db');
+    dbStore.incrementAutoDeploy(err, client, db, io, data)
+  })
+}
+
+function startAutoDeploy(data) {
+  MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
+    if (err) throw err;
+    var db = client.db('db');
+    dbStore.startAutoDeploy(err, client, db, io, data)
+  })
+}
+
 io.on("connection", (socket) => {
   var connection = socket.handshake.headers.host
   connections[connection] = connections[connection] ? connections[connection] + 1 : 1
@@ -120,6 +144,8 @@ io.on("connection", (socket) => {
   })
 
   socket.on("loadGame", (data) => { loadGame(data) })
+
+  socket.on("restartGame", (data) => { restartGame(data) })
 
   socket.on("updateRole", (data) => { updateRole(data) })
 
@@ -155,9 +181,9 @@ io.on("connection", (socket) => {
 
   socket.on("updateReEstimate", (data) => { emit("updateReEstimate", data) })
 
-  socket.on("startAutoDeploy", (data) => { emit("startAutoDeploy", data) })
+  socket.on("startAutoDeploy", (data) => { startAutoDeploy(data) })
 
-  socket.on("incrementAutoDeploy", (data) => { emit("incrementAutoDeploy", data) })
+  socket.on("incrementAutoDeploy", (data) => { incrementAutoDeploy(data) })
 
 });
 

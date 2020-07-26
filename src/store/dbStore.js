@@ -141,14 +141,32 @@ module.exports = {
     _loadGame(err, client, db, io, data)
   },
 
+  restartGame: function(err, client, db, io, data) {
+    db.collection('games').deleteMany({gameName: data.gameName}, function(err, res) {
+      _loadGame(err, client, db, io, data)
+    })
+  },
+
   updateCurrentDay: function(err, client, db, io, data) {
 
     db.collection('games').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
       if (err) throw err;
       if (res) {
-        var currentDay = res.currentDay + 1
-        db.collection('games').updateOne({"_id": res._id}, {$set: {currentDay: currentDay}}, function(err, res) {
+        var teams = res.teams, currentDay = res.currentDay + 1
+        for (var i = 0; i < teams.length; i++) {
+          if (teams[i].name == data.teamName) {
+            if (data.autoDeploy) {
+              teams[i].autoDeploy.doing = true
+            }
+            if (data.canStartAutoDeploy) {
+              teams[i].canStartAutoDeploy = true
+            }
+          }
+        }
+        data.teams = teams
+        db.collection('games').updateOne({"_id": res._id}, {$set: {currentDay: currentDay, teams: teams}}, function(err, res) {
           io.emit("updateCurrentDay", data)
+          io.emit("updateTeams", data)
           client.close()
         })
       }
@@ -343,6 +361,52 @@ module.exports = {
         }
       }
     })
-  }
+  },
+
+  startAutoDeploy: function(err, client, db, io, data) {
+
+    db.collection('games').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
+      if (err) throw err;
+      if (res) {
+        var teams = res.teams
+        for (var i = 0; i < teams.length; i++) {
+          if (teams[i].name == data.teamName) {
+            teams[i].autoDeploy.doing = true
+          }
+        }
+        data.teams = teams
+        db.collection('games').updateOne({"_id": res._id}, {$set: {teams: teams}}, function(err, res) {
+          if (err) throw err;
+          io.emit("updateTeams", data)
+          client.close();
+        })
+      }
+    })
+  },
+
+  incrementAutoDeploy: function(err, client, db, io, data) {
+
+    db.collection('games').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
+      if (err) throw err;
+      if (res) {
+        var teams = res.teams
+        for (var i = 0; i < teams.length; i++) {
+          if (teams[i].name == data.teamName) {
+            teams[i].autoDeploy.effort = teams[i].autoDeploy.effort + 1
+            if (teams[i].autoDeploy.effort == 8) {
+              teams[i].autoDeploy.doing = false
+              teams[i].autoDeploy.done = true
+            }
+          }
+        }
+        data.teams = teams
+        db.collection('games').updateOne({"_id": res._id}, {$set: {teams: teams}}, function(err, res) {
+          if (err) throw err;
+          io.emit("updateTeams", data)
+          client.close();
+        })
+      }
+    })
+  },
 
 }

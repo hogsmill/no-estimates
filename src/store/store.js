@@ -234,38 +234,9 @@ export const store = new Vuex.Store({
       state.currentDay = payload.currentDay
       state.myEffort.available = payload.capacity ? payload.capacity : 4
       state.myEffort.assigned = 0
-
-      for (var i = 0; i < state.teams.length; i++) {
-        if (state.teams[i].name == payload.teamName) {
-          if (payload.autoDeploy) {
-            state.teams[i].autoDeploy.doing = true
-          }
-          if (payload.canStartAutoDeploy) {
-            state.teams[i].canStartAutoDeploy = true
-          }
-        }
-      }
     },
     updateColumns: (state, payload) => {
       state.columns = payload.columns
-    },
-    startAutoDeploy: (state, payload) => {
-      for (var i = 0; i < state.teams.length; i++) {
-        if (state.teams[i].name == payload.teamName) {
-          state.teams[i].autoDeploy.doing = true
-        }
-      }
-    },
-    incrementAutoDeploy: (state, payload) => {
-      for (var i = 0; i < state.teams.length; i++) {
-        if (state.teams[i].name == payload.teamName) {
-          state.teams[i].autoDeploy.effort = state.teams[i].autoDeploy.effort + 1
-          if (state.teams[i].autoDeploy.effort == 8) {
-            state.teams[i].autoDeploy.doing = false
-            state.teams[i].autoDeploy.done = true
-          }
-        }
-      }
     },
     updateCurrentWorkCard: (state, payload) => {
       state.currentWorkCard = payload.currentWorkCard
@@ -331,12 +302,6 @@ export const store = new Vuex.Store({
     },
     updateColumns : ({ commit }, payload) => {
       commit("updateColumns", payload);
-    },
-    startAutoDeploy : ({ commit }, payload) => {
-      commit("startAutoDeploy", payload);
-    },
-    incrementAutoDeploy : ({ commit }, payload) => {
-      commit("incrementAutoDeploy", payload);
     },
     updateProjectEstimate: ({ commit }, payload) => {
       commit("updateProjectEstimate", payload);

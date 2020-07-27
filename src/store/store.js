@@ -50,7 +50,7 @@ export const store = new Vuex.Store({
       {number: 7, text: "Perhaps you have delivered at least one card? If so, are you able to forecast when you might deliver the Minimum Viable Product, which the Product Owner has defined as cards #1-11 "},
       {number: 8, text: "In this game, you may have been committing to work on an individual work-item basis. Now a new Scrum Master has joined the comapny, and she wants you to do batch commitment (i.e. pull in as many stories at once as you belive you can accomplish in a week). Will you do this?"},
       {number: 9, text: "Testers and Developers want to sit together. You now have the option to fo concurrent Dev and Test (i.e. no need to finish Development effort before beginning Testing). Do you want to do this?"},
-      {number: 10, text: "Vince from the PMO says he's nervous that you're not producing enough according to your original estimate. As a result, he wants you to spend time re-estimating. Lock the team in a room for a day and do no delivery work tomorrow - update your estimate for delivering the entire project and move your day tracker one more day."},
+      {number: 10, function: 'Spend a Day Estimating', text: "Vince from the PMO says he's nervous that you're not producing enough according to your original estimate. As a result, he wants you to spend time re-estimating. Lock the team in a room for a day and do no delivery work tomorrow - update your estimate for delivering the entire project and move your day tracker one more day."},
       {number: 11, text: "Vince is satisfied with your estimate and sends it around to the business in an email titled 'Team commits to deadline'"},
       {number: 12, function: 'Have Paired', text: "Did you pair (more than one person worked on a single card in one work stage) today? If so, tick off an extra point of work in each stage where the pairing occured (for today only)"},
       {number: 13, function: 'Lose Tester', text: "Your oranisation has lost a tester so one of your testers now has to support multiple teams. One tester loses two points of effort tomorrow. (Disregard if you have no tester)"},
@@ -232,6 +232,9 @@ export const store = new Vuex.Store({
       }
       if (payload.capacity) {
         capacity = payload.capacity
+      }
+      if (payload.capacity  == 0) {
+        capacity = 0
       }
       state.currentDay = payload.currentDay
       state.myEffort.available = capacity

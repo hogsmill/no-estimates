@@ -57,6 +57,9 @@ export default {
         case 'Lose Tester':
           data = {testCapacity: 2}
           break
+        case 'Spend a Day Estimating':
+          data = {capacity: 0}
+          break
         default:
           console.log("Doing '" + this.currentEventCard.function + "' (not implemented)")
       }

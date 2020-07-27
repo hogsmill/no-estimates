@@ -1,14 +1,15 @@
 #!/bin/bash
 
+PORT=3007
+
 while true
 do
   running=`ps -ef | grep node | grep "No Estimates"`
-  echo $running
-  if [ $$ -eq 0 ]
+  if [ $? -eq 0 ]
   then
-    echo "Running..."
+    sleep 5
   else
-    echo "CRASHED!"
-    exit 0
+    echo "CRASHED! Re-starting server"
+    node src/server.js $PORT 'No Estimates' &
   fi
 done

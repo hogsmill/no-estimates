@@ -40,6 +40,7 @@ export default {
       var gameName = document.getElementById('game-name').value
       this.$store.dispatch("updateGameName", gameName)
       localStorage.setItem("gameName", gameName);
+      this.socket.emit("restartGame", {gameName: this.gameName})
       this.hide()
     },
     restart() {
@@ -57,7 +58,6 @@ export default {
   mounted() {
     this.socket.on("restartGame", (data) => {
       if (this.gameName == data.gameName) {
-        //alert('Game has been re-started')
         location.reload()
       }
     })

@@ -32,6 +32,7 @@ function createNewGame(data) {
   game.currentDay = 1
   game.currentEventCard = 0
   game.currentWorkCard = 0
+  game.created = new Date().toISOString()
 
   return game
 }

@@ -36,7 +36,7 @@ function createNewGame(data) {
   return game
 }
 
-function _loadGame(err, client, db, io, data) {
+function _loadGame(err, client, db, io, data, debugOn) {
 
   db.collection('games').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
     if (err) throw err;

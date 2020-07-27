@@ -61,8 +61,8 @@ function createNewGame(data) {
   game.currentDay = 1
   game.currentEventCard = 0
   game.currentWorkCard = 0
-  game.percentageBlocked = 0.25
-  game.percentageDeployFail = 0.25
+  game.percentageBlocked = 0.2
+  game.percentageDeployFail = 0.2
   game.created = new Date().toISOString()
 
   return game

@@ -22,7 +22,13 @@ if [ -f "src/server.js" ]; then
   if [ "$SERVER" != "" ]; then
     kill -9 $SERVER
   fi
+  KEEP=`ps -ef | grep keep.sh | grep $PORT | awk {'print $2'}`
+  if [ "$KEEP" != "" ]; then
+    kill -9 $KEEP
+  fi
   node src/server.js $PORT 'No Estimates' &
+  sleep 5
+  ./keep.sh $PORT &
 fi
 
 ps -ef | grep node

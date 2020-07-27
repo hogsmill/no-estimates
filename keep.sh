@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PORT=3007
+PORT=$1
 
 while true
 do

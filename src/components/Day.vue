@@ -31,30 +31,6 @@ export default {
       return days
     },
     next() {
-      var columns = this.columns
-      var blocked = []
-      var failed = []
-      var i, j
-
-      for (i = 1; i < columns.length; i++) {
-        if (columns[i].name != 'deploy') {
-          // Block a percentege of cards
-          for (j = 0; j < columns[i].cards.length; j++) {
-            if (Math.random() < this.percentageBlocked) {
-              blocked.push(columns[i].cards[j].number)
-            }
-          }
-        }
-        // Fail a percentage of deploys if not-auto-deploying
-        if (!this.myTeam.autoDeploy.done && this.columns[i].name == 'deploy') {
-          for (j = 0; j < columns[i].cards.length; j++) {
-            if (Math.random() < this.percentageDeployFail) {
-              failed.push(columns[i].cards[j].number)
-            }
-          }
-        }
-      }
-      this.socket.emit("updateQueues", {gameName: this.gameName, teamName: this.teamName, blocked: blocked, failed: failed})
       this.socket.emit("showEventCard", {gameName: this.gameName, teamName: this.teamName})
     }
   },
@@ -76,12 +52,6 @@ export default {
     },
     columns() {
       return this.$store.getters.getColumns
-    },
-    percentageBlocked() {
-      return this.$store.getters.getPercentageBlocked
-    },
-    percentageDeployFail() {
-      return this.$store.getters.getPercentageDeployFail
     }
   },
   mounted() {

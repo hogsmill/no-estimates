@@ -7,20 +7,20 @@
       <div class="card-number">#{{workCard.number}}</div>
       <div class="card-effort">Effort: {{totalEffort()}}</div>
     </div>
-    <div class="work-card-effort">
-      <div class="work-card-column column rounded-circle" :class="{'design': !workCard.blocked}" @click="addEffort('design')">A</div>
+    <div class="work-card-effort" :class="{ 'current' : column == 'design' }" @click="addEffort('design')">
+      <div class="work-card-column column rounded-circle" :class="{'design': !workCard.blocked}">A</div>
       <div v-for="n in workCard.design" :key="n" :class="{'assigned' : n <= workCard.effort.design}" class="work-card-column rounded-circle"></div>
     </div>
-    <div class="work-card-effort">
-      <div class="work-card-column column rounded-circle" :class="{'develop': !workCard.blocked}" @click="addEffort('develop')">B</div>
+    <div class="work-card-effort" :class="{ 'current' : column == 'develop' }" @click="addEffort('develop')">
+      <div class="work-card-column column rounded-circle" :class="{'develop': !workCard.blocked}">B</div>
       <div v-for="n in workCard.develop" :key="n" :class="{'assigned' : n <= workCard.effort.develop}" class="work-card-column rounded-circle"></div>
     </div>
-    <div class="work-card-effort">
-      <div class="work-card-column column rounded-circle" :class="{'test': !workCard.blocked}" @click="addEffort('test')">C</div>
+    <div class="work-card-effort" :class="{ 'current' : column == 'test' }" @click="addEffort('test')">
+      <div class="work-card-column column rounded-circle" :class="{'test': !workCard.blocked}">C</div>
       <div v-for="n in workCard.test" :key="n" :class="{'assigned' : n <= workCard.effort.test}" class="work-card-column rounded-circle"></div>
     </div>
-    <div class="work-card-effort">
-      <div class="work-card-column column rounded-circle" :class="{'deploy': !workCard.blocked}" @click="addEffort('deploy')">D</div>
+    <div class="work-card-effort" :class="{ 'current' : column == 'deploy' }" @click="addEffort('deploy')">
+      <div class="work-card-column column rounded-circle" :class="{'deploy': !workCard.blocked}">D</div>
       <div v-for="n in workCard.deploy" :key="n" :class="{'assigned' : n <= workCard.effort.deploy}" class="work-card-column rounded-circle"></div>
     </div>
     <table class="delivery">
@@ -200,7 +200,6 @@ export default {
 
     div {
       text-align: left;
-      height: 14px;
     }
 
     .urgent, .failed {
@@ -241,6 +240,16 @@ export default {
 
     .work-card-effort {
 
+      opacity: 0.5;
+
+      &.current {
+        opacity: 1;
+
+        &:hover {
+          cursor: pointer;
+        }
+      }
+
       .work-card-column {
         display: inline-block;
         border: 1px solid;
@@ -249,10 +258,6 @@ export default {
         height: 8px;
         font-size: 8px;
         padding-left: 2px;
-
-        &:hover {
-          cursor: pointer;
-        }
 
         &.column {
           color: #fff;

@@ -64,8 +64,6 @@ export const store = new Vuex.Store({
       //{number: 6, text: "If you decided yesterday to automate deployments, when you complete the delivery automation, you will no longer have to roll the die when you deploy."},
       //{number: 15, text: "Would you like to restructure your team? Feel free to change role specialities or negotiate with other teams to bring on new members."},
     ],
-    percentageBlocked: 0.5,
-    percentageDeployFail: 0.5,
     currentEventCard: 0,
     workCards: [
       {number: 1, design: 6, develop: 7, test: 8, deploy: 2, urgent: false, teamDependency: 0, dependentOn: '', commit: 0, blocked: false, effort: {design: 0, develop: 0, test: 0, deploy: 0}},
@@ -167,12 +165,6 @@ export const store = new Vuex.Store({
     },
     getWorkCards: (state) => {
       return state.workCards;
-    },
-    getPercentageBlocked: (state) => {
-      return state.percentageBlocked;
-    },
-    getPercentageDeployFail: (state) => {
-      return state.percentageDeployFail;
     },
     getProjectEstimate: (state) => {
       return state.projectEstimate;

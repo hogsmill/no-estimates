@@ -52,5 +52,7 @@ export default {
 <style lang="scss">
   .status {
     height: 20px;
+    font-weight: bold;
+    margin: 6px;
   }
 </style>

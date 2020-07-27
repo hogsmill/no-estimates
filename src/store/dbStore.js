@@ -32,6 +32,8 @@ function createNewGame(data) {
   game.currentDay = 1
   game.currentEventCard = 0
   game.currentWorkCard = 0
+  game.percentageBlocked = 0.25
+  game.percentageDeployFail = 0.25
   game.created = new Date().toISOString()
 
   return game
@@ -113,8 +115,18 @@ function cardValue(workCards, card) {
   }
 }
 
-function cardComplete(card, colName) {
-  return !card.blocked && card[colName] == card.effort[colName] && (card.teamDependency == 0 || card.teamDependency == card.dependencyDone)
+function blockOrFailCard(card, colName, percentageBlocked, percentageDeployFail) {
+  if (colName != 'deploy' && Math.random() < percentageBlocked) {
+    card.blocked = true
+  }
+  if (colName == 'deploy' && Math.random() < percentageDeployFail) {
+    card.failed = true
+  }
+}
+
+function cardCompleteInColumn(card, colName, percentageBlocked, percentageDeployFail) {
+  blockOrFailCard(card, percentageBlocked, percentageDeployFail)
+  return !card.blocked &&! card.failed && card[colName] == card.effort[colName] && (card.teamDependency == 0 || card.teamDependency == card.dependencyDone)
 }
 
 function moveCard(columns, workCards, card, n, currentDay) {
@@ -169,7 +181,7 @@ module.exports = {
     db.collection('games').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
       if (err) throw err;
       if (res) {
-        var teams = res.teams, currentDay = res.currentDay + 1
+        var teams = res.teams, columns = res.columns, currentDay = res.currentDay + 1
         for (var i = 0; i < teams.length; i++) {
           if (teams[i].name == data.teamName) {
             if (data.autoDeploy) {
@@ -180,10 +192,22 @@ module.exports = {
             }
           }
         }
+        for (var i = 1; i < columns.length; i++) {
+          for (var j = 0; j < columns[i].cards.length; j++) {
+            var card = columns[i].cards[j]
+            if (card.blocked || card.failed) {
+              card.blocked = false
+              card.failed = false
+              blockOrFailCard(card, columns[i].name, res.percentageBlocked, res.percentageDeployFail)
+            }
+          }
+        }
         data.teams = teams
-        db.collection('games').updateOne({"_id": res._id}, {$set: {currentDay: currentDay, teams: teams}}, function(err, res) {
+        data.columns = columns
+        db.collection('games').updateOne({"_id": res._id}, {$set: {currentDay: currentDay, teams: teams, columns: columns}}, function(err, res) {
           io.emit("updateCurrentDay", data)
           io.emit("updateTeams", data)
+          io.emit("updateColumns", data)
           client.close()
         })
       }
@@ -234,7 +258,7 @@ module.exports = {
           for (var j = 0; j < columns[i].cards.length; j++) {
             var card = columns[i].cards[j]
             var colName = columns[i].name
-            if (cardComplete(card, colName)) {
+            if (cardCompleteInColumn(card, colName, res.percentageBlocked, res.percentageDeployFail)) {
               moveCard(columns, workCards, card, i, res.currentDay)
             }
           }
@@ -243,39 +267,6 @@ module.exports = {
           if (err) throw err;
           io.emit("updateColumns", data)
           client.close();
-        })
-      }
-    })
-  },
-
-  updateQueues: function(err, client, db, io, data, debugOn) {
-
-    if (debugOn) { console.log('updateQueues', data) }
-
-    db.collection('games').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
-      if (err) throw err;
-      if (res) {
-        var i, j, k, columns = res.columns, workCards = res.workCards
-        for (i = 1; i < columns.length; i++) {
-          for (j = 0; j < columns[i].cards.length; j++) {
-            for (k = 0; k < data.blocked.length; k++) {
-              if (columns[i].cards[j].number == data.blocked[k]) {
-                columns[i].cards[j].blocked = true
-              } else {
-                columns[i].cards[j].blocked = false
-              }
-            }
-            for (k = 0; k < data.failed.length; k++) {
-              if (columns[i].cards[j].number == data.failed[k]) {
-                columns[i].cards[j].failed = true
-                columns[i].cards[j].effort.deploy = 0
-              }
-            }
-          }
-        }
-        db.collection('games').updateOne({"_id": res._id}, {$set: {columns: columns, workCards: workCards}}, function(err, res) {
-          if (err) throw err;
-          io.emit("updateColumns", columns)
         })
       }
     })
@@ -344,7 +335,7 @@ module.exports = {
               var card = columns[i].cards[j]
               var colName = columns[i].name
               card.effort = data.workCard.effort
-              if (cardComplete(card, colName)) {
+              if (cardCompleteInColumn(card, colName, res.percentageBlocked, res.percentageDeployFail)) {
                 moveCard(columns, workCards, card, i, res.currentDay)
               }
             }
@@ -374,7 +365,7 @@ module.exports = {
               var card = columns[i].cards[j]
               var colName = columns[i].name
               card.dependencyDone = card.dependencyDone + 1
-              if (cardComplete(card, colName)) {
+              if (cardCompleteInColumn(card, colName, res.percentageBlocked, res.percentageDeployFail)) {
                 moveCard(columns, workCards, card, i, team.currentDay)
               }
             }

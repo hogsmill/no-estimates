@@ -79,14 +79,6 @@ function updateColumns(data) {
   })
 }
 
-function updateQueues(data) {
-  MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
-    if (err) throw err;
-    var db = client.db('db');
-    dbStore.updateQueues(err, client, db, io, data, debugOn)
-  })
-}
-
 function updateDependentTeam(data) {
   MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
     if (err) throw err;
@@ -158,8 +150,6 @@ io.on("connection", (socket) => {
   socket.on("updateCurrentWorkCard", (data) => { updateCurrentWorkCard(data) })
 
   socket.on("updateColumns", (data) => { updateColumns(data) })
-
-  socket.on("updateQueues", (data) => { updateQueues(data) })
 
   socket.on("updatePersonEffort", (data) => { emit("updatePersonEffort", data) })
 

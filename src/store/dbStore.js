@@ -116,10 +116,11 @@ function cardValue(workCards, card) {
 }
 
 function blockOrFailCard(card, colName, percentageBlocked, percentageDeployFail) {
-  if (colName != 'deploy' && Math.random() < percentageBlocked) {
+  var rand = Math.random()
+  if (colName != 'deploy' && rand < percentageBlocked) {
     card.blocked = true
   }
-  if (colName == 'deploy' && Math.random() < percentageDeployFail) {
+  if (colName == 'deploy' && rand < percentageDeployFail) {
     card.failed = true
   }
 }
@@ -195,10 +196,13 @@ module.exports = {
         for (var i = 1; i < columns.length; i++) {
           for (var j = 0; j < columns[i].cards.length; j++) {
             var card = columns[i].cards[j]
+            var colName = columns[i].name
             if (card.blocked || card.failed) {
               card.blocked = false
               card.failed = false
-              blockOrFailCard(card, columns[i].name, res.percentageBlocked, res.percentageDeployFail)
+              if (cardCompleteInColumn(card, colName, res.percentageBlocked, res.percentageDeployFail)) {
+                moveCard(columns, workCards, card, i, res.currentDay)
+              }
             }
           }
         }
@@ -453,7 +457,6 @@ module.exports = {
       if (res) {
         db.collection('games').updateOne({"_id": res._id}, {$set: {projectEstimate: data.projectEstimate}}, function(err, res) {
           if (err) throw err;
-          console.log("xxx updateProjectEstimate", data)
           io.emit("updateProjectEstimate", data)
           client.close();
         })

@@ -6,8 +6,9 @@
     <p v-html="currentEventCard.text"></p>
     <div>
       <button v-if="!currentEventCard.function" class="btn btn-sm btn-info" @click="done()">Done</button>
-      <button v-if="currentEventCard.function" class="btn btn-sm btn-info" @click="doFunction()">Yes</button>
-      <button v-if="currentEventCard.function" class="btn btn-sm btn-info" @click="done()">No</button>
+      <button v-if="currentEventCard.function && !currentEventCard.confirm" class="btn btn-sm btn-info" @click="doFunction()">Done</button>
+      <button v-if="currentEventCard.function && currentEventCard.confirm" class="btn btn-sm btn-info" @click="doFunction()">Yes</button>
+      <button v-if="currentEventCard.function && currentEventCard.confirm" class="btn btn-sm btn-info" @click="done()">No</button>
     </div>
   </modal>
 
@@ -52,6 +53,9 @@ export default {
           break
         case 'Add 8 points to Deploy':
           data = {autoDeploy: true}
+          break
+        case 'Lose Tester':
+          data = {testCapacity: 2}
           break
         default:
           console.log("Doing '" + this.currentEventCard.function + "' (not implemented)")

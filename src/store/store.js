@@ -45,7 +45,7 @@ export const store = new Vuex.Store({
       {number: 2, text: "Remember that manual deploymnts will fail a certian percentage of the time. In this case, you will need to re-do the deployment effort."},
       {number: 3, function: 'Add 1 Point To Everyones Capacity', text: "Pizza inspires your team to greatness! Add one to each person's capacity tomorrow."},
       {number: 4, text: "Did you remember that people can work in areas outside their speciality? They require two effort points to make one effort point in another area."},
-      {number: 5, function: 'Add 8 points to Deploy',autoDeployCard: true, text: "You read that automating deployments can lead to better quality and more predictable delivery. If you'd like to invest in that, you'll need to spend 8 effort points in Deploy (you can do this over multiple sprints)</br></br>(<em>You can do this later by clicking the '*' in the Deploy Column header</em>)"},
+      {number: 5, function: 'Add 8 points to Deploy', confirm: true, autoDeployCard: true, text: "You read that automating deployments can lead to better quality and more predictable delivery. If you'd like to invest in that, you'll need to spend 8 effort points in Deploy (you can do this over multiple sprints)</br></br>(<em>You can do this later by clicking the '*' in the Deploy Column header</em>)"},
       {number: 6, function: 'Pairing', text: "Would someone like to learn a new skill? If so, give this card to that person. After that person spends five days pairing with someone in a work stage different from his or her speciality, the person will be able to work in that state at a 1:1 effort ratio."},
       {number: 7, text: "Perhaps you have delivered at least one card? If so, are you able to forecast when you might deliver the Minimum Viable Product, which the Product Owner has defined as cards #1-11 "},
       {number: 8, text: "In this game, you may have been committing to work on an individual work-item basis. Now a new Scrum Master has joined the comapny, and she wants you to do batch commitment (i.e. pull in as many stories at once as you belive you can accomplish in a week). Will you do this?"},
@@ -226,8 +226,15 @@ export const store = new Vuex.Store({
       state.currentEventCard = payload.currentEventCard;
     },
     updateCurrentDay: (state, payload) => {
+      var capacity = 4
+      if (payload.testCapacity && state.myEffort.role == 'Tester') {
+        capacity = 2
+      }
+      if (payload.capacity) {
+        capacity = payload.capacity
+      }
       state.currentDay = payload.currentDay
-      state.myEffort.available = payload.capacity ? payload.capacity : 4
+      state.myEffort.available = capacity
       state.myEffort.assigned = 0
     },
     updateColumns: (state, payload) => {

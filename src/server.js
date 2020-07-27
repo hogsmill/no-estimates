@@ -119,6 +119,30 @@ function startAutoDeploy(data) {
   })
 }
 
+function updateProjectEstimate(data) {
+  MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
+    if (err) throw err;
+    var db = client.db('db');
+    dbStore.updateProjectEstimate(err, client, db, io, data, debugOn)
+  })
+}
+
+function updateMVPEstimate(data) {
+  MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
+    if (err) throw err;
+    var db = client.db('db');
+    dbStore.updateMVPEstimate(err, client, db, io, data, debugOn)
+  })
+}
+
+function updateReEstimate(data) {
+  MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
+    if (err) throw err;
+    var db = client.db('db');
+    dbStore.updateReEstimate(err, client, db, io, data, debugOn)
+  })
+}
+
 io.on("connection", (socket) => {
   var connection = socket.handshake.headers.host
   connections[connection] = connections[connection] ? connections[connection] + 1 : 1
@@ -165,11 +189,11 @@ io.on("connection", (socket) => {
 
   socket.on("updateOtherTeamEffort", (data) => { emit("updateOtherTeamEffort", data) })
 
-  socket.on("updateProjectEstimate", (data) => { emit("updateProjectEstimate", data) })
+  socket.on("updateProjectEstimate", (data) => { updateProjectEstimate(data) })
 
-  socket.on("updateMVPEstimate", (data) => { emit("updateMVPEstimate", data) })
+  socket.on("updateMVPEstimate", (data) => { updateMVPEstimate(data) })
 
-  socket.on("updateReEstimate", (data) => { emit("updateReEstimate", data) })
+  socket.on("updateReEstimate", (data) => { updateReEstimate(data) })
 
   socket.on("startAutoDeploy", (data) => { startAutoDeploy(data) })
 

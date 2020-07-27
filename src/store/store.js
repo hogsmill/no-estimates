@@ -192,6 +192,9 @@ export const store = new Vuex.Store({
       state.currentDay = payload.currentDay;
       state.currentEventCard = payload.currentEventCard;
       state.currentWorkCard = payload.currentWorkCard;
+      state.projectEstimate = payload.projectEstimate
+      state.mvpEstimate = payload.mvpEstimate
+      state.reEstimate = payload.reEstimate
     },
     updateGameName: (state, payload) => {
       state.gameName = payload;
@@ -234,13 +237,16 @@ export const store = new Vuex.Store({
       state.currentWorkCard = payload.currentWorkCard
     },
     updateProjectEstimate: (state, payload) => {
-      state.projectEstimate = payload
+      console.log('updateProjectEstimate', payload)
+      state.projectEstimate = payload.projectEstimate
     },
     updateMVPEstimate: (state, payload) => {
-      state.mvpEstimate = payload
+      console.log('updateMVPEstimate', payload)
+      state.mvpEstimate = payload.mvpEstimate
     },
     updateReEstimate: (state, payload) => {
-      state.reEstimate = payload
+      console.log('updateReEstimate', payload)
+      state.reEstimate = payload.reEstimate
     },
   },
   actions: {

@@ -442,6 +442,55 @@ module.exports = {
         })
       }
     })
+  },
+
+  updateProjectEstimate: function(err, client, db, io, data, debugOn) {
+
+    if (debugOn) { console.log('updateProjectEstimate', data) }
+
+    db.collection('games').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
+      if (err) throw err;
+      if (res) {
+        db.collection('games').updateOne({"_id": res._id}, {$set: {projectEstimate: data.projectEstimate}}, function(err, res) {
+          if (err) throw err;
+          console.log("xxx updateProjectEstimate", data)
+          io.emit("updateProjectEstimate", data)
+          client.close();
+        })
+      }
+    })
+  },
+
+  updateMVPEstimate: function(err, client, db, io, data, debugOn) {
+
+    if (debugOn) { console.log('updateMVPEstimate', data) }
+
+    db.collection('games').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
+      if (err) throw err;
+      if (res) {
+        db.collection('games').updateOne({"_id": res._id}, {$set: {mvpEstimate: data.mvpEstimate}}, function(err, res) {
+          if (err) throw err;
+          io.emit("updateMVPEstimate", data)
+          client.close();
+        })
+      }
+    })
+  },
+
+  updateReEstimate: function(err, client, db, io, data, debugOn) {
+
+    if (debugOn) { console.log('updateReEstimate', data) }
+
+    db.collection('games').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
+      if (err) throw err;
+      if (res) {
+        db.collection('games').updateOne({"_id": res._id}, {$set: {reEstimate: data.reEstimate}}, function(err, res) {
+          if (err) throw err;
+          io.emit("updateReEstimate", data)
+          client.close();
+        })
+      }
+    })
   }
 
 }

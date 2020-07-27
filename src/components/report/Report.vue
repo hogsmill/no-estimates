@@ -81,15 +81,15 @@ export default {
     },
     saveTotalProject() {
       var estimate = document.getElementById("project-estimate").value
-      this.socket.emit("updateProjectEstimate", {gameName: this.gameName, teamName: this.teamName, estimate: estimate})
+      this.socket.emit("updateProjectEstimate", {gameName: this.gameName, teamName: this.teamName, projectEstimate: estimate})
     },
     saveMVP() {
       var estimate = document.getElementById("mvp-estimate").value
-      this.socket.emit("updateMVPEstimate", {gameName: this.gameName, teamName: this.teamName, estimate: estimate})
+      this.socket.emit("updateMVPEstimate", {gameName: this.gameName, teamName: this.teamName, mvpEstimate: estimate})
     },
     saveReEstimate() {
       var estimate = document.getElementById("re-estimate").value
-      this.socket.emit("updateReEstimate", {gameName: this.gameName, teamName: this.teamName, estimate: estimate})
+      this.socket.emit("updateReEstimate", {gameName: this.gameName, teamName: this.teamName, reEstimate: estimate})
     }
   },
   computed: {
@@ -121,17 +121,17 @@ export default {
   mounted() {
     this.socket.on("updateProjectEstimate", (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
-        this.$store.dispatch("updateProjectEstimate", data.estimate)
+        this.$store.dispatch("updateProjectEstimate", data)
       }
     })
     this.socket.on("updateMVPEstimate", (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
-        this.$store.dispatch("updateMVPEstimate", data.estimate)
+        this.$store.dispatch("updateMVPEstimate", data)
       }
     })
     this.socket.on("updateReEstimate", (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
-        this.$store.dispatch("updateReEstimate", data.estimate)
+        this.$store.dispatch("updateReEstimate", data)
       }
     })
   }

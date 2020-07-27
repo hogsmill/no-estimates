@@ -44,7 +44,7 @@
             <td>{{card.number}}</td>
             <td>{{card.commit}}</td>
             <td>{{card.delivery}}</td>
-            <td>{{time(card)}}</td>
+            <td :class="{ 'not-delivered': !card.delivery }">{{time(card)}}</td>
             <td>{{card.value}}</td>
           </tr>
         </tbody>
@@ -195,6 +195,12 @@ export default {
   .results {
     th {
       width: 20%;
+    }
+
+    .not-delivered {
+      font-style: italic;
+      color: #aaa;
+      border-color: #444;
     }
   }
 

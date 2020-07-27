@@ -157,6 +157,12 @@ export default {
         this.$store.dispatch("updateTeams", data)
       }
     })
+
+    this.socket.on("updateWorkCards", (data) => {
+      if (this.gameName == data.gameName && this.teamName == data.teamName) {
+        this.$store.dispatch("updateWorkCards", data)
+      }
+    })
   },
 }
 </script>

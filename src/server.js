@@ -63,6 +63,14 @@ function updateCurrentEventCard(data) {
   })
 }
 
+function updateCommit(data) {
+  MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
+    if (err) throw err;
+    var db = client.db('db');
+    dbStore.updateCommit(err, client, db, io, data, debugOn)
+  })
+}
+
 function updateCurrentWorkCard(data) {
   MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
     if (err) throw err;
@@ -170,6 +178,8 @@ io.on("connection", (socket) => {
   socket.on("updateCurrentEventCard", (data) => { updateCurrentEventCard(data) })
 
   socket.on("updateCurrentDay", (data) => { updateCurrentDay(data) })
+
+  socket.on("updateCommit", (data) => { updateCommit(data) })
 
   socket.on("updateCurrentWorkCard", (data) => { updateCurrentWorkCard(data) })
 

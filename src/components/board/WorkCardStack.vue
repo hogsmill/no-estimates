@@ -20,6 +20,7 @@ export default {
         var columns = this.columns
         workCards[currentWorkCard].commit = this.currentDay
         columns[1].cards.push(workCards[currentWorkCard])
+        this.socket.emit("updateCommit", {gameName: this.gameName, teamName: this.teamName, workCard: currentWorkCard, commit: this.currentDay})
         this.socket.emit("updateColumns", {gameName: this.gameName, teamName: this.teamName, columns: columns})
         this.socket.emit("updateCurrentWorkCard", {gameName: this.gameName, teamName: this.teamName, currentWorkCard: currentWorkCard + 1})
       }

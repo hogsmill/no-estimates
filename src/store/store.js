@@ -236,16 +236,16 @@ export const store = new Vuex.Store({
     updateCurrentWorkCard: (state, payload) => {
       state.currentWorkCard = payload.currentWorkCard
     },
+    updateWorkCards: (state, payload) => {
+      state.workCards = payload.workCards
+    },
     updateProjectEstimate: (state, payload) => {
-      console.log('updateProjectEstimate', payload)
       state.projectEstimate = payload.projectEstimate
     },
     updateMVPEstimate: (state, payload) => {
-      console.log('updateMVPEstimate', payload)
       state.mvpEstimate = payload.mvpEstimate
     },
     updateReEstimate: (state, payload) => {
-      console.log('updateReEstimate', payload)
       state.reEstimate = payload.reEstimate
     },
   },
@@ -294,6 +294,9 @@ export const store = new Vuex.Store({
     },
     updateCurrentWorkCard: ({ commit }, payload) => {
       commit("updateCurrentWorkCard", payload);
+    },
+    updateWorkCards: ({ commit }, payload) => {
+      commit("updateWorkCards", payload);
     },
     updateCurrentDay: ({ commit }, payload) => {
       commit("updateCurrentDay", payload);

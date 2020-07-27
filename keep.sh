@@ -3,7 +3,8 @@
 while true
 do
   running=`ps -ef | grep node | grep "No Estimates"`
-  if [ $running ]
+  echo $running
+  if [ $$ -eq 0 ]
   then
     echo "Running..."
   else

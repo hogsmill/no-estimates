@@ -27,7 +27,7 @@ function loadGame(data) {
   MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
     if (err) throw err;
     var db = client.db('db');
-    dbStore.loadGame(err, client, db, io, data)
+    dbStore.loadGame(err, client, db, io, data, debugOn)
   })
 }
 
@@ -35,7 +35,7 @@ function restartGame(data) {
   MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
     if (err) throw err;
     var db = client.db('db');
-    dbStore.restartGame(err, client, db, io, data)
+    dbStore.restartGame(err, client, db, io, data, debugOn)
   })
 }
 
@@ -43,7 +43,7 @@ function updateRole(data) {
   MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
     if (err) throw err;
     var db = client.db('db');
-    dbStore.updateRole(err, client, db, io, data)
+    dbStore.updateRole(err, client, db, io, data, debugOn)
   })
 }
 
@@ -51,7 +51,7 @@ function updateCurrentDay(data) {
   MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
     if (err) throw err;
     var db = client.db('db');
-    dbStore.updateCurrentDay(err, client, db, io, data)
+    dbStore.updateCurrentDay(err, client, db, io, data, debugOn)
   })
 }
 
@@ -59,7 +59,7 @@ function updateCurrentEventCard(data) {
   MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
     if (err) throw err;
     var db = client.db('db');
-    dbStore.updateCurrentEventCard(err, client, db, io, data)
+    dbStore.updateCurrentEventCard(err, client, db, io, data, debugOn)
   })
 }
 
@@ -67,7 +67,7 @@ function updateCurrentWorkCard(data) {
   MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
     if (err) throw err;
     var db = client.db('db');
-    dbStore.updateCurrentWorkCard(err, client, db, io, data)
+    dbStore.updateCurrentWorkCard(err, client, db, io, data, debugOn)
   })
 }
 
@@ -75,7 +75,7 @@ function updateColumns(data) {
   MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
     if (err) throw err;
     var db = client.db('db');
-    dbStore.updateColumns(err, client, db, io, data)
+    dbStore.updateColumns(err, client, db, io, data, debugOn)
   })
 }
 
@@ -83,7 +83,7 @@ function updateQueues(data) {
   MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
     if (err) throw err;
     var db = client.db('db');
-    dbStore.updateQueues(err, client, db, io, data)
+    dbStore.updateQueues(err, client, db, io, data, debugOn)
   })
 }
 
@@ -91,7 +91,7 @@ function updateDependentTeam(data) {
   MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
     if (err) throw err;
     var db = client.db('db');
-    dbStore.updateDependentTeam(err, client, db, io, data)
+    dbStore.updateDependentTeam(err, client, db, io, data, debugOn)
   })
 }
 
@@ -99,7 +99,7 @@ function updateEffort(data) {
   MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
     if (err) throw err;
     var db = client.db('db');
-    dbStore.updateEffort(err, client, db, io, data)
+    dbStore.updateEffort(err, client, db, io, data, debugOn)
   })
 }
 
@@ -107,7 +107,7 @@ function addEffortToOthersCard(data) {
   MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
     if (err) throw err;
     var db = client.db('db');
-    dbStore.addEffortToOthersCard(err, client, db, io, data)
+    dbStore.addEffortToOthersCard(err, client, db, io, data, debugOn)
   })
 }
 
@@ -115,7 +115,7 @@ function incrementAutoDeploy(data) {
   MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
     if (err) throw err;
     var db = client.db('db');
-    dbStore.incrementAutoDeploy(err, client, db, io, data)
+    dbStore.incrementAutoDeploy(err, client, db, io, data, debugOn)
   })
 }
 
@@ -123,7 +123,7 @@ function startAutoDeploy(data) {
   MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
     if (err) throw err;
     var db = client.db('db');
-    dbStore.startAutoDeploy(err, client, db, io, data)
+    dbStore.startAutoDeploy(err, client, db, io, data, debugOn)
   })
 }
 

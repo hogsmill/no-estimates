@@ -41,7 +41,7 @@ function _loadGame(err, client, db, io, data) {
   db.collection('games').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
     if (err) throw err;
     if (res) {
-      console.log("Loading game '" + data.gameName + "', team '" + data.teamName + "'")
+      if (debugOn) { console.log("Loading game '" + data.gameName + "', team '" + data.teamName + "'") }
       io.emit("loadGame", res)
       client.close();
     } else {
@@ -51,7 +51,7 @@ function _loadGame(err, client, db, io, data) {
         gameTeams.push(game.teamName)
         games.push(JSON.parse(JSON.stringify(game)))
       }
-      console.log("Created new game '" + data.gameName + "', teams '" + gameTeams.join(', ') + "'")
+      if (debugOn) { console.log("Created new game '" + data.gameName + "', teams '" + gameTeams.join(', ') + "'") }
       db.collection('games').insertMany(games, function(err, res) {
       if (err) throw err;
       for (i = 0; i < games.length; i++) {
@@ -112,7 +112,11 @@ function cardValue(workCards, card) {
   }
 }
 
-function moveCard(columns, workCards, card, n) {
+function cardComplete(card, colName) {
+  return !card.blocked && card[colName] == card.effort[colName] && (card.teamDependency == 0 || card.teamDependency == card.dependencyDone)
+}
+
+function moveCard(columns, workCards, card, n, currentDay) {
   var fromCol = columns[n]
   var toCol = columns[n + 1]
   var i, cards = []
@@ -124,7 +128,7 @@ function moveCard(columns, workCards, card, n) {
   fromCol.cards = cards
   if (toCol.name == 'done') {
     card.done = true
-    card.delivery = state.currentDay
+    card.delivery = currentDay
     card.time = card.delivery - card.commit
     cardValue(workCards, card)
   }
@@ -133,22 +137,33 @@ function moveCard(columns, workCards, card, n) {
 
 module.exports = {
 
-  updateRole: function(err, client, db, io, data) {
+  updateRole: function(err, client, db, io, data, debugOn) {
+
+    if (debugOn) { console.log('updateRole', data) }
+
     _updateRole(err, client, db, io, data)
   },
 
-  loadGame: function(err, client, db, io, data) {
-    _loadGame(err, client, db, io, data)
+  loadGame: function(err, client, db, io, data, debugOn) {
+
+    if (debugOn) { console.log('loadGame', data) }
+
+    _loadGame(err, client, db, io, data, debugOn)
   },
 
-  restartGame: function(err, client, db, io, data) {
+  restartGame: function(err, client, db, io, data, debugOn) {
+
+    if (debugOn) { console.log('restartGame', data) }
+
     db.collection('games').deleteMany({gameName: data.gameName}, function(err, res) {
-      _loadGame(err, client, db, io, data)
+      _loadGame(err, client, db, io, data, debugOn)
       io.emit("restartGame", data)
     })
   },
 
-  updateCurrentDay: function(err, client, db, io, data) {
+  updateCurrentDay: function(err, client, db, io, data, debugOn) {
+
+    if (debugOn) { console.log('updateCurrentDay', data) }
 
     db.collection('games').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
       if (err) throw err;
@@ -174,7 +189,9 @@ module.exports = {
     })
   },
 
-  updateCurrentWorkCard: function(err, client, db, io, data) {
+  updateCurrentWorkCard: function(err, client, db, io, data, debugOn) {
+
+    if (debugOn) { console.log('updateCurrentWorkCard', data) }
 
     db.collection('games').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
       if (err) throw err;
@@ -188,7 +205,9 @@ module.exports = {
     })
   },
 
-  updateCurrentEventCard: function(err, client, db, io, data) {
+  updateCurrentEventCard: function(err, client, db, io, data, debugOn) {
+
+    if (debugOn) { console.log('updateCurrentEventCard', data) }
 
     db.collection('games').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
       if (err) throw err;
@@ -202,12 +221,24 @@ module.exports = {
     })
   },
 
-  updateColumns: function(err, client, db, io, data) {
+  updateColumns: function(err, client, db, io, data, debugOn) {
+
+    if (debugOn) { console.log('updateColumns', data) }
 
     db.collection('games').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
       if (err) throw err;
       if (res) {
-        db.collection('games').updateOne({"_id": res._id}, {$set: {columns: data.columns}}, function(err, res) {
+        var columns = data.columns, workCards = res.workCards
+        for (var i = 1; i < columns.length; i++) {
+          for (var j = 0; j < columns[i].cards.length; j++) {
+            var card = columns[i].cards[j]
+            var colName = columns[i].name
+            if (cardComplete(card, colName)) {
+              moveCard(columns, workCards, card, i, res.currentDay)
+            }
+          }
+        }
+        db.collection('games').updateOne({"_id": res._id}, {$set: {columns: columns}}, function(err, res) {
           if (err) throw err;
           io.emit("updateColumns", data)
           client.close();
@@ -216,7 +247,9 @@ module.exports = {
     })
   },
 
-  updateQueues: function(err, client, db, io, data) {
+  updateQueues: function(err, client, db, io, data, debugOn) {
+
+    if (debugOn) { console.log('updateQueues', data) }
 
     db.collection('games').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
       if (err) throw err;
@@ -239,17 +272,6 @@ module.exports = {
             }
           }
         }
-        // Update completed
-        for (i = 1; i < columns.length - 1; i++) {
-          var column = columns[i]
-          var colName = column.name
-          for (j = 0; j < column.cards.length; j++) {
-            var card = column.cards[j]
-            if (!card.blocked && card[colName] == card.effort[colName]) {
-              moveCard(columns, workCards, card, i)
-            }
-          }
-        }
         db.collection('games').updateOne({"_id": res._id}, {$set: {columns: columns, workCards: workCards}}, function(err, res) {
           if (err) throw err;
           io.emit("updateColumns", columns)
@@ -258,7 +280,9 @@ module.exports = {
     })
   },
 
-  updateDependentTeam: function(err, client, db, io, data) {
+  updateDependentTeam: function(err, client, db, io, data, debugOn) {
+
+    if (debugOn) { console.log('updateDependentTeam', data) }
 
     db.collection('games').find({gameName: data.gameName}).toArray(function(err, res) {
       if (err) throw err;
@@ -305,21 +329,28 @@ module.exports = {
     })
   },
 
-  updateEffort: function(err, client, db, io, data) {
+  updateEffort: function(err, client, db, io, data, debugOn) {
+
+    if (debugOn) { console.log('updateEffort', data) }
 
     db.collection('games').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
       if (err) throw err;
       if (res) {
-        var columns = res.columns
+        var columns = res.columns, workCards = res.workCards
         for (var i = 1; i < columns.length; i++) {
           for (var j = 0; j < columns[i].cards.length; j++) {
             if (columns[i].cards[j].number == data.workCard.number) {
-              columns[i].cards[j].effort = data.workCard.effort
+              var card = columns[i].cards[j]
+              var colName = columns[i].name
+              card.effort = data.workCard.effort
+              if (cardComplete(card, colName)) {
+                moveCard(columns, workCards, card, i, res.currentDay)
+              }
             }
           }
         }
         data.columns = columns
-        db.collection('games').updateOne({"_id": res._id}, {$set: {columns: columns}}, function(err, res) {
+        db.collection('games').updateOne({"_id": res._id}, {$set: {columns: columns, workCards: workCards}}, function(err, res) {
           io.emit("updateColumns", data)
           client.close()
         })
@@ -327,17 +358,24 @@ module.exports = {
     })
   },
 
-  addEffortToOthersCard: function(err, client, db, io, data) {
+  addEffortToOthersCard: function(err, client, db, io, data, debugOn) {
+
+    if (debugOn) { console.log('addEffortToOthersCard', data) }
 
     db.collection('games').find({gameName: data.gameName}).toArray(function(err, res) {
       if (err) throw err;
       if (res.length) {
         team = res[0]
-        var i, j, columns = team.columns, teams = team.teams
+        var i, j, columns = team.columns, teams = team.teams, workCards = team.workCards
         for (i = 1; i < columns.length; i++) {
           for (j = 0; j < columns[i].cards.length; j++) {
             if (columns[i].cards[j].number == data.card.number) {
-              columns[i].cards[j].dependencyDone = columns[i].cards[j].dependencyDone + 1
+              var card = columns[i].cards[j]
+              var colName = columns[i].name
+              card.dependencyDone = card.dependencyDone + 1
+              if (cardComplete(card, colName)) {
+                moveCard(columns, workCards, card, i, team.currentDay)
+              }
             }
           }
         }
@@ -364,7 +402,9 @@ module.exports = {
     })
   },
 
-  startAutoDeploy: function(err, client, db, io, data) {
+  startAutoDeploy: function(err, client, db, io, data, debugOn) {
+
+    if (debugOn) { console.log('startAutoDeploy', data) }
 
     db.collection('games').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
       if (err) throw err;
@@ -385,7 +425,9 @@ module.exports = {
     })
   },
 
-  incrementAutoDeploy: function(err, client, db, io, data) {
+  incrementAutoDeploy: function(err, client, db, io, data, debugOn) {
+
+    if (debugOn) { console.log('incrementAutoDeploy', data) }
 
     db.collection('games').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
       if (err) throw err;
@@ -408,6 +450,6 @@ module.exports = {
         })
       }
     })
-  },
+  }
 
 }

@@ -62,7 +62,7 @@ function createNewGame(data) {
   game.currentEventCard = 0
   game.currentWorkCard = 0
   game.percentageBlocked = 0.05
-  game.percentageDeployFail = 0.05
+  game.percentageDeployFail = 0.5
   game.created = new Date().toISOString()
 
   return game
@@ -149,7 +149,7 @@ function blockOrFailCard(card, colName, percentageBlocked, percentageDeployFail)
   if (colName != 'deploy' && rand < percentageBlocked) {
     card.blocked = true
   }
-  if (colName == 'deploy' && rand < percentageDeployFail) {
+  if (colName == 'deploy' && card.deploy == card.effort['deploy'] && rand < percentageDeployFail) {
     card.failed = true
   }
 }

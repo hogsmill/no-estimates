@@ -40,6 +40,8 @@ export const store = new Vuex.Store({
     ],
     numberOfDays: 30,
     currentDay: 1,
+    percentageBlocked: 0,
+    percentageDeployFail: 0,
     eventCards: [
       {number: 1, text: "Good Luck!"},
       {number: 2, text: "Remember that manual deploymnts will fail a certian percentage of the time. In this case, you will need to re-do the deployment effort."},
@@ -140,6 +142,12 @@ export const store = new Vuex.Store({
     getNumberOfDays: (state) => {
       return state.numberOfDays;
     },
+    getPercentageBlocked: (state) => {
+      return state.percentageBlocked;
+    },
+    getPercentageDeployFail: (state) => {
+      return state.percentageDeployFail;
+    },
     getCurrentDay: (state) => {
       return state.currentDay;
     },
@@ -190,6 +198,8 @@ export const store = new Vuex.Store({
       state.teams = payload.teams;
       state.columns = payload.columns;
       state.currentDay = payload.currentDay;
+      state.percentageBlocked = payload.percentageBlocked;
+      state.percentageDeployFail = payload.percentageDeployFail;
       state.currentEventCard = payload.currentEventCard;
       state.currentWorkCard = payload.currentWorkCard;
       state.projectEstimate = payload.projectEstimate
@@ -215,6 +225,12 @@ export const store = new Vuex.Store({
     },
     updateRoles: (state, payload) => {
       state.roles = payload.roles
+    },
+    percentageBlocked: (state, payload) => {
+      state.percentageBlocked = payload.percentageBlocked
+    },
+    percentageDeployFail: (state, payload) => {
+      state.percentageDeployFail = payload.percentageDeployFail
     },
     updateTeams: (state, payload) => {
       state.teams = payload.teams
@@ -295,6 +311,12 @@ export const store = new Vuex.Store({
     },
     updateRole: ({ commit }, payload) => {
       commit("updateRole", payload);
+    },
+    percentageBlocked: ({ commit }, payload) => {
+      commit("percentageBlocked", payload);
+    },
+    percentageDeployFail: ({ commit }, payload) => {
+      commit("percentageDeployFail", payload);
     },
     updateTeamName: ({ commit }, payload) => {
       commit("updateTeamName", payload);

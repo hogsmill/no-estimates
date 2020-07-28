@@ -47,6 +47,22 @@ function updateRole(data) {
   })
 }
 
+function percentageBlocked(data) {
+  MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
+    if (err) throw err;
+    var db = client.db('db');
+    dbStore.percentageBlocked(err, client, db, io, data, debugOn)
+  })
+}
+
+function percentageDeployFail(data) {
+  MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
+    if (err) throw err;
+    var db = client.db('db');
+    dbStore.percentageDeployFail(err, client, db, io, data, debugOn)
+  })
+}
+
 function updateCurrentDay(data) {
   MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
     if (err) throw err;
@@ -170,8 +186,12 @@ io.on("connection", (socket) => {
   socket.on("loadGame", (data) => { loadGame(data) })
 
   socket.on("restartGame", (data) => { restartGame(data) })
-  
+
   socket.on("updateRole", (data) => { updateRole(data) })
+
+  socket.on("percentageBlocked", (data) => { percentageBlocked(data) })
+
+  socket.on("percentageDeployFail", (data) => { percentageDeployFail(data) })
 
   socket.on("showEventCard", (data) => { emit("showEventCard", data) })
 

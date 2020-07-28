@@ -141,6 +141,7 @@ export default {
 <style lang="scss">
   .report {
     width: 80px;
+    display: inline-block; 
 
     button {
       text-align: left;

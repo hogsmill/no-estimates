@@ -14,7 +14,10 @@
       <GameName v-bind:socket="socket" />
       <Status v-bind:socket="socket" />
       <div v-if="isSetUp()" class="container board">
-        <Report v-bind:socket="socket" />
+        <div class="game-buttons">
+          <Report v-bind:socket="socket" />
+          <GameParams v-bind:socket="socket" />
+        </div>
         <Roles />
         <Day v-bind:socket="socket" />
         <Board v-bind:socket="socket" />
@@ -34,6 +37,7 @@ import MyName from "./components/MyName.vue";
 import MyRole from "./components/MyRole.vue";
 import TeamName from "./components/TeamName.vue";
 import GameName from "./components/GameName.vue";
+import GameParams from "./components/GameParams.vue";
 import Status from "./components/Status.vue";
 import AboutView from "./components/about/AboutView.vue";
 import WalkThroughView from "./components/about/WalkThroughView.vue";
@@ -52,6 +56,7 @@ export default {
     TeamName,
     MyRole,
     GameName,
+    GameParams,
     Status,
     Report,
     Roles,
@@ -140,6 +145,18 @@ export default {
       }
     })
 
+    this.socket.on("percentageBlocked", (data) => {
+      if (this.gameName == data.gameName && this.teamName == data.teamName) {
+        this.$store.dispatch("percentageBlocked", data)
+      }
+    })
+
+    this.socket.on("percentageDeployFail", (data) => {
+      if (this.gameName == data.gameName && this.teamName == data.teamName) {
+        this.$store.dispatch("percentageDeployFail", data)
+      }
+    })
+
     this.socket.on("updateRoles", (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         this.$store.dispatch("updateRoles", data)
@@ -198,6 +215,10 @@ export default {
 
     margin-top: 6px;
     color: #fff;
+
+    .game-buttons {
+      text-align: left;
+    }
   }
 
 </style>

@@ -45,7 +45,6 @@ export default {
     },
     restart() {
       var restartGame = confirm("Are you sure you want to re-start this game?")
-      console.log(restartGame)
       if (restartGame) {
         this.socket.emit("restartGame", {gameName: this.gameName})
       }

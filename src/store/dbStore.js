@@ -191,6 +191,46 @@ module.exports = {
     _updateRole(err, client, db, io, data)
   },
 
+  percentageBlocked: function(err, client, db, io, data, debugOn) {
+
+    if (debugOn) { console.log('percentageBlocked', data) }
+
+    db.collection('games').find({gameName: data.gameName}).toArray(function(err, res) {
+      if (err) throw err;
+      if (res.length) {
+        for (var r = 0; r < res.length; r++) {
+          if (typeof(res[r]) != "undefined") {
+            db.collection('games').updateOne({"_id": res[r]._id}, {$set: {percentageBlocked: data.percentageBlocked}}, function(err, rec) {
+              if (err) throw err;
+              data.teamName = rec.teamName
+              io.emit("percentageBlocked", data)
+            })
+         }
+       }
+     }
+    })
+  },
+
+  percentageDeployFail: function(err, client, db, io, data, debugOn) {
+
+    if (debugOn) { console.log('percentageDeployFail', data) }
+
+    db.collection('games').find({gameName: data.gameName}).toArray(function(err, res) {
+      if (err) throw err;
+      if (res.length) {
+        for (var r = 0; r < res.length; r++) {
+          if (typeof(res[r]) != "undefined") {
+            db.collection('games').updateOne({"_id": res[r]._id}, {$set: {percentageDeployFail: data.percentageDeployFail}}, function(err, rec) {
+              if (err) throw err;
+              data.teamName = rec.teamName
+              io.emit("percentageDeployFail", data)
+            })
+          }
+        }
+      }
+    })
+  },
+
   loadGame: function(err, client, db, io, data, debugOn) {
 
     if (debugOn) { console.log('loadGame', data) }

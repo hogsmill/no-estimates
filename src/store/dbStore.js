@@ -155,8 +155,12 @@ function blockOrFailCard(card, colName, percentageBlocked, percentageDeployFail)
 }
 
 function cardCompleteInColumn(card, colName, percentageBlocked, percentageDeployFail) {
-  blockOrFailCard(card, percentageBlocked, percentageDeployFail)
-  return !card.blocked &&! card.failed && card[colName] == card.effort[colName] && (card.teamDependency == 0 || card.teamDependency == card.dependencyDone)
+  blockOrFailCard(card, colName, percentageBlocked, percentageDeployFail)
+  var dependentDone = true
+  if (colName == 'deploy') {
+    dependentDone == card.teamDependency == 0 || card.teamDependency == card.dependencyDone
+  }
+  return !card.blocked && !card.failed && card[colName] == card.effort[colName] && dependentDone
 }
 
 function moveCard(columns, workCards, card, n, currentDay) {

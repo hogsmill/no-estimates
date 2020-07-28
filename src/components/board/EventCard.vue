@@ -32,6 +32,7 @@ export default {
       this.$modal.hide('event-card-popup');
     },
     done(data) {
+      this.hide()
       var updateData = {gameName: this.gameName, teamName: this.teamName, currentDay: this.currentDay + 1}
       if (data) {
         for (var key in data) {
@@ -43,7 +44,6 @@ export default {
       }
       this.socket.emit("updateCurrentDay", updateData)
       this.socket.emit("updateCurrentEventCard", {gameName: this.gameName, teamName: this.teamName, currentEventCard: this.currentEventCard.number})
-      this.hide()
     },
     doFunction() {
       var data

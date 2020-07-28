@@ -170,7 +170,7 @@ io.on("connection", (socket) => {
   socket.on("loadGame", (data) => { loadGame(data) })
 
   socket.on("restartGame", (data) => { restartGame(data) })
-
+  
   socket.on("updateRole", (data) => { updateRole(data) })
 
   socket.on("showEventCard", (data) => { emit("showEventCard", data) })

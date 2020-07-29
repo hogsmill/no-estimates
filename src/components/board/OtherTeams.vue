@@ -9,8 +9,8 @@
             <div class="card-number">#{{card.number}}</div>
             <div class="card-team"><span :style="{ 'background-color': card.team.toLowerCase()}">{{card.team}}</span></div>
           </div>
-          <div class="other-work-card-effort">
-            <div class="other-work-card-column column rounded-circle" @click="addEffort(card)">X</div>
+          <div class="other-work-card-effort" @click="addEffort(card)">
+            <div class="other-work-card-column column rounded-circle">X</div>
             <div v-for="n in card.teamDependency" :key="n" :class="{'assigned' : n <= card.dependencyDone}" class="other-work-card-column rounded-circle"></div>
           </div>
           <div v-if="card.dependencyDone == card.teamDependency">COMPLETE</div>
@@ -133,6 +133,10 @@ export default {
     .other-work-card-effort {
       text-align: left;
 
+      &:hover {
+        cursor: pointer;
+      }
+
       .other-work-card-column {
         display: inline-block;
         border: 1px solid;
@@ -151,10 +155,6 @@ export default {
           height: 11px;
           font-size: 8px;
           padding-left: 2px;
-
-          &:hover {
-            cursor: pointer;
-          }
         }
       }
 

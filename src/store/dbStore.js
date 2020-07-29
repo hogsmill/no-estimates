@@ -380,43 +380,41 @@ module.exports = {
     db.collection('games').find({gameName: data.gameName}).toArray(function(err, res) {
       if (err) throw err;
       if (res.length) {
-        team = res[0]
-        var i, j, columns = team.columns
-        for (i = 1; i < columns.length; i++) {
-          for (j = 0; j < columns[i].cards.length; j++) {
-            var card = columns[i].cards[j]
-            if (card.number == data.workCard.number) {
-              card.dependentOn = data.dependentOn
-            }
-          }
-        }
-        var teams = team.teams
-        for (i = 0; i < teams.length; i++) {
-          var otherCards = []
-          for (j = 0; j < teams[i].otherCards.length; j++) {
-            if (teams[i].otherCards[j].number != data.workCard.number) {
-              otherCards.push(teams[i].otherCards[j])
-            }
-          }
-          teams[i].otherCards = otherCards
-        }
-        for (i = 0; i < teams.length; i++) {
-          if (teams[i].name == data.dependentOn.name) {
-            data.workCard.team = data.teamName
-            teams[i].otherCards.push(data.workCard)
-          }
-        }
+        var workCardTeam = data.teamName
         for (var r = 0; r < res.length; r++) {
-          if (typeof(res[r]) != "undefined") {
-            data.teamName = res[r].teamName
-            data.teams = teams
-            io.emit("updateTeams", data)
-            data.columns = columns
-            io.emit("updateColumns", data)
-            db.collection('games').updateOne({"_id": res[r]._id}, {$set: {teams: teams, columns: columns}}, function(err, res) {
-              if (err) throw err;
-            })
+          var i, j, columns = res[r].columns
+          for (i = 1; i < columns.length; i++) {
+            for (j = 0; j < columns[i].cards.length; j++) {
+              var card = columns[i].cards[j]
+              if (card.number == data.workCard.number) {
+                card.dependentOn = data.dependentOn
+              }
+            }
           }
+          var teams = res[r].teams
+          for (i = 0; i < teams.length; i++) {
+            var otherCards = []
+            for (j = 0; j < teams[i].otherCards.length; j++) {
+              if (teams[i].otherCards[j].number != data.workCard.number) {
+                otherCards.push(teams[i].otherCards[j])
+              }
+            }
+            teams[i].otherCards = otherCards
+          }
+          for (i = 0; i < teams.length; i++) {
+            if (teams[i].name == data.dependentOn.name) {
+              data.workCard.team = workCardTeam
+              teams[i].otherCards.push(data.workCard)
+            }
+          }
+          data.teamName = res[r].teamName
+          data.teams = teams
+          data.columns = columns
+          io.emit("updateTeams", data)
+          io.emit("updateColumns", data)
+          db.collection('games').updateOne({"_id": res[r]._id}, {$set: {teams: teams, columns: columns}}, function(err, res) {
+            if (err) throw err;
+          })
         }
       }
     })

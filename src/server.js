@@ -47,6 +47,14 @@ function updateRole(data) {
   })
 }
 
+function changeName(data) {
+  MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
+    if (err) throw err;
+    var db = client.db('db');
+    dbStore.changeName(err, client, db, io, data, debugOn)
+  })
+}
+
 function percentageBlocked(data) {
   MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
     if (err) throw err;
@@ -188,6 +196,8 @@ io.on("connection", (socket) => {
   socket.on("restartGame", (data) => { restartGame(data) })
 
   socket.on("updateRole", (data) => { updateRole(data) })
+
+  socket.on("changeName", (data) => { changeName(data) })
 
   socket.on("percentageBlocked", (data) => { percentageBlocked(data) })
 

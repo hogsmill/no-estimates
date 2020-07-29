@@ -10,7 +10,7 @@ export const store = new Vuex.Store({
     host: false,
     currency: '&#163;',
     gameName: '',
-    myName: '',
+    myName: {id: '', name: ''},
     myRole: '',
     teamName: '',
     teams: [
@@ -209,8 +209,15 @@ export const store = new Vuex.Store({
     updateGameName: (state, payload) => {
       state.gameName = payload;
     },
-    updateMyName: (state, payload) => {
-      state.myName = payload;
+    setMyName: (state, payload) => {
+      if (payload.uuid && payload.uuid == state.myName.uuid) {
+        state.myName.name = payload.name;
+      } else {
+        state.myName = payload;
+      }
+    },
+    changeName: (state, payload) => {
+      state.myName.name = payload.name;
     },
     updateMyRole: (state, payload) => {
       state.myRole = payload;
@@ -291,8 +298,11 @@ export const store = new Vuex.Store({
     updateGameName: ({ commit }, payload) => {
       commit("updateGameName", payload);
     },
-    updateMyName: ({ commit }, payload) => {
-      commit("updateMyName", payload);
+    setMyName: ({ commit }, payload) => {
+      commit("setMyName", payload);
+    },
+    changeName: ({ commit }, payload) => {
+      commit("changeName", payload);
     },
     updateMyRole: ({ commit }, payload) => {
       commit("updateMyRole", payload);

@@ -104,7 +104,7 @@ function _updateRole(err, client, db, io, data) {
       for (i = 0; i < roles.length; i++) {
         var names = []
         for (j = 0; j < roles[i].names.length; j++) {
-          if (roles[i].names[j] != data.name) {
+          if (roles[i].names[j].id != data.name.id) {
             names.push(roles[i].names[j])
           }
         }
@@ -189,6 +189,38 @@ module.exports = {
     if (debugOn) { console.log('updateRole', data) }
 
     _updateRole(err, client, db, io, data)
+  },
+
+  changeName: function(err, client, db, io, data, debugOn) {
+
+    if (debugOn) { console.log('changeName', data) }
+
+    db.collection('games').find({gameName: data.gameName}).toArray(function(err, res) {
+      if (err) throw err;
+      if (res.length) {
+        for (var r = 0; r < res.length; r++) {
+          if (typeof(res[r]) != "undefined") {
+            for (var i = 0; i < res[r].roles.length; i++) {
+              var names = []
+              for (var j = 0; j < res[r].roles[i].names.length; j++) {
+                var name = res[r].roles[i].names[j]
+                if (name.id == data.name.id) {
+                  name.name = data.newName
+                }
+                names.push(name)
+              }
+              res[r].roles[i].names = names
+            }
+            data.roles = res[r].roles
+            data.teamName = res[r].teamName
+            io.emit("updateRoles", data)
+            db.collection('games').updateOne({"_id": res[r]._id}, {$set: {roles: data.roles}}, function(err, rec) {
+              if (err) throw err;
+            })
+          }
+        }
+      }
+    })
   },
 
   percentageBlocked: function(err, client, db, io, data, debugOn) {

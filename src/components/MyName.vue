@@ -2,7 +2,7 @@
   <div class="my-name" v-if="!showAbout">
     <div class="my-name text-right">
       <button class="btn btn-sm btn-secondary smaller-font" v-if="!myName" @click="show">Set My Name</button>
-      <span v-if="myName" @click="show" class="mr-2 mt-2 pointer p-2 bg-light">I am: {{myName}}</span>
+      <span v-if="myName" @click="show" class="mr-2 mt-2 pointer p-2 bg-light">I am: {{myName.name}}</span>
       <div class="effort-div" v-if="myName">
         <div v-for="n in myEffort.available" :key="n" class="effort rounded-circle"
           :class="getClass(n)">{{n}}</div>
@@ -29,6 +29,8 @@
 </template>
 
 <script>
+import { v4 as uuidv4 } from 'uuid';
+
 export default {
   props: [
     'socket'
@@ -52,10 +54,19 @@ export default {
       this.$modal.hide('set-my-name');
     },
     saveMyName: function() {
-      var myName = document.getElementById('my-name').value
-      this.$store.dispatch("updateMyName", myName)
-      localStorage.setItem("myName", myName);
-      this.socket.emit("addMyNameAsAPlayer", {gameName: this.gameName, player: myName, oldName: this.myName})
+      var oldName = this.myName
+      var newName = document.getElementById('my-name').value
+      var myNameData
+      if (!oldName.id) {
+        var uuid = uuidv4()
+        myNameData = {id: uuid, name: newName}
+        this.$store.dispatch("setMyName", myNameData)
+      } else {
+        myNameData = {id: this.myName.id, name: newName}
+        this.$store.dispatch("changeName", {name: newName})
+        this.socket.emit("changeName", {gameName: this.gameName, name: oldName, newName: newName})
+      }
+      localStorage.setItem("myName", JSON.stringify(myNameData));
       this.hide()
     }
   },
@@ -71,14 +82,10 @@ export default {
     },
     myEffort() {
       return this.$store.getters.getMyEffort
+    },
+    teams() {
+      return this.$store.getters.getTeams
     }
-  },
-  mounted() {
-    this.socket.on("addMyNameAsAPlayer", (data) => {
-      if (this.gameName == data.gameName) {
-        this.$store.dispatch("addPlayer", data.player)
-      }
-    })
   }
 }
 </script>

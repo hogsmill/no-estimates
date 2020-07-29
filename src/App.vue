@@ -73,7 +73,7 @@ export default {
       var setUp = this.myName && this.teamName && this.myRole && this.gameName
       if (setUp && !this.setUp) {
         this.setUp = true
-        localStorage.setItem("myName", this.myName)
+        localStorage.setItem("myName", JSON.stringify(this.myName))
         localStorage.setItem("teamName", this.teamName)
         localStorage.setItem("myRole", this.myRole)
         localStorage.setItem("gameName", this.gameName)
@@ -121,7 +121,12 @@ export default {
 
     var myName = localStorage.getItem("myName")
     if (myName) {
-      this.$store.dispatch("updateMyName", myName)
+      if (!myName.match(/"id":/)) {
+        localStorage.removeItem('myName')
+      } else {
+        myName = JSON.parse(myName)
+        this.$store.dispatch("setMyName", myName)
+      }
     }
 
     var teamName = localStorage.getItem("teamName")

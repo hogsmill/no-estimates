@@ -1,4 +1,6 @@
 
+const util = require('util')
+
 var initialRoles = [
   {role: 'Designer', order: 1, names: []},
   {role: 'Developer', order: 2, names: []},
@@ -54,6 +56,7 @@ function createNewGame(data) {
 
   var game = data
   game.roles = initialRoles
+  game.pairing = []
   game.teams = initialTeams
   game.columns = initialColumns
   game.workCards = initialCards
@@ -478,6 +481,63 @@ module.exports = {
           io.emit("updateColumns", data)
           io.emit("updateWorkCards", data)
           client.close()
+        })
+      }
+    })
+  },
+
+  pairingDay: function(err, client, db, io, data, debugOn) {
+
+    if (debugOn) { console.log('pairingDay', data) }
+
+    db.collection('games').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
+      if (err) throw err;
+      if (res) {
+        var i, pairing = [], player
+        for (i = 0; i < res.pairing.length; i++) {
+          if (res.pairing[i].name.id == data.name.id) {
+            player = res.pairing[i]
+          } else {
+            pairing.push(res.pairing[i])
+          }
+        }
+        if (!player) {
+          player = {name: data.name, columns: [{column: data.column, days: [data.day]}]}
+        } else {
+          var column
+          for (i = 0; i < player.columns.length; i++) {
+            if (player.columns[i].column == data.column) {
+              column = player.columns[i]
+            }
+          }
+          if (!column) {
+            player.columns.push({column: data.column, days: [data.day]})
+          } else {
+            var dayDone = false
+            for (i = 0; i < column.days.length; i++) {
+              if (column.days[i] == data.day) {
+                dayDone = true
+              }
+            }
+            if (!dayDone) {
+              column.days.push(data.day)
+            }
+            var columns = []
+            for (i = 0; i < player.columns.length; i++) {
+              if (player.columns[i].column == data.column) {
+                columns.push(column)
+              } else {
+                columns.push(player.columns[i])
+              }
+            }
+            player.columns = columns
+          }
+        }
+        pairing.push(player)
+        data.pairing = pairing
+        io.emit("updatePairing", data)
+        db.collection('games').updateOne({"_id": res._id}, {$set: {pairing: pairing}}, function(err, res) {
+          if (err) throw err;
         })
       }
     })

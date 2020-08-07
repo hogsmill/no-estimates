@@ -5,7 +5,7 @@
     <div v-if="showAbout">
       <AboutView />
     </div>
-    <div v-else>
+    <div class="main" v-else>
       <h1>No Estimates <span v-if="teamName">(Team: {{teamName}})</span></h1>
       <h3 class="setup-header" v-if="!isSetUp()">Before we start the game, please set your name, team, speciality and game</h3>
       <MyName v-bind:socket="socket" />
@@ -185,11 +185,18 @@ export default {
         this.$store.dispatch("updateWorkCards", data)
       }
     })
+
+    this.socket.on("updatePairing", (data) => {
+      if (this.gameName == data.gameName && this.teamName == data.teamName) {
+        this.$store.dispatch("updatePairing", data)
+      }
+    })
   },
 }
 </script>
 
 <style lang="scss">
+
   .not-host {
     height: 0px;
     visibility: hidden;

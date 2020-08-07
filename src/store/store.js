@@ -43,28 +43,26 @@ export const store = new Vuex.Store({
     percentageBlocked: 0,
     percentageDeployFail: 0,
     eventCards: [
-      {number: 1, text: "Good Luck!"},
+      {number: 1, text: "Good Luck!<br/><br/>. Have you submitted an initial estimate for the project? Click 'Report' and create your estimate now."},
       {number: 2, text: "Remember that manual deploymnts will fail a certian percentage of the time. In this case, you will need to re-do the deployment effort."},
       {number: 3, function: 'Add 1 Point To Everyones Capacity', text: "Pizza inspires your team to greatness! Add one to each person's capacity tomorrow."},
       {number: 4, text: "Did you remember that people can work in areas outside their speciality? They require two effort points to make one effort point in another area."},
       {number: 5, function: 'Add 8 points to Deploy', confirm: true, autoDeployCard: true, text: "You read that automating deployments can lead to better quality and more predictable delivery. If you'd like to invest in that, you'll need to spend 8 effort points in Deploy (you can do this over multiple sprints)</br></br>(<em>You can do this later by clicking the '*' in the Deploy Column header</em>)"},
-      {number: 6, function: 'Pairing', text: "Would someone like to learn a new skill? If so, give this card to that person. After that person spends five days pairing with someone in a work stage different from his or her speciality, the person will be able to work in that state at a 1:1 effort ratio."},
-      {number: 7, text: "Perhaps you have delivered at least one card? If so, are you able to forecast when you might deliver the Minimum Viable Product, which the Product Owner has defined as cards #1-11 "},
-      {number: 8, text: "In this game, you may have been committing to work on an individual work-item basis. Now a new Scrum Master has joined the comapny, and she wants you to do batch commitment (i.e. pull in as many stories at once as you belive you can accomplish in a week). Will you do this?"},
-      {number: 9, text: "Testers and Developers want to sit together. You now have the option to fo concurrent Dev and Test (i.e. no need to finish Development effort before beginning Testing). Do you want to do this?"},
-      {number: 10, function: 'Spend a Day Estimating', text: "Vince from the PMO says he's nervous that you're not producing enough according to your original estimate. As a result, he wants you to spend time re-estimating. Lock the team in a room for a day and do no delivery work tomorrow - update your estimate for delivering the entire project and move your day tracker one more day."},
-      {number: 11, text: "Vince is satisfied with your estimate and sends it around to the business in an email titled 'Team commits to deadline'"},
-      {number: 12, function: 'Have Paired', text: "Did you pair (more than one person worked on a single card in one work stage) today? If so, tick off an extra point of work in each stage where the pairing occured (for today only)"},
-      {number: 13, function: 'Lose Tester', text: "Your oranisation has lost a tester so one of your testers now has to support multiple teams. One tester loses two points of effort tomorrow. (Disregard if you have no tester)"},
-      {number: 14, function: 'Deploy Dice', text: "You have found that quality improves when you have someone pair with a Deployer. Roll an eight-sided die whenever you finish a work card, whenever someone in addition to Deployer works in deploy. (Disregard if you're doing automated delpoyments)"},
-      {number: 15, text: "Team rechartering! Would you like to restructure your team? Feel free to change role specialties or negotiate with other teams to bring on new members."},
-      {number: 16, text: "If you restructured your team yesterday, how do you expect the change to impact your forecast."},
-      {number: 17, text: "Jim from accounting sales sends an email directing employees to make sure they're fully utilised (i.e. follow a policy that you do not leave capacity on the table). Do you obey or silently ignore him?"},
-      {number: 18, text: "How much work in progress do you have? Has that changed from earlier?"},
-      {number: 19, text: "When you have completed the MVP (cards 1 to 11), look at your estimates from earlier. How did you do? This time, try creating a probabilistic forecast for the rest of the backlog using the delivery-time data (ask the facilitator for help)."}
-
-      //{number: 6, text: "If you decided yesterday to automate deployments, when you complete the delivery automation, you will no longer have to roll the die when you deploy."},
-      //{number: 15, text: "Would you like to restructure your team? Feel free to change role specialities or negotiate with other teams to bring on new members."},
+      {number: 6, text: "If you decided yesterday to automate deployments, when you complete the delivery automation, deployments will no longr fail, and you will no longer have to re-do any deploy work."},
+      {number: 7, text: "Would someone like to learn a new skill? If so, give this card to that person. After that person spends five days working in a work stage different from his or her speciality, the person will be able to work in that state at a 1:1 effort ratio."},
+      {number: 8, text: "Perhaps you have delivered at least one card? If so, are you able to forecast when you might deliver the Minimum Viable Product, which the Product Owner has defined as cards #1-11 "},
+      {number: 9, text: "In this game, you may have been committing to work on an individual work-item basis. Now a new Scrum Master has joined the comapny, and she wants you to do batch commitment (i.e. pull in as many stories at once as you believe you can accomplish in a week). Will you do this?"},
+      {number: 10, function: 'Concurrent Dev and Test', text: "Testers and Developers want to sit together. You now have the option to do concurrent Dev and Test (i.e. no need to finish Development effort before beginning Testing). Do you want to do this?"},
+      {number: 11, function: 'Spend a Day Estimating', text: "Vince from the PMO says he's nervous that you're not producing enough according to your original estimate. As a result, he wants you to spend time re-estimating. Lock the team in a room for a day and do no delivery work tomorrow - update your estimate for delivering the entire project and move your day tracker one more day."},
+      {number: 12, text: "Vince is satisfied with your estimate and sends it around to the business in an email titled 'Team commits to deadline'"},
+      {number: 13, function: 'Have Paired', text: "Did you pair (more than one person worked on a single card in one work stage) today? If so, tick off an extra point of work in each stage where the pairing occured (for today only)"},
+      {number: 14, function: 'Lose Tester', text: "Your oranisation has lost a tester so one of your testers now has to support multiple teams. One tester loses two points of effort tomorrow. (Disregard if you have no tester)"},
+      {number: 15, function: 'Deploy Dice', text: "You have found that quality improves when you have someone pair with a Deployer. Roll an eight-sided die whenever you finish a work card, whenever someone in addition to Deployer works in deploy. (Disregard if you're doing automated delpoyments)"},
+      {number: 16, text: "Team rechartering! Would you like to restructure your team? Feel free to change role specialties or negotiate with other teams to bring on new members."},
+      {number: 17, text: "If you restructured your team yesterday, how do you expect the change to impact your forecast."},
+      {number: 19, text: "Jim from accounting sales sends an email directing employees to make sure they're fully utilised (i.e. follow a policy that you do not leave capacity on the table). Do you obey or silently ignore him?"},
+      {number: 19, text: "How much work in progress do you have? Has that changed from earlier?"},
+      {number: 20, text: "When you have completed the MVP (cards 1 to 11), look at your estimates from earlier. How did you do? This time, try creating a probabilistic forecast for the rest of the backlog using the delivery-time data (ask the facilitator for help)."}
     ],
     currentEventCard: 0,
     workCards: [
@@ -224,8 +222,11 @@ export const store = new Vuex.Store({
       state.myEffort.role = payload;
     },
     updateMyAssignedEffort: (state, payload) => {
-      state.myEffort.available = state.myEffort.available - payload;
-      state.myEffort.assigned = state.myEffort.assigned + payload;
+      state.myEffort.available = state.myEffort.available - payload.effort;
+      state.myEffort.assigned = state.myEffort.assigned + payload.effort;
+    },
+    updatePairing: (state, payload) => {
+      state.pairing = payload.pairing;
     },
     updateEffortPerDay: (state, payload) => {
       state.effortPerDay = payload;
@@ -309,6 +310,9 @@ export const store = new Vuex.Store({
     },
     updateMyAssignedEffort: ({ commit }, payload) => {
       commit("updateMyAssignedEffort", payload);
+    },
+    updatePairing: ({ commit }, payload) => {
+      commit("updatePairing", payload);
     },
     updateEffortPerDay: ({ commit }, payload) => {
       commit("updateEffortPerDay", payload);

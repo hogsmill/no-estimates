@@ -62,7 +62,7 @@ export default {
       } else {
         this.socket.emit("addEffortToOthersCard", {gameName: this.gameName, teamName: this.teamName, card: card, myName: this.myName})
         this.socket.emit("updateOtherTeamEffort", {gameName: this.gameName, teamName: this.teamName, card: card})
-        this.$store.dispatch("updateMyAssignedEffort", 1)
+        this.$store.dispatch("updateMyAssignedEffort", {effort: 1})
       }
     }
   },

@@ -16,7 +16,7 @@ export default {
   methods: {
     addEffort() {
       if (this.myEffort.available > 0) {
-        this.$store.dispatch("updateMyAssignedEffort", 1)
+        this.$store.dispatch("updateMyAssignedEffort", {effort: 1})
         this.socket.emit("incrementAutoDeploy", {gameName: this.gameName, teamName: this.teamName})
         this.socket.emit("updatePersonAutoDeployEffort", {gameName: this.gameName, teamName: this.teamName, name: this.myName})
       }

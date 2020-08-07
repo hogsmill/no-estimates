@@ -175,6 +175,14 @@ function updateReEstimate(data) {
   })
 }
 
+function pairingDay(data) {
+  MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
+    if (err) throw err;
+    var db = client.db('db');
+    dbStore.pairingDay(err, client, db, io, data, debugOn)
+  })
+}
+
 io.on("connection", (socket) => {
   var connection = socket.handshake.headers.host
   connections[connection] = connections[connection] ? connections[connection] + 1 : 1
@@ -220,6 +228,8 @@ io.on("connection", (socket) => {
   socket.on("updatePersonAutoDeployEffort", (data) => { emit("updatePersonAutoDeployEffort", data) })
 
   socket.on("updateEffort", (data) => { updateEffort(data) })
+
+  socket.on("pairingDay", (data) => { pairingDay(data) })
 
   socket.on("resetEffort", (data) => { emit("resetEffort", data) })
 

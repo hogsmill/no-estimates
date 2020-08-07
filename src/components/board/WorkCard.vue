@@ -108,13 +108,14 @@ export default {
         } else {
           if (column == stringFuns.roleToColumn(this.myRole)) {
             this.workCard.effort[column] = this.workCard.effort[column] + 1
-            this.$store.dispatch("updateMyAssignedEffort", 1)
+            this.$store.dispatch("updateMyAssignedEffort", {effort: 1})
           } else {
             if (this.myEffort.available < 2) {
               message = "Can't assign - you only have one effort point left"
             } else {
               this.workCard.effort[column] = this.workCard.effort[column] + 1
-              this.$store.dispatch("updateMyAssignedEffort", 2)
+              this.$store.dispatch("updateMyAssignedEffort", {effort: 2})
+              this.socket.emit("pairingDay", {gameName: this.gameName, teamName: this.teamName, name: this.myName, column: column, day: this.currentDay})
             }
           }
         }

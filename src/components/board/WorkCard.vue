@@ -7,19 +7,19 @@
       <div class="card-number">#{{workCard.number}}</div>
       <div class="card-effort">Effort: {{totalEffort()}}</div>
     </div>
-    <div class="work-card-effort" :class="{ 'current' : column == 'design' }" @click="addEffort('design')">
+    <div class="work-card-effort" :class="{ 'current' : canAssign('design') }" @click="addEffort('design')">
       <div class="work-card-column column rounded-circle" :class="{'design': !workCard.blocked}">A</div>
       <div v-for="n in workCard.design" :key="n" :class="{'assigned' : n <= workCard.effort.design}" class="work-card-column rounded-circle"></div>
     </div>
-    <div class="work-card-effort" :class="{ 'current' : column == 'develop' }" @click="addEffort('develop')">
+    <div class="work-card-effort" :class="{ 'current' : canAssign('develop') }" @click="addEffort('develop')">
       <div class="work-card-column column rounded-circle" :class="{'develop': !workCard.blocked}">B</div>
       <div v-for="n in workCard.develop" :key="n" :class="{'assigned' : n <= workCard.effort.develop}" class="work-card-column rounded-circle"></div>
     </div>
-    <div class="work-card-effort" :class="{ 'current' : column == 'test' }" @click="addEffort('test')">
+    <div class="work-card-effort" :class="{ 'current' : canAssign('test') }" @click="addEffort('test')">
       <div class="work-card-column column rounded-circle" :class="{'test': !workCard.blocked}">C</div>
       <div v-for="n in workCard.test" :key="n" :class="{'assigned' : n <= workCard.effort.test}" class="work-card-column rounded-circle"></div>
     </div>
-    <div class="work-card-effort" :class="{ 'current' : column == 'deploy' }" @click="addEffort('deploy')">
+    <div class="work-card-effort" :class="{ 'current' : canAssign('deploy') }" @click="addEffort('deploy')">
       <div class="work-card-column column rounded-circle" :class="{'deploy': !workCard.blocked}">D</div>
       <div v-for="n in workCard.deploy" :key="n" :class="{'assigned' : n <= workCard.effort.deploy}" class="work-card-column rounded-circle"></div>
     </div>
@@ -96,6 +96,16 @@ export default {
     time() {
       return this.currentDay - this.workCard.commit
     },
+    canAssign(column) {
+      var concurrent = false
+      for (var i= 0; i < this.teams.length; i++) {
+        if (this.teamName == this.teams[i].name && this.teams[i].concurrentDevAndTest) {
+          concurrent = true
+        }
+      }
+      concurrent = concurrent && (column == 'develop' || column == 'test')
+      return this.column == column || concurrent
+    },
     addEffort(column) {
       var message = ''
       if (this.workCard.blocked) {
@@ -119,7 +129,7 @@ export default {
             }
           }
         }
-      } else if (this.column != column) {
+      } else if (!this.canAssign(column)) {
         message = "Can't assign - wrong column"
       }
       if (message) {

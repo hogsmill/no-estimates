@@ -7,8 +7,10 @@
           <tr>
             <th v-for="(column, index) in columns" :key="index">
               <div :class="column.name">
+                <span class="concurrentDevAndTest" v-if="concurrentDevAndTestTest(column)" title="Concurrent Dev and Test Allowed">&#x021A4;</span>
                 {{columnDisplayName(column.name)}}
-                <span class="autoDeploy" v-if="showAutoDeploy(column)">&#10004;</span>
+                <span class="concurrentDevAndTest" v-if="concurrentDevAndTestDev(column)" title="Concurrent Dev and Test Allowed">&#x021A6;</span>
+                <span class="autoDeploy" v-if="showAutoDeploy(column)" title="Deployment is now automated">&#10004;</span>
                 <span class="canStartAutoDeploy rounded-circle" v-if="canStartAutoDeploy(column)" @click="startAutoDeploy()">&#10033;</span>
               </div>
             </th>
@@ -43,6 +45,12 @@ export default {
   methods: {
     columnDisplayName(s) {
       return stringFuns.properCase(s)
+    },
+    concurrentDevAndTestDev(column) {
+      return this.teamName && this.myTeam.concurrentDevAndTest && column.name == 'develop'
+    },
+    concurrentDevAndTestTest(column) {
+      return this.teamName && this.myTeam.concurrentDevAndTest && column.name == 'test'
     },
     showAutoDeploy(column) {
       return this.teamName && this.myTeam.autoDeploy.done && column.name == 'deploy'

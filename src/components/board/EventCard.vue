@@ -54,6 +54,9 @@ export default {
         case 'Add 8 points to Deploy':
           data = {autoDeploy: true}
           break
+        case 'Concurrent Dev and Test':
+          data = {concurrentDevAndTest: true}
+          break
         case 'Lose Tester':
           data = {testCapacity: 2}
           break

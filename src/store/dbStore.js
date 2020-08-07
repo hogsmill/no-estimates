@@ -299,6 +299,9 @@ module.exports = {
             if (data.canStartAutoDeploy) {
               teams[i].canStartAutoDeploy = true
             }
+            if (data.concurrentDevAndTest) {
+              teams[i].concurrentDevAndTest = true
+            }
           }
         }
         for (var i = 1; i < columns.length; i++) {

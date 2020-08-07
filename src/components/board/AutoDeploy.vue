@@ -1,8 +1,8 @@
 <template>
   <div class="auto-deploy">
     <div class="deploy-card-header">Auto Deploy</div>
-    <div class="deploy-card-effort">
-      <div class="deploy-card-column column rounded-circle" @click="addEffort('auto-deploy')">A</div>
+    <div class="deploy-card-effort" @click="addEffort('auto-deploy')">
+      <div class="deploy-card-column column rounded-circle" >A</div>
       <div v-for="n in 8" :key="n" class="deploy-card-column rounded-circle" :class="{'assigned' : n <= myTeam.autoDeploy.effort}"></div>
     </div>
   </div>

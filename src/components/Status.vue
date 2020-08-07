@@ -37,7 +37,7 @@ export default {
     })
     this.socket.on("updatePersonAutoDeployEffort", (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
-        self.setStatus(data.name,name + ' has added Auto Deploy effort')
+        self.setStatus(data.name.name + ' has added Auto Deploy effort')
       }
     })
     this.socket.on("updateOtherTeamEffort", (data) => {

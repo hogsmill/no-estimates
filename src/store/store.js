@@ -14,10 +14,10 @@ export const store = new Vuex.Store({
     myRole: '',
     teamName: '',
     teams: [
-      { name: 'Blue', otherCards: [], canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
-      { name: 'Green', otherCards: [], canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
-      { name: 'Purple', otherCards: [], canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
-      { name: 'Red', otherCards: [], canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } }
+      { name: 'Blue', otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
+      { name: 'Green', otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
+      { name: 'Purple', otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
+      { name: 'Red', otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } }
     ],
     myEffort: {
       available: 4,
@@ -43,8 +43,8 @@ export const store = new Vuex.Store({
     percentageBlocked: 0,
     percentageDeployFail: 0,
     eventCards: [
-      {number: 1, text: "Good Luck!<br/><br/>. Have you submitted an initial estimate for the project? Click 'Report' and create your estimate now."},
-      {number: 2, text: "Remember that manual deploymnts will fail a certian percentage of the time. In this case, you will need to re-do the deployment effort."},
+      {number: 1, text: "Good Luck!<br/><br/>. Have you submitted an initial estimate for the project?<br/><br/>Click 'Report' and create your estimate now."},
+      {number: 2, text: "Remember that manual deploymnts will fail a certain percentage of the time. In this case, you will need to re-do the deployment effort."},
       {number: 3, function: 'Add 1 Point To Everyones Capacity', text: "Pizza inspires your team to greatness! Add one to each person's capacity tomorrow."},
       {number: 4, text: "Did you remember that people can work in areas outside their speciality? They require two effort points to make one effort point in another area."},
       {number: 5, function: 'Add 8 points to Deploy', confirm: true, autoDeployCard: true, text: "You read that automating deployments can lead to better quality and more predictable delivery. If you'd like to invest in that, you'll need to spend 8 effort points in Deploy (you can do this over multiple sprints)</br></br>(<em>You can do this later by clicking the '*' in the Deploy Column header</em>)"},

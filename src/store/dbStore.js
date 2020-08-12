@@ -190,7 +190,7 @@ function addSecondarySkill(roles, column, name) {
   for (var i = 0; i < roles.length; i++) {
     if (roles[i].role == role) {
       var roleExists = false
-      for (j = 0; j < roles[i].otherNames; j++) {
+      for (j = 0; j < roles[i].otherNames.length; j++) {
         if (roles[i].otherNames[j].id == name.id) {
           roleExists = true
         }

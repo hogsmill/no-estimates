@@ -120,6 +120,17 @@ export const store = new Vuex.Store({
     getMyRole: (state) => {
       return state.myRole;
     },
+    getMyOtherRoles: (state) => {
+      var roles = []
+      for (var i = 0; i < state.roles.length; i++) {
+        for (var j = 0; j < state.roles[i].otherNames.length; j++) {
+          if (state.myName.id == state.roles[i].otherNames[j].id) {
+            roles.push(state.roles[i].role)
+          }
+        }
+      }
+      return roles;
+    },
     getMyEffort: (state) => {
       return state.myEffort;
     },

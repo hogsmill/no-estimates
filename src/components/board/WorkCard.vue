@@ -106,6 +106,20 @@ export default {
       concurrent = concurrent && (column == 'develop' || column == 'test')
       return this.column == column || concurrent
     },
+    iHaveRole(column) {
+      var haveRole = false
+      if (column == stringFuns.roleToColumn(this.myRole)) {
+        haveRole = true
+      } else {
+        var roles = this.myOtherRoles
+        for (var i = 0; i < roles.length; i++) {
+          if (column == stringFuns.roleToColumn(roles[i])) {
+            haveRole = true
+          }
+        }
+      }
+      return haveRole
+    },
     addEffort(column) {
       var message = ''
       if (this.workCard.blocked) {
@@ -116,7 +130,7 @@ export default {
         } else if (this.workCard.effort[column] == this.workCard[column]) {
           message = "Can't assign - all work completed"
         } else {
-          if (column == stringFuns.roleToColumn(this.myRole)) {
+          if (this.iHaveRole(column)) {
             this.workCard.effort[column] = this.workCard.effort[column] + 1
             this.$store.dispatch("updateMyAssignedEffort", {effort: 1})
           } else {
@@ -166,6 +180,9 @@ export default {
     },
     myRole() {
       return this.$store.getters.getMyRole
+    },
+    myOtherRoles() {
+      return this.$store.getters.getMyOtherRoles
     },
     myEffort() {
       return this.$store.getters.getMyEffort

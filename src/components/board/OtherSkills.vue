@@ -6,9 +6,11 @@
     <div v-for="(pairday, index) in pairing" :key="index">
       <div v-if="pairday.name.id == myName.id">
         <div v-for="(column, col) in pairday.columns" :key="col" class="other-skill">
-          <div class="skill">{{columnName(column.column)}}</div>
-          <div class="skill-circles">
-            <div v-for="n in 5" :key="n" :class="{'done' : n <= column.days.length}" class="skill-circle rounded-circle"></div>
+          <div v-if="column.days.length < 5">
+            <div class="skill">{{columnName(column.column)}}</div>
+            <div class="skill-circles">
+              <div v-for="n in 5" :key="n" :class="{'done' : n <= column.days.length}" class="skill-circle rounded-circle"></div>
+            </div>
           </div>
         </div>
       </div>

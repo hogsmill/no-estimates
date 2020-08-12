@@ -19,16 +19,17 @@ export const store = new Vuex.Store({
       { name: 'Purple', otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
       { name: 'Red', otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } }
     ],
+    pairing: [],
     myEffort: {
       available: 4,
       assigned: 0,
       role: ''
     },
     roles: [
-      {role: 'Designer', order: 1, names: []},
-      {role: 'Developer', order: 2, names: []},
-      {role: 'Tester', order: 3, names: []},
-      {role: 'Deployer', order: 4, names: []}
+      {role: 'Designer', order: 1, names: [], otherNames: []},
+      {role: 'Developer', order: 2, names: [], otherNames: []},
+      {role: 'Tester', order: 3, names: [], otherNames: []},
+      {role: 'Deployer', order: 4, names: [], otherNames: []}
     ],
     columns: [
       {name: "options", order: 1},
@@ -136,6 +137,9 @@ export const store = new Vuex.Store({
     },
     getTeams: (state) => {
       return state.teams;
+    },
+    getPairing: (state) => {
+      return state.pairing;
     },
     getNumberOfDays: (state) => {
       return state.numberOfDays;

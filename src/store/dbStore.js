@@ -2,10 +2,10 @@
 const util = require('util')
 
 var initialRoles = [
-  {role: 'Designer', order: 1, names: []},
-  {role: 'Developer', order: 2, names: []},
-  {role: 'Tester', order: 3, names: []},
-  {role: 'Deployer', order: 4, names: []}
+  {role: 'Designer', order: 1, names: [], otherNames: []},
+  {role: 'Developer', order: 2, names: [], otherNames: []},
+  {role: 'Tester', order: 3, names: [], otherNames: []},
+  {role: 'Deployer', order: 4, names: [], otherNames: []}
 ]
 
 var initialTeams = [
@@ -183,6 +183,24 @@ function moveCard(columns, workCards, card, n, currentDay) {
     cardValue(workCards, card)
   }
   toCol.cards.push(card)
+}
+
+function addSecondarySkill(roles, column, name) {
+  var role = column.charAt(0).toUpperCase() + column.slice(1) + 'er'
+  for (var i = 0; i < roles.length; i++) {
+    if (roles[i].role == role) {
+      var roleExists = false
+      for (j = 0; j < roles[i].otherNames; j++) {
+        if (roles[i].otherNames[j].id == name.id) {
+          roleExists = true
+        }
+      }
+      if (!roleExists) {
+        roles[i].otherNames.push(name)
+      }
+    }
+  }
+  return roles
 }
 
 module.exports = {
@@ -496,7 +514,7 @@ module.exports = {
     db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
       if (err) throw err;
       if (res) {
-        var i, pairing = [], player
+        var i, pairing = [], player, roles = res.roles
         for (i = 0; i < res.pairing.length; i++) {
           if (res.pairing[i].name.id == data.name.id) {
             player = res.pairing[i]
@@ -525,6 +543,9 @@ module.exports = {
             if (!dayDone) {
               column.days.push(data.day)
             }
+            if (column.days.length >= 5) {
+              roles = addSecondarySkill(roles, column.column, data.name)
+            }
             var columns = []
             for (i = 0; i < player.columns.length; i++) {
               if (player.columns[i].column == data.column) {
@@ -538,8 +559,10 @@ module.exports = {
         }
         pairing.push(player)
         data.pairing = pairing
+        data.roles = roles
         io.emit("updatePairing", data)
-        db.collection('noEstimates').updateOne({"_id": res._id}, {$set: {pairing: pairing}}, function(err, res) {
+        io.emit("updateRoles", data)
+        db.collection('noEstimates').updateOne({"_id": res._id}, {$set: {pairing: pairing, roles: roles}}, function(err, res) {
           if (err) throw err;
         })
       }

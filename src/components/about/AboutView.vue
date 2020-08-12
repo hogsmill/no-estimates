@@ -6,9 +6,10 @@
     </p>
     <p><span class="new">&#9733;</span> = New</p>
     <ul class="text-left">
-      <li><span class="new">&#9733;</span><strong>Auto deploy</strong> implemented (go to day 5! :-) ) - you can add effort to get to auto deploy</li>
-      <li><span class="new">&#9733;</span><strong>Improved styling</strong> on board and report</li>
       <li><span class="new">&#9733;</span><strong>Event Card</strong> removed, as automatically displayed on day change</li>
+      <li><strong>Auto deploy</strong> implemented (go to day 5! :-) ) - you can add effort to get to auto deploy</li>
+      <li><strong>Improved styling</strong> on board and report</li>
+      <li><strong>Event Card</strong> removed, as automatically displayed on day change</li>
       <li><strong>Report</strong> mainly built. Can save estimates and calculates value</li>
       <li><strong>Event Card extras</strong> implemented (an architecture for and) the first function - pizza adds one to capacity</li>
       <li><strong>Time and Delivery Date</strong> calculated automatically</li>
@@ -26,16 +27,9 @@
 
     <p>Next steps...</p>
     <ul class="text-left">
-      <li>Random re-work when moving to deploy (<em>a la "Blocked" functionality</em>)</li>
-      <li>Assign effort on other teams cards</li>
       <li>Do the extras on event cards; 8 points for deploy, etc. </li>
     </ul>
 
-    <p>Missing event cards:</p>
-    <ol class="text-left">
-      <li>If you decided yesterday to automate deployments, when you complete the delivery automation, you will no longer have to roll the die when you deploy.</li>
-      <li>Would you like to restructure your team? Feel free to change role specialities or negotiate with other teams to bring on new members.</li>
-    </ol>
   </div>
 </template>
 

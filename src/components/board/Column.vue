@@ -2,6 +2,7 @@
   <div>
     <div v-if="column.name == 'options'">
       <WorkCardStack v-bind:socket="socket" />
+      <OtherSkills />
       <OtherTeams v-bind:socket="socket" />
     </div>
     <div v-if="column.name != 'options'">
@@ -15,6 +16,7 @@
 
 <script>
 import OtherTeams from "./OtherTeams.vue";
+import OtherSkills from "./OtherSkills.vue";
 import WorkCardStack from "./WorkCardStack.vue";
 import WorkCard from "./WorkCard.vue";
 import AutoDeploy from "./AutoDeploy.vue";
@@ -22,6 +24,7 @@ import AutoDeploy from "./AutoDeploy.vue";
 export default {
   components: {
     WorkCardStack,
+    OtherSkills,
     OtherTeams,
     WorkCard,
     AutoDeploy

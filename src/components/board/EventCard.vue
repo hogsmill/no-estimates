@@ -2,8 +2,9 @@
 
   <modal name="event-card-popup" class="popup" :height="240" :classes="['rounded']">
     <div class="text-right"><span @click="hide" class="glyphicon glyphicon-star">x</span></div>
-    <h4>Event Card {{currentEventCard.number}}</h4>
-    <p v-html="currentEventCard.text"></p>
+    <h4 v-if="!currentEventCard">We are now on Day {{currentDay + 1}}</h4>
+    <h4 v-if="currentEventCard">Event Card {{currentEventCard.number}}</h4>
+    <p v-if="currentEventCard" v-html="currentEventCard.text"></p>
     <div>
       <button v-if="!currentEventCard.function" class="btn btn-sm btn-info" @click="done()">Done</button>
       <button v-if="currentEventCard.function && !currentEventCard.confirm" class="btn btn-sm btn-info" @click="doFunction()">Done</button>

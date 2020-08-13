@@ -261,8 +261,23 @@ function updateTodaysEffort(res, column, card, name) {
   return todaysEffort
 }
 
-function addExtraPointForPairing(columns, pairing) {
-  // TBD
+function addExtraPointForPairing(day, columns, daysEffort) {
+  var i, j, todaysEffort
+  for (i = 0; i < daysEffort.length; i++) {
+    if (day == daysEffort[i].day) {
+      todaysEffort = daysEffort[i]
+    }
+  }
+  if (todaysEffort) {
+    for (i = 0; i < columns.length; i++) {
+      for (j = 0; j < todaysEffort.columns; j++) {
+        if (columns[i].name == todaysEffort.columns[j].name) {
+          console.log(columns[i], todaysEffort.columns[j])
+        }
+      }
+    }
+  }
+  return columns
 }
 
 module.exports = {
@@ -382,8 +397,8 @@ module.exports = {
             if (data.concurrentDevAndTest) {
               teams[i].concurrentDevAndTest = true
             }
-            if (data.extraEffortForPairing) {
-              addExtraPointForPairing(columns, res.pairing)
+            if (data.extraEffortForPairing || true) {
+              columns = addExtraPointForPairing(res.currentDay, columns, res.daysEffort)
             }
           }
         }

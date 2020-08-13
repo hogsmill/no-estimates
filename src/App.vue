@@ -2,8 +2,8 @@
   <div id="app" class="mb-4">
     <appHeader></appHeader>
     <WalkThroughView />
-    <div v-if="showAbout">
-      <AboutView />
+    <div v-if="showFacilitator">
+      <FacilitatorView v-bind:socket="socket" />
     </div>
     <div class="main" v-else>
       <h1>No Estimates <span v-if="teamName">(Team: {{teamName}})</span></h1>
@@ -16,7 +16,6 @@
       <div v-if="isSetUp()" class="container board">
         <div class="game-buttons">
           <Report v-bind:socket="socket" />
-          <GameParams v-bind:socket="socket" />
         </div>
         <Roles />
         <Day v-bind:socket="socket" />
@@ -37,9 +36,8 @@ import MyName from "./components/MyName.vue";
 import MyRole from "./components/MyRole.vue";
 import TeamName from "./components/TeamName.vue";
 import GameName from "./components/GameName.vue";
-import GameParams from "./components/GameParams.vue";
 import Status from "./components/Status.vue";
-import AboutView from "./components/about/AboutView.vue";
+import FacilitatorView from "./components/facilitator/FacilitatorView.vue";
 import WalkThroughView from "./components/about/WalkThroughView.vue";
 
 import Roles from "./components/Roles.vue";
@@ -50,13 +48,12 @@ export default {
   name: "App",
   components: {
     appHeader: Header,
-    AboutView,
+    FacilitatorView,
     WalkThroughView,
     MyName,
     TeamName,
     MyRole,
     GameName,
-    GameParams,
     Status,
     Report,
     Roles,
@@ -90,8 +87,9 @@ export default {
     walkThrough() {
       return this.$store.getters.getWalkThrough;
     },
-    showAbout() {
-      return this.$store.getters.getShowAbout;
+    showFacilitator() {
+      console.log('showFacilitator', this.$store.getters.getShowFacilitator)
+      return this.$store.getters.getShowFacilitator;
     },
     teamName() {
       return this.$store.getters.getTeamName;

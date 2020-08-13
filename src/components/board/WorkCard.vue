@@ -39,7 +39,7 @@
       <tr v-if="workCard.teamDependency">
         <td class="dependency" colspan="3">
           <span>TEAM: </span>
-          <div class="dependency-team" @click="selectDependentTeam()" :click-prevent="selectDependentTeam"
+          <div class="dependency-team"
             :style="{'background-color': teamClass()}">
             <strong v-if="!workCard.dependentOn">None</strong>
             <strong v-if="workCard.dependentOn">{{workCard.dependentOn.name}}</strong>
@@ -156,18 +156,6 @@ export default {
         this.socket.emit("updatePersonEffort", {gameName: this.gameName, teamName: this.teamName, workCard: this.workCard, name: this.myName, column: column})
         this.socket.emit("updateEffort", {gameName: this.gameName, teamName: this.teamName, name: this.myName, workCard: this.workCard})
       }
-    },
-    selectDependentTeam() {
-      // Make sure we don't pick our own team...
-      var teams = []
-      for (var i = 0; i < this.teams.length; i++) {
-        if (this.teams[i].name != this.teamName) {
-          teams.push(i)
-        }
-      }
-      var index = teams[Math.floor(Math.random() * teams.length)]
-      var dependentOn = this.teams[index]
-      this.socket.emit("updateDependentTeam", {gameName: this.gameName, teamName: this.teamName, workCard: this.workCard, dependentOn: dependentOn})
     }
   },
   computed: {

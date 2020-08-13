@@ -23,12 +23,28 @@ export default {
         this.socket.emit("updateCommit", {gameName: this.gameName, teamName: this.teamName, workCard: currentWorkCard, commit: this.currentDay})
         this.socket.emit("updateColumns", {gameName: this.gameName, teamName: this.teamName, columns: columns})
         this.socket.emit("updateCurrentWorkCard", {gameName: this.gameName, teamName: this.teamName, currentWorkCard: currentWorkCard + 1})
+        console.log()
+        if (workCards[currentWorkCard].teamDependency > 0) {
+          var dependentOn = this.selectDependentTeam()
+          this.socket.emit("updateDependentTeam", {gameName: this.gameName, teamName: this.teamName, workCard: workCards[currentWorkCard], dependentOn: dependentOn})
+        }
       }
+    },
+    selectDependentTeam() {
+      // Make sure we don't pick our own team...
+      var teams = []
+      for (var i = 0; i < this.teams.length; i++) {
+        if (this.teams[i].name != this.teamName) {
+          teams.push(i)
+        }
+      }
+      var index = teams[Math.floor(Math.random() * teams.length)]
+      return this.teams[index]
     }
   },
   computed: {
-    showAbout() {
-      return this.$store.getters.getShowAbout
+    showFacilitator() {
+      return this.$store.getters.getShowFacilitator
     },
     gameName() {
       return this.$store.getters.getGameName
@@ -41,6 +57,9 @@ export default {
     },
     currentDay() {
       return this.$store.getters.getCurrentDay
+    },
+    teams() {
+      return this.$store.getters.getTeams
     },
     columns() {
       return this.$store.getters.getColumns

@@ -1,7 +1,7 @@
 <template>
   <div>
     <button
-      v-if="walkThrough && !showAbout"
+      v-if="walkThrough && !showFacilitator"
       class="btn btn-sm btn-info"
       @click="help"
     >
@@ -100,8 +100,8 @@ export default {
     walkThrough() {
       return this.$store.getters.getWalkThrough;
     },
-    showAbout() {
-      return this.$store.getters.getShowAbout;
+    showFacilitator() {
+      return this.$store.getters.getShowFacilitator;
     },
   },
   mounted() {
@@ -127,5 +127,5 @@ export default {
       margin-right: 8px;
     }
  }
- 
+
 </style>

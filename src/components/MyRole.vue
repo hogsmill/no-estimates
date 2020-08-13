@@ -1,5 +1,5 @@
 <template>
-  <div class="role-name" v-if="!showAbout">
+  <div class="role-name" v-if="!showFacilitator">
     <div class="role-name text-right">
       <button class="btn btn-sm btn-secondary smaller-font" v-if="!myRole" @click="show" :disabled="!myName">Set My Speciality</button>
       <span v-if="myRole" @click="show" class="mr-2 mt-2 pointer p-2 bg-light">My Role is: {{myRole}}</span>
@@ -46,8 +46,8 @@ export default {
     }
   },
   computed: {
-    showAbout() {
-      return this.$store.getters.getShowAbout
+    showFacilitator() {
+      return this.$store.getters.getShowFacilitator
     },
     myName() {
       return this.$store.getters.getMyName

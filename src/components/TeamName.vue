@@ -1,5 +1,5 @@
 <template>
-  <div class="team-name" v-if="!showAbout">
+  <div class="team-name" v-if="!showFacilitator">
     <div class="team-name text-right">
       <button class="btn btn-sm btn-secondary smaller-font" v-if="!teamName" @click="show">Set My Team</button>
       <span v-if="teamName" @click="show" class="mr-2 mt-2 pointer p-2 bg-light">My Team is: {{teamName}}</span>
@@ -51,8 +51,8 @@ export default {
     }
   },
   computed: {
-    showAbout() {
-      return this.$store.getters.getShowAbout
+    showFacilitator() {
+      return this.$store.getters.getShowFacilitator
     },
     gameName() {
       return this.$store.getters.getGameName

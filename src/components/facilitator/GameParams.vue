@@ -1,5 +1,5 @@
 <template>
-  <div class="game-params" v-if="!showAbout">
+  <div class="game-params" v-if="!showFacilitator">
     <div class="game-params">
       <button class="btn btn-sm btn-site-primary" @click="show">Game Params</button>
     </div>
@@ -52,8 +52,8 @@ export default {
     }
   },
   computed: {
-    showAbout() {
-      return this.$store.getters.getShowAbout
+    showFacilitator() {
+      return this.$store.getters.getShowFacilitator
     },
     gameName() {
       return this.$store.getters.getGameName

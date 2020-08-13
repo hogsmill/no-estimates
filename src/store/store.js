@@ -6,7 +6,7 @@ Vue.use(Vuex);
 export const store = new Vuex.Store({
   state: {
     walkThrough: false,
-    showAbout: false,
+    showFacilitator: false,
     host: false,
     currency: '&#163;',
     gameName: '',
@@ -48,9 +48,9 @@ export const store = new Vuex.Store({
       {number: 2, text: "Remember that manual deployments will fail a certain percentage of the time. In this case, you will need to re-do the deployment effort."},
       {number: 3, function: 'Add 1 Point To Everyones Capacity', text: "Pizza inspires your team to greatness! Add one to each person's capacity tomorrow."},
       {number: 4, text: "Did you remember that people can work in areas outside their speciality? They require two effort points to make one effort point in another area."},
-      {number: 5, function: 'Add 8 points to Deploy', confirm: true, autoDeployCard: true, text: "You read that automating deployments can lead to better quality and more predictable delivery. If you'd like to invest in that, you'll need to spend 8 effort points in Deploy (you can do this over multiple sprints)</br></br>(<em>You can do this later by clicking the '*' in the Deploy Column header</em>)"},
+      {number: 5, function: 'Add 8 points to Deploy', confirm: true, autoDeployCard: true, text: "You read that automating deployments can lead to better quality and more predictable delivery. If you'd like to invest in that, you'll need to spend 8 effort points in Deploy (you can do this over multiple days)</br></br>(<em>You can do this later by clicking the '*' in the Deploy Column header</em>)"},
       {number: 6, text: "If you decided yesterday to automate deployments, when you complete the delivery automation, deployments will no longer fail, and you will no longer have to re-do any deploy work."},
-      {number: 7, text: "Would someone like to learn a new skill? If so, give this card to that person. After that person spends five days working in a work stage different from his or her speciality, the person will be able to work in that state at a 1:1 effort ratio."},
+      {number: 7, text: "Would someone like to learn a new skill? If a person spends five days working in a work stage different from his or her speciality, the person will be able to work in that state at a 1:1 effort ratio."},
       {number: 8, text: "Perhaps you have delivered at least one card? If so, are you able to forecast when you might deliver the Minimum Viable Product, which the Product Owner has defined as cards #1-11 "},
       {number: 9, text: "In this game, you may have been committing to work on an individual work-item basis. Now a new Scrum Master has joined the company, and she wants you to do batch commitment (i.e. pull in as many stories at once as you believe you can accomplish in a week). Will you do this?"},
       {number: 10, function: 'Concurrent Dev and Test', confirm: true, text: "Testers and Developers want to sit together. You now have the option to do concurrent Dev and Test (i.e. no need to finish Development effort before beginning Testing). Do you want to do this?"},
@@ -99,8 +99,8 @@ export const store = new Vuex.Store({
     reEstimate: 0
   },
   getters: {
-    getShowAbout: (state) => {
-      return state.showAbout;
+    getShowFacilitator: (state) => {
+      return state.showFacilitator;
     },
     getWalkThrough: (state) => {
       return state.walkThrough;
@@ -198,8 +198,9 @@ export const store = new Vuex.Store({
     }
   },
   mutations: {
-    updateShowAbout: (state, payload) => {
-      state.showAbout = payload;
+    updateShowFacilitator: (state, payload) => {
+      state.showFacilitator = payload;
+      console.log(state)
     },
     updateWalkThrough: (state, payload) => {
       state.walkThrough = payload;
@@ -299,8 +300,8 @@ export const store = new Vuex.Store({
     },
   },
   actions: {
-    updateShowAbout: ({ commit }, payload) => {
-      commit("updateShowAbout", payload);
+    updateShowFacilitator: ({ commit }, payload) => {
+      commit("updateShowFacilitator", payload);
     },
     updateWalkThrough: ({ commit }, payload) => {
       commit("updateWalkThrough", payload);

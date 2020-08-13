@@ -126,7 +126,7 @@ export default {
       var message = ''
       if (this.workCard.blocked) {
         message = "Can't assign - card is blocked"
-      } else if (this.column == column) {
+      } else if (this.canAssign(column)) {
         if (this.myEffort.available == 0) {
           message = "Can't assign - all effort assigned"
         } else if (this.workCard.effort[column] == this.workCard[column]) {

@@ -111,7 +111,7 @@ export default {
       }
 
       input {
-        width: 50px;
+        width: 70px;
         height: 24px;
         margin: 6px;
         display: inline-block;

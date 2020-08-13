@@ -63,6 +63,12 @@ export default {
         case 'Spend a Day Estimating':
           data = {capacity: 0}
           break
+        case 'Have Paired':
+          data = {extraEffortForPairing: true}
+          break
+        case 'Deploy Dice':
+          // TBD
+          break
         default:
           console.log("Doing '" + this.currentEventCard.function + "' (not implemented)")
       }

@@ -152,7 +152,7 @@ export default {
         setTimeout(function() { self.message = message }, 100)
       } else {
         this.socket.emit("updatePersonEffort", {gameName: this.gameName, teamName: this.teamName, workCard: this.workCard, name: this.myName, column: column})
-        this.socket.emit("updateEffort", {gameName: this.gameName, teamName: this.teamName, workCard: this.workCard})
+        this.socket.emit("updateEffort", {gameName: this.gameName, teamName: this.teamName, name: this.myName, workCard: this.workCard})
       }
     },
     selectDependentTeam() {

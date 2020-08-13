@@ -61,6 +61,7 @@ function createNewGame(data) {
   game.columns = initialColumns
   game.workCards = initialCards
   game.gameName = data.gameName
+  game.daysEffort = []
   game.currentDay = 1
   game.currentEventCard = 0
   game.currentWorkCard = 0
@@ -203,6 +204,67 @@ function addSecondarySkill(roles, column, name) {
   return roles
 }
 
+function updateTodayPerson(person, card) {
+  var i, cards = []
+  for (i = 0; i < person.cards.length; i++) {
+    if (person.cards[i] != card.number) {
+      cards.push(person.cards[i])
+    }
+  }
+  cards.push(card.number)
+  person.cards = cards
+  return person
+}
+
+function updateTodayColumn(column, card, name) {
+  var i,
+      person = {name: name, cards: []},
+      people = []
+  for (i = 0; i < column.names.length; i++) {
+    if (column.names[i].name.id != name.id) {
+      people.push(column.names[i])
+    } else {
+      person = column.names[i]
+    }
+  }
+  people.push(updateTodayPerson(person, card))
+  column.names = people
+  return column
+}
+
+function updateToday(today, column, card, name) {
+  var i, j,
+      column = {column: column.name, names: []},
+      columns = []
+  for (i = 0; i < today.columns.length; i++) {
+    if (today.columns[i].column == column.column) {
+      column = today.columns[i]
+    } else {
+      columns.push(today.columns[i])
+    }
+  }
+  columns.push(updateTodayColumn(column, card, name))
+  today.columns = columns
+  return today
+}
+
+function updateTodaysEffort(res, column, card, name) {
+  var todaysEffort = [], day = res.currentDay, found = false, today = {day: day, columns: []}
+  for (var i = 0; i < res.daysEffort.length; i++) {
+    if (res.daysEffort[i].day != day) {
+      todaysEffort.push(res.daysEffort[i])
+    } else {
+      today = res.daysEffort[i]
+    }
+  }
+  todaysEffort.push(updateToday(today, column, card, name))
+  return todaysEffort
+}
+
+function addExtraPointForPairing(columns, pairing) {
+  // TBD
+}
+
 module.exports = {
 
   updateRole: function(err, client, db, io, data, debugOn) {
@@ -319,6 +381,9 @@ module.exports = {
             }
             if (data.concurrentDevAndTest) {
               teams[i].concurrentDevAndTest = true
+            }
+            if (data.extraEffortForPairing) {
+              addExtraPointForPairing(columns, res.pairing)
             }
           }
         }
@@ -483,10 +548,11 @@ module.exports = {
     db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
       if (err) throw err;
       if (res) {
-        var columns = res.columns, workCards = res.workCards
+        var columns = res.columns, workCards = res.workCards, todaysEffort
         for (var i = 1; i < columns.length; i++) {
           for (var j = 0; j < columns[i].cards.length; j++) {
             if (columns[i].cards[j].number == data.workCard.number) {
+              todaysEffort = updateTodaysEffort(res, columns[i], data.workCard, data.name)
               var card = columns[i].cards[j]
               var colName = columns[i].name
               card.effort = data.workCard.effort
@@ -498,7 +564,7 @@ module.exports = {
         }
         data.columns = columns
         data.workCards = workCards
-        db.collection('noEstimates').updateOne({"_id": res._id}, {$set: {columns: columns, workCards: workCards}}, function(err, res) {
+        db.collection('noEstimates').updateOne({"_id": res._id}, {$set: {columns: columns, workCards: workCards, daysEffort: todaysEffort}}, function(err, res) {
           io.emit("updateColumns", data)
           io.emit("updateWorkCards", data)
           client.close()

@@ -88,7 +88,6 @@ export default {
       return this.$store.getters.getWalkThrough;
     },
     showFacilitator() {
-      console.log('showFacilitator', this.$store.getters.getShowFacilitator)
       return this.$store.getters.getShowFacilitator;
     },
     teamName() {

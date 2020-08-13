@@ -150,11 +150,12 @@ function cardValue(workCards, card) {
 
 function blockOrFailCard(card, colName, percentageBlocked, percentageDeployFail) {
   var rand = Math.random()
-  if (colName != 'deploy' && rand < percentageBlocked) {
+  if (colName != 'deploy' && colName != 'done' && rand < percentageBlocked) {
     card.blocked = true
   }
   if (colName == 'deploy' && card.deploy == card.effort['deploy'] && rand < percentageDeployFail) {
     card.failed = true
+    card.effort.deploy = 0
   }
 }
 

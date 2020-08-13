@@ -23,7 +23,6 @@ export default {
         this.socket.emit("updateCommit", {gameName: this.gameName, teamName: this.teamName, workCard: currentWorkCard, commit: this.currentDay})
         this.socket.emit("updateColumns", {gameName: this.gameName, teamName: this.teamName, columns: columns})
         this.socket.emit("updateCurrentWorkCard", {gameName: this.gameName, teamName: this.teamName, currentWorkCard: currentWorkCard + 1})
-        console.log()
         if (workCards[currentWorkCard].teamDependency > 0) {
           var dependentOn = this.selectDependentTeam()
           this.socket.emit("updateDependentTeam", {gameName: this.gameName, teamName: this.teamName, workCard: workCards[currentWorkCard], dependentOn: dependentOn})

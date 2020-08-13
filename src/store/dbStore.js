@@ -205,37 +205,37 @@ function addSecondarySkill(roles, column, name) {
   return roles
 }
 
-function updateTodayPerson(person, card) {
-  var i, cards = []
-  for (i = 0; i < person.cards.length; i++) {
-    if (person.cards[i] != card.number) {
-      cards.push(person.cards[i])
+function updateTodayCard(card, name) {
+  var i, names = []
+  for (i = 0; i < card.names.length; i++) {
+    if (card.names[i].name.id != name.id) {
+      names.push(card.names[i])
     }
   }
-  cards.push(card.number)
-  person.cards = cards
-  return person
+  names.push(name)
+  card.names = names
+  return card
 }
 
 function updateTodayColumn(column, card, name) {
   var i,
-      person = {name: name, cards: []},
-      people = []
-  for (i = 0; i < column.names.length; i++) {
-    if (column.names[i].name.id != name.id) {
-      people.push(column.names[i])
+      card = {number: card.number, names: []}
+      cards = []
+  for (i = 0; i < column.cards.length; i++) {
+    if (column.cards[i].number != card.number) {
+      cards.push(column.cards[i])
     } else {
-      person = column.names[i]
+      card = column.cards[i]
     }
   }
-  people.push(updateTodayPerson(person, card))
-  column.names = people
+  cards.push(updateTodayCard(card, name))
+  column.cards = cards
   return column
 }
 
 function updateToday(today, column, card, name) {
   var i, j,
-      column = {column: column.name, names: []},
+      column = {column: column.name, cards: []},
       columns = []
   for (i = 0; i < today.columns.length; i++) {
     if (today.columns[i].column == column.column) {
@@ -262,6 +262,15 @@ function updateTodaysEffort(res, column, card, name) {
   return todaysEffort
 }
 
+function addExtraPointToCardForPairing(column, card) {
+  for (var i = 0; i < column.cards.length; i++) {
+    if (column.cards[i].number == card) {
+      column.cards[i].effort[column.name] = column.cards[i].effort[column.name] + 1
+    }
+  }
+  return column
+}
+
 function addExtraPointForPairing(day, columns, daysEffort) {
   var i, j, todaysEffort
   for (i = 0; i < daysEffort.length; i++) {
@@ -271,9 +280,13 @@ function addExtraPointForPairing(day, columns, daysEffort) {
   }
   if (todaysEffort) {
     for (i = 0; i < columns.length; i++) {
-      for (j = 0; j < todaysEffort.columns; j++) {
-        if (columns[i].name == todaysEffort.columns[j].name) {
-          console.log(columns[i], todaysEffort.columns[j])
+      for (j = 0; j < todaysEffort.columns.length; j++) {
+        if (columns[i].name == todaysEffort.columns[j].column) {
+          for (k = 0; k < todaysEffort.columns[j].cards.length; k++) {
+            if (todaysEffort.columns[j].cards[k].names.length > 1) {
+              columns[i] = addExtraPointToCardForPairing(columns[i], todaysEffort.columns[j].cards[k].number)
+            }
+          }
         }
       }
     }
@@ -398,7 +411,7 @@ module.exports = {
             if (data.concurrentDevAndTest) {
               teams[i].concurrentDevAndTest = true
             }
-            if (data.extraEffortForPairing || true) {
+            if (data.extraEffortForPairing) {
               columns = addExtraPointForPairing(res.currentDay, columns, res.daysEffort)
             }
           }

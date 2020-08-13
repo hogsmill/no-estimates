@@ -201,7 +201,6 @@ export const store = new Vuex.Store({
   mutations: {
     updateShowFacilitator: (state, payload) => {
       state.showFacilitator = payload;
-      console.log(state)
     },
     updateWalkThrough: (state, payload) => {
       state.walkThrough = payload;

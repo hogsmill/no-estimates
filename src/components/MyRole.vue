@@ -41,6 +41,7 @@ export default {
       var myRole = document.getElementById('role-select').value
       this.$store.dispatch("updateMyRole", myRole)
       localStorage.setItem("myRole", myRole);
+      console.log({gameName: this.gameName, teamName: this.teamName, name: this.myName, role: myRole })
       this.socket.emit("updateRole", {gameName: this.gameName, teamName: this.teamName, name: this.myName, role: myRole })
       this.hide()
     }

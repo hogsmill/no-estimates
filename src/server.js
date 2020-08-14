@@ -11,7 +11,7 @@ var prod = os.hostname() == "agilesimulations" ? true : false
 var url = prod ?  "mongodb://127.0.0.1:27017/" : "mongodb://localhost:27017/"
 
 var connectDebugOff = prod
-var debugOn = false //!prod
+var debugOn = !prod
 
 var connections = {}
 var maxConnections = 20
@@ -39,6 +39,14 @@ function restartGame(data) {
   })
 }
 
+function updateTeamName(data) {
+  MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
+    if (err) throw err;
+    var db = client.db('db');
+    dbStore.updateTeamName(err, client, db, io, data, debugOn)
+  })
+}
+
 function updateRole(data) {
   MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
     if (err) throw err;
@@ -52,22 +60,6 @@ function changeName(data) {
     if (err) throw err;
     var db = client.db('db');
     dbStore.changeName(err, client, db, io, data, debugOn)
-  })
-}
-
-function percentageBlocked(data) {
-  MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
-    if (err) throw err;
-    var db = client.db('db');
-    dbStore.percentageBlocked(err, client, db, io, data, debugOn)
-  })
-}
-
-function percentageDeployFail(data) {
-  MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
-    if (err) throw err;
-    var db = client.db('db');
-    dbStore.percentageDeployFail(err, client, db, io, data, debugOn)
   })
 }
 
@@ -183,6 +175,32 @@ function pairingDay(data) {
   })
 }
 
+// Facilitator View
+
+function percentageBlocked(data) {
+  MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
+    if (err) throw err;
+    var db = client.db('db');
+    dbStore.percentageBlocked(err, client, db, io, data, debugOn)
+  })
+}
+
+function percentageDeployFail(data) {
+  MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
+    if (err) throw err;
+    var db = client.db('db');
+    dbStore.percentageDeployFail(err, client, db, io, data, debugOn)
+  })
+}
+
+function updateTeamActive(data) {
+  MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
+    if (err) throw err;
+    var db = client.db('db');
+    dbStore.updateTeamActive(err, client, db, io, data, debugOn)
+  })
+}
+
 io.on("connection", (socket) => {
   var connection = socket.handshake.headers.host
   connections[connection] = connections[connection] ? connections[connection] + 1 : 1
@@ -203,13 +221,11 @@ io.on("connection", (socket) => {
 
   socket.on("restartGame", (data) => { restartGame(data) })
 
+  socket.on("updateTeamName", (data) => { updateTeamName(data) })
+
   socket.on("updateRole", (data) => { updateRole(data) })
 
   socket.on("changeName", (data) => { changeName(data) })
-
-  socket.on("percentageBlocked", (data) => { percentageBlocked(data) })
-
-  socket.on("percentageDeployFail", (data) => { percentageDeployFail(data) })
 
   socket.on("showEventCard", (data) => { emit("showEventCard", data) })
 
@@ -248,6 +264,15 @@ io.on("connection", (socket) => {
   socket.on("startAutoDeploy", (data) => { startAutoDeploy(data) })
 
   socket.on("incrementAutoDeploy", (data) => { incrementAutoDeploy(data) })
+
+  // Facilitator View
+
+  socket.on("percentageBlocked", (data) => { percentageBlocked(data) })
+
+  socket.on("percentageDeployFail", (data) => { percentageDeployFail(data) })
+
+  socket.on("updateTeamActive", (data) => { updateTeamActive(data) })
+
 
 });
 

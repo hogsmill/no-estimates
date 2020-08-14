@@ -82,9 +82,6 @@ export default {
     },
     myEffort() {
       return this.$store.getters.getMyEffort
-    },
-    teams() {
-      return this.$store.getters.getTeams
     }
   }
 }

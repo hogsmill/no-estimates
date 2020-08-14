@@ -26,10 +26,7 @@
       <tr v-if="showGameParams">
         <td class="left-col">Teams</td>
         <td colspan="3">
-          <div><input type="checkbox"> Blue</div>
-          <div><input type="checkbox"> Green</div>
-          <div><input type="checkbox"> Purple</div>
-          <div><input type="checkbox"> Red</div>
+          <div v-for="(team, index) in teams" :key="index"><input type="checkbox" :checked="team.include" @click="toggleActive(team)"> {{team.name}}</div>
         </td>
       </tr>
     </table>
@@ -66,6 +63,10 @@ export default {
     setShowGameState(val) {
       this.showGameState = val
     },
+    toggleActive(team) {
+      team.include = !team.include
+      this.socket.emit("updateTeamActive", {gameName: this.gameName, team: team})
+    },
     savePercentageBlocked: function() {
       var percentageBlocked = document.getElementById('percentageBlocked').value
       this.socket.emit("percentageBlocked", {gameName: this.gameName, percentageBlocked: percentageBlocked})
@@ -81,6 +82,9 @@ export default {
     },
     gameName() {
       return this.$store.getters.getGameName
+    },
+    teams() {
+      return this.$store.getters.getTeams
     },
     percentageBlocked() {
       return this.$store.getters.getPercentageBlocked

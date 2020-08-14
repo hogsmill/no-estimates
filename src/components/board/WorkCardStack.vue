@@ -33,7 +33,7 @@ export default {
       // Make sure we don't pick our own team...
       var teams = []
       for (var i = 0; i < this.teams.length; i++) {
-        if (this.teams[i].name != this.teamName) {
+        if (this.teams[i].include && this.teams[i].name != this.teamName) {
           teams.push(i)
         }
       }

@@ -6,12 +6,14 @@
       <FacilitatorView v-bind:socket="socket" />
     </div>
     <div class="main" v-else>
+      <div v-if="isHost" class="right" @click="clear()">Clear Storage</div>
       <h1>No Estimates <span v-if="teamName">(Team: {{teamName}})</span></h1>
       <h3 class="setup-header" v-if="!isSetUp()">Before we start the game, please set your name, team, speciality and game</h3>
       <MyName v-bind:socket="socket" />
       <TeamName v-bind:socket="socket" />
       <MyRole v-bind:socket="socket" />
       <GameName v-bind:socket="socket" />
+
       <Status v-bind:socket="socket" />
       <div v-if="isSetUp()" class="container board">
         <div class="game-buttons">
@@ -66,6 +68,12 @@ export default {
     }
   },
   methods: {
+    clear() {
+      localStorage.removeItem("myName")
+      localStorage.removeItem("teamName")
+      localStorage.removeItem("myRole")
+      localStorage.removeItem("gameName")
+    },
     isSetUp() {
       var setUp = this.myName && this.teamName && this.myRole && this.gameName
       if (setUp && !this.setUp) {
@@ -193,6 +201,11 @@ export default {
 </script>
 
 <style lang="scss">
+
+  .right {
+    text-align: right;
+    padding-right: 4px;
+  }
 
   .not-host {
     height: 0px;

@@ -14,10 +14,12 @@ export const store = new Vuex.Store({
     myRole: '',
     teamName: '',
     teams: [
-      { name: 'Blue', otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
-      { name: 'Green', otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
-      { name: 'Purple', otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
-      { name: 'Red', otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } }
+      { name: 'Blue', include: true, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
+      { name: 'Green', include: true, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
+      { name: 'Purple', include: true, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
+      { name: 'Red', include: true, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
+      { name: 'Orange', include: false, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
+      { name: 'Black', include: false, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } }
     ],
     pairing: [],
     myEffort: {
@@ -149,6 +151,15 @@ export const store = new Vuex.Store({
     },
     getTeams: (state) => {
       return state.teams;
+    },
+    getActiveTeams: (state) => {
+      var teams = []
+      for (var i = 0; i < state.teams.length; i++) {
+        if (state.teams[i].include) {
+          teams.push(state.teams[i])
+        }
+      }
+      return teams;
     },
     getPairing: (state) => {
       return state.pairing;
@@ -338,9 +349,6 @@ export const store = new Vuex.Store({
     },
     updateRoles: ({ commit }, payload) => {
       commit("updateRoles", payload);
-    },
-    updateRole: ({ commit }, payload) => {
-      commit("updateRole", payload);
     },
     percentageBlocked: ({ commit }, payload) => {
       commit("percentageBlocked", payload);

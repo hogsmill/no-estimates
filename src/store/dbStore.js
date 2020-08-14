@@ -9,10 +9,12 @@ var initialRoles = [
 ]
 
 var initialTeams = [
-  { name: 'Blue', otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
-  { name: 'Green', otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
-  { name: 'Purple', otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
-  { name: 'Red', otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } }
+  { name: 'Blue', include: true, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
+  { name: 'Green', include: true, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
+  { name: 'Purple', include: true, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
+  { name: 'Red', include: true, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
+  { name: 'Orange', include: false, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
+  { name: 'Black', include: false, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } }
 ]
 
 var initialColumns = [
@@ -295,6 +297,39 @@ function addExtraPointForPairing(day, columns, daysEffort) {
 }
 
 module.exports = {
+
+  updateTeamName: function(err, client, db, io, data, debugOn) {
+
+    if (debugOn) { console.log('updateTeamName', data) }
+
+    db.collection('noEstimates').find({gameName: data.gameName}).toArray(function(err, res) {
+      if (err) throw err;
+      if (res.length) {
+        var r, i, j
+        for (r = 0; r < res.length; r++) {
+          var roles = []
+          if (res[r].teamName != data.teamName) {
+            for (i = 0; i < res[r].roles.length; i++) {
+              roles.push(res[r].roles[i])
+              var names = []
+              for (j = 0; j < res[r].roles[i].names.length; j++) {
+                if (res[r].roles[i].names[j].id != data.name.id) {
+                  names.push(res[r].roles[i].names[j])
+                }
+              }
+            }
+          } else {
+            roles = res[r].roles
+          }
+          data.roles = roles
+          io.emit("updateRoles", data)
+          db.collection('noEstimates').updateOne({"_id": res[r]._id}, {$set: {roles: data.roles}}, function(err, rec) {
+            if (err) throw err;
+          })
+        }
+      }
+    })
+  },
 
   updateRole: function(err, client, db, io, data, debugOn) {
 
@@ -671,40 +706,53 @@ module.exports = {
     db.collection('noEstimates').find({gameName: data.gameName}).toArray(function(err, res) {
       if (err) throw err;
       if (res.length) {
-        team = res[0]
-        var i, j, columns = team.columns, teams = team.teams, workCards = team.workCards
-        for (i = 1; i < columns.length; i++) {
-          for (j = 0; j < columns[i].cards.length; j++) {
-            if (columns[i].cards[j].number == data.card.number) {
-              var card = columns[i].cards[j]
-              var colName = columns[i].name
-              card.dependencyDone = card.dependencyDone + 1
-              if (cardCompleteInColumn(card, colName, res.percentageBlocked, res.percentageDeployFail)) {
-                moveCard(columns, workCards, card, i, team.currentDay)
+        var teams
+        for (var r = 0; r < res.length; r++) {
+          // Other team
+          if (res[r].teamName == data.teamName) {
+            teams = res[r].teams
+            for (i = 0; i < teams.length; i++) {
+              for (j = 0; j < teams[i].otherCards.length; j++) {
+                if (teams[i].otherCards[j].number ==  data.card.number) {
+                  teams[i].otherCards[j].dependencyDone = teams[i].otherCards[j].dependencyDone + 1
+                }
               }
             }
           }
         }
-        for (i = 0; i < teams.length; i++) {
-          for (j = 0; j < teams[i].otherCards.length; j++) {
-            if (teams[i].otherCards[j].number ==  data.card.number) {
-              teams[i].otherCards[j].dependencyDone = teams[i].otherCards[j].dependencyDone + 1
-            }
-          }
-        }
         for (var r = 0; r < res.length; r++) {
-          if (typeof(res[r]) != "undefined") {
+          if (res[r].teamName == data.card.team) {
+            // this team
+            var i, j, columns = res[r].columns, workCards = res[r].workCards
+            for (i = 1; i < columns.length; i++) {
+              for (j = 0; j < columns[i].cards.length; j++) {
+                if (columns[i].cards[j].number == data.card.number) {
+                  var card = columns[i].cards[j]
+                  var colName = columns[i].name
+                  card.dependencyDone = card.dependencyDone + 1
+                  if (cardCompleteInColumn(card, colName, res.percentageBlocked, res.percentageDeployFail)) {
+                    moveCard(columns, workCards, card, i, team.currentDay)
+                  }
+                }
+              }
+            }
             data.teamName = res[r].teamName
-            data.teams = teams
             data.columns = columns
             data.workCards = workCards
-            io.emit("updateTeams", data)
             io.emit("updateColumns", data)
             io.emit("updateWorkCards", data)
-            db.collection('noEstimates').updateOne({"_id": res[r]._id}, {$set: {teams: teams, columns: columns, workCards: workCards}}, function(err, res) {
+            db.collection('noEstimates').updateOne({"_id": res[r]._id}, {$set: {columns: columns, workCards: workCards}}, function(err, res) {
               if (err) throw err;
             })
           }
+        }
+        data.teams = teams
+        for (var r = 0; r < res.length; r++) {
+          data.teamName = res[r].teamName
+          io.emit("updateTeams", data)
+          db.collection('noEstimates').updateOne({"_id": res[r]._id}, {$set: {teams: teams}}, function(err, res) {
+            if (err) throw err;
+          })
         }
       }
     })
@@ -804,6 +852,32 @@ module.exports = {
           io.emit("updateReEstimate", data)
           client.close();
         })
+      }
+    })
+  },
+
+  updateTeamActive: function(err, client, db, io, data, debugOn) {
+
+    if (debugOn) { console.log('updateTeamActive', data) }
+
+    db.collection('noEstimates').find({gameName: data.gameName}).toArray(function(err, res) {
+      if (err) throw err;
+      if (res.length) {
+        var teams = res[0].teams
+        for (var i = 0; i < teams.length; i++) {
+          if (teams[i].name == data.team.name) {
+            teams[i] = data.team
+          }
+        }
+        data.teams = teams
+        for (var r = 0; r < res.length; r++) {
+          if (typeof(res[r]) != "undefined") {
+            db.collection('noEstimates').updateOne({"_id": res[r]._id}, {$set: {teams: data.teams}}, function(err, res) {
+              if (err) throw err;
+              io.emit("updateTeams", data)
+            })
+          }
+        }
       }
     })
   }

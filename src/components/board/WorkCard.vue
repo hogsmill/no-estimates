@@ -313,10 +313,6 @@ export default {
         background-color: #fff;
         color: #fff;
         text-align: center;
-
-        &:hover {
-          cursor: pointer;
-        }
       }
 
       .dependency-column {

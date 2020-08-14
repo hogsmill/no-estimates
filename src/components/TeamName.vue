@@ -14,8 +14,8 @@
       <div class="mt-4">
         <h4>Select Your Team Name</h4>
         <div class="set-team-name">
-          <select :class="{ 'hidden': teams.length == 0}" id="team-name-select" class="form-control col-md-6 offset-md-2 mr-2">
-            <option v-for="(team, index) in teams" :key="index">{{team.name}}</option>
+          <select :class="{ 'hidden': activeTeams.length == 0}" id="team-name-select" class="form-control col-md-6 offset-md-2 mr-2">
+            <option v-for="(team, index) in activeTeams" :key="index">{{team.name}}</option>
           </select>
           <button class="btn btn-sm btn-secondary smaller-font" @click="saveTeamName">Save</button>
         </div>
@@ -45,6 +45,7 @@ export default {
     saveTeamName: function() {
       var teamName = document.getElementById('team-name-select').value
       this.$store.dispatch("updateTeamName", teamName)
+      this.socket.emit("updateTeamName", {gameName: this.gameName, teamName: teamName, name: this.myName})
       this.socket.emit("loadGame", {gameName: this.gameName, teamName: teamName})
       localStorage.setItem("teamName", teamName);
       this.hide()
@@ -60,8 +61,14 @@ export default {
     teamName() {
       return this.$store.getters.getTeamName
     },
-    teams() {
-      return this.$store.getters.getTeams
+    myName() {
+      return this.$store.getters.getMyName
+    },
+    myRole() {
+      return this.$store.getters.getMyRole
+    },
+    activeTeams() {
+      return this.$store.getters.getActiveTeams
     }
   }
 }

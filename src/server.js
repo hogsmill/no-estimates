@@ -23,181 +23,85 @@ function emit(event, data, persist) {
   io.emit(event, data)
 }
 
-function loadGame(data) {
+function doDb(fun, data) {
   MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
     if (err) throw err;
     var db = client.db('db');
-    dbStore.loadGame(err, client, db, io, data, debugOn)
-  })
-}
 
-function restartGame(data) {
-  MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
-    if (err) throw err;
-    var db = client.db('db');
-    dbStore.restartGame(err, client, db, io, data, debugOn)
-  })
-}
+    switch(fun) {
+      case 'loadGame':
+        dbStore.loadGame(err, client, db, io, data, debugOn)
+        break;
+      case 'restartGame':
+        dbStore.restartGame(err, client, db, io, data, debugOn)
+        break;
+      case 'updateTeamName':
+        dbStore.updateTeamName(err, client, db, io, data, debugOn)
+        break;
+      case 'updateRole':
+        dbStore.updateRole(err, client, db, io, data, debugOn)
+        break;
+      case 'changeName':
+        dbStore.changeName(err, client, db, io, data, debugOn)
+        break;
+      case 'updateCurrentDay':
+        dbStore.updateCurrentDay(err, client, db, io, data, debugOn)
+        break;
+      case 'updateCurrentEventCard':
+        dbStore.updateCurrentEventCard(err, client, db, io, data, debugOn)
+        break;
+      case 'updateCurrentWorkCard':
+        dbStore.updateCurrentWorkCard(err, client, db, io, data, debugOn)
+        break;
+      case 'updateCommit':
+        dbStore.updateCommit(err, client, db, io, data, debugOn)
+        break;
+      case 'updateColumns':
+        dbStore.updateColumns(err, client, db, io, data, debugOn)
+        break;
+      case 'updateDependentTeam':
+        dbStore.updateDependentTeam(err, client, db, io, data, debugOn)
+        break;
+      case 'updateEffort':
+        dbStore.updateEffort(err, client, db, io, data, debugOn)
+        break;
+      case 'addEffortToOthersCard':
+        dbStore.addEffortToOthersCard(err, client, db, io, data, debugOn)
+        break;
+      case 'incrementAutoDeploy':
+        dbStore.incrementAutoDeploy(err, client, db, io, data, debugOn)
+        break;
+      case 'startAutoDeploy':
+        dbStore.startAutoDeploy(err, client, db, io, data, debugOn)
+        break;
+      case 'updateProjectEstimate':
+        dbStore.updateProjectEstimate(err, client, db, io, data, debugOn)
+        break;
+      case 'updateMVPEstimate':
+        dbStore.updateMVPEstimate(err, client, db, io, data, debugOn)
+        break;
+      case 'updateReEstimate':
+        dbStore.updateReEstimate(err, client, db, io, data, debugOn)
+        break;
+      case 'pairingDay':
+        dbStore.pairingDay(err, client, db, io, data, debugOn)
+        break;
 
-function updateTeamName(data) {
-  MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
-    if (err) throw err;
-    var db = client.db('db');
-    dbStore.updateTeamName(err, client, db, io, data, debugOn)
-  })
-}
+      // Facilitator
+      //
+      case 'percentageBlocked':
+        dbStore.percentageBlocked(err, client, db, io, data, debugOn)
+        break;
+      case 'percentageDeployFail':
+        dbStore.percentageDeployFail(err, client, db, io, data, debugOn)
+        break;
+      case 'updateTeamActive':
+        dbStore.updateTeamActive(err, client, db, io, data, debugOn)
+        break;
 
-function updateRole(data) {
-  MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
-    if (err) throw err;
-    var db = client.db('db');
-    dbStore.updateRole(err, client, db, io, data, debugOn)
-  })
-}
-
-function changeName(data) {
-  MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
-    if (err) throw err;
-    var db = client.db('db');
-    dbStore.changeName(err, client, db, io, data, debugOn)
-  })
-}
-
-function updateCurrentDay(data) {
-  MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
-    if (err) throw err;
-    var db = client.db('db');
-    dbStore.updateCurrentDay(err, client, db, io, data, debugOn)
-  })
-}
-
-function updateCurrentEventCard(data) {
-  MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
-    if (err) throw err;
-    var db = client.db('db');
-    dbStore.updateCurrentEventCard(err, client, db, io, data, debugOn)
-  })
-}
-
-function updateCommit(data) {
-  MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
-    if (err) throw err;
-    var db = client.db('db');
-    dbStore.updateCommit(err, client, db, io, data, debugOn)
-  })
-}
-
-function updateCurrentWorkCard(data) {
-  MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
-    if (err) throw err;
-    var db = client.db('db');
-    dbStore.updateCurrentWorkCard(err, client, db, io, data, debugOn)
-  })
-}
-
-function updateColumns(data) {
-  MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
-    if (err) throw err;
-    var db = client.db('db');
-    dbStore.updateColumns(err, client, db, io, data, debugOn)
-  })
-}
-
-function updateDependentTeam(data) {
-  MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
-    if (err) throw err;
-    var db = client.db('db');
-    dbStore.updateDependentTeam(err, client, db, io, data, debugOn)
-  })
-}
-
-function updateEffort(data) {
-  MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
-    if (err) throw err;
-    var db = client.db('db');
-    dbStore.updateEffort(err, client, db, io, data, debugOn)
-  })
-}
-
-function addEffortToOthersCard(data) {
-  MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
-    if (err) throw err;
-    var db = client.db('db');
-    dbStore.addEffortToOthersCard(err, client, db, io, data, debugOn)
-  })
-}
-
-function incrementAutoDeploy(data) {
-  MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
-    if (err) throw err;
-    var db = client.db('db');
-    dbStore.incrementAutoDeploy(err, client, db, io, data, debugOn)
-  })
-}
-
-function startAutoDeploy(data) {
-  MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
-    if (err) throw err;
-    var db = client.db('db');
-    dbStore.startAutoDeploy(err, client, db, io, data, debugOn)
-  })
-}
-
-function updateProjectEstimate(data) {
-  MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
-    if (err) throw err;
-    var db = client.db('db');
-    dbStore.updateProjectEstimate(err, client, db, io, data, debugOn)
-  })
-}
-
-function updateMVPEstimate(data) {
-  MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
-    if (err) throw err;
-    var db = client.db('db');
-    dbStore.updateMVPEstimate(err, client, db, io, data, debugOn)
-  })
-}
-
-function updateReEstimate(data) {
-  MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
-    if (err) throw err;
-    var db = client.db('db');
-    dbStore.updateReEstimate(err, client, db, io, data, debugOn)
-  })
-}
-
-function pairingDay(data) {
-  MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
-    if (err) throw err;
-    var db = client.db('db');
-    dbStore.pairingDay(err, client, db, io, data, debugOn)
-  })
-}
-
-// Facilitator View
-
-function percentageBlocked(data) {
-  MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
-    if (err) throw err;
-    var db = client.db('db');
-    dbStore.percentageBlocked(err, client, db, io, data, debugOn)
-  })
-}
-
-function percentageDeployFail(data) {
-  MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
-    if (err) throw err;
-    var db = client.db('db');
-    dbStore.percentageDeployFail(err, client, db, io, data, debugOn)
-  })
-}
-
-function updateTeamActive(data) {
-  MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
-    if (err) throw err;
-    var db = client.db('db');
-    dbStore.updateTeamActive(err, client, db, io, data, debugOn)
+      default:
+        console.log("Unknown function: '" + fun + "'")
+    }
   })
 }
 
@@ -217,62 +121,61 @@ io.on("connection", (socket) => {
     connectDebugOff || console.log(`User with socket id ${socket.id} has disconnected.`)
   })
 
-  socket.on("loadGame", (data) => { loadGame(data) })
+  socket.on("loadGame", (data) => { doDb('loadGame', data) })
 
-  socket.on("restartGame", (data) => { restartGame(data) })
+  socket.on("restartGame", (data) => { doDb('restartGame', data) })
 
-  socket.on("updateTeamName", (data) => { updateTeamName(data) })
+  socket.on("updateTeamName", (data) => { doDb('updateTeamName', data) })
 
-  socket.on("updateRole", (data) => { updateRole(data) })
+  socket.on("updateRole", (data) => { doDb('updateRole', data) })
 
-  socket.on("changeName", (data) => { changeName(data) })
+  socket.on("changeName", (data) => { doDb('changeName', data) })
 
   socket.on("showEventCard", (data) => { emit("showEventCard", data) })
 
-  socket.on("updateCurrentEventCard", (data) => { updateCurrentEventCard(data) })
+  socket.on("updateCurrentEventCard", (data) => { doDb('updateCurrentEventCard', data) })
 
-  socket.on("updateCurrentDay", (data) => { updateCurrentDay(data) })
+  socket.on("updateCurrentDay", (data) => { doDb('updateCurrentDay', data) })
 
-  socket.on("updateCommit", (data) => { updateCommit(data) })
+  socket.on("updateCommit", (data) => { doDb('updateCommit', data) })
 
-  socket.on("updateCurrentWorkCard", (data) => { updateCurrentWorkCard(data) })
+  socket.on("updateCurrentWorkCard", (data) => { doDb('updateCurrentWorkCard', data) })
 
-  socket.on("updateColumns", (data) => { updateColumns(data) })
+  socket.on("updateColumns", (data) => { doDb('updateColumns', data) })
 
   socket.on("updatePersonEffort", (data) => { emit("updatePersonEffort", data) })
 
   socket.on("updatePersonAutoDeployEffort", (data) => { emit("updatePersonAutoDeployEffort", data) })
 
-  socket.on("updateEffort", (data) => { updateEffort(data) })
+  socket.on("updateEffort", (data) => { doDb('updateEffort', data) })
 
-  socket.on("pairingDay", (data) => { pairingDay(data) })
+  socket.on("pairingDay", (data) => { doDb('pairingDay', data) })
 
   socket.on("resetEffort", (data) => { emit("resetEffort", data) })
 
-  socket.on("updateDependentTeam", (data) => { updateDependentTeam(data) })
+  socket.on("updateDependentTeam", (data) => { doDb('updateDependentTeam', data) })
 
-  socket.on("addEffortToOthersCard", (data) => { addEffortToOthersCard(data) })
+  socket.on("addEffortToOthersCard", (data) => { doDb('addEffortToOthersCard', data) })
 
   socket.on("updateOtherTeamEffort", (data) => { emit("updateOtherTeamEffort", data) })
 
-  socket.on("updateProjectEstimate", (data) => { updateProjectEstimate(data) })
+  socket.on("updateProjectEstimate", (data) => { doDb('updateProjectEstimate', data) })
 
-  socket.on("updateMVPEstimate", (data) => { updateMVPEstimate(data) })
+  socket.on("updateMVPEstimate", (data) => { doDb('updateMVPEstimate', data) })
 
-  socket.on("updateReEstimate", (data) => { updateReEstimate(data) })
+  socket.on("updateReEstimate", (data) => { doDb('updateReEstimate', data) })
 
-  socket.on("startAutoDeploy", (data) => { startAutoDeploy(data) })
+  socket.on("startAutoDeploy", (data) => { doDb('startAutoDeploy', data) })
 
-  socket.on("incrementAutoDeploy", (data) => { incrementAutoDeploy(data) })
+  socket.on("incrementAutoDeploy", (data) => { doDb('incrementAutoDeploy', data) })
 
   // Facilitator View
 
-  socket.on("percentageBlocked", (data) => { percentageBlocked(data) })
+  socket.on("percentageBlocked", (data) => { doDb('percentageBlocked', data) })
 
-  socket.on("percentageDeployFail", (data) => { percentageDeployFail(data) })
+  socket.on("percentageDeployFail", (data) => { doDb('percentageDeployFail', data) })
 
-  socket.on("updateTeamActive", (data) => { updateTeamActive(data) })
-
+  socket.on("updateTeamActive", (data) => { doDb('updateTeamActive', data) })
 
 });
 

@@ -202,6 +202,7 @@ export default {
     background-color: #fff;
     color: #444;
     margin: 6px;
+    position: relative;
 
     &.blocked {
       background-color: red;
@@ -209,7 +210,7 @@ export default {
 
     .blocked-text {
       z-index: 10;
-      position: relative;
+      position: absolute;
       top: 50px;
       left: 16px;
       color: #fff;

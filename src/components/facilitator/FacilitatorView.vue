@@ -53,7 +53,11 @@
         <td v-if="showTeamState(team)">
           <div v-for="(member, m) in team.members" :key="m">{{member.name.name}} (<i>{{member.role}}</i>)</div>
         </td>
-        <td v-if="showTeamState(team)">Doing: <input type="checkbox" :checked="team.autoDeploy.doing"></td>
+        <td v-if="showTeamState(team)" class="auto-deploy">
+          <div>Doing: </div>
+          <div v-if="!team.autoDeploy.doing">&#9744;</div>
+          <div v-if="team.autoDeploy.doing">&#9745;</div>
+        </td>
         <td v-if="showTeamState(team) && !team.autoDeploy.done">Effort: {{team.autoDeploy.effort}} / 8</td>
         <td v-if="showTeamState(team) && team.autoDeploy.done">Done: <input type="checkbox" :checked="team.autoDeploy.done"></td>
         <td v-if="showTeamState(team)">{{team.currentDay}}</td>
@@ -196,6 +200,10 @@ export default {
 
     td {
       text-align: center;
+
+      &.auto-deploy div {
+        display: inline;
+      }
     }
 
     .white {

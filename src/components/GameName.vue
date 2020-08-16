@@ -3,7 +3,7 @@
     <div class="game-name text-right">
       <button class="btn btn-sm btn-secondary smaller-font" v-if="!gameName" @click="show">Set Game Name</button>
       <span v-if="gameName" @click="show" class="mr-2 mt-2 pointer p-2 bg-light">Game: {{gameName}}</span>
-      <span v-if="gameName" title="Restart Game" class="restart" @click="restart">&#8635;</span>
+      <span v-if="gameName" title="Restart Game" class="restart" @click="restartGame">&#8635;</span>
     </div>
 
     <modal name="set-game-name" :height="120" :classes="['rounded']">
@@ -43,7 +43,7 @@ export default {
       this.socket.emit("restartGame", {gameName: this.gameName})
       this.hide()
     },
-    restart() {
+    restartGame() {
       var restartGame = confirm("Are you sure you want to re-start this game?")
       if (restartGame) {
         this.socket.emit("restartGame", {gameName: this.gameName})

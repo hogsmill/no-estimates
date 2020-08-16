@@ -196,6 +196,12 @@ export default {
         this.$store.dispatch("updatePairing", data)
       }
     })
+
+    this.socket.on("updateGameState", (data) => {
+      if (this.gameName == data.gameName) {
+        this.$store.dispatch("updateGameState", data)
+      }
+    })
   },
 }
 </script>

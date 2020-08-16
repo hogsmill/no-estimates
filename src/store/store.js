@@ -69,7 +69,6 @@ export const store = new Vuex.Store({
     ],
     currentEventCard: 0,
     workCards: [
-
       {number: 1, design: 6, develop: 7, test: 8, deploy: 2, urgent: false, teamDependency: 0, dependentOn: '', commit: 0, blocked: false, effort: {design: 0, develop: 0, test: 0, deploy: 0}},
       {number: 2, design: 0, develop: 8, test: 6, deploy: 4, urgent: false, teamDependency: 0, dependentOn: '', commit: 0, blocked: false, effort: {design: 0, develop: 0, test: 0, deploy: 0}},
       {number: 3, design: 10, develop: 9, test: 9, deploy: 3, urgent: true, teamDependency: 0, dependentOn: '', commit: 0, blocked: false, effort: {design: 0, develop: 0, test: 0, deploy: 0}},
@@ -99,7 +98,8 @@ export const store = new Vuex.Store({
     currentWorkCard: 0,
     projectEstimate: 0,
     mvpEstimate: 0,
-    reEstimate: 0
+    reEstimate: 0,
+    gameState: []
   },
   getters: {
     getShowFacilitator: (state) => {
@@ -207,6 +207,9 @@ export const store = new Vuex.Store({
     },
     getReEstimate: (state) => {
       return state.reEstimate;
+    },
+    getGameState: (state) => {
+      return state.gameState;
     }
   },
   mutations: {
@@ -309,6 +312,9 @@ export const store = new Vuex.Store({
     updateReEstimate: (state, payload) => {
       state.reEstimate = payload.reEstimate
     },
+    updateGameState: (state, payload) => {
+      state.gameState = payload.gameState
+    },
   },
   actions: {
     updateShowFacilitator: ({ commit }, payload) => {
@@ -382,6 +388,9 @@ export const store = new Vuex.Store({
     },
     updateReEstimate: ({ commit }, payload) => {
       commit("updateReEstimate", payload);
+    },
+    updateGameState: ({ commit }, payload) => {
+      commit("updateGameState", payload);
     }
   }
 });

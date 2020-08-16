@@ -81,7 +81,6 @@ function _loadGame(err, client, db, io, data, debugOn) {
     if (res) {
       if (debugOn) { console.log("Loading game '" + data.gameName + "', team '" + data.teamName + "'") }
       io.emit("loadGame", res)
-      client.close();
     } else {
       var i, games = [], gameTeams = [], game = createNewGame(data)
       for (i = 0; i < initialTeams.length; i++) {
@@ -91,17 +90,18 @@ function _loadGame(err, client, db, io, data, debugOn) {
       }
       if (debugOn) { console.log("Created new game '" + data.gameName + "', teams '" + gameTeams.join(', ') + "'") }
       db.collection('noEstimates').insertMany(games, function(err, res) {
-      if (err) throw err;
-      for (i = 0; i < games.length; i++) {
-        io.emit("loadGame", games[i])
-      }
-      _updateRole(err, client, db, io, data)
-    })
+        if (err) throw err;
+        for (i = 0; i < games.length; i++) {
+          io.emit("loadGame", games[i])
+        }
+        _updateRole(err, client, db, io, data, debugOn)
+      })
     }
+    updateGameState(err, client, db, io, data, debugOn)
   })
 }
 
-function _updateRole(err, client, db, io, data) {
+function _updateRole(err, client, db, io, data, debugOn) {
 
   db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
     if (err) throw err;
@@ -127,6 +127,7 @@ function _updateRole(err, client, db, io, data) {
         io.emit("updateRoles", data)
       })
     }
+    updateGameState(err, client, db, io, data, debugOn)
   })
 }
 
@@ -296,6 +297,91 @@ function addExtraPointForPairing(day, columns, daysEffort) {
   return columns
 }
 
+function teamDetails(team, teams) {
+  var team
+  for (var i = 0; i < teams.length; i++) {
+    if (team == teams[i].name) {
+      team = teams[i]
+    }
+  }
+  return team
+}
+
+function cardEffort(card) {
+  return {
+    effort: card.design + card.develop + card.test + card.deploy,
+    done: card.effort.design + card.effort.develop + card.effort.test + card.effort.deploy
+  }
+}
+
+function columnDetails(res) {
+  var cols = {}
+  for (var i = 1; i < res.columns.length; i++) {
+    cols[res.columns[i].name] = []
+    for (var j = 0; j < res.columns[i].cards.length; j++) {
+      var card = res.columns[i].cards[j]
+      cols[res.columns[i].name].push({
+        number: card.number,
+        blocked: card.blocked,
+        commit: card.commit,
+        delivered: card.delivered,
+        effort: cardEffort(card),
+        urgent: card.urgent,
+        dependentOn: card.dependentOn
+      })
+    }
+  }
+  return cols
+}
+
+function memberDetails(res) {
+  var members = []
+  for (var i = 0; i < res.roles.length; i++) {
+    for (var j = 0; j < res.roles[i].names.length; j++) {
+      members.push({
+        name: res.roles[i].names[j],
+        role: res.roles[i].role
+      })
+    }
+  }
+  return members
+}
+
+function teamState(res) {
+  var team = teamDetails(res.teamName, res.teams)
+  var columns = columnDetails(res)
+  var members = memberDetails(res)
+  return {
+    name: res.teamName,
+    include: team.include,
+    currentDay: res.currentDay,
+    currentWorkCard: res.currentWorkCard,
+    autoDeploy: team.autoDeploy,
+    members: members,
+    columns: columns,
+    projectEstimate: res.projectEstimate,
+    mvpEstimate: res.mvpEstimate,
+    reEstimate: res.reEstimate
+  }
+}
+
+function updateGameState(err, client, db, io, data, debugOn) {
+
+  if (debugOn) { console.log('updateGameState', data) }
+
+  db.collection('noEstimates').find({gameName: data.gameName}).toArray(function(err, res) {
+    if (err) throw err;
+    if (res.length) {
+      var teams = []
+      for (var r = 0; r < res.length; r++) {
+        teams.push(teamState(res[r]))
+      }
+      data.gameState = teams
+      io.emit("updateGameState", data)
+    }
+  })
+}
+
 module.exports = {
 
   updateTeamName: function(err, client, db, io, data, debugOn) {
@@ -335,7 +421,7 @@ module.exports = {
 
     if (debugOn) { console.log('updateRole', data) }
 
-    _updateRole(err, client, db, io, data)
+    _updateRole(err, client, db, io, data, debugOn)
   },
 
   changeName: function(err, client, db, io, data, debugOn) {
@@ -472,9 +558,9 @@ module.exports = {
           io.emit("updateTeams", data)
           io.emit("updateColumns", data)
           io.emit("updateWorkCards", data)
-          client.close()
         })
       }
+      updateGameState(err, client, db, io, data, debugOn)
     })
   },
 
@@ -488,9 +574,9 @@ module.exports = {
         db.collection('noEstimates').updateOne({"_id": res._id}, {$set: {currentWorkCard: data.currentWorkCard}}, function(err, res) {
           if (err) throw err;
           io.emit("updateCurrentWorkCard", data)
-          client.close();
         })
       }
+      updateGameState(err, client, db, io, data, debugOn)
     })
   },
 
@@ -504,9 +590,9 @@ module.exports = {
         db.collection('noEstimates').updateOne({"_id": res._id}, {$set: {currentEventCard: data.currentEventCard}}, function(err, res) {
           if (err) throw err;
           io.emit("updateCurrentEventCard", data)
-          client.close();
         })
       }
+      updateGameState(err, client, db, io, data, debugOn)
     })
   },
 
@@ -523,9 +609,9 @@ module.exports = {
           if (err) throw err;
           data.workCards = workCards
           io.emit("updateCommit", data)
-          client.close();
         })
       }
+      updateGameState(err, client, db, io, data, debugOn)
     })
   },
 
@@ -552,9 +638,9 @@ module.exports = {
           if (err) throw err;
           io.emit("updateColumns", data)
           io.emit("updateWorkCards", data)
-          client.close();
         })
       }
+      updateGameState(err, client, db, io, data, debugOn)
     })
   },
 
@@ -602,6 +688,7 @@ module.exports = {
           })
         }
       }
+      updateGameState(err, client, db, io, data, debugOn)
     })
   },
 
@@ -631,9 +718,9 @@ module.exports = {
         db.collection('noEstimates').updateOne({"_id": res._id}, {$set: {columns: columns, workCards: workCards, daysEffort: todaysEffort}}, function(err, res) {
           io.emit("updateColumns", data)
           io.emit("updateWorkCards", data)
-          client.close()
         })
       }
+      updateGameState(err, client, db, io, data, debugOn)
     })
   },
 
@@ -755,6 +842,7 @@ module.exports = {
           })
         }
       }
+      updateGameState(err, client, db, io, data, debugOn)
     })
   },
 
@@ -775,9 +863,9 @@ module.exports = {
         db.collection('noEstimates').updateOne({"_id": res._id}, {$set: {teams: teams}}, function(err, res) {
           if (err) throw err;
           io.emit("updateTeams", data)
-          client.close();
         })
       }
+      updateGameState(err, client, db, io, data, debugOn)
     })
   },
 
@@ -802,9 +890,9 @@ module.exports = {
         db.collection('noEstimates').updateOne({"_id": res._id}, {$set: {teams: teams}}, function(err, res) {
           if (err) throw err;
           io.emit("updateTeams", data)
-          client.close();
         })
       }
+      updateGameState(err, client, db, io, data, debugOn)
     })
   },
 
@@ -818,9 +906,9 @@ module.exports = {
         db.collection('noEstimates').updateOne({"_id": res._id}, {$set: {projectEstimate: data.projectEstimate}}, function(err, res) {
           if (err) throw err;
           io.emit("updateProjectEstimate", data)
-          client.close();
         })
       }
+      updateGameState(err, client, db, io, data, debugOn)
     })
   },
 
@@ -834,9 +922,9 @@ module.exports = {
         db.collection('noEstimates').updateOne({"_id": res._id}, {$set: {mvpEstimate: data.mvpEstimate}}, function(err, res) {
           if (err) throw err;
           io.emit("updateMVPEstimate", data)
-          client.close();
         })
       }
+      updateGameState(err, client, db, io, data, debugOn)
     })
   },
 
@@ -850,9 +938,9 @@ module.exports = {
         db.collection('noEstimates').updateOne({"_id": res._id}, {$set: {reEstimate: data.reEstimate}}, function(err, res) {
           if (err) throw err;
           io.emit("updateReEstimate", data)
-          client.close();
         })
       }
+      updateGameState(err, client, db, io, data, debugOn)
     })
   },
 
@@ -872,12 +960,14 @@ module.exports = {
         data.teams = teams
         for (var r = 0; r < res.length; r++) {
           if (typeof(res[r]) != "undefined") {
+            data.teamName = res[r].teamName
+            io.emit("updateTeams", data)
             db.collection('noEstimates').updateOne({"_id": res[r]._id}, {$set: {teams: data.teams}}, function(err, res) {
               if (err) throw err;
-              io.emit("updateTeams", data)
             })
           }
         }
+        updateGameState(err, client, db, io, data, debugOn)
       }
     })
   }

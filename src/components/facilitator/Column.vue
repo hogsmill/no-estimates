@@ -12,7 +12,9 @@
         <div v-if="card.urgent" class="urgent">URGENT</div>
         <div class="card-number">#{{card.number}}</div>
         <div>{{card.effort.done}} / {{card.effort.effort}}</div>
-        <div v-if="card.dependentOn" class="dependent-on" :style="{'background-color': card.dependentOn.name.toLowerCase()}">{{card.dependentOn.name}}</div>
+        <div v-if="card.dependentOn" class="dependent-on" :style="{'background-color': card.dependentOn.team.toLowerCase()}">
+           {{card.dependentOn.done}} / {{card.dependentOn.effort}}
+          </div>
         <div v-if="card.commit" class="delivered">C: {{card.commit}}</div>
         <div v-if="card.delivered" class="delivered">D: {{card.delivered}}</div>
       </div>

@@ -320,6 +320,14 @@ function columnDetails(res) {
     cols[res.columns[i].name] = []
     for (var j = 0; j < res.columns[i].cards.length; j++) {
       var card = res.columns[i].cards[j]
+      var dependentOn = false
+      if (card.dependentOn) {
+        dependentOn = {
+          team: card.dependentOn.name,
+          effort: card.teamDependency,
+          done: card.dependencyDone
+        }
+      }
       cols[res.columns[i].name].push({
         number: card.number,
         blocked: card.blocked,
@@ -327,7 +335,7 @@ function columnDetails(res) {
         delivered: card.delivered,
         effort: cardEffort(card),
         urgent: card.urgent,
-        dependentOn: card.dependentOn
+        dependentOn: dependentOn
       })
     }
   }

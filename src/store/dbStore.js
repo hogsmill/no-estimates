@@ -1,6 +1,8 @@
 
 const util = require('util')
 
+var gameState = require('./gameState.js')
+
 var initialRoles = [
   {role: 'Designer', order: 1, names: [], otherNames: []},
   {role: 'Developer', order: 2, names: [], otherNames: []},
@@ -97,7 +99,7 @@ function _loadGame(err, client, db, io, data, debugOn) {
         _updateRole(err, client, db, io, data, debugOn)
       })
     }
-    updateGameState(err, client, db, io, data, debugOn)
+    gameState.update(err, client, db, io, data, debugOn)
   })
 }
 
@@ -127,7 +129,7 @@ function _updateRole(err, client, db, io, data, debugOn) {
         io.emit("updateRoles", data)
       })
     }
-    updateGameState(err, client, db, io, data, debugOn)
+    gameState.update(err, client, db, io, data, debugOn)
   })
 }
 
@@ -143,12 +145,9 @@ function cardValue(workCards, card) {
   } else {
     card.value = -100 * card.delivery
   }
-  for (var i = 0; i < workCards.length; i++) {
-    if (workCards[i].number == card.number) {
-      workCards[i].delivery = card.delivery
-      workCards[i].value = card.value
-    }
-  }
+  workCard = workCards.find(function(workCard) { return workCard.number == card.number })
+  workCard.delivery = card.delivery
+  workCard.value = card.value
 }
 
 function blockOrFailCard(card, colName, percentageBlocked, percentageDeployFail) {
@@ -266,21 +265,13 @@ function updateTodaysEffort(res, column, card, name) {
 }
 
 function addExtraPointToCardForPairing(column, card) {
-  for (var i = 0; i < column.cards.length; i++) {
-    if (column.cards[i].number == card) {
-      column.cards[i].effort[column.name] = column.cards[i].effort[column.name] + 1
-    }
-  }
+  var pairedCard = column.cards.find(function(c) { return c.number == card})
+  pairedCard.effort[column.name] = pairedCard.effort[column.name] + 1
   return column
 }
 
 function addExtraPointForPairing(day, columns, daysEffort) {
-  var i, j, todaysEffort
-  for (i = 0; i < daysEffort.length; i++) {
-    if (day == daysEffort[i].day) {
-      todaysEffort = daysEffort[i]
-    }
-  }
+  var todaysEffort = daysEffort.find(function(d) { return day == d.day })
   if (todaysEffort) {
     for (i = 0; i < columns.length; i++) {
       for (j = 0; j < todaysEffort.columns.length; j++) {
@@ -295,99 +286,6 @@ function addExtraPointForPairing(day, columns, daysEffort) {
     }
   }
   return columns
-}
-
-function teamDetails(team, teams) {
-  var team
-  for (var i = 0; i < teams.length; i++) {
-    if (team == teams[i].name) {
-      team = teams[i]
-    }
-  }
-  return team
-}
-
-function cardEffort(card) {
-  return {
-    effort: card.design + card.develop + card.test + card.deploy,
-    done: card.effort.design + card.effort.develop + card.effort.test + card.effort.deploy
-  }
-}
-
-function columnDetails(res) {
-  var cols = {}
-  for (var i = 1; i < res.columns.length; i++) {
-    cols[res.columns[i].name] = []
-    for (var j = 0; j < res.columns[i].cards.length; j++) {
-      var card = res.columns[i].cards[j]
-      var dependentOn = false
-      if (card.dependentOn) {
-        dependentOn = {
-          team: card.dependentOn.name,
-          effort: card.teamDependency,
-          done: card.dependencyDone
-        }
-      }
-      cols[res.columns[i].name].push({
-        number: card.number,
-        blocked: card.blocked,
-        commit: card.commit,
-        delivered: card.delivered,
-        effort: cardEffort(card),
-        urgent: card.urgent,
-        dependentOn: dependentOn
-      })
-    }
-  }
-  return cols
-}
-
-function memberDetails(res) {
-  var members = []
-  for (var i = 0; i < res.roles.length; i++) {
-    for (var j = 0; j < res.roles[i].names.length; j++) {
-      members.push({
-        name: res.roles[i].names[j],
-        role: res.roles[i].role
-      })
-    }
-  }
-  return members
-}
-
-function teamState(res) {
-  var team = teamDetails(res.teamName, res.teams)
-  var columns = columnDetails(res)
-  var members = memberDetails(res)
-  return {
-    name: res.teamName,
-    include: team.include,
-    currentDay: res.currentDay,
-    currentWorkCard: res.currentWorkCard,
-    autoDeploy: team.autoDeploy,
-    members: members,
-    columns: columns,
-    projectEstimate: res.projectEstimate,
-    mvpEstimate: res.mvpEstimate,
-    reEstimate: res.reEstimate
-  }
-}
-
-function updateGameState(err, client, db, io, data, debugOn) {
-
-  if (debugOn) { console.log('updateGameState', data) }
-
-  db.collection('noEstimates').find({gameName: data.gameName}).toArray(function(err, res) {
-    if (err) throw err;
-    if (res.length) {
-      var teams = []
-      for (var r = 0; r < res.length; r++) {
-        teams.push(teamState(res[r]))
-      }
-      data.gameState = teams
-      io.emit("updateGameState", data)
-    }
-  })
 }
 
 module.exports = {
@@ -568,7 +466,7 @@ module.exports = {
           io.emit("updateWorkCards", data)
         })
       }
-      updateGameState(err, client, db, io, data, debugOn)
+      gameState.update(err, client, db, io, data, debugOn)
     })
   },
 
@@ -584,7 +482,7 @@ module.exports = {
           io.emit("updateCurrentWorkCard", data)
         })
       }
-      updateGameState(err, client, db, io, data, debugOn)
+      gameState.update(err, client, db, io, data, debugOn)
     })
   },
 
@@ -600,7 +498,7 @@ module.exports = {
           io.emit("updateCurrentEventCard", data)
         })
       }
-      updateGameState(err, client, db, io, data, debugOn)
+      gameState.update(err, client, db, io, data, debugOn)
     })
   },
 
@@ -619,7 +517,7 @@ module.exports = {
           io.emit("updateCommit", data)
         })
       }
-      updateGameState(err, client, db, io, data, debugOn)
+      gameState.update(err, client, db, io, data, debugOn)
     })
   },
 
@@ -648,7 +546,7 @@ module.exports = {
           io.emit("updateWorkCards", data)
         })
       }
-      updateGameState(err, client, db, io, data, debugOn)
+      gameState.update(err, client, db, io, data, debugOn)
     })
   },
 
@@ -696,7 +594,7 @@ module.exports = {
           })
         }
       }
-      updateGameState(err, client, db, io, data, debugOn)
+      gameState.update(err, client, db, io, data, debugOn)
     })
   },
 
@@ -728,7 +626,7 @@ module.exports = {
           io.emit("updateWorkCards", data)
         })
       }
-      updateGameState(err, client, db, io, data, debugOn)
+      gameState.update(err, client, db, io, data, debugOn)
     })
   },
 
@@ -850,7 +748,7 @@ module.exports = {
           })
         }
       }
-      updateGameState(err, client, db, io, data, debugOn)
+      gameState.update(err, client, db, io, data, debugOn)
     })
   },
 
@@ -873,7 +771,7 @@ module.exports = {
           io.emit("updateTeams", data)
         })
       }
-      updateGameState(err, client, db, io, data, debugOn)
+      gameState.update(err, client, db, io, data, debugOn)
     })
   },
 
@@ -900,7 +798,7 @@ module.exports = {
           io.emit("updateTeams", data)
         })
       }
-      updateGameState(err, client, db, io, data, debugOn)
+      gameState.update(err, client, db, io, data, debugOn)
     })
   },
 
@@ -916,7 +814,7 @@ module.exports = {
           io.emit("updateProjectEstimate", data)
         })
       }
-      updateGameState(err, client, db, io, data, debugOn)
+      gameState.update(err, client, db, io, data, debugOn)
     })
   },
 
@@ -932,7 +830,7 @@ module.exports = {
           io.emit("updateMVPEstimate", data)
         })
       }
-      updateGameState(err, client, db, io, data, debugOn)
+      gameState.update(err, client, db, io, data, debugOn)
     })
   },
 
@@ -948,7 +846,7 @@ module.exports = {
           io.emit("updateReEstimate", data)
         })
       }
-      updateGameState(err, client, db, io, data, debugOn)
+      gameState.update(err, client, db, io, data, debugOn)
     })
   },
 
@@ -975,7 +873,7 @@ module.exports = {
             })
           }
         }
-        updateGameState(err, client, db, io, data, debugOn)
+        gameState.update(err, client, db, io, data, debugOn)
       }
     })
   }

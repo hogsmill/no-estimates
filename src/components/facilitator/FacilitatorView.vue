@@ -43,8 +43,9 @@
         <td>Team</td>
         <td>Members</td>
         <td colspan="2">Autodeploy?</td>
-        <td>Current Day</td>
-        <td>Last Card Played</td>
+        <td>Current<br />Day</td>
+        <td>Last<br />Card<br />Played</td>
+        <td>Other<br />Team<br />Cards</td>
         <td colspan="5">Columns</td>
         <td colspan="3">Estimates<br/>Proj./MVP/Re-est.</td>
       </tr>
@@ -62,6 +63,7 @@
         <td v-if="showTeamState(team) && team.autoDeploy.done">Done: <input type="checkbox" :checked="team.autoDeploy.done"></td>
         <td v-if="showTeamState(team)">{{team.currentDay}}</td>
         <td v-if="showTeamState(team)">{{team.currentWorkCard}}</td>
+        <OtherCards v-if="showTeamState(team)" v-bind:cards="team.otherCards" />
         <Column v-if="showTeamState(team)" v-bind:column="team.columns.design" v-bind:name="'Design'" />
         <Column v-if="showTeamState(team)" v-bind:column="team.columns.develop"  v-bind:name="'Develop'" />
         <Column v-if="showTeamState(team)" v-bind:column="team.columns.test"  v-bind:name="'Test'" />
@@ -75,6 +77,7 @@
 </template>
 
 <script>
+import OtherCards from "./OtherCards.vue";
 import Column from "./Column.vue";
 
 export default {
@@ -82,6 +85,7 @@ export default {
     'socket'
   ],
   components: {
+    OtherCards,
     Column
   },
   data() {
@@ -127,6 +131,7 @@ export default {
       return this.$store.getters.getGameName
     },
     teams() {
+      console.log('teams', this.$store.getters.getTeams)
       return this.$store.getters.getTeams
     },
     percentageBlocked() {
@@ -136,6 +141,7 @@ export default {
       return this.$store.getters.getPercentageDeployFail
     },
     gameState() {
+      console.log('gameState', this.$store.getters.getGameState)
       return this.$store.getters.getGameState
     }
   }
@@ -194,6 +200,7 @@ export default {
 
   .game-state {
     .header td {
+      vertical-align: middle;
       text-align: center;
       font-weight: bold;
     }

@@ -1,8 +1,10 @@
 
 const util = require('util')
 
-var roleFuns = require('./roles.js')
-var gameState = require('./gameState.js')
+var roleFuns = require('./lib/roles.js')
+var cardFuns = require('./lib/cards.js')
+var pairingFuns = require('./lib/pairing.js')
+var gameState = require('./lib/gameState.js')
 
 var initialRoles = [
   {role: 'Designer', order: 1, names: [], otherNames: []},
@@ -132,161 +134,6 @@ function _updateRole(err, client, db, io, data, debugOn) {
     }
     gameState.update(err, client, db, io, data, debugOn)
   })
-}
-
-function cardValue(workCards, card) {
-  if (!card.urgent) {
-    if (card.delivery < 3) {
-      card.value = 700
-    } else if (card.delivery < 6) {
-      card.value = 400
-    } else {
-      card.value = 200
-    }
-  } else {
-    card.value = -100 * card.delivery
-  }
-  workCard = workCards.find(function(workCard) { return workCard.number == card.number })
-  workCard.delivery = card.delivery
-  workCard.value = card.value
-}
-
-function blockOrFailCard(card, colName, percentageBlocked, percentageDeployFail) {
-  var rand = Math.random()
-  if (colName != 'deploy' && colName != 'done' && rand < percentageBlocked) {
-    card.blocked = true
-  }
-  if (colName == 'deploy' && card.deploy == card.effort['deploy'] && rand < percentageDeployFail) {
-    card.failed = true
-    card.effort.deploy = 0
-  }
-}
-
-function cardCompleteInColumn(card, colName, percentageBlocked, percentageDeployFail) {
-  blockOrFailCard(card, colName, percentageBlocked, percentageDeployFail)
-  var dependentDone = true
-  if (colName == 'deploy') {
-    dependentDone == card.teamDependency == 0 || card.teamDependency == card.dependencyDone
-  }
-  return !card.blocked && !card.failed && card[colName] == card.effort[colName] && dependentDone
-}
-
-function moveCard(columns, workCards, card, n, currentDay) {
-  var fromCol = columns[n]
-  var toCol = columns[n + 1]
-  var i, cards = []
-  for (i = 0; i < fromCol.cards.length; i++) {
-    if (fromCol.cards[i].number != card.number) {
-      cards.push(fromCol.cards[i])
-    }
-  }
-  fromCol.cards = cards
-  if (toCol.name == 'done') {
-    card.done = true
-    card.delivery = currentDay
-    card.time = card.delivery - card.commit
-    cardValue(workCards, card)
-  }
-  toCol.cards.push(card)
-}
-
-function addSecondarySkill(roles, column, name) {
-  var role = column.charAt(0).toUpperCase() + column.slice(1) + 'er'
-  for (var i = 0; i < roles.length; i++) {
-    if (roles[i].role == role) {
-      var roleExists = false
-      for (j = 0; j < roles[i].otherNames.length; j++) {
-        if (roles[i].otherNames[j].id == name.id) {
-          roleExists = true
-        }
-      }
-      if (!roleExists) {
-        roles[i].otherNames.push(name)
-      }
-    }
-  }
-  return roles
-}
-
-function updateTodayCard(card, name) {
-  var i, names = []
-  for (i = 0; i < card.names.length; i++) {
-    if (card.names[i].name.id != name.id) {
-      names.push(card.names[i])
-    }
-  }
-  names.push(name)
-  card.names = names
-  return card
-}
-
-function updateTodayColumn(column, card, name) {
-  var i,
-      card = {number: card.number, names: []}
-      cards = []
-  for (i = 0; i < column.cards.length; i++) {
-    if (column.cards[i].number != card.number) {
-      cards.push(column.cards[i])
-    } else {
-      card = column.cards[i]
-    }
-  }
-  cards.push(updateTodayCard(card, name))
-  column.cards = cards
-  return column
-}
-
-function updateToday(today, column, card, name) {
-  var i, j,
-      column = {column: column.name, cards: []},
-      columns = []
-  for (i = 0; i < today.columns.length; i++) {
-    if (today.columns[i].column == column.column) {
-      column = today.columns[i]
-    } else {
-      columns.push(today.columns[i])
-    }
-  }
-  columns.push(updateTodayColumn(column, card, name))
-  today.columns = columns
-  return today
-}
-
-function updateTodaysEffort(res, column, card, name) {
-  var todaysEffort = [], day = res.currentDay, found = false, today = {day: day, columns: []}
-  for (var i = 0; i < res.daysEffort.length; i++) {
-    if (res.daysEffort[i].day != day) {
-      todaysEffort.push(res.daysEffort[i])
-    } else {
-      today = res.daysEffort[i]
-    }
-  }
-  todaysEffort.push(updateToday(today, column, card, name))
-  return todaysEffort
-}
-
-function addExtraPointToCardForPairing(column, card) {
-  var pairedCard = column.cards.find(function(c) { return c.number == card})
-  pairedCard.effort[column.name] = pairedCard.effort[column.name] + 1
-  return column
-}
-
-function addExtraPointForPairing(day, columns, daysEffort) {
-  var todaysEffort = daysEffort.find(function(d) { return day == d.day })
-  if (todaysEffort) {
-    for (i = 0; i < columns.length; i++) {
-      for (j = 0; j < todaysEffort.columns.length; j++) {
-        if (columns[i].name == todaysEffort.columns[j].column) {
-          for (k = 0; k < todaysEffort.columns[j].cards.length; k++) {
-            if (todaysEffort.columns[j].cards[k].names.length > 1) {
-              columns[i] = addExtraPointToCardForPairing(columns[i], todaysEffort.columns[j].cards[k].number)
-            }
-          }
-        }
-      }
-    }
-  }
-  return columns
 }
 
 module.exports = {
@@ -436,7 +283,7 @@ module.exports = {
               teams[i].concurrentDevAndTest = true
             }
             if (data.extraEffortForPairing) {
-              columns = addExtraPointForPairing(res.currentDay, columns, res.daysEffort)
+              columns = pairingFuns.addExtraPointForPairing(res.currentDay, columns, res.daysEffort)
             }
           }
         }
@@ -447,8 +294,8 @@ module.exports = {
             if (card.blocked || card.failed) {
               card.blocked = false
               card.failed = false
-              if (cardCompleteInColumn(card, colName, res.percentageBlocked, res.percentageDeployFail)) {
-                moveCard(columns, workCards, card, i, res.currentDay)
+              if (cardFuns.cardCompleteInColumn(card, colName, res.teamName, res.teams, res.percentageBlocked, res.percentageDeployFail)) {
+                cardFuns.moveCard(columns, workCards, card, i, res.currentDay)
               }
             }
           }
@@ -530,8 +377,8 @@ module.exports = {
           for (var j = 0; j < columns[i].cards.length; j++) {
             var card = columns[i].cards[j]
             var colName = columns[i].name
-            if (cardCompleteInColumn(card, colName, res.percentageBlocked, res.percentageDeployFail)) {
-              moveCard(columns, workCards, card, i, res.currentDay)
+            if (cardFuns.cardCompleteInColumn(card, colName, res.teamName, res.teams, res.percentageBlocked, res.percentageDeployFail)) {
+              cardFuns.moveCard(columns, workCards, card, i, res.currentDay)
             }
           }
         }
@@ -606,12 +453,12 @@ module.exports = {
         for (var i = 1; i < columns.length; i++) {
           for (var j = 0; j < columns[i].cards.length; j++) {
             if (columns[i].cards[j].number == data.workCard.number) {
-              todaysEffort = updateTodaysEffort(res, columns[i], data.workCard, data.name)
+              todaysEffort = pairingFuns.updateTodaysEffort(res, columns[i], data.workCard, data.name)
               var card = columns[i].cards[j]
               var colName = columns[i].name
               card.effort = data.workCard.effort
-              if (cardCompleteInColumn(card, colName, res.percentageBlocked, res.percentageDeployFail)) {
-                moveCard(columns, workCards, card, i, res.currentDay)
+              if (cardFuns.cardCompleteInColumn(card, colName, res.teamName, res.teams, res.percentageBlocked, res.percentageDeployFail)) {
+                cardFuns.moveCard(columns, workCards, card, i, res.currentDay)
               }
             }
           }
@@ -664,7 +511,7 @@ module.exports = {
               column.days.push(data.day)
             }
             if (column.days.length >= 5) {
-              roles = addSecondarySkill(roles, column.column, data.name)
+              roles = pairingFuns.addSecondarySkill(roles, column.column, data.name)
             }
             var columns = []
             for (i = 0; i < player.columns.length; i++) {
@@ -720,8 +567,8 @@ module.exports = {
                   var card = columns[i].cards[j]
                   var colName = columns[i].name
                   card.dependencyDone = card.dependencyDone + 1
-                  if (cardCompleteInColumn(card, colName, res.percentageBlocked, res.percentageDeployFail)) {
-                    moveCard(columns, workCards, card, i, team.currentDay)
+                  if (cardFuns.cardCompleteInColumn(card, colName, res.teamName, res.teams, res.percentageBlocked, res.percentageDeployFail)) {
+                    cardFuns.moveCard(columns, workCards, card, i, team.currentDay)
                   }
                 }
               }

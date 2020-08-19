@@ -52,7 +52,7 @@
       <tr v-for="(team, index) in gameState" :key="index">
         <td v-if="showTeamState(team)" class="white" :style="{'background-color': team.name.toLowerCase()}">{{team.name}}</td>
         <td v-if="showTeamState(team)">
-          <div v-for="(member, m) in team.members" :key="m">{{member.name.name}} (<i>{{member.role}}</i>)</div>
+          <div v-for="(member, m) in team.members" :key="m"><b>{{member.name.name}}</b> (<i>{{member.role}}</i>)</div>
         </td>
         <td v-if="showTeamState(team)" class="auto-deploy">
           <div>Doing: </div>

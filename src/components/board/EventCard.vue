@@ -4,13 +4,13 @@
     <div class="text-right"><span @click="hide" class="glyphicon glyphicon-star">x</span></div>
     <div v-if="!currentEventCard">
       <h4>We are now on Day {{currentDay + 1}}</h4>
-      <button v-if="currentEventCard.function && currentEventCard.confirm" class="btn btn-sm btn-info" @click="done()">Done</button>
+      <button class="btn btn-sm btn-info" @click="done()">Done</button>
     </div>
     <div v-if="currentEventCard">
       <h4>Event Card {{currentEventCard.number}}</h4>
       <p v-html="currentEventCard.text"></p>
       <div>
-        <button v-if="!currentEventCard.function" class="btn btn-sm btn-info" @click="done()">Done</button>
+        <button v-if="!currentEventCard || !currentEventCard.function" class="btn btn-sm btn-info" @click="done()">Done</button>
         <button v-if="currentEventCard.function && !currentEventCard.confirm" class="btn btn-sm btn-info" @click="doFunction()">Done</button>
         <button v-if="currentEventCard.function && currentEventCard.confirm" class="btn btn-sm btn-info" @click="doFunction()">Yes</button>
         <button v-if="currentEventCard.function && currentEventCard.confirm" class="btn btn-sm btn-info" @click="done()">No</button>

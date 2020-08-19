@@ -1,9 +1,9 @@
 <template>
-  <div class="my-name" v-if="!showFacilitator">
+  <div class="my-name" v-if="!showFacilitator && gameName">
     <div class="my-name text-right">
-      <button class="btn btn-sm btn-secondary smaller-font" v-if="!myName" @click="show">Set My Name</button>
-      <span v-if="myName" @click="show" class="mr-2 mt-2 pointer p-2 bg-light">I am: {{myName.name}}</span>
-      <div class="effort-div" v-if="myName">
+      <button class="btn btn-sm btn-secondary smaller-font" v-if="!myName.id" @click="show">Set My Name</button>
+      <span v-if="myName.id" @click="show" class="mr-2 mt-2 pointer p-2 bg-light">My Name is: {{myName.name}}</span>
+      <div class="effort-div" v-if="myName.id">
         <div v-for="n in myEffort.available" :key="n" class="effort rounded-circle"
           :class="getClass(n)">{{n}}</div>
       </div>
@@ -64,9 +64,11 @@ export default {
       } else {
         myNameData = {id: this.myName.id, name: newName}
         this.$store.dispatch("changeName", {name: newName})
-        this.socket.emit("changeName", {gameName: this.gameName, name: oldName, newName: newName})
+        localStorage.setItem("myName", JSON.stringify(myNameData));
+        if (this.gameName) {
+          this.socket.emit("changeName", {gameName: this.gameName, name: oldName, newName: newName})
+        }
       }
-      localStorage.setItem("myName", JSON.stringify(myNameData));
       this.hide()
     }
   },

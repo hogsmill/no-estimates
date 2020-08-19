@@ -1,5 +1,5 @@
 <template>
-  <div class="role-name" v-if="!showFacilitator">
+  <div class="role-name" v-if="!showFacilitator && gameName && myName.id && teamName">
     <div class="role-name text-right">
       <button class="btn btn-sm btn-secondary smaller-font" v-if="!myRole" @click="show" :disabled="!myName">Set My Speciality</button>
       <span v-if="myRole" @click="show" class="mr-2 mt-2 pointer p-2 bg-light">My Role is: {{myRole}}</span>
@@ -41,7 +41,9 @@ export default {
       var myRole = document.getElementById('role-select').value
       this.$store.dispatch("updateMyRole", myRole)
       localStorage.setItem("myRole", myRole);
-      this.socket.emit("updateRole", {gameName: this.gameName, teamName: this.teamName, name: this.myName, role: myRole })
+      if (myRole && this.gameName && this.teamName) {
+        this.socket.emit("updateRole", {gameName: this.gameName, teamName: this.teamName, name: this.myName, role: myRole })
+      }
       this.hide()
     }
   },

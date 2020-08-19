@@ -40,7 +40,9 @@ export default {
       var gameName = document.getElementById('game-name').value
       this.$store.dispatch("updateGameName", gameName)
       localStorage.setItem("gameName", gameName);
-      this.socket.emit("restartGame", {gameName: this.gameName})
+      if (gameName && this.teamName) {
+        this.socket.emit("loadGame", {gameName: this.gameName, teamName: this.teamName})
+      }
       this.hide()
     },
     restartGame() {

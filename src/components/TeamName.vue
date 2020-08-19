@@ -1,5 +1,5 @@
 <template>
-  <div class="team-name" v-if="!showFacilitator">
+  <div class="team-name" v-if="!showFacilitator && gameName && myName.id">
     <div class="team-name text-right">
       <button class="btn btn-sm btn-secondary smaller-font" v-if="!teamName" @click="show">Set My Team</button>
       <span v-if="teamName" @click="show" class="mr-2 mt-2 pointer p-2 bg-light">My Team is: {{teamName}}</span>
@@ -44,9 +44,13 @@ export default {
     },
     saveTeamName: function() {
       var teamName = document.getElementById('team-name-select').value
+      if (!this.teamName) {
+        this.socket.emit("loadGame", {gameName: this.gameName, teamName: teamName})
+      } else if (teamName && this.gameName) {
+        this.socket.emit("updateTeamName", {gameName: this.gameName, teamName: teamName, name: this.myName})
+        this.socket.emit("loadGame", {gameName: this.gameName, teamName: teamName})
+      }
       this.$store.dispatch("updateTeamName", teamName)
-      this.socket.emit("updateTeamName", {gameName: this.gameName, teamName: teamName, name: this.myName})
-      this.socket.emit("loadGame", {gameName: this.gameName, teamName: teamName})
       localStorage.setItem("teamName", teamName);
       this.hide()
     }

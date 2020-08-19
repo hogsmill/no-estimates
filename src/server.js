@@ -11,7 +11,7 @@ var prod = os.hostname() == "agilesimulations" ? true : false
 var url = prod ?  "mongodb://127.0.0.1:27017/" : "mongodb://localhost:27017/"
 
 var connectDebugOff = prod
-var debugOn = false //!prod
+var debugOn = !prod
 
 var connections = {}
 var maxConnections = 20

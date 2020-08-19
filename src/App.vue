@@ -8,11 +8,11 @@
     <div class="main" v-else>
       <div v-if="isHost" class="right" @click="clear()">Clear Storage</div>
       <h1>No Estimates <span v-if="teamName">(Team: {{teamName}})</span></h1>
-      <h3 class="setup-header" v-if="!isSetUp()">Before we start the game, please set your name, team, speciality and game</h3>
+      <h3 class="setup-header" v-if="!isSetUp()">Before we start the game, please set the game name, your name, your team and your speciality.</h3>
+      <GameName v-bind:socket="socket" />
       <MyName v-bind:socket="socket" />
       <TeamName v-bind:socket="socket" />
       <MyRole v-bind:socket="socket" />
-      <GameName v-bind:socket="socket" />
 
       <Status v-bind:socket="socket" />
       <div v-if="isSetUp()" class="container board">
@@ -223,7 +223,7 @@ export default {
   }
 
   .setup-header {
-    width: 550px;
+    width: 700px;
     margin: 0 auto 16px auto;
   }
 

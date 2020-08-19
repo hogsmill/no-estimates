@@ -3,7 +3,9 @@
     <div class="row days">
       <div class="days">
         <div class="days-label">Day</div>
+        <span class="passed" v-if="days()[0] > 1"> . . . </span>
         <div class="day rounded-circle" :class="getClass(day)" v-for="(day, index) in days()" :key="index">{{day}}</div>
+        <span> . . . </span>
         <button class="btn btn-sm btn-info next" @click="next()">Next</button>
       </div>
     </div>
@@ -25,7 +27,10 @@ export default {
     },
     days() {
       var days = []
-      for (var i = 1; i < this.numberOfDays + 1; i++) {
+      var range = 15
+      var startDay = Math.max(1, this.currentDay - range)
+      var endDay = Math.max(30, this.currentDay + range)
+      for (var i = startDay; i <= endDay; i++) {
         days.push(i)
       }
       return days
@@ -43,9 +48,6 @@ export default {
     },
     myTeam() {
       return this.$store.getters.getMyTeam
-    },
-    numberOfDays() {
-      return this.$store.getters.getNumberOfDays
     },
     currentDay() {
       return this.$store.getters.getCurrentDay
@@ -70,6 +72,10 @@ export default {
     width: 100%;
     font-weight: bold;
     margin-bottom: 4px;
+
+    .passed {
+      opacity: 0.25;
+    }
   }
 
   .days-label {
@@ -81,10 +87,6 @@ export default {
   .day {
     display: inline-block;
     width: 20px;
-
-    &.passed {
-      color: #888;
-    }
 
     &.current {
       background-color: #fff;

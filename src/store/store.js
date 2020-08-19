@@ -41,7 +41,6 @@ export const store = new Vuex.Store({
       {name: "deploy", order: 5, cards: []},
       {name: "done", order: 6, cards: []}
     ],
-    numberOfDays: 30,
     currentDay: 1,
     percentageBlocked: 0,
     percentageDeployFail: 0,
@@ -157,9 +156,6 @@ export const store = new Vuex.Store({
     },
     getPairing: (state) => {
       return state.pairing;
-    },
-    getNumberOfDays: (state) => {
-      return state.numberOfDays;
     },
     getPercentageBlocked: (state) => {
       return state.percentageBlocked;

@@ -1,6 +1,7 @@
 
 const util = require('util')
 
+var roleFuns = require('./roles.js')
 var gameState = require('./gameState.js')
 
 var initialRoles = [
@@ -297,28 +298,20 @@ module.exports = {
     db.collection('noEstimates').find({gameName: data.gameName}).toArray(function(err, res) {
       if (err) throw err;
       if (res.length) {
-        var r, i, j
-        for (r = 0; r < res.length; r++) {
-          var roles = []
-          if (res[r].teamName != data.teamName) {
-            for (i = 0; i < res[r].roles.length; i++) {
-              roles.push(res[r].roles[i])
-              var names = []
-              for (j = 0; j < res[r].roles[i].names.length; j++) {
-                if (res[r].roles[i].names[j].id != data.name.id) {
-                  names.push(res[r].roles[i].names[j])
-                }
-              }
-            }
+        res.forEach(function(r) {
+          var roles
+          if (r.teamName != data.teamName) {
+            roles = roleFuns.removeNameFromRoles(data.name, r.roles)
           } else {
-            roles = res[r].roles
+            roles = roleFuns.addNameToRoles(data.name, data.role, r.roles)
           }
+          data.teamName = r.teamName
           data.roles = roles
           io.emit("updateRoles", data)
-          db.collection('noEstimates').updateOne({"_id": res[r]._id}, {$set: {roles: data.roles}}, function(err, rec) {
+          db.collection('noEstimates').updateOne({"_id": r._id}, {$set: {roles: data.roles}}, function(err, rec) {
             if (err) throw err;
           })
-        }
+        })
       }
     })
   },

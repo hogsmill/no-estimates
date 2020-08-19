@@ -44,14 +44,13 @@ export default {
     },
     saveTeamName: function() {
       var teamName = document.getElementById('team-name-select').value
+      this.$store.dispatch("updateTeamName", teamName)
+      localStorage.setItem("teamName", teamName);
       if (!this.teamName) {
         this.socket.emit("loadGame", {gameName: this.gameName, teamName: teamName})
       } else if (teamName && this.gameName) {
-        this.socket.emit("updateTeamName", {gameName: this.gameName, teamName: teamName, name: this.myName})
-        this.socket.emit("loadGame", {gameName: this.gameName, teamName: teamName})
+        this.socket.emit("updateTeamName", {gameName: this.gameName, teamName: teamName, role: this.myRole, name: this.myName})
       }
-      this.$store.dispatch("updateTeamName", teamName)
-      localStorage.setItem("teamName", teamName);
       this.hide()
     }
   },

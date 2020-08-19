@@ -131,7 +131,6 @@ export default {
       return this.$store.getters.getGameName
     },
     teams() {
-      console.log('teams', this.$store.getters.getTeams)
       return this.$store.getters.getTeams
     },
     percentageBlocked() {
@@ -141,7 +140,6 @@ export default {
       return this.$store.getters.getPercentageDeployFail
     },
     gameState() {
-      console.log('gameState', this.$store.getters.getGameState)
       return this.$store.getters.getGameState
     }
   }

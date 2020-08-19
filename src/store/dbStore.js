@@ -298,12 +298,13 @@ module.exports = {
     db.collection('noEstimates').find({gameName: data.gameName}).toArray(function(err, res) {
       if (err) throw err;
       if (res.length) {
+        var newTeamName = data.teamName
         res.forEach(function(r) {
           var roles
-          if (r.teamName != data.teamName) {
-            roles = roleFuns.removeNameFromRoles(data.name, r.roles)
+          if (r.teamName != newTeamName) {
+            roles = roleFuns.removeNameFromRoles(data.name, r.roles, r.teamName)
           } else {
-            roles = roleFuns.addNameToRoles(data.name, data.role, r.roles)
+            roles = roleFuns.addNameToRoles(data.name, data.role, r.roles, r.teamName)
           }
           data.teamName = r.teamName
           data.roles = roles
@@ -311,6 +312,9 @@ module.exports = {
           db.collection('noEstimates').updateOne({"_id": r._id}, {$set: {roles: data.roles}}, function(err, rec) {
             if (err) throw err;
           })
+        })
+        res.forEach(function(r) {
+          _loadGame(err, client, db, io, {gameName: data.gameName, teamName: r.teamName}, debugOn)
         })
       }
     })

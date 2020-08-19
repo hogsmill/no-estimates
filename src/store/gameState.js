@@ -74,7 +74,7 @@ module.exports = {
 
   update: function(err, client, db, io, data, debugOn) {
 
-    //if (debugOn) { console.log('updateGameState', data) }
+    if (debugOn) { console.log('updateGameState', data) }
 
     db.collection('noEstimates').find({gameName: data.gameName}).toArray(function(err, res) {
       if (err) throw err;

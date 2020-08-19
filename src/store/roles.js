@@ -1,30 +1,31 @@
 
 module.exports = {
 
-  removeNameFromRoles: function(name, roles) {
+  removeNameFromRoles: function(name, roles, team) {
     var i, j, newRoles = []
     for (i = 0; i < roles.length; i++) {
-      var role = roles[i]
-      role.names = []
+      var names = []
       for (j = 0; j < roles[i].names.length; j++) {
         if (name.id != roles[i].names[j].id) {
-          role.names.push(roles[i].names[j])
+          names.push(roles[i].names[j])
         }
       }
-      role.otherNames = []
+      roles[i].names = names
+      var otherNames = []
       for (j = 0; j < roles[i].otherNames.length; j++) {
         if (name.id != roles[i].otherNames[j].id) {
-          role.otherNames.push(roles[i].names[j])
+          otherNames.push(roles[i].names[j])
         }
       }
-      newRoles.push(role)
+      roles[i].otherNames = otherNames
+      newRoles.push(roles[i])
     }
     return newRoles
   },
 
-  addNameToRoles: function(name, role, roles) {
+  addNameToRoles: function(name, role, roles, team) {
     for (i = 0; i < roles.length; i++) {
-      if (roles[i].role == role.role) {
+      if (roles[i].role == role) {
         roles[i].names.push(name)
       }
     }

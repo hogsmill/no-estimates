@@ -270,7 +270,7 @@ module.exports = {
     db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
       if (err) throw err;
       if (res) {
-        var teams = res.teams, columns = res.columns, workCards = res.workCards, currentDay = res.currentDay + 1
+        var teams = res.teams, columns = res.columns, workCards = res.workCards, roles = res.roles, currentDay = res.currentDay + 1
         for (var i = 0; i < teams.length; i++) {
           if (teams[i].name == data.teamName) {
             if (data.autoDeploy) {
@@ -300,11 +300,13 @@ module.exports = {
             }
           }
         }
+        data.roles = roleFuns.setRolesEffort(roles, data)
         data.teams = teams
         data.columns = columns
         data.workCards = workCards
-        db.collection('noEstimates').updateOne({"_id": res._id}, {$set: {currentDay: currentDay, teams: teams, columns: columns, workCards: workCards}}, function(err, res) {
+        db.collection('noEstimates').updateOne({"_id": res._id}, {$set: {currentDay: currentDay, teams: teams, columns: columns, workCards: workCards, roles: roles}}, function(err, res) {
           io.emit("updateCurrentDay", data)
+          io.emit("updateRoles", data)
           io.emit("updateTeams", data)
           io.emit("updateColumns", data)
           io.emit("updateWorkCards", data)
@@ -471,6 +473,36 @@ module.exports = {
         })
       }
       gameState.update(err, client, db, io, data, debugOn)
+    })
+  },
+
+  updateAssignedEffort: function(err, client, db, io, data, debugOn) {
+
+    if (debugOn) { console.log('updateAssignedEffort', data) }
+
+    db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
+      if (err) throw err;
+      if (res) {
+        var roles = []
+        for (var i = 0; i < res.roles.length; i++) {
+          var role = res.roles[i]
+          var names = []
+          for (var j = 0; j < res.roles[i].names.length; j++) {
+            var name = res.roles[i].names[j]
+            if (res.roles[i].names[j].id == data.name.id) {
+              name.effort = data.effort
+            }
+            names.push(name)
+          }
+          role.names = names
+          roles.push(role)
+        }
+        data.roles = roles
+        io.emit("updateRoles", data)
+        db.collection('noEstimates').updateOne({"_id": res._id}, {$set: {roles: roles}}, function(err, res) {
+          if (err) throw err;
+        })
+      }
     })
   },
 

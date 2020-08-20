@@ -30,5 +30,21 @@ module.exports = {
       }
     }
     return roles
+  },
+
+  setRolesEffort: function(roles, data) {
+    var capacity = data.capacity ? data.capacity : 4
+    for (var i = 0; i < roles.length; i++) {
+      for (var j = 0; j < roles[i].names.length; j++) {
+        if (roles[i].role == 'Tester' && data.testCapacity) {
+          capacity = data.testCapacity
+        }
+        if (roles[i].names[j].effort) {
+          roles[i].names[j].effort.available = capacity
+        }
+      }
+    }
+    return roles
+
   }
 }

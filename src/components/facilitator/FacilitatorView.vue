@@ -42,7 +42,7 @@
       <tr  v-if="showGameState" class="header">
         <td>Team</td>
         <td>Members</td>
-        <td colspan="2">Autodeploy?</td>
+        <td>Autodeploy?</td>
         <td>Current<br />Day</td>
         <td>Last<br />Card<br />Played</td>
         <td>Other<br />Team<br />Cards</td>
@@ -54,13 +54,9 @@
         <td v-if="showTeamState(team)">
           <div v-for="(member, m) in team.members" :key="m"><b>{{member.name.name}}</b> (<i>{{member.role}}</i>)</div>
         </td>
-        <td v-if="showTeamState(team)" class="auto-deploy">
-          <div>Doing: </div>
-          <div v-if="!team.autoDeploy.doing">&#9744;</div>
-          <div v-if="team.autoDeploy.doing">&#9745;</div>
-        </td>
-        <td v-if="showTeamState(team) && !team.autoDeploy.done">Effort: {{team.autoDeploy.effort}} / 8</td>
-        <td v-if="showTeamState(team) && team.autoDeploy.done">Done: <input type="checkbox" :checked="team.autoDeploy.done"></td>
+        <td v-if="showTeamState(team) && !team.autoDeploy.doing && !team.autoDeploy.done">&#9746;</td>
+        <td v-if="showTeamState(team) && team.autoDeploy.doing">{{team.autoDeploy.effort}} / 8</td>
+        <td v-if="showTeamState(team) && team.autoDeploy.done">&#9745;</td>
         <td v-if="showTeamState(team)">{{team.currentDay}}</td>
         <td v-if="showTeamState(team)">{{team.currentWorkCard}}</td>
         <OtherCards v-if="showTeamState(team)" v-bind:cards="team.otherCards" />

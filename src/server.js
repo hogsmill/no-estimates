@@ -11,7 +11,7 @@ var prod = os.hostname() == "agilesimulations" ? true : false
 var url = prod ?  "mongodb://127.0.0.1:27017/" : "mongodb://localhost:27017/"
 
 var connectDebugOff = prod
-var debugOn = !prod
+var debugOn = false // !prod
 
 var connections = {}
 var maxConnections = 20
@@ -64,6 +64,9 @@ function doDb(fun, data) {
         break;
       case 'updateEffort':
         dbStore.updateEffort(err, client, db, io, data, debugOn)
+        break;
+      case 'updateAssignedEffort':
+        dbStore.updateAssignedEffort(err, client, db, io, data, debugOn)
         break;
       case 'addEffortToOthersCard':
         dbStore.addEffortToOthersCard(err, client, db, io, data, debugOn)
@@ -142,6 +145,8 @@ io.on("connection", (socket) => {
   socket.on("updateCurrentWorkCard", (data) => { doDb('updateCurrentWorkCard', data) })
 
   socket.on("updateColumns", (data) => { doDb('updateColumns', data) })
+
+  socket.on("updateAssignedEffort", (data) => { doDb('updateAssignedEffort', data) })
 
   socket.on("updatePersonEffort", (data) => { emit("updatePersonEffort", data) })
 

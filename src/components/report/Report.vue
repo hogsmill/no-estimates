@@ -36,7 +36,7 @@
             <th>Commit Day</th>
             <th>Delivery Day</th>
             <th>Delivery Time</th>
-            <th v-html="currency"></th>
+            <th>Total: <span v-html="currency"></span><span>{{total()}}</span></th>
           </tr>
         </thead>
         <tbody>
@@ -78,6 +78,16 @@ export default {
         t= ''
       }
       return t
+    },
+    total() {
+      var total = 0
+      for (var i = 0; i < this.workCards.length; i++) {
+        if (this.workCards[i].value) {
+          total += this.workCards[i].value
+        }
+      }
+      console.log('Total', total)
+      return total
     },
     saveTotalProject() {
       var estimate = document.getElementById("project-estimate").value
@@ -141,7 +151,7 @@ export default {
 <style lang="scss">
   .report {
     width: 80px;
-    display: inline-block; 
+    display: inline-block;
 
     button {
       text-align: left;
@@ -196,6 +206,7 @@ export default {
   .results {
     th {
       width: 20%;
+      text-align: center;
     }
 
     .not-delivered {

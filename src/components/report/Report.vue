@@ -34,15 +34,17 @@
         <thead>
           <tr>
             <th>Card #</th>
-            <th>Commit Day</th>
-            <th>Delivery Day</th>
-            <th>Delivery Time</th>
-            <th>Total: <span v-html="currency"></span><span>{{total()}}</span></th>
+            <th>Effort</th>
+            <th>Commit<br />Day</th>
+            <th>Delivery<br />Day</th>
+            <th>Delivery<br />Time</th>
+            <th>Total<br /><span v-html="currency"></span><span>{{total()}}</span></th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="(card, index) in workCards" :key="index">
             <td>{{card.number}}</td>
+            <td>{{totalEffort(card)}}</td>
             <td>{{card.commit}}</td>
             <td>{{card.delivery}}</td>
             <td :class="{ 'not-delivered': !card.delivery }">{{time(card)}}</td>
@@ -79,6 +81,12 @@ export default {
         t= ''
       }
       return t
+    },
+    totalEffort(card) {
+      return card.design +
+        card.develop +
+        card.test +
+        card.deploy
     },
     total() {
       var total = 0
@@ -210,7 +218,7 @@ export default {
 
   .results {
     th {
-      width: 20%;
+      width: 16%;
       text-align: center;
     }
 

@@ -2,6 +2,7 @@
 
   <div class="report">
     <button class="btn btn-sm btn-site-primary" @click="show()">Report</button>
+    <span class="current-value">Current Project Value: <span v-html="currency"></span><span>{{total()}}</span></span>
 
     <modal class="report-modal" name="report-modal" :height="500" :classes="['rounded']">
       <div class="float-right mr-2 mt-1">
@@ -86,7 +87,6 @@ export default {
           total += this.workCards[i].value
         }
       }
-      console.log('Total', total)
       return total
     },
     saveTotalProject() {
@@ -150,12 +150,17 @@ export default {
 
 <style lang="scss">
   .report {
-    width: 80px;
     display: inline-block;
 
     button {
       text-align: left;
       margin-top: 6px;
+    }
+
+    .current-value {
+      position: relative;
+      top: 3px;
+      padding-left: 6px;
     }
   }
 

@@ -45,11 +45,13 @@ export default {
           updateData[key] = data[key]
         }
       }
-      if (this.currentEventCard.autoDeployCard) {
-        updateData.canStartAutoDeploy = true
+      if (this.currentEventCard) {
+        if (this.currentEventCard.autoDeployCard) {
+          updateData.canStartAutoDeploy = true
+        }
+        this.socket.emit("updateCurrentEventCard", {gameName: this.gameName, teamName: this.teamName, currentEventCard: this.currentEventCard.number})
       }
       this.socket.emit("updateCurrentDay", updateData)
-      this.socket.emit("updateCurrentEventCard", {gameName: this.gameName, teamName: this.teamName, currentEventCard: this.currentEventCard.number})
     },
     doFunction() {
       var data

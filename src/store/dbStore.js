@@ -138,6 +138,10 @@ function _updateRole(err, client, db, io, data, debugOn) {
 
 module.exports = {
 
+  gameState: function(err, client, db, io, data, debugOn) {
+    gameState.update(err, client, db, io, data, debugOn)
+  },
+
   updateTeamName: function(err, client, db, io, data, debugOn) {
 
     if (debugOn) { console.log('updateTeamName', data) }

@@ -147,6 +147,7 @@ export default {
     var gameName = localStorage.getItem("gameName")
     if (gameName) {
       this.$store.dispatch("updateGameName", gameName)
+      this.socket.emit("gameState", {gameName: gameName})
     }
 
     this.socket.on("loadGame", (data) => {

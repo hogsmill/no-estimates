@@ -102,6 +102,12 @@ function doDb(fun, data) {
         dbStore.updateTeamActive(err, client, db, io, data, debugOn)
         break;
 
+     // Game State
+     //
+     case 'gameState':
+       dbStore.gameState(err, client, db, io, data, debugOn)
+       break;
+
       default:
         console.log("Unknown function: '" + fun + "'")
     }
@@ -181,6 +187,11 @@ io.on("connection", (socket) => {
   socket.on("percentageDeployFail", (data) => { doDb('percentageDeployFail', data) })
 
   socket.on("updateTeamActive", (data) => { doDb('updateTeamActive', data) })
+
+  // Game State
+
+  socket.on("gameState", (data) => { doDb('gameState', data) })
+
 
 });
 

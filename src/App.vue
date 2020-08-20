@@ -157,13 +157,13 @@ export default {
     })
 
     this.socket.on("percentageBlocked", (data) => {
-      if (this.gameName == data.gameName && this.teamName == data.teamName) {
+      if (this.gameName == data.gameName) {
         this.$store.dispatch("percentageBlocked", data)
       }
     })
 
     this.socket.on("percentageDeployFail", (data) => {
-      if (this.gameName == data.gameName && this.teamName == data.teamName) {
+      if (this.gameName == data.gameName) {
         this.$store.dispatch("percentageDeployFail", data)
       }
     })

@@ -2,7 +2,11 @@
   <div class="role-name" v-if="!showFacilitator && gameName && myName.id && teamName">
     <div class="role-name text-right">
       <button class="btn btn-sm btn-secondary smaller-font" v-if="!myRole" @click="show" :disabled="!myName">Set My Speciality</button>
-      <span v-if="myRole" @click="show" class="mr-2 mt-2 pointer p-2 bg-light">My Role is: {{myRole}}</span>
+      <span v-if="myRole && canChangeRole()" @click="show" class="mr-2 mt-2 pointer p-2 bg-light">
+        My Role is: {{myRole}}
+        <i>(You can change this)</i>
+      </span>
+      <span v-if="myRole && !canChangeRole()" class="mr-2 mt-2 pointer p-2 bg-light">My Role is: {{myRole}}</span>
     </div>
 
     <modal name="set-role" :height="180" :classes="['rounded']">
@@ -37,6 +41,9 @@ export default {
     hide () {
       this.$modal.hide('set-role');
     },
+    canChangeRole: function() {
+      return this.currentDay == 1 || this.myTeam.recharting
+    },
     saveMyRole: function() {
       var myRole = document.getElementById('role-select').value
       this.$store.dispatch("updateMyRole", myRole)
@@ -63,8 +70,14 @@ export default {
     teamName() {
       return this.$store.getters.getTeamName
     },
+    myTeam() {
+      return this.$store.getters.getMyTeam
+    },
     roles() {
       return this.$store.getters.getRoles
+    },
+    currentDay() {
+      return this.$store.getters.getCurrentDay
     }
   }
 }

@@ -74,6 +74,9 @@ export default {
         case 'Have Paired':
           data = {extraEffortForPairing: true}
           break
+        case 'Recharting':
+          data = {recharting: true}
+          break;
         case 'Deploy Dice':
           // TBD
           break

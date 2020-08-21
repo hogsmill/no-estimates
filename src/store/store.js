@@ -10,16 +10,16 @@ export const store = new Vuex.Store({
     host: false,
     currency: '&#163;',
     gameName: '',
-    myName: {id: '', name: ''},
+    myName: {id: '', name: '', captain: false},
     myRole: '',
     teamName: '',
     teams: [
-      { name: 'Blue', include: true, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
-      { name: 'Green', include: true, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
-      { name: 'Purple', include: true, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
-      { name: 'Red', include: true, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
-      { name: 'Orange', include: false, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
-      { name: 'Black', include: false, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } }
+      { name: 'Blue', include: true, recharting: false, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
+      { name: 'Green', include: true, recharting: false, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
+      { name: 'Purple', include: true, recharting: false, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
+      { name: 'Red', include: true, recharting: false, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
+      { name: 'Orange', include: false, recharting: false, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
+      { name: 'Black', include: false, recharting: false, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } }
     ],
     pairing: [],
     myEffort: {
@@ -60,7 +60,7 @@ export const store = new Vuex.Store({
       {number: 13, function: 'Have Paired', text: "Did you pair (more than one person worked on a single card in one work stage) today? If so, you get an extra point of work in each stage where the pairing occured (for today only)"},
       {number: 14, function: 'Lose Tester', text: "Your organisation has lost a tester so one of your testers now has to support multiple teams. One tester loses two points of effort tomorrow. (Disregard if you have no tester)"},
       {number: 15, function: 'Deploy Dice', text: "You have found that quality improves when you have someone pair with a Deployer. Roll an eight-sided die whenever you finish a work card, whenever someone in addition to Deployer works in deploy. (Disregard if you're doing automated deployments)"},
-      {number: 16, text: "Team rechartering! Would you like to restructure your team? Feel free to change role specialties or negotiate with other teams to bring on new members."},
+      {number: 16, function: 'Recharting', text: "Team rechartering! Would you like to restructure your team? Feel free to change role specialties (<i>click on 'My Role is: ...'</i>)  or negotiate with other teams to bring on new members."},
       {number: 17, text: "If you restructured your team yesterday, how do you expect the change to impact your forecast."},
       {number: 19, text: "Jim from accounting sales sends an email directing employees to make sure they're fully utilised (i.e. follow a policy that you do not leave capacity on the table). Do you obey or silently ignore him?"},
       {number: 19, text: "How much work in progress do you have? Has that changed from earlier?"},
@@ -94,6 +94,7 @@ export const store = new Vuex.Store({
       {number: 24, design: 0, develop: 6, test: 4, deploy: 6, urgent: false, teamDependency: 0, dependentOn: '', commit: 0, blocked: false, effort: {design: 0, develop: 0, test: 0, deploy: 0}},
       {number: 25, design: 3, develop: 2, test: 2, deploy: 4, urgent: false, teamDependency: 0, dependentOn: '', commit: 0, blocked: false, effort: {design: 0, develop: 0, test: 0, deploy: 0}}
     ],
+    recharting: false,
     currentWorkCard: 0,
     projectEstimate: 0,
     mvpEstimate: 0,

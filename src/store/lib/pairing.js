@@ -45,7 +45,6 @@ function updateToday(today, column, card, name) {
 
 function addExtraPointToCardForPairing(column, card) {
   var pairedCard = column.cards.find(function(c) { return c.number == card})
-  console.log('PAIRED CARD', pairedCard)
   if (pairedCard && pairedCard.effort) {
     pairedCard.effort[column.name] = pairedCard.effort[column.name] + 1
   }

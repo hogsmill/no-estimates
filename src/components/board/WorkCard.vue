@@ -3,6 +3,7 @@
     <div v-if="workCard.blocked" class="blocked-text"><strong>BLOCKED</strong></div>
     <div v-if="workCard.failed && column == 'deploy'" class="failed">FAILED</div>
     <div v-if="workCard.urgent" class="urgent">URGENT</div>
+    <div v-if="workCard.teamDependency && workCard.dependencyDone < workCard.teamDependency" class="outstanding-dependency">DEPENDENCY</div>
     <div class="work-card-header">
       <div class="card-number">#{{workCard.number}}</div>
       <div class="card-effort">Effort: {{totalEffort()}}</div>
@@ -223,7 +224,7 @@ export default {
       text-align: left;
     }
 
-    .urgent, .failed {
+    .urgent, .failed, .outstanding-dependency {
       height: 22px;
       text-align: center;
       padding: 0 6px;
@@ -233,6 +234,10 @@ export default {
 
     .urgent {
       background-color: red;
+    }
+
+    .outstanding-dependency {
+      background-color: orange;
     }
 
     .failed {

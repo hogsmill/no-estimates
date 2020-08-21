@@ -5,11 +5,6 @@
     <span class="current-value">Current Project Value: <span v-html="currency"></span><span>{{total()}}</span></span>
 
     <modal class="report-modal" name="report-modal" :height="500" :classes="['rounded']">
-      <div class="float-right mr-2 mt-1">
-        <button type="button" class="close" @click="hide" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
       <div class="mt-4">
       <h4>Status (Day: {{currentDay}}) <button class="btn btn-sm btn-site-primary" @click="hide()">Close</button></h4>
       <div class="scroller">
@@ -45,7 +40,7 @@
           <tr v-for="(card, index) in workCards" :key="index">
             <td>{{card.number}}</td>
             <td>{{totalEffort(card)}}</td>
-            <td>{{card.commit}}</td>
+            <td><span v-if="card.commit > 0">{{card.commit}}</span></td>
             <td>{{card.delivery}}</td>
             <td :class="{ 'not-delivered': !card.delivery }">{{time(card)}}</td>
             <td>{{card.value}}</td>
@@ -182,7 +177,7 @@ export default {
     input {
       width: 50px;
       height: 24px;
-      margin: 6px;
+      margin: 0 auto;
       text-align: right;
     }
 

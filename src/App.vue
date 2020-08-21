@@ -181,7 +181,7 @@ export default {
     })
 
     this.socket.on("updateTeams", (data) => {
-      if (this.gameName == data.gameName && this.teamName == data.teamName) {
+      if (this.gameName == data.gameName) {
         this.$store.dispatch("updateTeams", data)
       }
     })

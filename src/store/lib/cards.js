@@ -19,6 +19,8 @@ function cardValue(workCards, card) {
 function blockOrFailCard(card, colName, teamName, teams, percentageBlocked, percentageDeployFail) {
   var team = teams.find(function(t) { return t.name == teamName })
   var rand = Math.random()
+  card.blocked = false
+  card.failed = false
   if (colName != 'deploy' && colName != 'done' && rand < percentageBlocked) {
     card.blocked = true
   }
@@ -34,7 +36,7 @@ module.exports = {
     blockOrFailCard(card, colName, team, teams, percentageBlocked, percentageDeployFail)
     var dependentDone = true
     if (colName == 'deploy') {
-      dependentDone == card.teamDependency == 0 || card.teamDependency == card.dependencyDone
+      dependentDone = card.teamDependency == 0 || card.teamDependency == card.dependencyDone
     }
     return !card.blocked && !card.failed && card[colName] == card.effort[colName] && dependentDone
   },

@@ -455,7 +455,7 @@ module.exports = {
     db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
       if (err) throw err;
       if (res) {
-        var columns = res.columns, workCards = res.workCards, todaysEffort
+        var columns = res.columns, workCards = res.workCards, todaysEffort = []
         for (var i = 1; i < columns.length; i++) {
           for (var j = 0; j < columns[i].cards.length; j++) {
             if (columns[i].cards[j].number == data.workCard.number) {
@@ -603,8 +603,8 @@ module.exports = {
                   var card = columns[i].cards[j]
                   var colName = columns[i].name
                   card.dependencyDone = card.dependencyDone + 1
-                  if (cardFuns.cardCompleteInColumn(card, colName, res.teamName, res.teams, res.percentageBlocked, res.percentageDeployFail)) {
-                    cardFuns.moveCard(columns, workCards, card, i, team.currentDay)
+                  if (cardFuns.cardCompleteInColumn(card, colName, res[r].teamName, res[r].teams, res[r].percentageBlocked, res[r].percentageDeployFail)) {
+                    cardFuns.moveCard(columns, workCards, card, i, res[r].currentDay)
                   }
                 }
               }

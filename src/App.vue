@@ -124,6 +124,15 @@ export default {
       this.$store.dispatch("updateHost", true)
     }
 
+    var self = this
+    window.onload = function() {
+      var myEffort = localStorage.getItem("myEffort")
+      if (myEffort) {
+        myEffort = JSON.parse(myEffort)
+        self.$store.dispatch("updateMyEffort", myEffort)
+      }
+    };
+
     var myName = localStorage.getItem("myName")
     if (myName) {
       if (!myName.match(/"id":/)) {

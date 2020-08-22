@@ -123,6 +123,9 @@ export default {
       }
       return haveRole
     },
+    storeEffort() {
+      localStorage.setItem("myEffort", JSON.stringify(this.myEffort))
+    },
     addEffort(column) {
       var message = ''
       if (this.workCard.blocked) {
@@ -136,6 +139,7 @@ export default {
           if (this.iHaveRole(column)) {
             this.workCard.effort[column] = this.workCard.effort[column] + 1
             this.$store.dispatch("updateMyAssignedEffort", {effort: 1})
+            this.storeEffort()
             this.socket.emit("updateAssignedEffort", {gameName: this.gameName, teamName: this.teamName, name: this.myName, effort: this.myEffort})
           } else {
             if (this.myEffort.available < 2) {
@@ -143,6 +147,7 @@ export default {
             } else {
               this.workCard.effort[column] = this.workCard.effort[column] + 1
               this.$store.dispatch("updateMyAssignedEffort", {effort: 2})
+              this.storeEffort()
               this.socket.emit("updateAssignedEffort", {gameName: this.gameName, teamName: this.teamName, name: this.myName, effort: this.myEffort})
               this.socket.emit("pairingDay", {gameName: this.gameName, teamName: this.teamName, name: this.myName, column: column, day: this.currentDay})
             }

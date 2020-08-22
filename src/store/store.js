@@ -242,6 +242,10 @@ export const store = new Vuex.Store({
       state.myRole = payload;
       state.myEffort.role = payload;
     },
+    updateMyEffort: (state, payload) => {
+      state.myEffort.available = payload.available;
+      state.myEffort.assigned = payload.assigned;
+    },
     updateMyAssignedEffort: (state, payload) => {
       state.myEffort.available = state.myEffort.available - payload.effort;
       state.myEffort.assigned = state.myEffort.assigned + payload.effort;
@@ -331,6 +335,9 @@ export const store = new Vuex.Store({
     },
     updateMyRole: ({ commit }, payload) => {
       commit("updateMyRole", payload);
+    },
+    updateMyEffort: ({ commit }, payload) => {
+      commit("updateMyEffort", payload);
     },
     updateMyAssignedEffort: ({ commit }, payload) => {
       commit("updateMyAssignedEffort", payload);

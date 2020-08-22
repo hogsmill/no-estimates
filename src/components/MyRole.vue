@@ -4,9 +4,12 @@
       <button class="btn btn-sm btn-secondary smaller-font" v-if="!myRole" @click="show" :disabled="!myName">Set My Speciality</button>
       <span v-if="myRole && canChangeRole()" @click="show" class="mr-2 mt-2 pointer p-2 bg-light">
         My Role is: {{myRole}}
-        <i>(You can change this)</i>
+        <span class="change-roles-allowed" title="Changing roles allowed">&#10003;</span>
       </span>
-      <span v-if="myRole && !canChangeRole()" class="mr-2 mt-2 pointer p-2 bg-light">My Role is: {{myRole}}</span>
+      <span v-if="myRole && !canChangeRole()" class="mr-2 mt-2 pointer p-2 bg-light">
+        My Role is: {{myRole}}
+        <span title="Changing roles not allowed">&#9940;</span>
+      </span>
     </div>
 
     <modal name="set-role" :height="180" :classes="['rounded']">
@@ -85,6 +88,10 @@ export default {
 
 <style lang="scss">
 
+  .change-roles-allowed {
+    font-weight: bold;
+    color: green;
+  }
   .role-name {
     padding: 0 6px;
     display: inline-block;

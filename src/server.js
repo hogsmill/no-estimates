@@ -182,6 +182,8 @@ io.on("connection", (socket) => {
 
   // Facilitator View
 
+  socket.on("broadcastMessage", (data) => { emit("broadcastMessage", data) })
+
   socket.on("percentageBlocked", (data) => { doDb('percentageBlocked', data) })
 
   socket.on("percentageDeployFail", (data) => { doDb('percentageDeployFail', data) })

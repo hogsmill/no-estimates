@@ -231,12 +231,14 @@ export const store = new Vuex.Store({
     setMyName: (state, payload) => {
       if (payload.uuid && payload.uuid == state.myName.uuid) {
         state.myName.name = payload.name;
+        state.myName.captain = payload.captain
       } else {
         state.myName = payload;
       }
     },
     changeName: (state, payload) => {
       state.myName.name = payload.name;
+      state.myName.captain = payload.captain
     },
     updateMyRole: (state, payload) => {
       state.myRole = payload;

@@ -10,7 +10,7 @@
       <div v-for="n in myEffort.assigned" :key="n" class="effort rounded-circle used">0</div>
     </div>
 
-    <modal name="set-my-name" :height="120" :classes="['rounded', 'set-my-name']">
+    <modal name="set-my-name" :height="140" :classes="['rounded', 'set-my-name']">
       <div class="float-right mr-2 mt-1">
         <button type="button" class="close" @click="hide" aria-label="Close">
           <span aria-hidden="true">&times;</span>
@@ -21,6 +21,7 @@
         <div class="set-my-name">
           <input type="text" id="my-name" class="form-control" />
           <button class="btn btn-sm btn-secondary smaller-font" @click="saveMyName">Save</button>
+          <div>I am the team Captain <input type="checkbox" id="captain"></div>
         </div>
       </div>
     </modal>
@@ -56,13 +57,14 @@ export default {
     saveMyName: function() {
       var oldName = this.myName
       var newName = document.getElementById('my-name').value
+      var captain = document.getElementById('captain').checked
       var myNameData
       if (!oldName.id) {
         var uuid = uuidv4()
-        myNameData = {id: uuid, name: newName}
+        myNameData = {id: uuid, name: newName, captain: captain}
         this.$store.dispatch("setMyName", myNameData)
       } else {
-        myNameData = {id: this.myName.id, name: newName}
+        myNameData = {id: this.myName.id, name: newName, captain: captain}
         this.$store.dispatch("changeName", {name: newName})
         localStorage.setItem("myName", JSON.stringify(myNameData));
         if (this.gameName) {
@@ -137,7 +139,7 @@ export default {
     }
 
   .set-my-name {
-    height: 120px;
+    height: 140px;
 
     #my-name {
       display: inline-block;

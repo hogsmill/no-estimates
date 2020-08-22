@@ -4,11 +4,11 @@
     <table class="roles">
       <tr>
         <td class="role" :class="role.role.toLowerCase()" v-for="(role, index) in roles" :key="index">
-        <div v-for="(name, m) in roles[index].names" :key="'name-' + m">
-          {{name.name}}
-          <span v-if="name.effort">({{name.effort.available}})</span>
-        </div>
-        <div v-for="(otherName, n) in roles[index].otherNames" :key="'otherName-' + n">(<i>{{otherName.name}}</i>)</div>
+          <div v-for="(name, m) in roles[index].names" :key="'name-' + m">
+            {{name.name}} <span v-if="name.captain" class="captain">&#9733;</span>
+            <span v-if="name.effort">({{name.effort.available}})</span>
+          </div>
+          <div v-for="(otherName, n) in roles[index].otherNames" :key="'otherName-' + n">(<i>{{otherName.name}}</i>)</div>
         </td>
       </tr>
     </table>
@@ -61,6 +61,10 @@ export default {
     }
     &.deployer {
       background-image: url("../assets/img/deployer.png");
+    }
+
+    .captain {
+      color: darkorange;
     }
   }
 

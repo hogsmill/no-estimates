@@ -3,6 +3,23 @@
 
     <h1>No Estimates - Facilitator View</h1>
 
+    <table class="game-messaging">
+      <tr>
+        <td>
+          <h4>Game Params</h4>
+          <span v-if="showGameMessaging" @click="setShowGameMessaging(false)" title="collapse" class="toggle">&#9650;</span>
+          <span v-if="!showGameMessaging" @click="setShowGameMessaging(true)" title="expand" class="toggle">&#9660;</span>
+        </td>
+      </tr>
+      <tr v-if="showGameMessaging" class="message-params">
+        <td>
+          <div>Message: </div>
+          <input type="text" id="gameMessageText" />
+          <button class="btn btn-sm btn-site-primary" @click="sendMessage">Send</button>
+        </td>
+      </tr>
+    </table>
+
     <table class="game-params">
       <tr>
         <td colspan="4">
@@ -86,16 +103,26 @@ export default {
   },
   data() {
     return {
+    showGameMessaging: false,
     showGameParams: true,
     showGameState: true
     }
   },
   methods: {
+    setShowGameMessaging(val) {
+      this.showGameMessaging = val
+    },
     setShowGameParams(val) {
       this.showGameParams = val
     },
     setShowGameState(val) {
       this.showGameState = val
+    },
+    sendMessage() {
+      var message = document.getElementById('gameMessageText').value
+      if (message) {
+        this.socket.emit("broadcastMessage", {gameName: this.gameName, message: message})
+      }
     },
     toggleActive(team) {
       team.include = !team.include
@@ -144,7 +171,7 @@ export default {
 
 <style lang="scss">
 
-  .game-params, .game-state {
+  .game-messaging, .game-params, .game-state {
 
     width: 100%;
     margin: 12px;
@@ -189,6 +216,21 @@ export default {
       padding: 2px;
       text-align: right;
       margin: 0 auto;
+    }
+  }
+
+  .game-messaging {
+    .message-params {
+      div, input, button {
+        display: inline-block;
+        margin: 2px 6px;
+      }
+
+      input {
+        width: 80%;
+        border: 1px solid #ccc;
+        text-align: left;
+      }
     }
   }
 

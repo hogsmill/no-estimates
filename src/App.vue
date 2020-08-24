@@ -159,6 +159,13 @@ export default {
       this.socket.emit("gameState", {gameName: gameName})
     }
 
+    this.socket.on("restartGame", (data) => {
+      localStorage.removeItem("myEffort")
+      if (this.gameName == data.gameName) {
+        location.reload()
+      }
+    })
+
     this.socket.on("loadGame", (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         this.$store.dispatch("loadGame", data)

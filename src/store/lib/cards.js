@@ -24,7 +24,8 @@ function blockOrFailCard(card, colName, teamName, teams, percentageBlocked, perc
   if (colName != 'deploy' && colName != 'done' && rand < percentageBlocked) {
     card.blocked = true
   }
-  if (colName == 'deploy' && !team.autoDeploy.done && card.deploy == card.effort['deploy'] && rand < percentageDeployFail) {
+  // TODO: shouldn't need >= - check adding effort
+  if (colName == 'deploy' && !team.autoDeploy.done && card.deploy >= card.effort['deploy'] && rand < percentageDeployFail) {
     card.failed = true
     card.effort.deploy = 0
   }
@@ -38,7 +39,8 @@ module.exports = {
     if (colName == 'deploy') {
       dependentDone = card.teamDependency == 0 || card.teamDependency == card.dependencyDone
     }
-    return !card.blocked && !card.failed && card[colName] == card.effort[colName] && dependentDone
+    // TODO: shouldn't need >= - check adding effort
+    return !card.blocked && !card.failed && card[colName] >= card.effort[colName] && dependentDone
   },
 
   moveCard: function(columns, workCards, card, n, currentDay) {

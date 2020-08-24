@@ -40,4 +40,3 @@ Navigate to coin-game/coin-game/src
 Then run 'node server.js'
 This is will listen on localhost:3007
 ```
-"# no-estimates"

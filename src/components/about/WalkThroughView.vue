@@ -17,9 +17,16 @@
         <h4>Welcome to the No Estimates Game</h4>
         <div>
           <p>
-            This is isn't fininshed, obviously :-) - click on the "About" tab to see what's been implemented at the
-            current time
+            The No Estimates game allows you to explore sources of variation in
+            estimation, and why they will always make your estimation efforts inaccurate
+            and, therefor wasteful. Ultimately, it will present a more scientific
+            approach to the perennial question - when will my stuff be delivered?
           </p>
+          <p>This activity is best facilitated by someone familiar with the game,
+            so do get in touch and we can either facilitate a workshop for you, or
+            or teach you hoe to do it yourself.
+          </p>
+          <div>Email: <input type="text" id="facilitate"> <button class="btn btn-info btn-sm" @click="facilitate">Submit</button></div>
         </div>
       </div>
       <div class="buttons" v-if="step < noOfScreens()">
@@ -34,6 +41,8 @@
 </template>
 
 <script>
+const axios = require('axios');
+
 import params from '../../lib/params.js'
 
 export default {
@@ -94,6 +103,18 @@ export default {
       elem.style.top = positions.top + 'px'
       elem.style.width = positions.width + 'px'
       elem.style.height = positions.height +'px'
+    },
+    facilitate() {
+      axios.post('http://agilesimulations.co.uk/mail.php', {
+        action: 'NoEstimates Facilitation Request',
+        email: document.getElementById('facilitate').value
+      })
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
     }
   },
   computed: {
@@ -117,10 +138,18 @@ export default {
 <style lang="scss">
 
   .buttons {
-    padding: 6px;
+    padding: 24px 0 6px 0;
+  }
+
+  #facilitate {
+    width: 50%;
   }
 
   #walk-through {
+
+    .vm--modal {
+      height: 400px !important;
+    }
 
     p {
       margin-left: 8px;

@@ -106,8 +106,8 @@ export default {
     },
     facilitate() {
       axios.post('http://agilesimulations.co.uk/mail.php', {
-        action: 'NoEstimates Facilitation Request',
-        email: document.getElementById('facilitate').value
+        action: 'facilitation',
+        email: encodeURIComponent(document.getElementById('facilitate').value)
       })
       .then(function (response) {
         console.log(response);

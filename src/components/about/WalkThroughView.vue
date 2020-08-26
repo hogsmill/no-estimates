@@ -24,7 +24,7 @@
           </p>
           <p>This activity is best facilitated by someone familiar with the game,
             so do get in touch and we can either facilitate a workshop for you, or
-            or teach you hoe to do it yourself.
+            or teach you how to do it yourself.
           </p>
           <div>Email: <input type="text" id="facilitate"> <button class="btn btn-info btn-sm" @click="facilitate">Submit</button></div>
         </div>

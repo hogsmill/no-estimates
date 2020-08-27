@@ -2,7 +2,7 @@
   <div class="my-name" v-if="!showFacilitator && gameName">
     <div class="my-name text-right">
       <button class="btn btn-sm btn-secondary smaller-font" v-if="!myName.id" @click="show">Set My Name</button>
-      <span v-if="myName.id" @click="show" class="mr-2 mt-2 pointer p-2 bg-light">My Name is: {{myName.name}}</span>
+      <span v-if="myName.id" @click="show" class="mr-2 mt-2 pointer p-2 bg-light">My Name is: {{myName.name}} <Captain v-bind:captain="myName.captain" /></span>
       <div class="effort-div" v-if="myName.id">
         <div v-for="n in myEffort.available" :key="n" class="effort rounded-circle"
           :class="getClass(n)">{{n}}</div>
@@ -32,7 +32,12 @@
 <script>
 import { v4 as uuidv4 } from 'uuid';
 
+import Captain from "./specialities/Captain.vue";
+
 export default {
+  components: {
+    Captain
+  },
   props: [
     'socket'
   ],
@@ -136,7 +141,11 @@ export default {
       background-color: $deploy;
     }
 
-    }
+  }
+
+  .captain {
+    color: darkorange;
+  }
 
   .set-my-name {
     height: 140px;

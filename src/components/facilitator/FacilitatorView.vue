@@ -6,7 +6,7 @@
     <table class="game-messaging">
       <tr>
         <td>
-          <h4>Game Params</h4>
+          <h4>Messaging</h4>
           <span v-if="showGameMessaging" @click="setShowGameMessaging(false)" title="collapse" class="toggle">&#9650;</span>
           <span v-if="!showGameMessaging" @click="setShowGameMessaging(true)" title="expand" class="toggle">&#9660;</span>
         </td>

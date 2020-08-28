@@ -103,9 +103,9 @@ export default {
   },
   data() {
     return {
-    showGameMessaging: false,
-    showGameParams: true,
-    showGameState: true
+      showGameMessaging: false,
+      showGameParams: true,
+      showGameState: true
     }
   },
   methods: {

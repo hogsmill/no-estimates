@@ -14,7 +14,7 @@ var connectDebugOff = prod
 var debugOn = !prod
 
 var connections = {}
-var maxConnections = 20
+var maxConnections = 200
 
 function emit(event, data, persist) {
   if (debugOn) {

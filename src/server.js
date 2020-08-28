@@ -122,12 +122,14 @@ io.on("connection", (socket) => {
     socket.disconnect(0)
   } else {
     connectDebugOff || console.log(`A user connected with socket id ${socket.id} from ${connection} - ${connections[connection]} connections. (${Object.keys(connections).length} clients)`)
+    emit('updateConnections', {connections: connections, maxConnections: maxConnections})
   }
 
   socket.on("disconnect", () => {
     var connection = socket.handshake.headers.host
     connections[connection] = connections[connection] - 1
     connectDebugOff || console.log(`User with socket id ${socket.id} has disconnected.`)
+    emit('updateConnections', {connections: connections, maxConnections: maxConnections})
   })
 
   socket.on("loadGame", (data) => { doDb('loadGame', data) })

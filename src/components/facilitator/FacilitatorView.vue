@@ -3,6 +3,8 @@
 
     <h1>No Estimates - Facilitator View</h1>
 
+    <div class="connections">Current server connections: {{connections.connections}} / {{connections.maxConnections}}</div>
+
     <table class="game-messaging">
       <tr>
         <td>
@@ -164,12 +166,19 @@ export default {
     },
     gameState() {
       return this.$store.getters.getGameState
+    },
+    connections() {
+      return this.$store.getters.getConnections
     }
   }
 }
 </script>
 
 <style lang="scss">
+
+  .connections {
+    text-align: right;
+  }
 
   .game-messaging, .game-params, .game-state {
 

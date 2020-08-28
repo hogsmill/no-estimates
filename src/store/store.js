@@ -5,6 +5,7 @@ Vue.use(Vuex);
 
 export const store = new Vuex.Store({
   state: {
+    connections: 0,
     walkThrough: false,
     showFacilitator: false,
     host: false,
@@ -201,6 +202,9 @@ export const store = new Vuex.Store({
     },
     getGameState: (state) => {
       return state.gameState;
+    },
+    getConnections: (state) => {
+      return state.connections;
     }
   },
   mutations: {
@@ -312,6 +316,9 @@ export const store = new Vuex.Store({
     updateGameState: (state, payload) => {
       state.gameState = payload.gameState
     },
+    updateConnections: (state, payload) => {
+      state.connections = payload
+    }
   },
   actions: {
     updateShowFacilitator: ({ commit }, payload) => {
@@ -391,6 +398,9 @@ export const store = new Vuex.Store({
     },
     updateGameState: ({ commit }, payload) => {
       commit("updateGameState", payload);
+    },
+    updateConnections: ({ commit }, payload) => {
+      commit("updateConnections", payload);
     }
   }
 });

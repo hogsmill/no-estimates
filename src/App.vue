@@ -219,6 +219,10 @@ export default {
         this.$store.dispatch("updateGameState", data)
       }
     })
+
+    this.socket.on("updateConnections", (data) => {
+      this.$store.dispatch("updateConnections", data)
+    })
   },
 }
 </script>

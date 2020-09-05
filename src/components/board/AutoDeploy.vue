@@ -1,9 +1,13 @@
 <template>
   <div class="auto-deploy">
-    <div class="deploy-card-header">Auto Deploy</div>
+    <div class="deploy-card-header">
+      Auto Deploy
+    </div>
     <div class="deploy-card-effort" @click="addEffort('auto-deploy')">
-      <div class="deploy-card-column column rounded-circle" >A</div>
-      <div v-for="n in 8" :key="n" class="deploy-card-column rounded-circle" :class="{'assigned' : n <= myTeam.autoDeploy.effort}"></div>
+      <div class="deploy-card-column column rounded-circle">
+        A
+      </div>
+      <div v-for="n in 8" :key="n" class="deploy-card-column rounded-circle" :class="{'assigned' : n <= myTeam.autoDeploy.effort}" />
     </div>
   </div>
 </template>
@@ -13,15 +17,6 @@ export default {
   props: [
     'socket'
   ],
-  methods: {
-    addEffort() {
-      if (this.myEffort.available > 0) {
-        this.$store.dispatch("updateMyAssignedEffort", {effort: 1})
-        this.socket.emit("incrementAutoDeploy", {gameName: this.gameName, teamName: this.teamName})
-        this.socket.emit("updatePersonAutoDeployEffort", {gameName: this.gameName, teamName: this.teamName, name: this.myName})
-      }
-    }
-  },
   computed: {
     gameName() {
       return this.$store.getters.getGameName
@@ -40,11 +35,20 @@ export default {
     }
   },
   mounted() {
-    this.socket.on("incrementAutoDeploy", (data) => {
+    this.socket.on('incrementAutoDeploy', (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
-        this.$store.dispatch("incrementAutoDeploy", data)
+        this.$store.dispatch('incrementAutoDeploy', data)
       }
     })
+  },
+  methods: {
+    addEffort() {
+      if (this.myEffort.available > 0) {
+        this.$store.dispatch('updateMyAssignedEffort', {effort: 1})
+        this.socket.emit('incrementAutoDeploy', {gameName: this.gameName, teamName: this.teamName})
+        this.socket.emit('updatePersonAutoDeployEffort', {gameName: this.gameName, teamName: this.teamName, name: this.myName})
+      }
+    }
   }
 }
 </script>

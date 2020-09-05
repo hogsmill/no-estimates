@@ -1,23 +1,33 @@
 <template>
-
   <modal name="event-card-popup" class="popup" :height="240" :classes="['rounded']">
-    <div class="text-right"><span @click="hide" class="glyphicon glyphicon-star">x</span></div>
+    <div class="text-right">
+      <span @click="hide" class="glyphicon glyphicon-star">x</span>
+    </div>
     <div v-if="!currentEventCard">
-      <h4>We are now on Day {{currentDay + 1}}</h4>
-      <button class="btn btn-sm btn-info" @click="done()">Done</button>
+      <h4>We are now on Day {{ currentDay + 1 }}</h4>
+      <button class="btn btn-sm btn-info" @click="done()">
+        Done
+      </button>
     </div>
     <div v-if="currentEventCard">
-      <h4>Event Card {{currentEventCard.number}}</h4>
-      <p v-html="currentEventCard.text"></p>
+      <h4>Event Card {{ currentEventCard.number }}</h4>
+      <p v-html="currentEventCard.text" />
       <div>
-        <button v-if="!currentEventCard || !currentEventCard.function" class="btn btn-sm btn-info" @click="done()">Done</button>
-        <button v-if="currentEventCard.function && !currentEventCard.confirm" class="btn btn-sm btn-info" @click="doFunction()">Done</button>
-        <button v-if="currentEventCard.function && currentEventCard.confirm" class="btn btn-sm btn-info" @click="doFunction()">Yes</button>
-        <button v-if="currentEventCard.function && currentEventCard.confirm" class="btn btn-sm btn-info" @click="done()">No</button>
+        <button v-if="!currentEventCard || !currentEventCard.function" class="btn btn-sm btn-info" @click="done()">
+          Done
+        </button>
+        <button v-if="currentEventCard.function && !currentEventCard.confirm" class="btn btn-sm btn-info" @click="doFunction()">
+          Done
+        </button>
+        <button v-if="currentEventCard.function && currentEventCard.confirm" class="btn btn-sm btn-info" @click="doFunction()">
+          Yes
+        </button>
+        <button v-if="currentEventCard.function && currentEventCard.confirm" class="btn btn-sm btn-info" @click="done()">
+          No
+        </button>
       </div>
     </div>
   </modal>
-
 </template>
 
 <script>
@@ -30,12 +40,41 @@ export default {
       showing: false
     }
   },
+  computed: {
+    gameName() {
+      return this.$store.getters.getGameName
+    },
+    teamName() {
+      return this.$store.getters.getTeamName
+    },
+    currentEventCard() {
+      return this.$store.getters.getCurrentEventCard
+    },
+    currentDay() {
+      return this.$store.getters.getCurrentDay
+    }
+  },
+  mounted() {
+    const self = this
+    this.socket.on('updateCurrentEventCard', (data) => {
+      if (this.gameName == data.gameName && this.teamName == data.teamName) {
+        self.hide()
+        this.$store.dispatch('updateCurrentEventCard', data)
+      }
+    })
+
+    this.socket.on('showEventCard', (data) => {
+      if (this.gameName == data.gameName && this.teamName == data.teamName) {
+        self.$modal.show('event-card-popup')
+      }
+    })
+  },
   methods: {
     show() {
-      this.socket.emit("showEventCard", {gameName: this.gameName, teamName: this.teamName})
+      this.socket.emit('showEventCard', {gameName: this.gameName, teamName: this.teamName})
     },
     hide() {
-      this.$modal.hide('event-card-popup');
+      this.$modal.hide('event-card-popup')
     },
     done(data) {
       this.hide()
@@ -49,9 +88,9 @@ export default {
         if (this.currentEventCard.autoDeployCard) {
           updateData.canStartAutoDeploy = true
         }
-        this.socket.emit("updateCurrentEventCard", {gameName: this.gameName, teamName: this.teamName, currentEventCard: this.currentEventCard.number})
+        this.socket.emit('updateCurrentEventCard', {gameName: this.gameName, teamName: this.teamName, currentEventCard: this.currentEventCard.number})
       }
-      this.socket.emit("updateCurrentDay", updateData)
+      this.socket.emit('updateCurrentDay', updateData)
     },
     doFunction() {
       var data
@@ -76,44 +115,15 @@ export default {
           break
         case 'Recharting':
           data = {recharting: true}
-          break;
+          break
         case 'Deploy Dice':
           // TBD
           break
         default:
-          console.log("Doing '" + this.currentEventCard.function + "' (not implemented)")
+          console.log('Doing \'' + this.currentEventCard.function + '\' (not implemented)')
       }
       this.done(data)
     }
-  },
-  computed: {
-    gameName() {
-      return this.$store.getters.getGameName
-    },
-    teamName() {
-      return this.$store.getters.getTeamName
-    },
-    currentEventCard() {
-      return this.$store.getters.getCurrentEventCard;
-    },
-    currentDay() {
-      return this.$store.getters.getCurrentDay;
-    }
-  },
-  mounted() {
-    const self = this;
-    this.socket.on("updateCurrentEventCard", (data) => {
-      if (this.gameName == data.gameName && this.teamName == data.teamName) {
-        self.hide()
-        this.$store.dispatch("updateCurrentEventCard", data)
-      }
-    })
-
-    this.socket.on("showEventCard", (data) => {
-      if (this.gameName == data.gameName && this.teamName == data.teamName) {
-        self.$modal.show('event-card-popup');
-      }
-    })
   }
 }
 </script>

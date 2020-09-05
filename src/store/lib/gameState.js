@@ -77,14 +77,14 @@ module.exports = {
     if (debugOn) { console.log('updateGameState', data) }
 
     db.collection('noEstimates').find({gameName: data.gameName}).toArray(function(err, res) {
-      if (err) throw err;
+      if (err) throw err
       if (res.length) {
         var teams = []
         for (var r = 0; r < res.length; r++) {
           teams.push(teamState(res[r]))
         }
         data.gameState = teams
-        io.emit("updateGameState", data)
+        io.emit('updateGameState', data)
       }
     })
   }

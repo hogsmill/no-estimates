@@ -1,29 +1,49 @@
 <template>
   <div class="work-card" :class="{'blocked': workCard.blocked}">
-    <div v-if="workCard.blocked" class="blocked-text"><strong>BLOCKED</strong></div>
-    <div v-if="workCard.failed && column == 'deploy'" class="failed">FAILED</div>
-    <div v-if="workCard.urgent" class="urgent">URGENT</div>
-    <div v-if="workCard.teamDependency && workCard.dependencyDone < workCard.teamDependency" class="outstanding-dependency">DEPENDENCY</div>
+    <div v-if="workCard.blocked" class="blocked-text">
+      <strong>BLOCKED</strong>
+    </div>
+    <div v-if="workCard.failed && column == 'deploy'" class="failed">
+      FAILED
+    </div>
+    <div v-if="workCard.urgent" class="urgent">
+      URGENT
+    </div>
+    <div v-if="workCard.teamDependency && workCard.dependencyDone < workCard.teamDependency" class="outstanding-dependency">
+      DEPENDENCY
+    </div>
     <div class="work-card-header">
-      <div class="card-number">#{{workCard.number}}</div>
-      <div class="card-effort">Effort: {{totalEffort()}}</div>
+      <div class="card-number">
+        #{{ workCard.number }}
+      </div>
+      <div class="card-effort">
+        Effort: {{ totalEffort() }}
+      </div>
     </div>
     <div v-if="column != 'done'">
       <div class="work-card-effort" :class="{ 'current' : canAssign('design') }" @click="addEffort('design')">
-        <div class="work-card-column column rounded-circle" :class="{'design': !workCard.blocked}">A</div>
-        <div v-for="n in workCard.design" :key="n" :class="{'assigned' : n <= workCard.effort.design}" class="work-card-column rounded-circle"></div>
+        <div class="work-card-column column rounded-circle" :class="{'design': !workCard.blocked}">
+          A
+        </div>
+        <div v-for="n in workCard.design" :key="n" :class="{'assigned' : n <= workCard.effort.design}" class="work-card-column rounded-circle" />
       </div>
       <div class="work-card-effort" :class="{ 'current' : canAssign('develop') }" @click="addEffort('develop')">
-        <div class="work-card-column column rounded-circle" :class="{'develop': !workCard.blocked}">B</div>
-        <div v-for="n in workCard.develop" :key="n" :class="{'assigned' : n <= workCard.effort.develop}" class="work-card-column rounded-circle"></div>
+        <div class="work-card-column column rounded-circle" :class="{'develop': !workCard.blocked}">
+          B
+        </div>
+        <div v-for="n in workCard.develop" :key="n" :class="{'assigned' : n <= workCard.effort.develop}" class="work-card-column rounded-circle" />
       </div>
       <div class="work-card-effort" :class="{ 'current' : canAssign('test') }" @click="addEffort('test')">
-        <div class="work-card-column column rounded-circle" :class="{'test': !workCard.blocked}">C</div>
-        <div v-for="n in workCard.test" :key="n" :class="{'assigned' : n <= workCard.effort.test}" class="work-card-column rounded-circle"></div>
+        <div class="work-card-column column rounded-circle" :class="{'test': !workCard.blocked}">
+          C
+        </div>
+        <div v-for="n in workCard.test" :key="n" :class="{'assigned' : n <= workCard.effort.test}" class="work-card-column rounded-circle" />
       </div>
       <div class="work-card-effort" :class="{ 'current' : canAssign('deploy') }" @click="addEffort('deploy')">
-        <div class="work-card-column column rounded-circle" :class="{'deploy': !workCard.blocked}">D</div>
-        <div v-for="n in workCard.deploy" :key="n" :class="{'assigned' : n <= workCard.effort.deploy}" class="work-card-column rounded-circle"></div>
+        <div class="work-card-column column rounded-circle" :class="{'deploy': !workCard.blocked}">
+          D
+        </div>
+        <div v-for="n in workCard.deploy" :key="n" :class="{'assigned' : n <= workCard.effort.deploy}" class="work-card-column rounded-circle" />
       </div>
     </div>
     <table class="delivery">
@@ -33,32 +53,38 @@
         <td>TIME</td>
       </tr>
       <tr>
-        <td>{{workCard.commit}}</td>
-        <td>{{workCard.delivery}}</td>
-        <td :class="{'not-done': !workCard.done}">{{time()}}</td>
+        <td>{{ workCard.commit }}</td>
+        <td>{{ workCard.delivery }}</td>
+        <td :class="{'not-done': !workCard.done}">
+          {{ time() }}
+        </td>
       </tr>
       <tr v-if="workCard.teamDependency">
         <td class="dependency" colspan="3">
           <span>TEAM: </span>
           <div class="dependency-team"
-            :style="{'background-color': teamClass()}">
+               :style="{'background-color': teamClass()}"
+          >
             <strong v-if="!workCard.dependentOn">None</strong>
-            <strong v-if="workCard.dependentOn">{{workCard.dependentOn.name}}</strong>
+            <strong v-if="workCard.dependentOn">{{ workCard.dependentOn.name }}</strong>
           </div>
-          <div v-for="n in workCard.teamDependency" :key="n" :class="{'assigned' : n <= workCard.dependencyDone}" class="dependency-column rounded-circle"></div>
+          <div v-for="n in workCard.teamDependency" :key="n" :class="{'assigned' : n <= workCard.dependencyDone}" class="dependency-column rounded-circle" />
         </td>
       </tr>
     </table>
 
     <modal class="work-card-popup" name="work-card-popup" :height="150" :classes="['rounded']">
-      <div class="text-right"><span @click="hide" class="glyphicon glyphicon-star">x</span></div>
+      <div class="text-right">
+        <span @click="hide" class="glyphicon glyphicon-star">x</span>
+      </div>
       <h4>Unable to Assign Effort</h4>
-      <p>{{message}}</p>
+      <p>{{ message }}</p>
       <div class="button">
-        <button class="btn btn-sm btn-info" @click="hide()">OK</button>
+        <button class="btn btn-sm btn-info" @click="hide()">
+          OK
+        </button>
       </div>
     </modal>
-
   </div>
 </template>
 
@@ -66,23 +92,47 @@
 import stringFuns from '../../lib/stringFuns.js'
 
 export default {
+  props: [
+    'column', 'workCard', 'socket'
+  ],
   data() {
     return {
       message: ''
     }
   },
-  props: [
-    'column',
-    'workCard',
-    'socket'
-  ],
+  computed: {
+    gameName() {
+      return this.$store.getters.getGameName
+    },
+    teamName() {
+      return this.$store.getters.getTeamName
+    },
+    myName() {
+      return this.$store.getters.getMyName
+    },
+    myRole() {
+      return this.$store.getters.getMyRole
+    },
+    myOtherRoles() {
+      return this.$store.getters.getMyOtherRoles
+    },
+    myEffort() {
+      return this.$store.getters.getMyEffort
+    },
+    teams() {
+      return this.$store.getters.getTeams
+    },
+    currentDay() {
+      return this.$store.getters.getCurrentDay
+    }
+  },
   methods: {
     show () {
-      this.$modal.show('work-card-popup');
+      this.$modal.show('work-card-popup')
     },
     hide () {
       this.message = ''
-      this.$modal.hide('work-card-popup');
+      this.$modal.hide('work-card-popup')
     },
     teamClass() {
       return this.workCard.dependentOn ? this.workCard.dependentOn.name.toLowerCase() : ''
@@ -124,72 +174,46 @@ export default {
       return haveRole
     },
     storeEffort() {
-      localStorage.setItem("myEffort", JSON.stringify(this.myEffort))
+      localStorage.setItem('myEffort', JSON.stringify(this.myEffort))
     },
     addEffort(column) {
       var message = ''
       if (this.workCard.blocked) {
-        message = "Can't assign - card is blocked"
+        message = 'Can\'t assign - card is blocked'
       } else if (this.canAssign(column)) {
         if (this.myEffort.available == 0) {
-          message = "Can't assign - all effort assigned"
+          message = 'Can\'t assign - all effort assigned'
         } else if (this.workCard.effort[column] == this.workCard[column]) {
-          message = "Can't assign - all work completed"
+          message = 'Can\'t assign - all work completed'
         } else {
           if (this.iHaveRole(column)) {
             this.workCard.effort[column] = this.workCard.effort[column] + 1
-            this.$store.dispatch("updateMyAssignedEffort", {effort: 1})
+            this.$store.dispatch('updateMyAssignedEffort', {effort: 1})
             this.storeEffort()
-            this.socket.emit("updateAssignedEffort", {gameName: this.gameName, teamName: this.teamName, name: this.myName, effort: this.myEffort})
+            this.socket.emit('updateAssignedEffort', {gameName: this.gameName, teamName: this.teamName, name: this.myName, effort: this.myEffort})
           } else {
             if (this.myEffort.available < 2) {
-              message = "Can't assign - you only have one effort point left"
+              message = 'Can\'t assign - you only have one effort point left'
             } else {
               this.workCard.effort[column] = this.workCard.effort[column] + 1
-              this.$store.dispatch("updateMyAssignedEffort", {effort: 2})
+              this.$store.dispatch('updateMyAssignedEffort', {effort: 2})
               this.storeEffort()
-              this.socket.emit("updateAssignedEffort", {gameName: this.gameName, teamName: this.teamName, name: this.myName, effort: this.myEffort})
-              this.socket.emit("pairingDay", {gameName: this.gameName, teamName: this.teamName, name: this.myName, column: column, day: this.currentDay})
+              this.socket.emit('updateAssignedEffort', {gameName: this.gameName, teamName: this.teamName, name: this.myName, effort: this.myEffort})
+              this.socket.emit('pairingDay', {gameName: this.gameName, teamName: this.teamName, name: this.myName, column: column, day: this.currentDay})
             }
           }
         }
       } else if (!this.canAssign(column)) {
-        message = "Can't assign - wrong column"
+        message = 'Can\'t assign - wrong column'
       }
       if (message) {
         this.show()
         var self = this
         setTimeout(function() { self.message = message }, 100)
       } else {
-        this.socket.emit("updatePersonEffort", {gameName: this.gameName, teamName: this.teamName, workCard: this.workCard, name: this.myName, column: column})
-        this.socket.emit("updateEffort", {gameName: this.gameName, teamName: this.teamName, name: this.myName, workCard: this.workCard})
+        this.socket.emit('updatePersonEffort', {gameName: this.gameName, teamName: this.teamName, workCard: this.workCard, name: this.myName, column: column})
+        this.socket.emit('updateEffort', {gameName: this.gameName, teamName: this.teamName, name: this.myName, workCard: this.workCard})
       }
-    }
-  },
-  computed: {
-    gameName() {
-      return this.$store.getters.getGameName
-    },
-    teamName() {
-      return this.$store.getters.getTeamName
-    },
-    myName() {
-      return this.$store.getters.getMyName
-    },
-    myRole() {
-      return this.$store.getters.getMyRole
-    },
-    myOtherRoles() {
-      return this.$store.getters.getMyOtherRoles
-    },
-    myEffort() {
-      return this.$store.getters.getMyEffort
-    },
-    teams() {
-      return this.$store.getters.getTeams
-    },
-    currentDay() {
-      return this.$store.getters.getCurrentDay
     }
   }
 }

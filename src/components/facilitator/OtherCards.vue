@@ -1,12 +1,12 @@
 <template>
-
   <td>
     <div class="column-other-card" v-for="(card, index) in cards" :key="index">
-      <div class="card-number" :style="{ 'background-color': card.team.toLowerCase()}" >#{{card.number}}</div>
-      <div>{{card.dependencyDone}} / {{card.teamDependency}}</div>
+      <div class="card-number" :style="{ 'background-color': card.team.toLowerCase()}">
+        #{{ card.number }}
+      </div>
+      <div>{{ card.dependencyDone }} / {{ card.teamDependency }}</div>
     </div>
   </td>
-
 </template>
 
 <script>

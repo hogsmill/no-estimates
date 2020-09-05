@@ -1,23 +1,23 @@
 <template>
   <div>
-
     <table class="roles">
       <tr>
         <td class="role" :class="role.role.toLowerCase()" v-for="(role, index) in roles" :key="index">
           <div v-for="(name, m) in roles[index].names" :key="'name-' + m">
-            {{name.name}} <Captain v-bind:captain="name.captain" />
-            <span v-if="name.effort">({{name.effort.available}})</span>
+            {{ name.name }} <Captain :captain="name.captain" />
+            <span v-if="name.effort">({{ name.effort.available }})</span>
           </div>
-          <div v-for="(otherName, n) in roles[index].otherNames" :key="'otherName-' + n">(<i>{{otherName.name}}</i>)</div>
+          <div v-for="(otherName, n) in roles[index].otherNames" :key="'otherName-' + n">
+            (<i>{{ otherName.name }}</i>)
+          </div>
         </td>
       </tr>
     </table>
-
   </div>
 </template>
 
 <script>
-import Captain from "./specialities/Captain.vue";
+import Captain from './specialities/Captain.vue'
 
 export default {
   components: {

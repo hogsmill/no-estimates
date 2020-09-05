@@ -1,25 +1,25 @@
 <template>
   <div>
     <div v-if="column.name == 'options'">
-      <WorkCardStack v-bind:socket="socket" />
+      <WorkCardStack :socket="socket" />
       <OtherSkills />
-      <OtherTeams v-bind:socket="socket" />
+      <OtherTeams :socket="socket" />
     </div>
     <div v-if="column.name != 'options'">
-      <AutoDeploy v-if="showAutoDeploy(column)" v-bind:socket="socket" />
+      <AutoDeploy v-if="showAutoDeploy(column)" :socket="socket" />
       <div v-for="(card, index) in column.cards" :key="index">
-        <WorkCard v-bind:column="column.name" v-bind:workCard="card" v-bind:socket="socket" />
+        <WorkCard :column="column.name" :work-card="card" :socket="socket" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import OtherTeams from "./OtherTeams.vue";
-import OtherSkills from "./OtherSkills.vue";
-import WorkCardStack from "./WorkCardStack.vue";
-import WorkCard from "./WorkCard.vue";
-import AutoDeploy from "./AutoDeploy.vue";
+import OtherTeams from './OtherTeams.vue'
+import OtherSkills from './OtherSkills.vue'
+import WorkCardStack from './WorkCardStack.vue'
+import WorkCard from './WorkCard.vue'
+import AutoDeploy from './AutoDeploy.vue'
 
 export default {
   components: {
@@ -30,14 +30,8 @@ export default {
     AutoDeploy
   },
   props: [
-    'column',
-    'socket'
+    'column', 'socket'
   ],
-  methods: {
-    showAutoDeploy(column) {
-      return this.teamName && this.myTeam.autoDeploy.doing && column.name == 'deploy'
-    }
-  },
   computed: {
     gameName() {
       return this.$store.getters.getGameName
@@ -49,7 +43,12 @@ export default {
       return this.$store.getters.getMyTeam
     },
     nColumns() {
-      return this.$store.getters.getColumns.length;
+      return this.$store.getters.getColumns.length
+    }
+  },
+  methods: {
+    showAutoDeploy(column) {
+      return this.teamName && this.myTeam.autoDeploy.doing && column.name == 'deploy'
     }
   },
 }

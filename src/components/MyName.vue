@@ -1,13 +1,20 @@
 <template>
   <div class="my-name" v-if="!showFacilitator && gameName">
     <div class="my-name text-right">
-      <button class="btn btn-sm btn-secondary smaller-font" v-if="!myName.id" @click="show">Set My Name</button>
-      <span v-if="myName.id" @click="show" class="mr-2 mt-2 pointer p-2 bg-light">My Name is: {{myName.name}} <Captain v-bind:captain="myName.captain" /></span>
+      <button class="btn btn-sm btn-secondary smaller-font" v-if="!myName.id" @click="show">
+        Set My Name
+      </button>
+      <span v-if="myName.id" @click="show" class="mr-2 mt-2 pointer p-2 bg-light">My Name is: {{ myName.name }} <Captain :captain="myName.captain" /></span>
       <div class="effort-div" v-if="myName.id">
         <div v-for="n in myEffort.available" :key="n" class="effort rounded-circle"
-          :class="getClass(n)">{{n}}</div>
+             :class="getClass(n)"
+        >
+          {{ n }}
+        </div>
       </div>
-      <div v-for="n in myEffort.assigned" :key="n" class="effort rounded-circle used">0</div>
+      <div v-for="n in myEffort.assigned" :key="n" class="effort rounded-circle used">
+        0
+      </div>
     </div>
 
     <modal name="set-my-name" :height="140" :classes="['rounded', 'set-my-name']">
@@ -19,20 +26,21 @@
       <div class="mt-4">
         <h4>Enter Your Name</h4>
         <div class="set-my-name">
-          <input type="text" id="my-name" class="form-control" />
-          <button class="btn btn-sm btn-secondary smaller-font" @click="saveMyName">Save</button>
+          <input type="text" id="my-name" class="form-control">
+          <button class="btn btn-sm btn-secondary smaller-font" @click="saveMyName">
+            Save
+          </button>
           <div>I am the team Captain <input type="checkbox" id="captain"></div>
         </div>
       </div>
     </modal>
-
   </div>
 </template>
 
 <script>
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid'
 
-import Captain from "./specialities/Captain.vue";
+import Captain from './specialities/Captain.vue'
 
 export default {
   components: {
@@ -41,6 +49,20 @@ export default {
   props: [
     'socket'
   ],
+  computed: {
+    showFacilitator() {
+      return this.$store.getters.getShowFacilitator
+    },
+    gameName() {
+      return this.$store.getters.getGameName
+    },
+    myName() {
+      return this.$store.getters.getMyName
+    },
+    myEffort() {
+      return this.$store.getters.getMyEffort
+    }
+  },
   methods: {
     getClass(n) {
     var className = ''
@@ -54,10 +76,10 @@ export default {
       return className
     },
     show () {
-      this.$modal.show('set-my-name');
+      this.$modal.show('set-my-name')
     },
     hide () {
-      this.$modal.hide('set-my-name');
+      this.$modal.hide('set-my-name')
     },
     saveMyName: function() {
       var oldName = this.myName
@@ -67,30 +89,16 @@ export default {
       if (!oldName.id) {
         var uuid = uuidv4()
         myNameData = {id: uuid, name: newName, captain: captain}
-        this.$store.dispatch("setMyName", myNameData)
+        this.$store.dispatch('setMyName', myNameData)
       } else {
         myNameData = {id: this.myName.id, name: newName, captain: captain}
-        this.$store.dispatch("changeName", {name: newName})
-        localStorage.setItem("myName", JSON.stringify(myNameData));
+        this.$store.dispatch('changeName', {name: newName})
+        localStorage.setItem('myName', JSON.stringify(myNameData))
         if (this.gameName) {
-          this.socket.emit("changeName", {gameName: this.gameName, name: oldName, newName: newName})
+          this.socket.emit('changeName', {gameName: this.gameName, name: oldName, newName: newName})
         }
       }
       this.hide()
-    }
-  },
-  computed: {
-    showFacilitator() {
-      return this.$store.getters.getShowFacilitator
-    },
-    gameName() {
-      return this.$store.getters.getGameName
-    },
-    myName() {
-      return this.$store.getters.getMyName
-    },
-    myEffort() {
-      return this.$store.getters.getMyEffort
     }
   }
 }

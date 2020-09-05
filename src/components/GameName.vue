@@ -1,8 +1,10 @@
 <template>
   <div class="game-name" v-if="!showFacilitator">
     <div class="game-name text-right">
-      <button class="btn btn-sm btn-secondary smaller-font" v-if="!gameName" @click="show">Set Game Name</button>
-      <span v-if="gameName" @click="show" class="mr-2 mt-2 pointer p-2 bg-light">Game: {{gameName}}</span>
+      <button class="btn btn-sm btn-secondary smaller-font" v-if="!gameName" @click="show">
+        Set Game Name
+      </button>
+      <span v-if="gameName" @click="show" class="mr-2 mt-2 pointer p-2 bg-light">Game: {{ gameName }}</span>
       <span v-if="gameName" title="Restart Game" class="restart" @click="restartGame">&#8635;</span>
     </div>
 
@@ -15,12 +17,13 @@
       <div class="mt-4">
         <h4>Enter Your Game Name</h4>
         <div class="set-game-name">
-          <input type="text" id="game-name" class="form-control" />
-          <button class="btn btn-sm btn-secondary smaller-font" @click="saveGameName">Save</button>
+          <input type="text" id="game-name" class="form-control">
+          <button class="btn btn-sm btn-secondary smaller-font" @click="saveGameName">
+            Save
+          </button>
         </div>
       </div>
     </modal>
-
   </div>
 </template>
 
@@ -29,29 +32,6 @@ export default {
   props: [
     'socket'
   ],
-  methods: {
-    show () {
-      this.$modal.show('set-game-name');
-    },
-    hide () {
-      this.$modal.hide('set-game-name');
-    },
-    saveGameName: function() {
-      var gameName = document.getElementById('game-name').value
-      this.$store.dispatch("updateGameName", gameName)
-      localStorage.setItem("gameName", gameName);
-      if (gameName && this.teamName) {
-        this.socket.emit("loadGame", {gameName: this.gameName, teamName: this.teamName})
-      }
-      this.hide()
-    },
-    restartGame() {
-      var restartGame = confirm("Are you sure you want to re-start this game?")
-      if (restartGame) {
-        this.socket.emit("restartGame", {gameName: this.gameName})
-      }
-    }
-  },
   computed: {
     showFacilitator() {
       return this.$store.getters.getShowFacilitator
@@ -61,11 +41,34 @@ export default {
     }
   },
   mounted() {
-    this.socket.on("restartGame", (data) => {
+    this.socket.on('restartGame', (data) => {
       if (this.gameName == data.gameName) {
         location.reload()
       }
     })
+  },
+  methods: {
+    show () {
+      this.$modal.show('set-game-name')
+    },
+    hide () {
+      this.$modal.hide('set-game-name')
+    },
+    saveGameName: function() {
+      var gameName = document.getElementById('game-name').value
+      this.$store.dispatch('updateGameName', gameName)
+      localStorage.setItem('gameName', gameName)
+      if (gameName && this.teamName) {
+        this.socket.emit('loadGame', {gameName: this.gameName, teamName: this.teamName})
+      }
+      this.hide()
+    },
+    restartGame() {
+      var restartGame = confirm('Are you sure you want to re-start this game?')
+      if (restartGame) {
+        this.socket.emit('restartGame', {gameName: this.gameName})
+      }
+    }
   }
 }
 </script>

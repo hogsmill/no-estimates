@@ -22,28 +22,41 @@
             and, therefor wasteful. Ultimately, it will present a more scientific
             approach to the perennial question - when will my stuff be delivered?
           </p>
-          <p>This activity is best facilitated by someone familiar with the game,
+          <p>
+            This activity is best facilitated by someone familiar with the game,
             so do get in touch and we can either facilitate a workshop for you, or
             or teach you how to do it yourself.
           </p>
-          <p>Contact us via LinkedIn at <a href="https://www.linkedin.com/in/hogsmill/">https://www.linkedin.com/in/hogsmill/</a>
-            and we can discuss your needs.</p>
-          <div v-if="false">Email: <input type="text" id="facilitate"> <button class="btn btn-info btn-sm" @click="facilitate">Submit</button></div>
+          <p>
+            Contact us via LinkedIn at <a href="https://www.linkedin.com/in/hogsmill/">https://www.linkedin.com/in/hogsmill/</a>
+            and we can discuss your needs.
+          </p>
+          <div v-if="false">
+            Email: <input type="text" id="facilitate"> <button class="btn btn-info btn-sm" @click="facilitate">
+              Submit
+            </button>
+          </div>
         </div>
       </div>
       <div class="buttons" v-if="step < noOfScreens()">
-        <button class="btn btn-info" @click="incrementStep">Next</button>
-        <button class="btn btn-info" @click="hide()">Skip</button>
+        <button class="btn btn-info" @click="incrementStep">
+          Next
+        </button>
+        <button class="btn btn-info" @click="hide()">
+          Skip
+        </button>
       </div>
       <div class="buttons" v-if="step == noOfScreens()">
-        <button class="btn btn-info" @click="hide()">Play Game</button>
+        <button class="btn btn-info" @click="hide()">
+          Play Game
+        </button>
       </div>
     </modal>
   </div>
 </template>
 
 <script>
-const axios = require('axios');
+const axios = require('axios')
 
 import params from '../../lib/params.js'
 
@@ -55,14 +68,29 @@ export default {
       positions: {
         2: { height: 290 }
       }
-    };
+    }
+  },
+  computed: {
+    walkThrough() {
+      return this.$store.getters.getWalkThrough
+    },
+    showFacilitator() {
+      return this.$store.getters.getShowFacilitator
+    },
+  },
+  mounted() {
+    const self = this
+    if (params.isParam('walkThrough') || params.isParam('walkThrough')) {
+      self.$store.dispatch('updateWalkThrough', true)
+      self.$modal.show('walk-through')
+    }
   },
   methods: {
     noOfScreens() {
       return 1 // Object.keys(this.positions).length + 1
     },
     setDefault() {
-      var elem = document.getElementsByClassName("vm--modal")[0].getBoundingClientRect()
+      var elem = document.getElementsByClassName('vm--modal')[0].getBoundingClientRect()
       this.default = {
         top: elem.top,
         left: elem.left,
@@ -71,21 +99,21 @@ export default {
       }
     },
     show() {
-      this.$modal.show("walk-through");
+      this.$modal.show('walk-through')
     },
     hide() {
-      this.$modal.hide("walk-through");
+      this.$modal.hide('walk-through')
     },
     help() {
-      this.step = 1;
-      this.show();
+      this.step = 1
+      this.show()
     },
     incrementStep() {
       if (this.step == 1) {
         this.setDefault()
       }
       this.step = this.step + 1
-      var elem = document.getElementsByClassName("vm--modal")[0]
+      var elem = document.getElementsByClassName('vm--modal')[0]
       var target, positions = {}
       if (this.positions[this.step].target) {
         target = document.getElementById(this.positions[this.step].target)
@@ -112,29 +140,14 @@ export default {
         email: encodeURIComponent(document.getElementById('facilitate').value)
       })
       .then(function (response) {
-        console.log(response);
+        console.log(response)
       })
       .catch(function (error) {
-        console.log(error);
-      });
+        console.log(error)
+      })
     }
   },
-  computed: {
-    walkThrough() {
-      return this.$store.getters.getWalkThrough;
-    },
-    showFacilitator() {
-      return this.$store.getters.getShowFacilitator;
-    },
-  },
-  mounted() {
-    const self = this;
-    if (params.isParam("walkThrough") || params.isParam("walkThrough")) {
-      self.$store.dispatch("updateWalkThrough", true);
-      self.$modal.show("walk-through");
-    }
-  },
-};
+}
 </script>
 
 <style lang="scss">

@@ -1,8 +1,10 @@
 <template>
   <div class="team-name" v-if="!showFacilitator && gameName && myName.id">
     <div class="team-name text-right">
-      <button class="btn btn-sm btn-secondary smaller-font" v-if="!teamName" @click="show">Set My Team</button>
-      <span v-if="teamName" @click="show" class="mr-2 mt-2 pointer p-2 bg-light">My Team is: {{teamName}}</span>
+      <button class="btn btn-sm btn-secondary smaller-font" v-if="!teamName" @click="show">
+        Set My Team
+      </button>
+      <span v-if="teamName" @click="show" class="mr-2 mt-2 pointer p-2 bg-light">My Team is: {{ teamName }}</span>
     </div>
 
     <modal name="set-team-name" :height="180" :classes="['rounded']">
@@ -15,43 +17,27 @@
         <h4>Select Your Team Name</h4>
         <div class="set-team-name">
           <select :class="{ 'hidden': activeTeams.length == 0}" id="team-name-select" class="form-control col-md-6 offset-md-2 mr-2">
-            <option v-for="(team, index) in activeTeams" :key="index">{{team.name}}</option>
+            <option v-for="(team, index) in activeTeams" :key="index">
+              {{ team.name }}
+            </option>
           </select>
-          <button class="btn btn-sm btn-secondary smaller-font" @click="saveTeamName">Save</button>
+          <button class="btn btn-sm btn-secondary smaller-font" @click="saveTeamName">
+            Save
+          </button>
         </div>
       </div>
     </modal>
-
   </div>
 </template>
 
 <script>
 export default {
-  data() {
-    return {
-      myTeamName: ''
-    }
-  },
   props: [
     'socket'
   ],
-  methods: {
-    show () {
-      this.$modal.show('set-team-name');
-    },
-    hide () {
-      this.$modal.hide('set-team-name');
-    },
-    saveTeamName: function() {
-      var teamName = document.getElementById('team-name-select').value
-      this.$store.dispatch("updateTeamName", teamName)
-      localStorage.setItem("teamName", teamName);
-      if (!this.teamName) {
-        this.socket.emit("loadGame", {gameName: this.gameName, teamName: teamName})
-      } else if (teamName && this.gameName) {
-        this.socket.emit("updateTeamName", {gameName: this.gameName, teamName: teamName, role: this.myRole, name: this.myName})
-      }
-      this.hide()
+  data() {
+    return {
+      myTeamName: ''
     }
   },
   computed: {
@@ -72,6 +58,25 @@ export default {
     },
     activeTeams() {
       return this.$store.getters.getActiveTeams
+    }
+  },
+  methods: {
+    show () {
+      this.$modal.show('set-team-name')
+    },
+    hide () {
+      this.$modal.hide('set-team-name')
+    },
+    saveTeamName: function() {
+      var teamName = document.getElementById('team-name-select').value
+      this.$store.dispatch('updateTeamName', teamName)
+      localStorage.setItem('teamName', teamName)
+      if (!this.teamName) {
+        this.socket.emit('loadGame', {gameName: this.gameName, teamName: teamName})
+      } else if (teamName && this.gameName) {
+        this.socket.emit('updateTeamName', {gameName: this.gameName, teamName: teamName, role: this.myRole, name: this.myName})
+      }
+      this.hide()
     }
   }
 }

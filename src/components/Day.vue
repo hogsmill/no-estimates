@@ -2,11 +2,17 @@
   <div class="card-deck">
     <div class="row days">
       <div class="days">
-        <div class="days-label">Day</div>
+        <div class="days-label">
+          Day
+        </div>
         <span class="passed" v-if="days()[0] > 1"> . . . </span>
-        <div class="day rounded-circle" :class="getClass(day)" v-for="(day, index) in days()" :key="index">{{day}}</div>
+        <div class="day rounded-circle" :class="getClass(day)" v-for="(day, index) in days()" :key="index">
+          {{ day }}
+        </div>
         <span> . . . </span>
-        <button class="btn btn-sm btn-info next" @click="next()">Next</button>
+        <button class="btn btn-sm btn-info next" @click="next()">
+          Next
+        </button>
       </div>
     </div>
   </div>
@@ -17,28 +23,6 @@ export default {
   props: [
     'socket'
   ],
-  methods: {
-    getClass(day) {
-      if (day < this.currentDay) {
-        return "passed"
-      } else if (day == this.currentDay) {
-        return "current"
-      }
-    },
-    days() {
-      var days = []
-      var range = 15
-      var startDay = Math.max(1, this.currentDay - range)
-      var endDay = Math.max(30, this.currentDay + range)
-      for (var i = startDay; i <= endDay; i++) {
-        days.push(i)
-      }
-      return days
-    },
-    next() {
-      this.socket.emit("showEventCard", {gameName: this.gameName, teamName: this.teamName})
-    }
-  },
   computed: {
     gameName() {
       return this.$store.getters.getGameName
@@ -57,11 +41,33 @@ export default {
     }
   },
   mounted() {
-    this.socket.on("updateCurrentDay", (data) => {
+    this.socket.on('updateCurrentDay', (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
-        this.$store.dispatch("updateCurrentDay", data)
+        this.$store.dispatch('updateCurrentDay', data)
       }
     })
+  },
+  methods: {
+    getClass(day) {
+      if (day < this.currentDay) {
+        return 'passed'
+      } else if (day == this.currentDay) {
+        return 'current'
+      }
+    },
+    days() {
+      var days = []
+      var range = 15
+      var startDay = Math.max(1, this.currentDay - range)
+      var endDay = Math.max(30, this.currentDay + range)
+      for (var i = startDay; i <= endDay; i++) {
+        days.push(i)
+      }
+      return days
+    },
+    next() {
+      this.socket.emit('showEventCard', {gameName: this.gameName, teamName: this.teamName})
+    }
   }
 }
 </script>

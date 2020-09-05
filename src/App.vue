@@ -1,53 +1,57 @@
 <template>
   <div id="app" class="mb-4">
-    <appHeader></appHeader>
+    <appHeader />
     <WalkThroughView />
     <div v-if="showFacilitator">
-      <FacilitatorView v-bind:socket="socket" />
+      <FacilitatorView :socket="socket" />
     </div>
     <div class="main" v-else>
-      <div v-if="isHost" class="right" @click="clear()">Clear Storage</div>
-      <h1>No Estimates <span v-if="teamName">(Team: {{teamName}})</span></h1>
-      <h3 class="setup-header" v-if="!isSetUp()">Before we start the game, please set the game name, your name, your team and your speciality.</h3>
-      <GameName v-bind:socket="socket" />
-      <MyName v-bind:socket="socket" />
-      <TeamName v-bind:socket="socket" />
-      <MyRole v-bind:socket="socket" />
+      <div v-if="isHost" class="right" @click="clear()">
+        Clear Storage
+      </div>
+      <h1>No Estimates <span v-if="teamName">(Team: {{ teamName }})</span></h1>
+      <h3 class="setup-header" v-if="!isSetUp()">
+        Before we start the game, please set the game name, your name, your team and your speciality.
+      </h3>
+      <GameName :socket="socket" />
+      <MyName :socket="socket" />
+      <TeamName :socket="socket" />
+      <MyRole :socket="socket" />
 
-      <Status v-bind:socket="socket" />
+      <Status :socket="socket" />
       <div v-if="isSetUp()" class="container board">
         <div class="game-buttons">
-          <Report v-bind:socket="socket" />
+          <Report :socket="socket" />
         </div>
         <Roles />
-        <Day v-bind:socket="socket" />
-        <Board v-bind:socket="socket" />
+        <Day :socket="socket" />
+        <Board :socket="socket" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import io from "socket.io-client";
+import io from 'socket.io-client'
 
 import params from './lib/params.js'
 
-import Header from "./components/Header.vue";
-import Report from "./components/report/Report.vue";
-import MyName from "./components/MyName.vue";
-import MyRole from "./components/MyRole.vue";
-import TeamName from "./components/TeamName.vue";
-import GameName from "./components/GameName.vue";
-import Status from "./components/Status.vue";
-import FacilitatorView from "./components/facilitator/FacilitatorView.vue";
-import WalkThroughView from "./components/about/WalkThroughView.vue";
+import Header from './components/Header.vue'
+import Report from './components/report/Report.vue'
+import MyName from './components/MyName.vue'
+import MyRole from './components/MyRole.vue'
+import TeamName from './components/TeamName.vue'
+import GameName from './components/GameName.vue'
+import Status from './components/Status.vue'
+import FacilitatorView from './components/facilitator/FacilitatorView.vue'
+import WalkThroughView from './components/about/WalkThroughView.vue'
 
-import Roles from "./components/Roles.vue";
-import Day from "./components/Day.vue";
-import Board from "./components/Board.vue";
+import Roles from './components/Roles.vue'
+import Day from './components/Day.vue'
+import Board from './components/Board.vue'
 
 export default {
-  name: "App",
+  name: 'App',
   components: {
     appHeader: Header,
     FacilitatorView,
@@ -67,39 +71,18 @@ export default {
       setup: false
     }
   },
-  methods: {
-    clear() {
-      localStorage.removeItem("myName")
-      localStorage.removeItem("teamName")
-      localStorage.removeItem("myRole")
-      localStorage.removeItem("gameName")
-    },
-    isSetUp() {
-      var setUp = this.myName && this.teamName && this.myRole && this.gameName
-      if (setUp && !this.setUp) {
-        this.setUp = true
-        localStorage.setItem("myName", JSON.stringify(this.myName))
-        localStorage.setItem("teamName", this.teamName)
-        localStorage.setItem("myRole", this.myRole)
-        localStorage.setItem("gameName", this.gameName)
-        this.socket.emit("updateRole", {gameName: this.gameName, teamName: this.teamName, name: this.myName, role: this.myRole})
-        this.socket.emit("loadGame", {gameName: this.gameName, teamName: this.teamName})
-      }
-      return setUp
-    }
-  },
   computed: {
     isHost() {
-      return this.$store.getters.getHost;
+      return this.$store.getters.getHost
     },
     walkThrough() {
-      return this.$store.getters.getWalkThrough;
+      return this.$store.getters.getWalkThrough
     },
     showFacilitator() {
-      return this.$store.getters.getShowFacilitator;
+      return this.$store.getters.getShowFacilitator
     },
     teamName() {
-      return this.$store.getters.getTeamName;
+      return this.$store.getters.getTeamName
     },
     gameName() {
       return this.$store.getters.getGameName
@@ -112,117 +95,138 @@ export default {
     },
   },
   created() {
-    var host = "77.68.122.69"
+    var host = '77.68.122.69'
     if (location.hostname == 'localhost') {
       host = 'localhost'
     }
-    var connStr = "http://" + host + ":3007"
-    console.log("Connecting to: " + connStr)
+    var connStr = 'http://' + host + ':3007'
+    console.log('Connecting to: ' + connStr)
     this.socket = io(connStr)
 
-    if (params.isParam("host")) {
-      this.$store.dispatch("updateHost", true)
+    if (params.isParam('host')) {
+      this.$store.dispatch('updateHost', true)
     }
 
     var self = this
     window.onload = function() {
-      var myEffort = localStorage.getItem("myEffort")
+      var myEffort = localStorage.getItem('myEffort')
       if (myEffort) {
         myEffort = JSON.parse(myEffort)
-        self.$store.dispatch("updateMyEffort", myEffort)
+        self.$store.dispatch('updateMyEffort', myEffort)
       }
-    };
+    }
 
-    var myName = localStorage.getItem("myName")
+    var myName = localStorage.getItem('myName')
     if (myName) {
       if (!myName.match(/"id":/)) {
         localStorage.removeItem('myName')
       } else {
         myName = JSON.parse(myName)
-        this.$store.dispatch("setMyName", myName)
+        this.$store.dispatch('setMyName', myName)
       }
     }
 
-    var teamName = localStorage.getItem("teamName")
+    var teamName = localStorage.getItem('teamName')
     if (teamName) {
-      this.$store.dispatch("updateTeamName", teamName)
+      this.$store.dispatch('updateTeamName', teamName)
     }
 
-    var myRole = localStorage.getItem("myRole")
+    var myRole = localStorage.getItem('myRole')
     if (myRole) {
-      this.$store.dispatch("updateMyRole", myRole)
+      this.$store.dispatch('updateMyRole', myRole)
     }
 
-    var gameName = localStorage.getItem("gameName")
+    var gameName = localStorage.getItem('gameName')
     if (gameName) {
-      this.$store.dispatch("updateGameName", gameName)
-      this.socket.emit("gameState", {gameName: gameName})
+      this.$store.dispatch('updateGameName', gameName)
+      this.socket.emit('gameState', {gameName: gameName})
     }
 
-    this.socket.on("restartGame", (data) => {
-      localStorage.removeItem("myEffort")
+    this.socket.on('restartGame', (data) => {
+      localStorage.removeItem('myEffort')
       if (this.gameName == data.gameName) {
         location.reload()
       }
     })
 
-    this.socket.on("loadGame", (data) => {
+    this.socket.on('loadGame', (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
-        this.$store.dispatch("loadGame", data)
+        this.$store.dispatch('loadGame', data)
       }
     })
 
-    this.socket.on("percentageBlocked", (data) => {
+    this.socket.on('percentageBlocked', (data) => {
       if (this.gameName == data.gameName) {
-        this.$store.dispatch("percentageBlocked", data)
+        this.$store.dispatch('percentageBlocked', data)
       }
     })
 
-    this.socket.on("percentageDeployFail", (data) => {
+    this.socket.on('percentageDeployFail', (data) => {
       if (this.gameName == data.gameName) {
-        this.$store.dispatch("percentageDeployFail", data)
+        this.$store.dispatch('percentageDeployFail', data)
       }
     })
 
-    this.socket.on("updateRoles", (data) => {
+    this.socket.on('updateRoles', (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
-        this.$store.dispatch("updateRoles", data)
+        this.$store.dispatch('updateRoles', data)
       }
     })
 
-    this.socket.on("updateColumns", (data) => {
+    this.socket.on('updateColumns', (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
-        this.$store.dispatch("updateColumns", data)
+        this.$store.dispatch('updateColumns', data)
       }
     })
 
-    this.socket.on("updateTeams", (data) => {
+    this.socket.on('updateTeams', (data) => {
       if (this.gameName == data.gameName) {
-        this.$store.dispatch("updateTeams", data)
+        this.$store.dispatch('updateTeams', data)
       }
     })
 
-    this.socket.on("updateWorkCards", (data) => {
+    this.socket.on('updateWorkCards', (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
-        this.$store.dispatch("updateWorkCards", data)
+        this.$store.dispatch('updateWorkCards', data)
       }
     })
 
-    this.socket.on("updatePairing", (data) => {
+    this.socket.on('updatePairing', (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
-        this.$store.dispatch("updatePairing", data)
+        this.$store.dispatch('updatePairing', data)
       }
     })
 
-    this.socket.on("updateGameState", (data) => {
+    this.socket.on('updateGameState', (data) => {
       if (this.gameName == data.gameName) {
-        this.$store.dispatch("updateGameState", data)
+        this.$store.dispatch('updateGameState', data)
       }
     })
 
-    this.socket.on("updateConnections", (data) => {
-      this.$store.dispatch("updateConnections", data)
+    this.socket.on('updateConnections', (data) => {
+      this.$store.dispatch('updateConnections', data)
     })
+  },
+  methods: {
+    clear() {
+      localStorage.removeItem('myName')
+      localStorage.removeItem('teamName')
+      localStorage.removeItem('myRole')
+      localStorage.removeItem('gameName')
+    },
+    isSetUp() {
+      var setUp = this.myName && this.teamName && this.myRole && this.gameName
+      if (setUp && !this.setUp) {
+        this.setUp = true
+        localStorage.setItem('myName', JSON.stringify(this.myName))
+        localStorage.setItem('teamName', this.teamName)
+        localStorage.setItem('myRole', this.myRole)
+        localStorage.setItem('gameName', this.gameName)
+        this.socket.emit('updateRole', {gameName: this.gameName, teamName: this.teamName, name: this.myName, role: this.myRole})
+        this.socket.emit('loadGame', {gameName: this.gameName, teamName: this.teamName})
+      }
+      return setUp
+    }
   },
 }
 </script>

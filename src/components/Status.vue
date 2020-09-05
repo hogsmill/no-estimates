@@ -1,5 +1,7 @@
 <template>
-  <div class="status" :class="{ 'urgent': urgent }">{{status}}</div>
+  <div class="status" :class="{ 'urgent': urgent }">
+    {{ status }}
+  </div>
 </template>
 
 <script>
@@ -15,12 +17,6 @@ export default {
       urgent: false
     }
   },
-  methods: {
-    setStatus(status, urgent) {
-      this.urgent = urgent
-      this.status = status
-    }
-  },
   computed: {
     gameName() {
       return this.$store.getters.getGameName
@@ -31,27 +27,33 @@ export default {
   },
   mounted() {
     const self = this
-    this.socket.on("updatePersonEffort", (data) => {
+    this.socket.on('updatePersonEffort', (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         var column = stringFuns.properCase(data.column)
         self.setStatus(data.name.name + ' has added effort to card #' + data.workCard.number + ' in ' + column, false)
       }
     })
-    this.socket.on("updatePersonAutoDeployEffort", (data) => {
+    this.socket.on('updatePersonAutoDeployEffort', (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         self.setStatus(data.name.name + ' has added Auto Deploy effort', false)
       }
     })
-    this.socket.on("updateOtherTeamEffort", (data) => {
+    this.socket.on('updateOtherTeamEffort', (data) => {
       if (this.gameName == data.gameName) {
         self.setStatus('Team ' + data.teamName + ' has added effort to card #' + data.card.number, false)
       }
     })
-    this.socket.on("broadcastMessage", (data) => {
+    this.socket.on('broadcastMessage', (data) => {
       if (this.gameName == data.gameName) {
         self.setStatus(data.message, true)
       }
     })
+  },
+  methods: {
+    setStatus(status, urgent) {
+      this.urgent = urgent
+      this.status = status
+    }
   }
 }
 </script>

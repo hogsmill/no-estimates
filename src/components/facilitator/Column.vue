@@ -1,33 +1,44 @@
 <template>
-
   <td class="game-state-column">
-    <div>{{name}}</div>
+    <div>{{ name }}</div>
     <div class="cards-header">
-      <div class="count">{{column.length}}</div>
-      <div v-if="showCards" @click="setShowCards(false)" title="collapse" class="toggle">&#9650;</div>
-      <div v-if="!showCards" @click="setShowCards(true)" title="expand" class="toggle">&#9660;</div>
+      <div class="count">
+        {{ column.length }}
+      </div>
+      <div v-if="showCards" @click="setShowCards(false)" title="collapse" class="toggle">
+        &#9650;
+      </div>
+      <div v-if="!showCards" @click="setShowCards(true)" title="expand" class="toggle">
+        &#9660;
+      </div>
     </div>
     <div v-if="showCards">
       <div class="column-card" :class="{'blocked': card.blocked}" v-for="(card, index) in column" :key="index">
-        <div v-if="card.urgent" class="urgent">URGENT</div>
-        <div class="card-number">#{{card.number}}</div>
-        <div>{{card.effort.done}} / {{card.effort.effort}}</div>
+        <div v-if="card.urgent" class="urgent">
+          URGENT
+        </div>
+        <div class="card-number">
+          #{{ card.number }}
+        </div>
+        <div>{{ card.effort.done }} / {{ card.effort.effort }}</div>
         <div v-if="card.dependentOn" class="dependent-on" :style="{'background-color': card.dependentOn.team.toLowerCase()}">
-           {{card.dependentOn.done}} / {{card.dependentOn.effort}}
-          </div>
-        <div v-if="card.commit" class="delivered">C: {{card.commit}}</div>
-        <div v-if="card.delivered" class="delivered">D: {{card.delivered}}</div>
+          {{ card.dependentOn.done }} / {{ card.dependentOn.effort }}
+        </div>
+        <div v-if="card.commit" class="delivered">
+          C: {{ card.commit }}
+        </div>
+        <div v-if="card.delivered" class="delivered">
+          D: {{ card.delivered }}
+        </div>
       </div>
     </div>
   </td>
-
 </template>
 
 <script>
 export default {
   props: [
-    'column',
-    'name'
+    'column', 'name'
   ],
   data() {
     return {

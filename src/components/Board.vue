@@ -1,6 +1,6 @@
 <template>
   <div class="board-container">
-    <EventCard v-bind:socket="socket" />
+    <EventCard :socket="socket" />
     <div class="game-board">
       <table class="board-table rounded">
         <thead>
@@ -8,7 +8,7 @@
             <th v-for="(column, index) in columns" :key="index">
               <div :class="column.name">
                 <span class="concurrentDevAndTest" v-if="concurrentDevAndTestTest(column)" title="Concurrent Dev and Test Allowed">&#x021A4;</span>
-                {{columnDisplayName(column.name)}}
+                {{ columnDisplayName(column.name) }}
                 <span class="concurrentDevAndTest" v-if="concurrentDevAndTestDev(column)" title="Concurrent Dev and Test Allowed">&#x021A6;</span>
                 <span class="autoDeploy" v-if="showAutoDeploy(column)" title="Deployment is now automated">&#10004;</span>
                 <span class="canStartAutoDeploy rounded-circle" v-if="canStartAutoDeploy(column)" @click="startAutoDeploy()">&#10033;</span>
@@ -19,7 +19,7 @@
         <tbody>
           <tr>
             <td v-for="(column, index) in columns" :key="index">
-              <Column v-bind:column="column" v-bind:socket="socket" />
+              <Column :column="column" :socket="socket" />
             </td>
           </tr>
         </tbody>
@@ -31,8 +31,8 @@
 <script>
 import stringFuns from '../lib/stringFuns.js'
 
-import EventCard from "./board/EventCard.vue";
-import Column from "./board/Column.vue";
+import EventCard from './board/EventCard.vue'
+import Column from './board/Column.vue'
 
 export default {
   components: {
@@ -42,6 +42,39 @@ export default {
   props: [
     'socket'
   ],
+  computed: {
+    gameName() {
+      return this.$store.getters.getGameName
+    },
+    teamName() {
+      return this.$store.getters.getTeamName
+    },
+    myTeam() {
+      return this.$store.getters.getMyTeam
+    },
+    columns() {
+      return this.$store.getters.getColumns
+    }
+  },
+  mounted() {
+    this.socket.on('updateColumns', (data) => {
+      if (this.gameName == data.gameName && this.teamName == data.teamName) {
+        this.$store.dispatch('updateColumns', data)
+      }
+    })
+
+    this.socket.on('updateDependentTeam', (data) => {
+      if (this.gameName == data.gameName) {
+        this.$store.dispatch('updateDependentTeam', data)
+      }
+    })
+
+    this.socket.on('startAutoDeploy', (data) => {
+      if (this.gameName == data.gameName && this.teamName == data.teamName) {
+        this.$store.dispatch('startAutoDeploy', data)
+      }
+    })
+  },
   methods: {
     columnDisplayName(s) {
       return stringFuns.properCase(s)
@@ -59,41 +92,8 @@ export default {
       return this.teamName && !this.myTeam.autoDeploy.doing && !this.myTeam.autoDeploy.done && this.myTeam.canStartAutoDeploy && column.name == 'deploy'
     },
     startAutoDeploy() {
-      this.socket.emit("startAutoDeploy", {gameName: this.gameName, teamName: this.teamName})
+      this.socket.emit('startAutoDeploy', {gameName: this.gameName, teamName: this.teamName})
     }
-  },
-  computed: {
-    gameName() {
-      return this.$store.getters.getGameName
-    },
-    teamName() {
-      return this.$store.getters.getTeamName
-    },
-    myTeam() {
-      return this.$store.getters.getMyTeam
-    },
-    columns() {
-      return this.$store.getters.getColumns;
-    }
-  },
-  mounted() {
-    this.socket.on("updateColumns", (data) => {
-      if (this.gameName == data.gameName && this.teamName == data.teamName) {
-        this.$store.dispatch("updateColumns", data)
-      }
-    })
-
-    this.socket.on("updateDependentTeam", (data) => {
-      if (this.gameName == data.gameName) {
-        this.$store.dispatch("updateDependentTeam", data)
-      }
-    })
-
-    this.socket.on("startAutoDeploy", (data) => {
-      if (this.gameName == data.gameName && this.teamName == data.teamName) {
-        this.$store.dispatch("startAutoDeploy", data)
-      }
-    })
   }
 }
 </script>

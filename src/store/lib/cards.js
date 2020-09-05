@@ -11,7 +11,7 @@ function cardValue(workCards, card) {
   } else {
     card.value = -100 * card.delivery
   }
-  workCard = workCards.find(function(workCard) { return workCard.number == card.number })
+  let workCard = workCards.find(function(workCard) { return workCard.number == card.number })
   workCard.delivery = card.delivery
   workCard.value = card.value
 }

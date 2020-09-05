@@ -24,7 +24,7 @@ module.exports = {
   },
 
   addNameToRoles: function(name, role, roles, team) {
-    for (i = 0; i < roles.length; i++) {
+    for (let i = 0; i < roles.length; i++) {
       if (roles[i].role == role) {
         roles[i].names.push(name)
       }

@@ -6,7 +6,7 @@ module.exports = {
     ],
     rules: {
       // override/add rules settings here, such as:
-      //'no-redeclare': 'error',
+      'no-redeclare': 'warn',
       'no-undef': 'error',
       'no-unused-vars': 'error',
       

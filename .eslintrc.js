@@ -8,7 +8,7 @@ module.exports = {
       // override/add rules settings here, such as:
       //'no-redeclare': 'error',
       'no-undef': 'error',
-      //'no-unused-vars': 'error',
+      'no-unused-vars': 'error',
       
       'vue/require-prop-types': 'off',
       'quotes': ['error', 'single'],

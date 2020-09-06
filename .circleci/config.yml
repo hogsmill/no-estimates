@@ -48,9 +48,9 @@ jobs:
           command: npm run test:e2e:ci --env circle=true
           no_output_timeout: '1m'
       - store_artifacts:
-          path: cypress\screenshots
+          path: tests\e2e\screenshots
       - store_artifacts:
-          path: cypress\videos
+          path: tests\e2e\videos
 
 workflows:
   win-build:
@@ -84,8 +84,7 @@ workflows:
           parallel: false # load balance all tests
           parallelism: 1 # across 3 machines
           group: '1x-electron on CircleCI' # name this group
-          start: 'npm run serve' # start server before running tests
-
+         
       # run on 1 machines using Chrome browser
       - cypress/run:
           name: '1 machines using Chrome'
@@ -101,6 +100,6 @@ workflows:
           parallel: false
           parallelism: 1
           group: '1x-chrome on CircleCI'
-          start: 'npm run serve'
+         
 
      

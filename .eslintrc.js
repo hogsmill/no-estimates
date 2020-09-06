@@ -9,7 +9,8 @@ module.exports = {
       'no-redeclare': 'warn',
       'no-undef': 'error',
       'no-unused-vars': 'error',
-      
+      'no-var': 'error',
+      'prefer-const': 'error',
       'vue/require-prop-types': 'off',
       'quotes': ['error', 'single'],
       'semi': ['error', 'never'],

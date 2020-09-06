@@ -1,28 +1,28 @@
 
-var roleFuns = require('./lib/roles.js')
-var cardFuns = require('./lib/cards.js')
-var pairingFuns = require('./lib/pairing.js')
-var gameState = require('./lib/gameState.js')
+const roleFuns = require('./lib/roles.js')
+const cardFuns = require('./lib/cards.js')
+const pairingFuns = require('./lib/pairing.js')
+const gameState = require('./lib/gameState.js')
 
-var initialRoles = [
+const initialRoles = [
   {role: 'Designer', order: 1, names: [], otherNames: []}, {role: 'Developer', order: 2, names: [], otherNames: []}, {role: 'Tester', order: 3, names: [], otherNames: []}, {role: 'Deployer', order: 4, names: [], otherNames: []}
 ]
 
-var initialTeams = [
+const initialTeams = [
   { name: 'Blue', include: true, recharting: false, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } }, { name: 'Green', include: true, recharting: false, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } }, { name: 'Purple', include: true, recharting: false, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } }, { name: 'Red', include: true, recharting: false, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } }, { name: 'Orange', include: false, recharting: false, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } }, { name: 'Black', include: false, recharting: false, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } }
 ]
 
-var initialColumns = [
+const initialColumns = [
   {name: 'options', order: 1}, {name: 'design', order: 2, cards: []}, {name: 'develop', order: 3, cards: []}, {name: 'test', order: 4, cards: []}, {name: 'deploy', order: 5, cards: []}, {name: 'done', order: 6, cards: []}
 ]
 
-var initialCards = [
+const initialCards = [
   {number: 1, design: 6, develop: 7, test: 8, deploy: 2, urgent: false, teamDependency: 0, dependentOn: '', commit: 0, blocked: false, effort: {design: 0, develop: 0, test: 0, deploy: 0}}, {number: 2, design: 0, develop: 8, test: 6, deploy: 4, urgent: false, teamDependency: 0, dependentOn: '', commit: 0, blocked: false, effort: {design: 0, develop: 0, test: 0, deploy: 0}}, {number: 3, design: 10, develop: 9, test: 9, deploy: 3, urgent: true, teamDependency: 0, dependentOn: '', commit: 0, blocked: false, effort: {design: 0, develop: 0, test: 0, deploy: 0}}, {number: 4, design: 4, develop: 9, test: 12, deploy: 3, urgent: false, teamDependency: 4, dependencyDone: 0, dependentOn: '', commit: 0, blocked: false, effort: {design: 0, develop: 0, test: 0, deploy: 0}}, {number: 5, design: 4, develop: 10, test: 5, deploy: 2, urgent: false, teamDependency: 4, dependencyDone: 0, dependentOn: '', commit: 0, blocked: false, effort: {design: 0, develop: 0, test: 0, deploy: 0}}, {number: 6, design: 1, develop: 8, test: 2, deploy: 5, urgent: false, teamDependency: 0, dependentOn: '', commit: 0, blocked: false, effort: {design: 0, develop: 0, test: 0, deploy: 0}}, {number: 7, design: 1, develop: 10, test: 3, deploy: 1, urgent: false, teamDependency: 0, dependentOn: '', commit: 0, blocked: false, effort: {design: 0, develop: 0, test: 0, deploy: 0}}, {number: 8, design: 0, develop: 4, test: 3, deploy: 5, urgent: false, teamDependency: 0, dependentOn: '', commit: 0, blocked: false, effort: {design: 0, develop: 0, test: 0, deploy: 0}}, {number: 9, design: 10, develop: 4, test: 10, deploy: 6, urgent: false, teamDependency: 0, dependentOn: '', commit: 0, blocked: false, effort: {design: 0, develop: 0, test: 0, deploy: 0}}, {number: 10, design: 1, develop: 7, test: 10, deploy: 8, urgent: true, teamDependency: 4, dependencyDone: 0, dependentOn: '', commit: 0, blocked: false, effort: {design: 0, develop: 0, test: 0, deploy: 0}}, {number: 11, design: 8, develop: 10, test: 10, deploy: 1, urgent: false, teamDependency: 0, dependentOn: '', commit: 0, blocked: false, effort: {design: 0, develop: 0, test: 0, deploy: 0}}, {number: 12, design: 3, develop: 8, test: 11, deploy: 3, urgent: false, teamDependency: 0, dependentOn: '', commit: 0, blocked: false, effort: {design: 0, develop: 0, test: 0, deploy: 0}}, {number: 13, design: 0, develop: 6, test: 9, deploy: 4, urgent: false, teamDependency: 0, dependentOn: '', commit: 0, blocked: false, effort: {design: 0, develop: 0, test: 0, deploy: 0}}, {number: 14, design: 1, develop: 6, test: 3, deploy: 1, urgent: false, teamDependency: 0, dependentOn: '', commit: 0, blocked: false, effort: {design: 0, develop: 0, test: 0, deploy: 0}}, {number: 15, design: 10, develop: 1, test: 5, deploy: 2, urgent: true, teamDependency: 0, dependentOn: '', commit: 0, blocked: false, effort: {design: 0, develop: 0, test: 0, deploy: 0}}, {number: 16, design: 2, develop: 5, test: 1, deploy: 5, urgent: false, teamDependency: 0, dependentOn: '', commit: 0, blocked: false, effort: {design: 0, develop: 0, test: 0, deploy: 0}}, {number: 17, design: 3, develop: 6, test: 8, deploy: 4, urgent: false, teamDependency: 0, dependentOn: '', commit: 0, blocked: false, effort: {design: 0, develop: 0, test: 0, deploy: 0}}, {number: 18, design: 0, develop: 7, test: 12, deploy: 3, urgent: false, teamDependency: 4, dependencyDone: 0, dependentOn: '', commit: 0, blocked: false, effort: {design: 0, develop: 0, test: 0, deploy: 0}}, {number: 19, design: 5, develop: 9, test: 4, deploy: 7, urgent: true, teamDependency: 0, dependentOn: '', commit: 0, blocked: false, effort: {design: 0, develop: 0, test: 0, deploy: 0}}, {number: 20, design: 8, develop: 8, test: 3, deploy: 7, urgent: false, teamDependency: 0, dependentOn: '', commit: 0, blocked: false, effort: {design: 0, develop: 0, test: 0, deploy: 0}}, {number: 21, design: 1, develop: 6, test: 5, deploy: 1, urgent: false, teamDependency: 4, dependencyDone: 0, dependentOn: '', commit: 0, blocked: false, effort: {design: 0, develop: 0, test: 0, deploy: 0}}, {number: 22, design: 0, develop: 10, test: 7, deploy: 7, urgent: false, teamDependency: 0, dependentOn: '', commit: 0, blocked: false, effort: {design: 0, develop: 0, test: 0, deploy: 0}}, {number: 23, design: 5, develop: 10, test: 11, deploy: 8, urgent: false, teamDependency: 0, dependentOn: '', commit: 0, blocked: false, effort: {design: 0, develop: 0, test: 0, deploy: 0}}, {number: 24, design: 0, develop: 6, test: 4, deploy: 6, urgent: false, teamDependency: 0, dependentOn: '', commit: 0, blocked: false, effort: {design: 0, develop: 0, test: 0, deploy: 0}}, {number: 25, design: 3, develop: 2, test: 2, deploy: 4, urgent: false, teamDependency: 0, dependentOn: '', commit: 0, blocked: false, effort: {design: 0, develop: 0, test: 0, deploy: 0}}
 ]
 
 function createNewGame(data) {
 
-  var game = data
+  const game = data
   game.roles = initialRoles
   game.pairing = []
   game.teams = initialTeams
@@ -48,7 +48,7 @@ function _loadGame(err, client, db, io, data, debugOn) {
       if (debugOn) { console.log('Loading game \'' + data.gameName + '\', team \'' + data.teamName + '\'') }
       io.emit('loadGame', res)
     } else {
-      var games = [], gameTeams = [], game = createNewGame(data)
+      const games = [], gameTeams = [], game = createNewGame(data)
       for (let i = 0; i < initialTeams.length; i++) {
         game.teamName = initialTeams[i].name
         gameTeams.push(game.teamName)
@@ -72,9 +72,10 @@ function _updateRole(err, client, db, io, data, debugOn) {
   db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
     if (err) throw err
     if (res) {
-      var i, j, roles = res.roles
+      let i, j
+      const roles = res.roles
       for (i = 0; i < roles.length; i++) {
-        var names = []
+        const names = []
         for (j = 0; j < roles[i].names.length; j++) {
           if (roles[i].names[j].id != data.name.id) {
             names.push(roles[i].names[j])
@@ -110,9 +111,9 @@ module.exports = {
     db.collection('noEstimates').find({gameName: data.gameName}).toArray(function(err, res) {
       if (err) throw err
       if (res.length) {
-        var newTeamName = data.teamName
+        const newTeamName = data.teamName
         res.forEach(function(r) {
-          var roles
+          let roles
           if (r.teamName != newTeamName) {
             roles = roleFuns.removeNameFromRoles(data.name, r.roles, r.teamName)
           } else {
@@ -146,12 +147,12 @@ module.exports = {
     db.collection('noEstimates').find({gameName: data.gameName}).toArray(function(err, res) {
       if (err) throw err
       if (res.length) {
-        for (var r = 0; r < res.length; r++) {
+        for (let r = 0; r < res.length; r++) {
           if (typeof(res[r]) != 'undefined') {
-            for (var i = 0; i < res[r].roles.length; i++) {
-              var names = []
-              for (var j = 0; j < res[r].roles[i].names.length; j++) {
-                var name = res[r].roles[i].names[j]
+            for (let i = 0; i < res[r].roles.length; i++) {
+              const names = []
+              for (let j = 0; j < res[r].roles[i].names.length; j++) {
+                const name = res[r].roles[i].names[j]
                 if (name.id == data.name.id) {
                   name.name = data.newName
                 }
@@ -178,7 +179,7 @@ module.exports = {
     db.collection('noEstimates').find({gameName: data.gameName}).toArray(function(err, res) {
       if (err) throw err
       if (res.length) {
-        for (var r = 0; r < res.length; r++) {
+        for (let r = 0; r < res.length; r++) {
           if (typeof(res[r]) != 'undefined') {
             db.collection('noEstimates').updateOne({'_id': res[r]._id}, {$set: {percentageBlocked: data.percentageBlocked}}, function(err, rec) {
               if (err) throw err
@@ -198,7 +199,7 @@ module.exports = {
     db.collection('noEstimates').find({gameName: data.gameName}).toArray(function(err, res) {
       if (err) throw err
       if (res.length) {
-        for (var r = 0; r < res.length; r++) {
+        for (let r = 0; r < res.length; r++) {
           if (typeof(res[r]) != 'undefined') {
             db.collection('noEstimates').updateOne({'_id': res[r]._id}, {$set: {percentageDeployFail: data.percentageDeployFail}}, function(err, rec) {
               if (err) throw err
@@ -235,8 +236,8 @@ module.exports = {
     db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
       if (err) throw err
       if (res) {
-        var teams = res.teams, columns = res.columns, workCards = res.workCards, roles = res.roles, currentDay = res.currentDay + 1
-        for (var i = 0; i < teams.length; i++) {
+        const teams = res.teams, columns = res.columns, workCards = res.workCards, roles = res.roles, currentDay = res.currentDay + 1
+        for (let i = 0; i < teams.length; i++) {
           if (teams[i].name == data.teamName) {
             if (data.autoDeploy) {
               teams[i].autoDeploy.doing = true
@@ -257,10 +258,10 @@ module.exports = {
             }
           }
         }
-        for (var i = 1; i < columns.length; i++) {
-          for (var j = 0; j < columns[i].cards.length; j++) {
-            var card = columns[i].cards[j]
-            var colName = columns[i].name
+        for (let i = 1; i < columns.length; i++) {
+          for (let j = 0; j < columns[i].cards.length; j++) {
+            const card = columns[i].cards[j]
+            const colName = columns[i].name
             if (card.blocked || card.failed) {
               card.blocked = false
               card.failed = false
@@ -325,7 +326,7 @@ module.exports = {
     db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
       if (err) throw err
       if (res) {
-        var workCards = res.workCards
+        const workCards = res.workCards
         workCards[data.workCard].commit = data.commit
         db.collection('noEstimates').updateOne({'_id': res._id}, {$set: {workCards: workCards}}, function(err, ) {
           if (err) throw err
@@ -344,11 +345,11 @@ module.exports = {
     db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
       if (err) throw err
       if (res) {
-        var columns = data.columns, workCards = res.workCards
-        for (var i = 1; i < columns.length; i++) {
-          for (var j = 0; j < columns[i].cards.length; j++) {
-            var card = columns[i].cards[j]
-            var colName = columns[i].name
+        const columns = data.columns, workCards = res.workCards
+        for (let i = 1; i < columns.length; i++) {
+          for (let j = 0; j < columns[i].cards.length; j++) {
+            const card = columns[i].cards[j]
+            const colName = columns[i].name
             if (cardFuns.cardCompleteInColumn(card, colName, res.teamName, res.teams, res.percentageBlocked, res.percentageDeployFail)) {
               cardFuns.moveCard(columns, workCards, card, i, res.currentDay)
             }
@@ -373,20 +374,21 @@ module.exports = {
     db.collection('noEstimates').find({gameName: data.gameName}).toArray(function(err, res) {
       if (err) throw err
       if (res.length) {
-        var workCardTeam = data.teamName
-        for (var r = 0; r < res.length; r++) {
-          var i, j, columns = res[r].columns
+        const workCardTeam = data.teamName
+        for (let r = 0; r < res.length; r++) {
+          let i, j
+          const columns = res[r].columns
           for (i = 1; i < columns.length; i++) {
             for (j = 0; j < columns[i].cards.length; j++) {
-              var card = columns[i].cards[j]
+              const card = columns[i].cards[j]
               if (card.number == data.workCard.number) {
                 card.dependentOn = data.dependentOn
               }
             }
           }
-          var teams = res[r].teams
+          const teams = res[r].teams
           for (i = 0; i < teams.length; i++) {
-            var otherCards = []
+            const otherCards = []
             for (j = 0; j < teams[i].otherCards.length; j++) {
               if (teams[i].otherCards[j].number != data.workCard.number) {
                 otherCards.push(teams[i].otherCards[j])
@@ -421,13 +423,15 @@ module.exports = {
     db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
       if (err) throw err
       if (res) {
-        var columns = res.columns, workCards = res.workCards, todaysEffort = []
-        for (var i = 1; i < columns.length; i++) {
-          for (var j = 0; j < columns[i].cards.length; j++) {
+        const columns = res.columns, 
+          workCards = res.workCards
+        let todaysEffort = []
+        for (let i = 1; i < columns.length; i++) {
+          for (let j = 0; j < columns[i].cards.length; j++) {
             if (columns[i].cards[j].number == data.workCard.number) {
               todaysEffort = pairingFuns.updateTodaysEffort(res, columns[i], data.workCard, data.name)
-              var card = columns[i].cards[j]
-              var colName = columns[i].name
+              const card = columns[i].cards[j]
+              const colName = columns[i].name
               card.effort = data.workCard.effort
               if (cardFuns.cardCompleteInColumn(card, colName, res.teamName, res.teams, res.percentageBlocked, res.percentageDeployFail)) {
                 cardFuns.moveCard(columns, workCards, card, i, res.currentDay)
@@ -453,12 +457,12 @@ module.exports = {
     db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
       if (err) throw err
       if (res) {
-        var roles = []
-        for (var i = 0; i < res.roles.length; i++) {
-          var role = res.roles[i]
-          var names = []
-          for (var j = 0; j < res.roles[i].names.length; j++) {
-            var name = res.roles[i].names[j]
+        const roles = []
+        for (let i = 0; i < res.roles.length; i++) {
+          const role = res.roles[i]
+          const names = []
+          for (let j = 0; j < res.roles[i].names.length; j++) {
+            const name = res.roles[i].names[j]
             if (res.roles[i].names[j].id == data.name.id) {
               name.effort = data.effort
             }
@@ -483,7 +487,8 @@ module.exports = {
     db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
       if (err) throw err
       if (res) {
-        var i, pairing = [], player, roles = res.roles
+        let i, player, roles = res.roles
+        const pairing = []
         for (i = 0; i < res.pairing.length; i++) {
           if (res.pairing[i].name.id == data.name.id) {
             player = res.pairing[i]
@@ -494,7 +499,7 @@ module.exports = {
         if (!player) {
           player = {name: data.name, columns: [{column: data.column, days: [data.day]}]}
         } else {
-          var column
+          let column
           for (i = 0; i < player.columns.length; i++) {
             if (player.columns[i].column == data.column) {
               column = player.columns[i]
@@ -503,7 +508,7 @@ module.exports = {
           if (!column) {
             player.columns.push({column: data.column, days: [data.day]})
           } else {
-            var dayDone = false
+            let dayDone = false
             for (i = 0; i < column.days.length; i++) {
               if (column.days[i] == data.day) {
                 dayDone = true
@@ -515,7 +520,7 @@ module.exports = {
             if (column.days.length >= 5) {
               roles = pairingFuns.addSecondarySkill(roles, column.column, data.name)
             }
-            var columns = []
+            const columns = []
             for (i = 0; i < player.columns.length; i++) {
               if (player.columns[i].column == data.column) {
                 columns.push(column)
@@ -545,13 +550,13 @@ module.exports = {
     db.collection('noEstimates').find({gameName: data.gameName}).toArray(function(err, res) {
       if (err) throw err
       if (res.length) {
-        var teams
-        for (var r = 0; r < res.length; r++) {
+        let teams
+        for (let r = 0; r < res.length; r++) {
           // Other team
           if (res[r].teamName == data.teamName) {
             teams = res[r].teams
-            for (i = 0; i < teams.length; i++) {
-              for (j = 0; j < teams[i].otherCards.length; j++) {
+            for (let i = 0; i < teams.length; i++) {
+              for (let j = 0; j < teams[i].otherCards.length; j++) {
                 if (teams[i].otherCards[j].number ==  data.card.number) {
                   teams[i].otherCards[j].dependencyDone = teams[i].otherCards[j].dependencyDone + 1
                 }
@@ -559,15 +564,16 @@ module.exports = {
             }
           }
         }
-        for (var r = 0; r < res.length; r++) {
+        for (let r = 0; r < res.length; r++) {
           if (res[r].teamName == data.card.team) {
             // this team
-            var i, j, columns = res[r].columns, workCards = res[r].workCards
+            let i, j 
+            const columns = res[r].columns, workCards = res[r].workCards
             for (i = 1; i < columns.length; i++) {
               for (j = 0; j < columns[i].cards.length; j++) {
                 if (columns[i].cards[j].number == data.card.number) {
-                  var card = columns[i].cards[j]
-                  var colName = columns[i].name
+                  const card = columns[i].cards[j]
+                  const colName = columns[i].name
                   card.dependencyDone = card.dependencyDone + 1
                   if (cardFuns.cardCompleteInColumn(card, colName, res[r].teamName, res[r].teams, res[r].percentageBlocked, res[r].percentageDeployFail)) {
                     cardFuns.moveCard(columns, workCards, card, i, res[r].currentDay)
@@ -586,7 +592,7 @@ module.exports = {
           }
         }
         data.teams = teams
-        for (var r = 0; r < res.length; r++) {
+        for (let r = 0; r < res.length; r++) {
           data.teamName = res[r].teamName
           io.emit('updateTeams', data)
           db.collection('noEstimates').updateOne({'_id': res[r]._id}, {$set: {teams: teams}}, function(err, ) {
@@ -605,8 +611,8 @@ module.exports = {
     db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
       if (err) throw err
       if (res) {
-        var teams = res.teams
-        for (var i = 0; i < teams.length; i++) {
+        const teams = res.teams
+        for (let i = 0; i < teams.length; i++) {
           if (teams[i].name == data.teamName) {
             teams[i].autoDeploy.doing = true
           }
@@ -628,8 +634,8 @@ module.exports = {
     db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
       if (err) throw err
       if (res) {
-        var teams = res.teams
-        for (var i = 0; i < teams.length; i++) {
+        const teams = res.teams
+        for (let i = 0; i < teams.length; i++) {
           if (teams[i].name == data.teamName) {
             teams[i].autoDeploy.effort = teams[i].autoDeploy.effort + 1
             if (teams[i].autoDeploy.effort == 8) {
@@ -703,14 +709,14 @@ module.exports = {
     db.collection('noEstimates').find({gameName: data.gameName}).toArray(function(err, res) {
       if (err) throw err
       if (res.length) {
-        var teams = res[0].teams
-        for (var i = 0; i < teams.length; i++) {
+        const teams = res[0].teams
+        for (let i = 0; i < teams.length; i++) {
           if (teams[i].name == data.team.name) {
             teams[i] = data.team
           }
         }
         data.teams = teams
-        for (var r = 0; r < res.length; r++) {
+        for (let r = 0; r < res.length; r++) {
           if (typeof(res[r]) != 'undefined') {
             data.teamName = res[r].teamName
             io.emit('updateTeams', data)

@@ -62,7 +62,7 @@
                 <th>Commit<br>Day</th>
                 <th>Delivery<br>Day</th>
                 <th>Delivery<br>Time</th>
-                <th>Total<br><span v-html="currency" /><span>{{ total() }}</span></th>
+                <th>Total<br><span>{{ currency }}{{ total() }}</span></th>
               </tr>
             </thead>
             <tbody>

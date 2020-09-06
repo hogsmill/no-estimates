@@ -55,7 +55,7 @@ export default {
       this.$modal.hide('set-game-name')
     },
     saveGameName: function() {
-      var gameName = document.getElementById('game-name').value
+      const gameName = document.getElementById('game-name').value
       this.$store.dispatch('updateGameName', gameName)
       localStorage.setItem('gameName', gameName)
       if (gameName && this.teamName) {
@@ -64,7 +64,7 @@ export default {
       this.hide()
     },
     restartGame() {
-      var restartGame = confirm('Are you sure you want to re-start this game?')
+      const restartGame = confirm('Are you sure you want to re-start this game?')
       if (restartGame) {
         this.socket.emit('restartGame', {gameName: this.gameName})
       }

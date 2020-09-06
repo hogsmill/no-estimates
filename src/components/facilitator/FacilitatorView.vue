@@ -182,7 +182,7 @@ export default {
       this.showGameState = val
     },
     sendMessage() {
-      var message = document.getElementById('gameMessageText').value
+      const message = document.getElementById('gameMessageText').value
       if (message) {
         this.socket.emit('broadcastMessage', {gameName: this.gameName, message: message})
       }
@@ -192,20 +192,20 @@ export default {
       this.socket.emit('updateTeamActive', {gameName: this.gameName, team: team})
     },
     savePercentageBlocked: function() {
-      var percentageBlocked = document.getElementById('percentageBlocked').value
+      const percentageBlocked = document.getElementById('percentageBlocked').value
       this.socket.emit('percentageBlocked', {gameName: this.gameName, percentageBlocked: percentageBlocked})
     },
     savePercentageDeployFail: function() {
-      var percentageDeployFail = document.getElementById('percentageDeployFail').value
+      const percentageDeployFail = document.getElementById('percentageDeployFail').value
       this.socket.emit('percentageDeployFail', {gameName: this.gameName, percentageDeployFail: percentageDeployFail})
     },
     showTeamState(team) {
       return this.showGameState && team.include
     },
     estimates(team) {
-      var proj = team.projectEstimate ? team.projectEstimate : '-'
-      var mvp = team.mvpEstimate ? team.mvpEstimate : '-'
-      var re = team.reEstimate ? team.reEstimate : '-'
+      const proj = team.projectEstimate ? team.projectEstimate : '-'
+      const mvp = team.mvpEstimate ? team.mvpEstimate : '-'
+      const re = team.reEstimate ? team.reEstimate : '-'
       return proj + ' / ' + mvp + ' / ' + re
     }
   }

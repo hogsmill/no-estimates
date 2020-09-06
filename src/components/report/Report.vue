@@ -160,7 +160,7 @@ export default {
       this.tab = tab
     },
     time(card) {
-      var t
+      let t
       if (card.delivery) {
         t = card.delivery - card.commit
       } else if (card.commit) {
@@ -177,8 +177,8 @@ export default {
         card.deploy
     },
     total() {
-      var total = 0
-      for (var i = 0; i < this.workCards.length; i++) {
+      let total = 0
+      for (let i = 0; i < this.workCards.length; i++) {
         if (this.workCards[i].value) {
           total += this.workCards[i].value
         }
@@ -186,10 +186,10 @@ export default {
       return total
     },
     correlation() {
-      var effort = [], deliveryTime = []
-      for (var i = 0; i < this.workCards.length; i++) {
+      const effort = [], deliveryTime = []
+      for (let i = 0; i < this.workCards.length; i++) {
         if (this.workCards[i].delivery) {
-          var card = this.workCards[i]
+          const card = this.workCards[i]
           effort.push(this.totalEffort(card))
           deliveryTime.push(card.delivery - card.commit)
         }
@@ -197,15 +197,15 @@ export default {
       return effort.length == 0 ? 0 : stats.pCorrelation(effort, deliveryTime).toFixed(2)
     },
     saveTotalProject() {
-      var estimate = document.getElementById('project-estimate').value
+      const estimate = document.getElementById('project-estimate').value
       this.socket.emit('updateProjectEstimate', {gameName: this.gameName, teamName: this.teamName, projectEstimate: estimate})
     },
     saveMVP() {
-      var estimate = document.getElementById('mvp-estimate').value
+      const estimate = document.getElementById('mvp-estimate').value
       this.socket.emit('updateMVPEstimate', {gameName: this.gameName, teamName: this.teamName, mvpEstimate: estimate})
     },
     saveReEstimate() {
-      var estimate = document.getElementById('re-estimate').value
+      const estimate = document.getElementById('re-estimate').value
       this.socket.emit('updateReEstimate', {gameName: this.gameName, teamName: this.teamName, reEstimate: estimate})
     }
   }

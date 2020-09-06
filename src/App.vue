@@ -95,11 +95,11 @@ export default {
     },
   },
   created() {
-    var host = '77.68.122.69'
+    let host = '77.68.122.69'
     if (location.hostname == 'localhost') {
       host = 'localhost'
     }
-    var connStr = 'http://' + host + ':3007'
+    const connStr = 'http://' + host + ':3007'
     console.log('Connecting to: ' + connStr)
     this.socket = io(connStr)
 
@@ -107,16 +107,16 @@ export default {
       this.$store.dispatch('updateHost', true)
     }
 
-    var self = this
+    const self = this
     window.onload = function() {
-      var myEffort = localStorage.getItem('myEffort')
+      let myEffort = localStorage.getItem('myEffort')
       if (myEffort) {
         myEffort = JSON.parse(myEffort)
         self.$store.dispatch('updateMyEffort', myEffort)
       }
     }
 
-    var myName = localStorage.getItem('myName')
+    let myName = localStorage.getItem('myName')
     if (myName) {
       if (!myName.match(/"id":/)) {
         localStorage.removeItem('myName')
@@ -126,17 +126,17 @@ export default {
       }
     }
 
-    var teamName = localStorage.getItem('teamName')
+    const teamName = localStorage.getItem('teamName')
     if (teamName) {
       this.$store.dispatch('updateTeamName', teamName)
     }
 
-    var myRole = localStorage.getItem('myRole')
+    const myRole = localStorage.getItem('myRole')
     if (myRole) {
       this.$store.dispatch('updateMyRole', myRole)
     }
 
-    var gameName = localStorage.getItem('gameName')
+    const gameName = localStorage.getItem('gameName')
     if (gameName) {
       this.$store.dispatch('updateGameName', gameName)
       this.socket.emit('gameState', {gameName: gameName})
@@ -215,7 +215,7 @@ export default {
       localStorage.removeItem('gameName')
     },
     isSetUp() {
-      var setUp = this.myName && this.teamName && this.myRole && this.gameName
+      const setUp = this.myName && this.teamName && this.myRole && this.gameName
       if (setUp && !this.setUp) {
         this.setUp = true
         localStorage.setItem('myName', JSON.stringify(this.myName))

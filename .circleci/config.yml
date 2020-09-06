@@ -103,26 +103,4 @@ workflows:
           group: '1x-chrome on CircleCI'
           start: 'npm run serve'
 
-      - cypress/run:
-          name: '1 machines using Firefox'
-          # job will use workspace with code and dependencies
-          # installed by the "install" job
-          requires:
-            - Linux install
-          # use executor with Chrome installed
-          executor: cypress/browsers-chrome73-ff68
-          # use browser "chrome" for running tests
-          browser: firefox
-          record: false
-          parallel: false
-          parallelism: 1
-          group: '1x-firefox on CircleCI'
-          start: 'npm run serve'
-
-     # - release:
-     #     filters:
-     #       branches:
-     #         only:
-     #           - master
-     #     requires:
-     #       - 3 machines
+     

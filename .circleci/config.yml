@@ -1,7 +1,60 @@
+# testing using CircleCI orb
+# see https://on.cypress.io/circleci-orb
+
+# for non-orb configuration see old commit
+# https://github.com/cypress-io/cypress-example-kitchensink/blob/aabb10cc1bb9dee88e1bf28e0af5e9661427ee7a/circle.yml
+
+# to use CircleCI orbs need to use version >= 2.1
 version: 2.1
 orbs:
-  node: circleci/node@3.0.0
+  # use Cypress orb from CircleCI registry
+  cypress: cypress-io/cypress@1.16.1
+  # for testing on Windows
+  # https://circleci.com/docs/2.0/hello-world-windows/
+  win: circleci/windows@1
+
+jobs:
+  win-test:
+    working_directory: ~/app
+    executor:
+      name: win/vs2019
+      shell: bash.exe
+    steps:
+      - checkout
+
+      - restore_cache:
+          key: dependencies-{{ arch }}-{{ .Branch }}-{{ checksum "package.json" }}
+
+      - run: npm ci
+      - run: npm run cy:verify
+
+      - save_cache:
+          key: dependencies-{{ arch }}-{{ .Branch }}-{{ checksum "package.json" }}
+          paths:
+            # could not use environment variables for some reason
+            - C:\Users\circleci\AppData\Local\Cypress\Cache
+            - C:\Users\circleci\AppData\Roaming\npm-cache
+
+      # if you want to test execa's behavior on Windows
+      # - run: node ./scripts/test-execa
+
+      #- run:
+      #    name: 'Start server'
+      #  command: npm run serve
+      #    background: true
+
+      - run:
+          name: 'Run Cypress tests'
+          command: npm run test:e2e:ci --env circle=true
+          no_output_timeout: '1m'
+      - store_test_results:
+          path: tests\results
+      - store_artifacts:
+          path: tests\e2e\screenshots
+      - store_artifacts:
+          path: tests\e2e\videos
+
 workflows:
-  node-tests:
+  win-build:
     jobs:
-      - node/test
+      - win-test

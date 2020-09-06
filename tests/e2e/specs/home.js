@@ -5,4 +5,9 @@ describe('First load', () => {
     cy.visit('/')
     cy.contains('h1', 'No Estimates')
   })
+  
+  it('Forcing an error', () => {
+    cy.visit('/')
+    cy.contains('h1', 'This shoudl error')
+  })
 })

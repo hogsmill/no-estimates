@@ -17,6 +17,11 @@ npm run serve
 ```
 The URL to navigate to will be shown when you do this.
 
+### Run tests
+```
+npm run test:e2e
+```
+
 ### Compiles and minifies for production
 
 ```

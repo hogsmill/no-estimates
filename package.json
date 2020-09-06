@@ -6,6 +6,8 @@
     "serve": "vue-cli-service serve --port 8088",
     "build": "vue-cli-service build",
     "test:e2e": "vue-cli-service test:e2e",
+    "test:e2e:ci": "vue-cli-service test:e2e --headless",
+    "test:e2e:record": "vue-cli-service test:e2e --headless --record",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
@@ -21,6 +23,7 @@
     "vuex": "^3.5.1"
   },
   "devDependencies": {
+    "@vue/babel-preset-app": "^4.5.4",
     "@vue/cli-plugin-e2e-cypress": "^4.5.4",
     "@vue/cli-plugin-eslint": "^4.5.4",
     "@vue/cli-service": "~4.3.0",

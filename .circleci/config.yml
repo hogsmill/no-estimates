@@ -69,9 +69,8 @@ workflows:
             # to check if we are caching previous binary versions
             - run: npx cypress cache path
             - run: npx cypress cache list
-            - run: npx cypress info
 
-      # runs on 3 machines, load balances tests
+      # runs on 1 machines, load balances tests
       # and records on Cypress Dashboard
       - cypress/run:
           # name this job because we are running "cypress/run" several times

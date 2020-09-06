@@ -88,7 +88,7 @@ export default {
       this.$modal.hide('work-card-popup')
     },
     addEffort(card) {
-      var message = ''
+      let message = ''
       if (this.myEffort.available == 0) {
         message = 'Can\'t assign - all effort assigned'
       } else if (card.dependencyDone == card.teamDependency) {
@@ -96,7 +96,7 @@ export default {
       }
       if (message) {
         this.show()
-        var self = this
+        const self = this
         setTimeout(function() { self.message = message }, 100)
       } else {
         this.socket.emit('addEffortToOthersCard', {gameName: this.gameName, teamName: this.teamName, card: card, myName: this.myName})

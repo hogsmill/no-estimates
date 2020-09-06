@@ -68,7 +68,7 @@ export default {
       this.$modal.hide('set-team-name')
     },
     saveTeamName: function() {
-      var teamName = document.getElementById('team-name-select').value
+      const teamName = document.getElementById('team-name-select').value
       this.$store.dispatch('updateTeamName', teamName)
       localStorage.setItem('teamName', teamName)
       if (!this.teamName) {

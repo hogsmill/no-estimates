@@ -1,0 +1,10 @@
+{
+
+  "pluginsFile": "tests/e2e/plugins/index.js",
+  "projectId": "no-estimates",
+  "reporter": "junit",
+  "reporterOptions": {
+    "mochaFile": "tests/results/no-estimates.xml",
+    "toConsole": true
+  }
+}

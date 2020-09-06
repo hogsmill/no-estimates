@@ -47,6 +47,8 @@ jobs:
           name: 'Run Cypress tests'
           command: npm run test:e2e:ci --env circle=true
           no_output_timeout: '1m'
+      - store_test_results:
+          path: tests\results
       - store_artifacts:
           path: tests\e2e\screenshots
       - store_artifacts:

@@ -48,9 +48,9 @@ jobs:
           command: npm run test:e2e:ci --env circle=true
           no_output_timeout: '1m'
       - store_artifacts:
-          path: tests\screenshots
+          path: tests\e2e\screenshots
       - store_artifacts:
-          path: tests\videos
+          path: tests\e2e\videos
 
 workflows:
   win-build:

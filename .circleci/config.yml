@@ -38,68 +38,21 @@ jobs:
       # if you want to test execa's behavior on Windows
       # - run: node ./scripts/test-execa
 
-      - run:
-          name: 'Start server'
-          command: npm run serve
-          background: true
+      #- run:
+      #    name: 'Start server'
+      #  command: npm run serve
+      #    background: true
 
       - run:
           name: 'Run Cypress tests'
           command: npm run test:e2e:ci --env circle=true
           no_output_timeout: '1m'
       - store_artifacts:
-          path: tests\e2e\screenshots
+          path: tests\screenshots
       - store_artifacts:
-          path: tests\e2e\videos
+          path: tests\videos
 
 workflows:
   win-build:
     jobs:
       - win-test
-
-  linux-build:
-    jobs:
-      # checks out code and installs dependencies once
-      - cypress/install:
-          name: 'Linux install'
-          # and builds the app using this command
-          #build: 'npm run build'
-          #post-steps:
-            # show Cypress cache folder and binary versions
-            # to check if we are caching previous binary versions
-          #  - run: npx cypress cache path
-          #  - run: npx cypress cache list
-
-      # runs on 1 machines, load balances tests
-      # and records on Cypress Dashboard
-      - cypress/run:
-          # name this job because we are running "cypress/run" several times
-          # with different parameters
-          name: '1 machine'
-          # job will use workspace with code and dependencies
-          # installed by the "install" job
-          requires:
-            - Linux install
-          record: false # record results on Cypress dashboard
-          parallel: false # load balance all tests
-          parallelism: 1 # across 3 machines
-          group: '1x-electron on CircleCI' # name this group
-         
-      # run on 1 machines using Chrome browser
-      - cypress/run:
-          name: '1 machines using Chrome'
-          # job will use workspace with code and dependencies
-          # installed by the "install" job
-          requires:
-            - Linux install
-          # use executor with Chrome installed
-          executor: cypress/browsers-chrome76
-          # use browser "chrome" for running tests
-          browser: chrome
-          record: false
-          parallel: false
-          parallelism: 1
-          group: '1x-chrome on CircleCI'
-         
-
-     

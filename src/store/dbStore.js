@@ -1,6 +1,4 @@
 
-const util = require('util')
-
 var roleFuns = require('./lib/roles.js')
 var cardFuns = require('./lib/cards.js')
 var pairingFuns = require('./lib/pairing.js')
@@ -50,16 +48,16 @@ function _loadGame(err, client, db, io, data, debugOn) {
       if (debugOn) { console.log('Loading game \'' + data.gameName + '\', team \'' + data.teamName + '\'') }
       io.emit('loadGame', res)
     } else {
-      var i, games = [], gameTeams = [], game = createNewGame(data)
-      for (i = 0; i < initialTeams.length; i++) {
+      var games = [], gameTeams = [], game = createNewGame(data)
+      for (let i = 0; i < initialTeams.length; i++) {
         game.teamName = initialTeams[i].name
         gameTeams.push(game.teamName)
         games.push(JSON.parse(JSON.stringify(game)))
       }
       if (debugOn) { console.log('Created new game \'' + data.gameName + '\', teams \'' + gameTeams.join(', ') + '\'') }
-      db.collection('noEstimates').insertMany(games, function(err, res) {
+      db.collection('noEstimates').insertMany(games, function(err, ) {
         if (err) throw err
-        for (i = 0; i < games.length; i++) {
+        for (let i = 0; i < games.length; i++) {
           io.emit('loadGame', games[i])
         }
         _updateRole(err, client, db, io, data, debugOn)
@@ -89,7 +87,7 @@ function _updateRole(err, client, db, io, data, debugOn) {
           roles[i].names.push(data.name)
         }
       }
-      db.collection('noEstimates').updateOne({'_id': res._id}, {$set: {roles: roles}}, function(err, res) {
+      db.collection('noEstimates').updateOne({'_id': res._id}, {$set: {roles: roles}}, function(err, ) {
         if (err) throw err
         data.roles = roles
         io.emit('updateRoles', data)
@@ -123,7 +121,7 @@ module.exports = {
           data.teamName = r.teamName
           data.roles = roles
           io.emit('updateRoles', data)
-          db.collection('noEstimates').updateOne({'_id': r._id}, {$set: {roles: data.roles}}, function(err, rec) {
+          db.collection('noEstimates').updateOne({'_id': r._id}, {$set: {roles: data.roles}}, function(err, ) {
             if (err) throw err
           })
         })
@@ -164,7 +162,7 @@ module.exports = {
             data.roles = res[r].roles
             data.teamName = res[r].teamName
             io.emit('updateRoles', data)
-            db.collection('noEstimates').updateOne({'_id': res[r]._id}, {$set: {roles: data.roles}}, function(err, rec) {
+            db.collection('noEstimates').updateOne({'_id': res[r]._id}, {$set: {roles: data.roles}}, function(err, ) {
               if (err) throw err
             })
           }
@@ -224,7 +222,7 @@ module.exports = {
 
     if (debugOn) { console.log('restartGame', data) }
 
-    db.collection('noEstimates').deleteMany({gameName: data.gameName}, function(err, res) {
+    db.collection('noEstimates').deleteMany({gameName: data.gameName}, function(err, ) {
       _loadGame(err, client, db, io, data, debugOn)
       io.emit('restartGame', data)
     })
@@ -276,7 +274,7 @@ module.exports = {
         data.teams = teams
         data.columns = columns
         data.workCards = workCards
-        db.collection('noEstimates').updateOne({'_id': res._id}, {$set: {currentDay: currentDay, teams: teams, columns: columns, workCards: workCards, roles: roles}}, function(err, res) {
+        db.collection('noEstimates').updateOne({'_id': res._id}, {$set: {currentDay: currentDay, teams: teams, columns: columns, workCards: workCards, roles: roles}}, function() {
           io.emit('updateCurrentDay', data)
           io.emit('updateRoles', data)
           io.emit('updateTeams', data)
@@ -295,7 +293,7 @@ module.exports = {
     db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
       if (err) throw err
       if (res) {
-        db.collection('noEstimates').updateOne({'_id': res._id}, {$set: {currentWorkCard: data.currentWorkCard}}, function(err, res) {
+        db.collection('noEstimates').updateOne({'_id': res._id}, {$set: {currentWorkCard: data.currentWorkCard}}, function(err, ) {
           if (err) throw err
           io.emit('updateCurrentWorkCard', data)
         })
@@ -311,7 +309,7 @@ module.exports = {
     db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
       if (err) throw err
       if (res) {
-        db.collection('noEstimates').updateOne({'_id': res._id}, {$set: {currentEventCard: data.currentEventCard}}, function(err, res) {
+        db.collection('noEstimates').updateOne({'_id': res._id}, {$set: {currentEventCard: data.currentEventCard}}, function(err, ) {
           if (err) throw err
           io.emit('updateCurrentEventCard', data)
         })
@@ -329,7 +327,7 @@ module.exports = {
       if (res) {
         var workCards = res.workCards
         workCards[data.workCard].commit = data.commit
-        db.collection('noEstimates').updateOne({'_id': res._id}, {$set: {workCards: workCards}}, function(err, res) {
+        db.collection('noEstimates').updateOne({'_id': res._id}, {$set: {workCards: workCards}}, function(err, ) {
           if (err) throw err
           data.workCards = workCards
           io.emit('updateCommit', data)
@@ -358,7 +356,7 @@ module.exports = {
         }
         data.columns = columns
         data.workCards = workCards
-        db.collection('noEstimates').updateOne({'_id': res._id}, {$set: {columns: columns, workCards: workCards}}, function(err, res) {
+        db.collection('noEstimates').updateOne({'_id': res._id}, {$set: {columns: columns, workCards: workCards}}, function(err, ) {
           if (err) throw err
           io.emit('updateColumns', data)
           io.emit('updateWorkCards', data)
@@ -407,7 +405,7 @@ module.exports = {
           data.columns = columns
           io.emit('updateTeams', data)
           io.emit('updateColumns', data)
-          db.collection('noEstimates').updateOne({'_id': res[r]._id}, {$set: {teams: teams, columns: columns}}, function(err, res) {
+          db.collection('noEstimates').updateOne({'_id': res[r]._id}, {$set: {teams: teams, columns: columns}}, function(err, ) {
             if (err) throw err
           })
         }
@@ -439,7 +437,7 @@ module.exports = {
         }
         data.columns = columns
         data.workCards = workCards
-        db.collection('noEstimates').updateOne({'_id': res._id}, {$set: {columns: columns, workCards: workCards, daysEffort: todaysEffort}}, function(err, res) {
+        db.collection('noEstimates').updateOne({'_id': res._id}, {$set: {columns: columns, workCards: workCards, daysEffort: todaysEffort}}, function() {
           io.emit('updateColumns', data)
           io.emit('updateWorkCards', data)
         })
@@ -471,7 +469,7 @@ module.exports = {
         }
         data.roles = roles
         io.emit('updateRoles', data)
-        db.collection('noEstimates').updateOne({'_id': res._id}, {$set: {roles: roles}}, function(err, res) {
+        db.collection('noEstimates').updateOne({'_id': res._id}, {$set: {roles: roles}}, function(err, ) {
           if (err) throw err
         })
       }
@@ -533,7 +531,7 @@ module.exports = {
         data.roles = roles
         io.emit('updatePairing', data)
         io.emit('updateRoles', data)
-        db.collection('noEstimates').updateOne({'_id': res._id}, {$set: {pairing: pairing, roles: roles}}, function(err, res) {
+        db.collection('noEstimates').updateOne({'_id': res._id}, {$set: {pairing: pairing, roles: roles}}, function(err, ) {
           if (err) throw err
         })
       }
@@ -582,7 +580,7 @@ module.exports = {
             data.workCards = workCards
             io.emit('updateColumns', data)
             io.emit('updateWorkCards', data)
-            db.collection('noEstimates').updateOne({'_id': res[r]._id}, {$set: {columns: columns, workCards: workCards}}, function(err, res) {
+            db.collection('noEstimates').updateOne({'_id': res[r]._id}, {$set: {columns: columns, workCards: workCards}}, function(err, ) {
               if (err) throw err
             })
           }
@@ -591,7 +589,7 @@ module.exports = {
         for (var r = 0; r < res.length; r++) {
           data.teamName = res[r].teamName
           io.emit('updateTeams', data)
-          db.collection('noEstimates').updateOne({'_id': res[r]._id}, {$set: {teams: teams}}, function(err, res) {
+          db.collection('noEstimates').updateOne({'_id': res[r]._id}, {$set: {teams: teams}}, function(err, ) {
             if (err) throw err
           })
         }
@@ -614,7 +612,7 @@ module.exports = {
           }
         }
         data.teams = teams
-        db.collection('noEstimates').updateOne({'_id': res._id}, {$set: {teams: teams}}, function(err, res) {
+        db.collection('noEstimates').updateOne({'_id': res._id}, {$set: {teams: teams}}, function(err, ) {
           if (err) throw err
           io.emit('updateTeams', data)
         })
@@ -641,7 +639,7 @@ module.exports = {
           }
         }
         data.teams = teams
-        db.collection('noEstimates').updateOne({'_id': res._id}, {$set: {teams: teams}}, function(err, res) {
+        db.collection('noEstimates').updateOne({'_id': res._id}, {$set: {teams: teams}}, function(err, ) {
           if (err) throw err
           io.emit('updateTeams', data)
         })
@@ -657,7 +655,7 @@ module.exports = {
     db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
       if (err) throw err
       if (res) {
-        db.collection('noEstimates').updateOne({'_id': res._id}, {$set: {projectEstimate: data.projectEstimate}}, function(err, res) {
+        db.collection('noEstimates').updateOne({'_id': res._id}, {$set: {projectEstimate: data.projectEstimate}}, function(err, ) {
           if (err) throw err
           io.emit('updateProjectEstimate', data)
         })
@@ -673,7 +671,7 @@ module.exports = {
     db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
       if (err) throw err
       if (res) {
-        db.collection('noEstimates').updateOne({'_id': res._id}, {$set: {mvpEstimate: data.mvpEstimate}}, function(err, res) {
+        db.collection('noEstimates').updateOne({'_id': res._id}, {$set: {mvpEstimate: data.mvpEstimate}}, function(err, ) {
           if (err) throw err
           io.emit('updateMVPEstimate', data)
         })
@@ -689,7 +687,7 @@ module.exports = {
     db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
       if (err) throw err
       if (res) {
-        db.collection('noEstimates').updateOne({'_id': res._id}, {$set: {reEstimate: data.reEstimate}}, function(err, res) {
+        db.collection('noEstimates').updateOne({'_id': res._id}, {$set: {reEstimate: data.reEstimate}}, function(err, ) {
           if (err) throw err
           io.emit('updateReEstimate', data)
         })
@@ -716,7 +714,7 @@ module.exports = {
           if (typeof(res[r]) != 'undefined') {
             data.teamName = res[r].teamName
             io.emit('updateTeams', data)
-            db.collection('noEstimates').updateOne({'_id': res[r]._id}, {$set: {teams: data.teams}}, function(err, res) {
+            db.collection('noEstimates').updateOne({'_id': res[r]._id}, {$set: {teams: data.teams}}, function(err, ) {
               if (err) throw err
             })
           }

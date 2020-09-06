@@ -1,7 +1,7 @@
 
 module.exports = {
 
-  removeNameFromRoles: function(name, roles, team) {
+  removeNameFromRoles: function(name, roles, ) {
     var i, j, newRoles = []
     for (i = 0; i < roles.length; i++) {
       var names = []
@@ -23,8 +23,8 @@ module.exports = {
     return newRoles
   },
 
-  addNameToRoles: function(name, role, roles, team) {
-    for (i = 0; i < roles.length; i++) {
+  addNameToRoles: function(name, role, roles, ) {
+    for (let i = 0; i < roles.length; i++) {
       if (roles[i].role == role) {
         roles[i].names.push(name)
       }

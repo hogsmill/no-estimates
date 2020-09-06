@@ -6,6 +6,10 @@ module.exports = {
     ],
     rules: {
       // override/add rules settings here, such as:
+      'no-redeclare': 'warn',
+      'no-undef': 'error',
+      'no-unused-vars': 'error',
+      
       'vue/require-prop-types': 'off',
       'quotes': ['error', 'single'],
       'semi': ['error', 'never'],
@@ -21,5 +25,10 @@ module.exports = {
           'allowFirstLine': true
         }
       }]
+    },
+    'globals': {
+        'require': true,
+        'module': true,
+        'process': true
     }
   }

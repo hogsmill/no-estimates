@@ -79,7 +79,7 @@ export default {
       return this.currentDay == 1 || this.myTeam.recharting
     },
     saveMyRole: function() {
-      var myRole = document.getElementById('role-select').value
+      const myRole = document.getElementById('role-select').value
       this.$store.dispatch('updateMyRole', myRole)
       localStorage.setItem('myRole', myRole)
       if (myRole && this.gameName && this.teamName) {

@@ -1,8 +1,8 @@
 
-var Stats = {
+const Stats = {
 
   pCorrelation: function(x, y) {
-    var sumX = 0, sumY = 0, sumXY = 0, sumX2 = 0, sumY2 = 0
+    let sumX = 0, sumY = 0, sumXY = 0, sumX2 = 0, sumY2 = 0
     const minLength = x.length = y.length = Math.min(x.length, y.length),
     reduce = (xi, idx) => {
       const yi = y[idx]

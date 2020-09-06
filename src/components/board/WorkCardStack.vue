@@ -50,29 +50,29 @@ export default {
   methods: {
     pullInCard() {
       if (this.currentWorkCard !== false) {
-        var currentWorkCard = this.currentWorkCard
-        var workCards = this.workCards
-        var columns = this.columns
+        const currentWorkCard = this.currentWorkCard
+        const workCards = this.workCards
+        const columns = this.columns
         workCards[currentWorkCard].commit = this.currentDay
         columns[1].cards.push(workCards[currentWorkCard])
         this.socket.emit('updateCommit', {gameName: this.gameName, teamName: this.teamName, workCard: currentWorkCard, commit: this.currentDay})
         this.socket.emit('updateColumns', {gameName: this.gameName, teamName: this.teamName, columns: columns})
         this.socket.emit('updateCurrentWorkCard', {gameName: this.gameName, teamName: this.teamName, currentWorkCard: currentWorkCard + 1})
         if (workCards[currentWorkCard].teamDependency > 0) {
-          var dependentOn = this.selectDependentTeam()
+          const dependentOn = this.selectDependentTeam()
           this.socket.emit('updateDependentTeam', {gameName: this.gameName, teamName: this.teamName, workCard: workCards[currentWorkCard], dependentOn: dependentOn})
         }
       }
     },
     selectDependentTeam() {
       // Make sure we don't pick our own team...
-      var teams = []
-      for (var i = 0; i < this.teams.length; i++) {
+      const teams = []
+      for (let i = 0; i < this.teams.length; i++) {
         if (this.teams[i].include && this.teams[i].name != this.teamName) {
           teams.push(i)
         }
       }
-      var index = teams[Math.floor(Math.random() * teams.length)]
+      const index = teams[Math.floor(Math.random() * teams.length)]
       return this.teams[index]
     }
   }

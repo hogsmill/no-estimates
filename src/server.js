@@ -3,20 +3,20 @@ const http = require('http').createServer(app)
 const io = require('socket.io')(http)
 const os = require('os')
 
-var dbStore = require('./store/dbStore.js')
+const dbStore = require('./store/dbStore.js')
 
-var MongoClient = require('mongodb').MongoClient
+const MongoClient = require('mongodb').MongoClient
 
-var prod = os.hostname() == 'agilesimulations' ? true : false
-var url = prod ?  'mongodb://127.0.0.1:27017/' : 'mongodb://localhost:27017/'
+const prod = os.hostname() == 'agilesimulations' ? true : false
+const url = prod ?  'mongodb://127.0.0.1:27017/' : 'mongodb://localhost:27017/'
 
-var connectDebugOff = prod
-var debugOn = !prod
+const connectDebugOff = prod
+const debugOn = !prod
 
-var connections = {}
-var maxConnections = 200
+const connections = {}
+const maxConnections = 200
 
-function emit(event, data, persist) {
+function emit(event, data) {
   if (debugOn) {
     console.log(event, data)
   }
@@ -26,7 +26,7 @@ function emit(event, data, persist) {
 function doDb(fun, data) {
   MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
     if (err) throw err
-    var db = client.db('db')
+    const db = client.db('db')
 
     switch(fun) {
       case 'loadGame':
@@ -115,7 +115,7 @@ function doDb(fun, data) {
 }
 
 io.on('connection', (socket) => {
-  var connection = socket.handshake.headers.host
+  const connection = socket.handshake.headers.host
   connections[connection] = connections[connection] ? connections[connection] + 1 : 1
   if (Object.keys(connections).length > maxConnections || connections[connection] > maxConnections) {
     console.log(`Too many connections. Socket ${socket.id} closed`)
@@ -126,7 +126,7 @@ io.on('connection', (socket) => {
   }
 
   socket.on('disconnect', () => {
-    var connection = socket.handshake.headers.host
+    const connection = socket.handshake.headers.host
     connections[connection] = connections[connection] - 1
     connectDebugOff || console.log(`User with socket id ${socket.id} has disconnected.`)
     emit('updateConnections', {connections: connections, maxConnections: maxConnections})
@@ -199,7 +199,7 @@ io.on('connection', (socket) => {
 
 })
 
-var port = process.argv[2] || 3007
+const port = process.argv[2] || 3007
 
 http.listen(port, () => {
   console.log('Listening on *:' + port)

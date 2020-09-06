@@ -69,9 +69,9 @@ export const store = new Vuex.Store({
       return state.myRole
     },
     getMyOtherRoles: (state) => {
-      var roles = []
-      for (var i = 0; i < state.roles.length; i++) {
-        for (var j = 0; j < state.roles[i].otherNames.length; j++) {
+      const roles = []
+      for (let i = 0; i < state.roles.length; i++) {
+        for (let j = 0; j < state.roles[i].otherNames.length; j++) {
           if (state.myName.id == state.roles[i].otherNames[j].id) {
             roles.push(state.roles[i].role)
           }
@@ -92,8 +92,8 @@ export const store = new Vuex.Store({
       return state.teams
     },
     getActiveTeams: (state) => {
-      var teams = []
-      for (var i = 0; i < state.teams.length; i++) {
+      const teams = []
+      for (let i = 0; i < state.teams.length; i++) {
         if (state.teams[i].include) {
           teams.push(state.teams[i])
         }
@@ -225,7 +225,7 @@ export const store = new Vuex.Store({
       state.currentEventCard = payload.currentEventCard
     },
     updateCurrentDay: (state, payload) => {
-      var capacity = 4
+      let capacity = 4
       if (payload.testCapacity && state.myEffort.role == 'Tester') {
         capacity = 2
       }

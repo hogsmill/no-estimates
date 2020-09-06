@@ -65,7 +65,7 @@ export default {
   },
   methods: {
     getClass(n) {
-    var className = ''
+    let className = ''
       if (n > this.myEffort.available) {
         className = 'used'
       } else if (this.myEffort.role) {
@@ -82,12 +82,12 @@ export default {
       this.$modal.hide('set-my-name')
     },
     saveMyName: function() {
-      var oldName = this.myName
-      var newName = document.getElementById('my-name').value
-      var captain = document.getElementById('captain').checked
-      var myNameData
+      const oldName = this.myName
+      const newName = document.getElementById('my-name').value
+      const captain = document.getElementById('captain').checked
+      let myNameData
       if (!oldName.id) {
-        var uuid = uuidv4()
+        const uuid = uuidv4()
         myNameData = {id: uuid, name: newName, captain: captain}
         this.$store.dispatch('setMyName', myNameData)
       } else {

@@ -11,12 +11,12 @@ function teamDetails(team, teams) {
 }
 
 function columnDetails(res) {
-  var cols = {}
-  for (var i = 1; i < res.columns.length; i++) {
+  const cols = {}
+  for (let i = 1; i < res.columns.length; i++) {
     cols[res.columns[i].name] = []
-    for (var j = 0; j < res.columns[i].cards.length; j++) {
-      var card = res.columns[i].cards[j]
-      var dependentOn = false
+    for (let j = 0; j < res.columns[i].cards.length; j++) {
+      const card = res.columns[i].cards[j]
+      let dependentOn = false
       if (card.dependentOn) {
         dependentOn = {
           team: card.dependentOn.name,
@@ -39,9 +39,9 @@ function columnDetails(res) {
 }
 
 function memberDetails(res) {
-  var members = []
-  for (var i = 0; i < res.roles.length; i++) {
-    for (var j = 0; j < res.roles[i].names.length; j++) {
+  const members = []
+  for (let i = 0; i < res.roles.length; i++) {
+    for (let j = 0; j < res.roles[i].names.length; j++) {
       members.push({
         name: res.roles[i].names[j],
         role: res.roles[i].role
@@ -52,9 +52,9 @@ function memberDetails(res) {
 }
 
 function teamState(res) {
-  var team = teamDetails(res.teamName, res.teams)
-  var columns = columnDetails(res)
-  var members = memberDetails(res)
+  const team = teamDetails(res.teamName, res.teams)
+  const columns = columnDetails(res)
+  const members = memberDetails(res)
   return {
     name: res.teamName,
     include: team.include,
@@ -79,8 +79,8 @@ module.exports = {
     db.collection('noEstimates').find({gameName: data.gameName}).toArray(function(err, res) {
       if (err) throw err
       if (res.length) {
-        var teams = []
-        for (var r = 0; r < res.length; r++) {
+        const teams = []
+        for (let r = 0; r < res.length; r++) {
           teams.push(teamState(res[r]))
         }
         data.gameState = teams

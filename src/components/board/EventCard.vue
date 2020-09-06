@@ -78,9 +78,9 @@ export default {
     },
     done(data) {
       this.hide()
-      var updateData = {gameName: this.gameName, teamName: this.teamName, currentDay: this.currentDay + 1}
+      const updateData = {gameName: this.gameName, teamName: this.teamName, currentDay: this.currentDay + 1}
       if (data) {
-        for (var key in data) {
+        for (const key in data) {
           updateData[key] = data[key]
         }
       }
@@ -93,7 +93,7 @@ export default {
       this.socket.emit('updateCurrentDay', updateData)
     },
     doFunction() {
-      var data
+      let data
       switch(this.currentEventCard.function) {
         case 'Add 1 Point To Everyones Capacity':
           data = {capacity: 5}

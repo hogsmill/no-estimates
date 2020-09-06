@@ -90,7 +90,7 @@ export default {
       return 1 // Object.keys(this.positions).length + 1
     },
     setDefault() {
-      var elem = document.getElementsByClassName('vm--modal')[0].getBoundingClientRect()
+      const elem = document.getElementsByClassName('vm--modal')[0].getBoundingClientRect()
       this.default = {
         top: elem.top,
         left: elem.left,
@@ -113,8 +113,8 @@ export default {
         this.setDefault()
       }
       this.step = this.step + 1
-      var elem = document.getElementsByClassName('vm--modal')[0]
-      var target, positions = {}
+      const elem = document.getElementsByClassName('vm--modal')[0]
+      let target, positions = {}
       if (this.positions[this.step].target) {
         target = document.getElementById(this.positions[this.step].target)
         target = target.getBoundingClientRect()

@@ -150,8 +150,8 @@ export default {
       return this.currentDay - this.workCard.commit
     },
     canAssign(column) {
-      var concurrent = false
-      for (var i= 0; i < this.teams.length; i++) {
+      let concurrent = false
+      for (let i= 0; i < this.teams.length; i++) {
         if (this.teamName == this.teams[i].name && this.teams[i].concurrentDevAndTest) {
           concurrent = true
         }
@@ -160,12 +160,12 @@ export default {
       return this.column == column || concurrent
     },
     iHaveRole(column) {
-      var haveRole = false
+      let haveRole = false
       if (column == stringFuns.roleToColumn(this.myRole)) {
         haveRole = true
       } else {
-        var roles = this.myOtherRoles
-        for (var i = 0; i < roles.length; i++) {
+        const roles = this.myOtherRoles
+        for (let i = 0; i < roles.length; i++) {
           if (column == stringFuns.roleToColumn(roles[i])) {
             haveRole = true
           }
@@ -177,7 +177,7 @@ export default {
       localStorage.setItem('myEffort', JSON.stringify(this.myEffort))
     },
     addEffort(column) {
-      var message = ''
+      let message = ''
       if (this.workCard.blocked) {
         message = 'Can\'t assign - card is blocked'
       } else if (this.canAssign(column)) {
@@ -208,7 +208,7 @@ export default {
       }
       if (message) {
         this.show()
-        var self = this
+        const self = this
         setTimeout(function() { self.message = message }, 100)
       } else {
         this.socket.emit('updatePersonEffort', {gameName: this.gameName, teamName: this.teamName, workCard: this.workCard, name: this.myName, column: column})

@@ -11,14 +11,14 @@ function cardValue(workCards, card) {
   } else {
     card.value = -100 * card.delivery
   }
-  let workCard = workCards.find(function(workCard) { return workCard.number == card.number })
+  const workCard = workCards.find(function(workCard) { return workCard.number == card.number })
   workCard.delivery = card.delivery
   workCard.value = card.value
 }
 
 function blockOrFailCard(card, colName, teamName, teams, percentageBlocked, percentageDeployFail) {
-  var team = teams.find(function(t) { return t.name == teamName })
-  var rand = Math.random()
+  const team = teams.find(function(t) { return t.name == teamName })
+  const rand = Math.random()
   card.blocked = false
   card.failed = false
   if (colName != 'deploy' && colName != 'done' && rand < percentageBlocked) {
@@ -35,7 +35,7 @@ module.exports = {
 
   cardCompleteInColumn: function(card, colName, team, teams, percentageBlocked, percentageDeployFail) {
     blockOrFailCard(card, colName, team, teams, percentageBlocked, percentageDeployFail)
-    var dependentDone = true
+    let dependentDone = true
     if (colName == 'deploy') {
       dependentDone = card.teamDependency == 0 || card.teamDependency == card.dependencyDone
     }
@@ -44,9 +44,10 @@ module.exports = {
   },
 
   moveCard: function(columns, workCards, card, n, currentDay) {
-    var fromCol = columns[n]
-    var toCol = columns[n + 1]
-    var i, cards = []
+    const fromCol = columns[n]
+    const toCol = columns[n + 1]
+    let i 
+    const cards = []
     for (i = 0; i < fromCol.cards.length; i++) {
       if (fromCol.cards[i].number != card.number) {
         cards.push(fromCol.cards[i])

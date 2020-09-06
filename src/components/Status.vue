@@ -29,7 +29,7 @@ export default {
     const self = this
     this.socket.on('updatePersonEffort', (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
-        var column = stringFuns.properCase(data.column)
+        const column = stringFuns.properCase(data.column)
         self.setStatus(data.name.name + ' has added effort to card #' + data.workCard.number + ' in ' + column, false)
       }
     })

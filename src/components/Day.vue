@@ -56,11 +56,11 @@ export default {
       }
     },
     days() {
-      var days = []
-      var range = 15
-      var startDay = Math.max(1, this.currentDay - range)
-      var endDay = Math.max(30, this.currentDay + range)
-      for (var i = startDay; i <= endDay; i++) {
+      const days = []
+      const range = 15
+      const startDay = Math.max(1, this.currentDay - range)
+      const endDay = Math.max(30, this.currentDay + range)
+      for (let i = startDay; i <= endDay; i++) {
         days.push(i)
       }
       return days

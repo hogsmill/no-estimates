@@ -5,4 +5,5 @@ describe('First load', () => {
     cy.visit('/')
     cy.contains('h1', 'No Estimates')
   })
+  
 })

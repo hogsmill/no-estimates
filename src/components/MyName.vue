@@ -4,7 +4,7 @@
       <button class="btn btn-sm btn-secondary smaller-font" v-if="!myName.id" @click="show">
         Set My Name
       </button>
-      <span v-if="myName.id" @click="show" class="mr-2 mt-2 pointer p-2 bg-light">My Name is: {{ myName.name }} <Captain :captain="myName.captain" /></span>
+      <span v-if="myName.id" @click="show" class="mr-2 mt-2 pointer p-2 bg-light">My Name is: {{ myName.name }} <Captain /></span>
       <div class="effort-div" v-if="myName.id">
         <div v-for="n in myEffort.available" :key="n" class="effort rounded-circle"
              :class="getClass(n)"
@@ -26,11 +26,11 @@
       <div class="mt-4">
         <h4>Enter Your Name</h4>
         <div class="set-my-name">
-          <input type="text" id="my-name" class="form-control">
+          <input type="text" id="my-name" class="form-control" :value="myName.name">
           <button class="btn btn-sm btn-secondary smaller-font" @click="saveMyName">
             Save
           </button>
-          <div>I am the team Captain <input type="checkbox" id="captain"></div>
+          <div>I am the team Captain <input type="checkbox" id="captain" :checked="myName.captain"></div>
         </div>
       </div>
     </modal>
@@ -76,6 +76,7 @@ export default {
       return className
     },
     show () {
+      console.log(this.myName)
       this.$modal.show('set-my-name')
     },
     hide () {
@@ -92,10 +93,10 @@ export default {
         this.$store.dispatch('setMyName', myNameData)
       } else {
         myNameData = {id: this.myName.id, name: newName, captain: captain}
-        this.$store.dispatch('changeName', {name: newName})
+        this.$store.dispatch('changeName', {name: newName, captain: captain})
         localStorage.setItem('myName', JSON.stringify(myNameData))
         if (this.gameName) {
-          this.socket.emit('changeName', {gameName: this.gameName, name: oldName, newName: newName})
+          this.socket.emit('changeName', {gameName: this.gameName, name: oldName, newName: newName, captain: captain})
         }
       }
       this.hide()

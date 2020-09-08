@@ -17,7 +17,7 @@
         <h4>Select Your Team Name</h4>
         <div class="set-team-name">
           <select :class="{ 'hidden': activeTeams.length == 0}" id="team-name-select" class="form-control col-md-6 offset-md-2 mr-2">
-            <option v-for="(team, index) in activeTeams" :key="index">
+            <option v-for="(team, index) in activeTeams" :key="index" :selected="team.name == teamName">
               {{ team.name }}
             </option>
           </select>

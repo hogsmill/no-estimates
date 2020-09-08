@@ -24,7 +24,7 @@
         <h4>Select Your Speciality</h4>
         <div class="set-role">
           <select id="role-select" class="form-control col-md-6 offset-md-2 mr-2">
-            <option v-for="(role, index) in roles" :key="index">
+            <option v-for="(role, index) in roles" :key="index" :selected="role.role == myRole">
               {{ role.role }}
             </option>
           </select>

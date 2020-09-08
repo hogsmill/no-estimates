@@ -14,7 +14,7 @@
       </span>
     </div>
 
-    <modal name="set-role" :height="180" :classes="['rounded']">
+    <modal name="set-role" :height="180" class="rounded">
       <div class="float-right mr-2 mt-1">
         <button type="button" class="close" @click="hide" aria-label="Close">
           <span aria-hidden="true">&times;</span>

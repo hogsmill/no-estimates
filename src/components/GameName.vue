@@ -8,7 +8,7 @@
       <span v-if="gameName" title="Restart Game" class="restart" @click="restartGame">&#8635;</span>
     </div>
 
-    <modal name="set-game-name" :height="120" :classes="['rounded']">
+    <modal name="set-game-name" :height="120" class="rounded">
       <div class="float-right mr-2 mt-1">
         <button type="button" class="close" @click="hide" aria-label="Close">
           <span aria-hidden="true">&times;</span>

@@ -7,7 +7,7 @@
       <span v-if="teamName" @click="show" class="mr-2 mt-2 pointer p-2 bg-light">My Team is: {{ teamName }}</span>
     </div>
 
-    <modal name="set-team-name" :height="180" :classes="['rounded']">
+    <modal name="set-team-name" :height="180" class="rounded">
       <div class="float-right mr-2 mt-1">
         <button type="button" class="close" @click="hide" aria-label="Close">
           <span aria-hidden="true">&times;</span>

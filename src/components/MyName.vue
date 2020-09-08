@@ -17,7 +17,7 @@
       </div>
     </div>
 
-    <modal name="set-my-name" :height="140" :classes="['rounded', 'set-my-name']">
+    <modal name="set-my-name" :height="140" class="rounded">
       <div class="float-right mr-2 mt-1">
         <button type="button" class="close" @click="hide" aria-label="Close">
           <span aria-hidden="true">&times;</span>

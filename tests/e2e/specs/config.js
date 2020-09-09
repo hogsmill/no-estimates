@@ -1,5 +1,5 @@
-const gameName = "_Cypress Game"
-const myName = "_Cypress Name"
+const gameName = "Cypress Game"
+const myName = "Cypress Name"
 
 describe('Set initial config', () => {
 

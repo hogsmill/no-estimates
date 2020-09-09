@@ -7,6 +7,10 @@ const StringFuns = {
 
   roleToColumn: function(role) {
     return role.replace(/er$/, '').toLowerCase()
+  },
+
+  sanitize: function(s) {
+    return s.replaceAll(/[^a-z0-9 ]/g, '')
   }
 }
 

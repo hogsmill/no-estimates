@@ -28,6 +28,8 @@
 </template>
 
 <script>
+import stringFuns from '../lib/stringFuns.js'
+
 export default {
   props: [
     'socket'
@@ -55,11 +57,14 @@ export default {
       this.$modal.hide('set-game-name')
     },
     saveGameName: function() {
-      const gameName = document.getElementById('game-name').value
-      this.$store.dispatch('updateGameName', gameName)
-      localStorage.setItem('gameName', gameName)
-      if (gameName && this.teamName) {
-        this.socket.emit('loadGame', {gameName: this.gameName, teamName: this.teamName})
+      let game = document.getElementById('game-name').value
+      game = stringFuns.sanitize(game)
+      if (game != '') {
+        this.$store.dispatch('updateGameName', game)
+        localStorage.setItem('gameName', game)
+        if (game && this.teamName) {
+          this.socket.emit('loadGame', {gameName: this.gameName, teamName: this.teamName})
+        }
       }
       this.hide()
     },

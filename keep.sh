@@ -9,7 +9,7 @@ do
   then
     sleep 5
   else
-    echo "CRASHED! Re-starting server"
+    echo "CRASHED! Re-starting server at `date`"
     node src/server.js $PORT 'No Estimates' &
   fi
 done

@@ -40,6 +40,8 @@
 <script>
 import { v4 as uuidv4 } from 'uuid'
 
+import stringFuns from '../lib/stringFuns.js'
+
 import Captain from './specialities/Captain.vue'
 
 export default {
@@ -84,19 +86,22 @@ export default {
     },
     saveMyName: function() {
       const oldName = this.myName
-      const newName = document.getElementById('my-name').value
+      let newName = document.getElementById('my-name').value
       const captain = document.getElementById('captain').checked
-      let myNameData
-      if (!oldName.id) {
-        const uuid = uuidv4()
-        myNameData = {id: uuid, name: newName, captain: captain}
-        this.$store.dispatch('setMyName', myNameData)
-      } else {
-        myNameData = {id: this.myName.id, name: newName, captain: captain}
-        this.$store.dispatch('changeName', {name: newName, captain: captain})
-        localStorage.setItem('myName', JSON.stringify(myNameData))
-        if (this.gameName) {
-          this.socket.emit('changeName', {gameName: this.gameName, name: oldName, newName: newName, captain: captain})
+      newName = stringFuns.sanitize(newName)
+      if (newName != '') {
+        let myNameData
+        if (!oldName.id) {
+          const uuid = uuidv4()
+          myNameData = {id: uuid, name: newName, captain: captain}
+          this.$store.dispatch('setMyName', myNameData)
+        } else {
+          myNameData = {id: this.myName.id, name: newName, captain: captain}
+          this.$store.dispatch('changeName', {name: newName, captain: captain})
+          localStorage.setItem('myName', JSON.stringify(myNameData))
+          if (this.gameName) {
+            this.socket.emit('changeName', {gameName: this.gameName, name: oldName, newName: newName, captain: captain})
+          }
         }
       }
       this.hide()

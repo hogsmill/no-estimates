@@ -10,7 +10,7 @@ const StringFuns = {
   },
 
   sanitize: function(s) {
-    return s.replaceAll(/[^a-z0-9 ]/g, '')
+    return s.replaceAll(/[^a-zA-Z0-9' ]/g, '').trim()
   }
 }
 

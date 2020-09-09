@@ -9,8 +9,14 @@ Vue.config.productionTip = false
 
 Vue.use(VModal)
 
-new Vue({
+const app = new Vue({
   el: '#app',
   store,
   render: (h) => h(App),
 })
+
+if (window.Cypress) {
+  // only available during E2E tests
+  window.app = app
+  window.store = store
+}

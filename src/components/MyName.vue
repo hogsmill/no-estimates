@@ -78,7 +78,6 @@ export default {
       return className
     },
     show () {
-      console.log(this.myName)
       this.$modal.show('set-my-name')
     },
     hide () {

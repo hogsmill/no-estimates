@@ -183,7 +183,6 @@ export const store = new Vuex.Store({
       state.gameName = payload
     },
     setMyName: (state, payload) => {
-      console.log(payload)
       if (payload.uuid && payload.uuid == state.myName.uuid) {
         state.myName.name = payload.name
         state.myName.captain = payload.captain

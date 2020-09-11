@@ -6,6 +6,7 @@ module.exports = {
     ],
     rules: {
       // override/add rules settings here, such as:
+      'array-element-newline': 'off',
       'no-redeclare': 'warn',
       'no-undef': 'error',
       'no-unused-vars': 'error',

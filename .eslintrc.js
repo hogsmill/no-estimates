@@ -6,7 +6,6 @@ module.exports = {
     ],
     rules: {
       // override/add rules settings here, such as:
-      'array-element-newline': 'off',
       'no-redeclare': 'warn',
       'no-undef': 'error',
       'no-unused-vars': 'error',
@@ -15,7 +14,7 @@ module.exports = {
       'vue/require-prop-types': 'off',
       'quotes': ['error', 'single'],
       'semi': ['error', 'never'],
-      'array-element-newline': ['error', 'never'],
+      'array-element-newline': 'off',
       'vue/attributes-order': ['error', {
         'order': [],
         'alphabetical': false

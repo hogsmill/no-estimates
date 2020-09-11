@@ -9,11 +9,22 @@ const initialRoles = [
 ]
 
 const initialTeams = [
-  { name: 'Blue', include: true, recharting: false, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } }, { name: 'Green', include: true, recharting: false, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } }, { name: 'Purple', include: true, recharting: false, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } }, { name: 'Red', include: true, recharting: false, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } }, { name: 'Orange', include: false, recharting: false, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } }, { name: 'Black', include: false, recharting: false, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } }
+  { name: 'Blue', include: true, recharting: false, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
+  { name: 'Green', include: true, recharting: false, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
+  { name: 'Purple', include: true, recharting: false, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
+  { name: 'Red', include: true, recharting: false, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
+  { name: 'Orange', include: false, recharting: false, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
+  { name: 'Black', include: false, recharting: false, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
+  { name: 'Black', include: false, recharting: false, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } }
 ]
 
 const initialColumns = [
-  {name: 'options', order: 1}, {name: 'design', order: 2, cards: []}, {name: 'develop', order: 3, cards: []}, {name: 'test', order: 4, cards: []}, {name: 'deploy', order: 5, cards: []}, {name: 'done', order: 6, cards: []}
+  {name: 'options', order: 1},
+  {name: 'design', order: 2, cards: []},
+  {name: 'develop', order: 3, cards: []},
+  {name: 'test', order: 4, cards: []},
+  {name: 'deploy', order: 5, cards: []},
+  {name: 'done', order: 6, cards: []}
 ]
 
 const initialCards = [
@@ -423,7 +434,7 @@ module.exports = {
     db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
       if (err) throw err
       if (res) {
-        const columns = res.columns, 
+        const columns = res.columns,
           workCards = res.workCards
         let todaysEffort = []
         for (let i = 1; i < columns.length; i++) {
@@ -567,7 +578,7 @@ module.exports = {
         for (let r = 0; r < res.length; r++) {
           if (res[r].teamName == data.card.team) {
             // this team
-            let i, j 
+            let i, j
             const columns = res[r].columns, workCards = res[r].workCards
             for (i = 1; i < columns.length; i++) {
               for (j = 0; j < columns[i].cards.length; j++) {

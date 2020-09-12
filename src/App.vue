@@ -50,6 +50,9 @@ import Roles from './components/Roles.vue'
 import Day from './components/Day.vue'
 import Board from './components/Board.vue'
 
+import EventBus from './EventBus'
+window.bus = EventBus
+
 export default {
   name: 'App',
   components: {

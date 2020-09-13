@@ -31,9 +31,6 @@
 import stringFuns from '../lib/stringFuns.js'
 
 export default {
-  props: [
-    'socket'
-  ],
   computed: {
     showFacilitator() {
       return this.$store.getters.getShowFacilitator
@@ -43,7 +40,7 @@ export default {
     }
   },
   mounted() {
-    this.socket.on('restartGame', (data) => {
+    window.bus.$on('restartGame', (data) => {
       if (this.gameName == data.gameName) {
         location.reload()
       }
@@ -63,7 +60,7 @@ export default {
         this.$store.dispatch('updateGameName', game)
         localStorage.setItem('gameName', game)
         if (game && this.teamName) {
-          this.socket.emit('loadGame', {gameName: this.gameName, teamName: this.teamName})
+          window.bus.$emit('loadGame', {gameName: this.gameName, teamName: this.teamName})
         }
       }
       this.hide()
@@ -71,7 +68,7 @@ export default {
     restartGame() {
       const restartGame = confirm('Are you sure you want to re-start this game?')
       if (restartGame) {
-        this.socket.emit('restartGame', {gameName: this.gameName})
+        window.bus.$emit('restartGame', {gameName: this.gameName})
       }
     }
   }

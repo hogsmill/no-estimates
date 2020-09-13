@@ -8,9 +8,6 @@
 import stringFuns from '../lib/stringFuns.js'
 
 export default {
-  props: [
-    'socket'
-  ],
   data() {
     return {
       status: '',
@@ -27,23 +24,23 @@ export default {
   },
   mounted() {
     const self = this
-    this.socket.on('updatePersonEffort', (data) => {
+    window.bus.$on('updatePersonEffort', (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         const column = stringFuns.properCase(data.column)
         self.setStatus(data.name.name + ' has added effort to card #' + data.workCard.number + ' in ' + column, false)
       }
     })
-    this.socket.on('updatePersonAutoDeployEffort', (data) => {
+    window.bus.$on('updatePersonAutoDeployEffort', (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         self.setStatus(data.name.name + ' has added Auto Deploy effort', false)
       }
     })
-    this.socket.on('updateOtherTeamEffort', (data) => {
+    window.bus.$on('updateOtherTeamEffort', (data) => {
       if (this.gameName == data.gameName) {
         self.setStatus('Team ' + data.teamName + ' has added effort to card #' + data.card.number, false)
       }
     })
-    this.socket.on('broadcastMessage', (data) => {
+    window.bus.$on('broadcastMessage', (data) => {
       if (this.gameName == data.gameName) {
         self.setStatus(data.message, true)
       }

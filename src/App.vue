@@ -3,7 +3,7 @@
     <appHeader />
     <WalkThroughView />
     <div v-if="showFacilitator">
-      <FacilitatorView :socket="socket" />
+      <FacilitatorView />
     </div>
     <div class="main" v-else>
       <div v-if="isHost" class="right" @click="clear()">
@@ -13,19 +13,19 @@
       <h3 class="setup-header" v-if="!isSetUp()">
         Before we start the game, please set the game name, your name, your team and your speciality.
       </h3>
-      <GameName :socket="socket" />
-      <MyName :socket="socket" />
-      <TeamName :socket="socket" />
-      <MyRole :socket="socket" />
+      <GameName />
+      <MyName />
+      <TeamName />
+      <MyRole />
 
-      <Status :socket="socket" />
+      <Status />
       <div v-if="isSetUp()" class="container board">
         <div class="game-buttons">
-          <Report :socket="socket" />
+          <Report />
         </div>
         <Roles />
-        <Day :socket="socket" />
-        <Board :socket="socket" />
+        <Day />
+        <Board />
       </div>
     </div>
   </div>

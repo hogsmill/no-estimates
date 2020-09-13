@@ -14,9 +14,6 @@
 
 <script>
 export default {
-  props: [
-    'socket'
-  ],
   computed: {
     gameName() {
       return this.$store.getters.getGameName
@@ -35,7 +32,7 @@ export default {
     }
   },
   mounted() {
-    this.socket.on('incrementAutoDeploy', (data) => {
+    window.bus.$on('incrementAutoDeploy', (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         this.$store.dispatch('incrementAutoDeploy', data)
       }
@@ -45,8 +42,8 @@ export default {
     addEffort() {
       if (this.myEffort.available > 0) {
         this.$store.dispatch('updateMyAssignedEffort', {effort: 1})
-        this.socket.emit('incrementAutoDeploy', {gameName: this.gameName, teamName: this.teamName})
-        this.socket.emit('updatePersonAutoDeployEffort', {gameName: this.gameName, teamName: this.teamName, name: this.myName})
+        window.bus.$emit('incrementAutoDeploy', {gameName: this.gameName, teamName: this.teamName})
+        window.bus.$emit('updatePersonAutoDeployEffort', {gameName: this.gameName, teamName: this.teamName, name: this.myName})
       }
     }
   }

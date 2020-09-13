@@ -1,6 +1,6 @@
 <template>
   <div class="board-container">
-    <EventCard :socket="socket" />
+    <EventCard />
     <div class="game-board">
       <table class="board-table rounded">
         <thead>
@@ -19,7 +19,7 @@
         <tbody>
           <tr>
             <td v-for="(column, index) in columns" :key="index">
-              <Column :column="column" :socket="socket" />
+              <Column :column="column" />
             </td>
           </tr>
         </tbody>
@@ -39,9 +39,6 @@ export default {
     Column,
     EventCard
   },
-  props: [
-    'socket'
-  ],
   computed: {
     gameName() {
       return this.$store.getters.getGameName
@@ -57,19 +54,19 @@ export default {
     }
   },
   mounted() {
-    this.socket.on('updateColumns', (data) => {
+    window.bus.$on('updateColumns', (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         this.$store.dispatch('updateColumns', data)
       }
     })
 
-    this.socket.on('updateDependentTeam', (data) => {
+    window.bus.$on('updateDependentTeam', (data) => {
       if (this.gameName == data.gameName) {
         this.$store.dispatch('updateDependentTeam', data)
       }
     })
 
-    this.socket.on('startAutoDeploy', (data) => {
+    window.bus.$on('startAutoDeploy', (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         this.$store.dispatch('startAutoDeploy', data)
       }
@@ -92,7 +89,7 @@ export default {
       return this.teamName && !this.myTeam.autoDeploy.doing && !this.myTeam.autoDeploy.done && this.myTeam.canStartAutoDeploy && column.name == 'deploy'
     },
     startAutoDeploy() {
-      this.socket.emit('startAutoDeploy', {gameName: this.gameName, teamName: this.teamName})
+      window.bus.$emit('startAutoDeploy', {gameName: this.gameName, teamName: this.teamName})
     }
   }
 }

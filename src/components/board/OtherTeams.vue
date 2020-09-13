@@ -47,9 +47,6 @@
 
 <script>
 export default {
-  props: [
-    'socket'
-  ],
   data() {
     return {
       message: ''
@@ -73,7 +70,7 @@ export default {
     }
   },
   mounted() {
-    this.socket.on('addEffortToOthersCard', (data) => {
+    window.bus.$on('addEffortToOthersCard', (data) => {
       if (this.gameName == data.gameName) {
         this.$store.dispatch('addEffortToOthersCard', data)
       }
@@ -99,8 +96,8 @@ export default {
         const self = this
         setTimeout(function() { self.message = message }, 100)
       } else {
-        this.socket.emit('addEffortToOthersCard', {gameName: this.gameName, teamName: this.teamName, card: card, myName: this.myName})
-        //this.socket.emit("updateOtherTeamEffort", {gameName: this.gameName, teamName: this.teamName, card: card})
+        window.bus.$emit('addEffortToOthersCard', {gameName: this.gameName, teamName: this.teamName, card: card, myName: this.myName})
+        //window.bus.$emit("updateOtherTeamEffort", {gameName: this.gameName, teamName: this.teamName, card: card})
         this.$store.dispatch('updateMyAssignedEffort', {effort: 1})
       }
     }

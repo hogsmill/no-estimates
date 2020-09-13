@@ -11,9 +11,6 @@
 
 <script>
 export default {
-  props: [
-    'socket'
-  ],
   computed: {
     showFacilitator() {
       return this.$store.getters.getShowFacilitator
@@ -41,7 +38,7 @@ export default {
     }
   },
   mounted() {
-    this.socket.on('updateCurrentWorkCard', (data) => {
+    window.bus.$on('updateCurrentWorkCard', (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         this.$store.dispatch('updateCurrentWorkCard', data)
       }
@@ -55,12 +52,12 @@ export default {
         const columns = this.columns
         workCards[currentWorkCard].commit = this.currentDay
         columns[1].cards.push(workCards[currentWorkCard])
-        this.socket.emit('updateCommit', {gameName: this.gameName, teamName: this.teamName, workCard: currentWorkCard, commit: this.currentDay})
-        this.socket.emit('updateColumns', {gameName: this.gameName, teamName: this.teamName, columns: columns})
-        this.socket.emit('updateCurrentWorkCard', {gameName: this.gameName, teamName: this.teamName, currentWorkCard: currentWorkCard + 1})
+        window.bus.$emit('updateCommit', {gameName: this.gameName, teamName: this.teamName, workCard: currentWorkCard, commit: this.currentDay})
+        window.bus.$emit('updateColumns', {gameName: this.gameName, teamName: this.teamName, columns: columns})
+        window.bus.$emit('updateCurrentWorkCard', {gameName: this.gameName, teamName: this.teamName, currentWorkCard: currentWorkCard + 1})
         if (workCards[currentWorkCard].teamDependency > 0) {
           const dependentOn = this.selectDependentTeam()
-          this.socket.emit('updateDependentTeam', {gameName: this.gameName, teamName: this.teamName, workCard: workCards[currentWorkCard], dependentOn: dependentOn})
+          window.bus.$emit('updateDependentTeam', {gameName: this.gameName, teamName: this.teamName, workCard: workCards[currentWorkCard], dependentOn: dependentOn})
         }
       }
     },

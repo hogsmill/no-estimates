@@ -20,9 +20,6 @@
 
 <script>
 export default {
-  props: [
-    'socket'
-  ],
   computed: {
     gameName() {
       return this.$store.getters.getGameName
@@ -41,7 +38,7 @@ export default {
     }
   },
   mounted() {
-    this.socket.on('updateCurrentDay', (data) => {
+    window.bus.$on('updateCurrentDay', (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         this.$store.dispatch('updateCurrentDay', data)
       }
@@ -66,7 +63,7 @@ export default {
       return days
     },
     next() {
-      this.socket.emit('showEventCard', {gameName: this.gameName, teamName: this.teamName})
+      window.bus.$emit('showEventCard', {gameName: this.gameName, teamName: this.teamName})
     }
   }
 }

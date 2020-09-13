@@ -98,9 +98,6 @@
 import stats from '../../lib/stats.js'
 
 export default {
-  props: [
-    'socket'
-  ],
   data() {
     return {
       tab: 'Report'
@@ -133,17 +130,17 @@ export default {
     },
   },
   mounted() {
-    this.socket.on('updateProjectEstimate', (data) => {
+    window.bus.$on('updateProjectEstimate', (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         this.$store.dispatch('updateProjectEstimate', data)
       }
     })
-    this.socket.on('updateMVPEstimate', (data) => {
+    window.bus.$on('updateMVPEstimate', (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         this.$store.dispatch('updateMVPEstimate', data)
       }
     })
-    this.socket.on('updateReEstimate', (data) => {
+    window.bus.$on('updateReEstimate', (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         this.$store.dispatch('updateReEstimate', data)
       }
@@ -198,15 +195,15 @@ export default {
     },
     saveTotalProject() {
       const estimate = document.getElementById('project-estimate').value
-      this.socket.emit('updateProjectEstimate', {gameName: this.gameName, teamName: this.teamName, projectEstimate: estimate})
+      window.bus.$emit('updateProjectEstimate', {gameName: this.gameName, teamName: this.teamName, projectEstimate: estimate})
     },
     saveMVP() {
       const estimate = document.getElementById('mvp-estimate').value
-      this.socket.emit('updateMVPEstimate', {gameName: this.gameName, teamName: this.teamName, mvpEstimate: estimate})
+      window.bus.$emit('updateMVPEstimate', {gameName: this.gameName, teamName: this.teamName, mvpEstimate: estimate})
     },
     saveReEstimate() {
       const estimate = document.getElementById('re-estimate').value
-      this.socket.emit('updateReEstimate', {gameName: this.gameName, teamName: this.teamName, reEstimate: estimate})
+      window.bus.$emit('updateReEstimate', {gameName: this.gameName, teamName: this.teamName, reEstimate: estimate})
     }
   }
 }

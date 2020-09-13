@@ -138,9 +138,6 @@ export default {
     OtherCards,
     Column
   },
-  props: [
-    'socket'
-  ],
   data() {
     return {
       showGameMessaging: false,
@@ -184,20 +181,20 @@ export default {
     sendMessage() {
       const message = document.getElementById('gameMessageText').value
       if (message) {
-        this.socket.emit('broadcastMessage', {gameName: this.gameName, message: message})
+        window.bus.$emit('broadcastMessage', {gameName: this.gameName, message: message})
       }
     },
     toggleActive(team) {
       team.include = !team.include
-      this.socket.emit('updateTeamActive', {gameName: this.gameName, team: team})
+      window.bus.$emit('updateTeamActive', {gameName: this.gameName, team: team})
     },
     savePercentageBlocked: function() {
       const percentageBlocked = document.getElementById('percentageBlocked').value
-      this.socket.emit('percentageBlocked', {gameName: this.gameName, percentageBlocked: percentageBlocked})
+      window.bus.$emit('percentageBlocked', {gameName: this.gameName, percentageBlocked: percentageBlocked})
     },
     savePercentageDeployFail: function() {
       const percentageDeployFail = document.getElementById('percentageDeployFail').value
-      this.socket.emit('percentageDeployFail', {gameName: this.gameName, percentageDeployFail: percentageDeployFail})
+      window.bus.$emit('percentageDeployFail', {gameName: this.gameName, percentageDeployFail: percentageDeployFail})
     },
     showTeamState(team) {
       return this.showGameState && team.include

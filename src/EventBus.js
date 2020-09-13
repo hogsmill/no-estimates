@@ -12,10 +12,17 @@ export class EventBus extends Vue {
     if (this.meddler && typeof this.meddler.call === 'function') {
       this.meddler(event, ...args)
     }
-
+    console.log('$EMIT', event, args)
     return super.$emit(event, ...args)
   }
 
+  $on (event, ...args) {
+    if (this.meddler && typeof this.meddler.call === 'function') {
+      this.meddler(event, ...args)
+    }
+    console.log('$ON', event, args)
+    return super.$on(event, ...args)
+  }
   // We can also override $on() to listen to callbacks being registered.
 }
 

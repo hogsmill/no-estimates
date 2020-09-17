@@ -12,9 +12,7 @@ function updateTodayCard(card, name) {
 }
 
 function updateTodayColumn(column, card, name) {
-  const
-      fullCard = {number: card.number, names: []},
-      cards = []
+  const fullCard = {number: card.number, names: []}, cards = []
   for (let i = 0; i < column.cards.length; i++) {
     if (column.cards[i].number != fullCard.number) {
       cards.push(column.cards[i])
@@ -28,8 +26,7 @@ function updateTodayColumn(column, card, name) {
 }
 
 function updateToday(today, column, card, name) {
-  const fullColumn = {column: column.name, cards: []},
-      columns = []
+  const fullColumn = {column: column.name, cards: []}, columns = []
   for (let i = 0; i < today.columns.length; i++) {
     if (today.columns[i].column == fullColumn.column) {
       column = today.columns[i]
@@ -53,8 +50,8 @@ function addExtraPointToCardForPairing(column, card) {
 module.exports = {
 
   updateTodaysEffort: function(res, column, card, name) {
-    let today = {day: day, columns: []}
     const day = res.currentDay, todaysEffort = []
+    let today = {day: day, columns: []}
     for (let i = 0; i < res.daysEffort.length; i++) {
       if (res.daysEffort[i].day != day) {
         todaysEffort.push(res.daysEffort[i])

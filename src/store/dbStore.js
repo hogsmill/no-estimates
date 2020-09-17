@@ -2,6 +2,7 @@
 const roleFuns = require('./lib/roles.js')
 const cardFuns = require('./lib/cards.js')
 const pairingFuns = require('./lib/pairing.js')
+const dependent = require('./lib/dependent.js')
 const gameState = require('./lib/gameState.js')
 
 const initialRoles = [
@@ -18,7 +19,8 @@ const initialTeams = [
   { name: 'Red', include: true, recharting: false, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
   { name: 'Orange', include: false, recharting: false, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
   { name: 'Black', include: false, recharting: false, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
-  { name: 'Black', include: false, recharting: false, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } }
+  { name: 'Grey', include: false, recharting: false, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } }
+
 ]
 
 const initialColumns = [
@@ -412,33 +414,13 @@ module.exports = {
     db.collection('noEstimates').find({gameName: data.gameName}).toArray(function(err, res) {
       if (err) throw err
       if (res.length) {
-        const workCardTeam = data.teamName
+        const teamName = data.teamName
         for (let r = 0; r < res.length; r++) {
-          let i, j
-          const columns = res[r].columns
-          for (i = 1; i < columns.length; i++) {
-            for (j = 0; j < columns[i].cards.length; j++) {
-              const card = columns[i].cards[j]
-              if (card.number == data.workCard.number) {
-                card.dependentOn = data.dependentOn
-              }
-            }
-          }
-          const teams = res[r].teams
-          for (i = 0; i < teams.length; i++) {
-            const otherCards = []
-            for (j = 0; j < teams[i].otherCards.length; j++) {
-              if (teams[i].otherCards[j].number != data.workCard.number) {
-                otherCards.push(teams[i].otherCards[j])
-              }
-            }
-            teams[i].otherCards = otherCards
-          }
-          for (i = 0; i < teams.length; i++) {
-            if (teams[i].name == data.dependentOn.name) {
-              data.workCard.team = workCardTeam
-              teams[i].otherCards.push(data.workCard)
-            }
+          let columns = res[r].columns, teams = res[r].teams
+          if (res[r].teamName == teamName) {
+            columns = dependent.addDependencyToCard(columns, data.workCard, data.dependentOn)
+          } else if (res[r].teamName == data.dependentOn.name) {
+            teams = dependent.addCardToOtherCards(teams, data.workCard, data.dependentOn.name, teamName)
           }
           data.teamName = res[r].teamName
           data.teams = teams
@@ -446,7 +428,7 @@ module.exports = {
           io.emit('updateTeams', data)
           io.emit('updateColumns', data)
           db.collection('noEstimates').updateOne({'_id': res[r]._id}, {$set: {teams: teams, columns: columns}}, function(err, ) {
-            if (err) throw err
+           if (err) throw err
           })
         }
       }

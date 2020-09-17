@@ -54,7 +54,7 @@ export default {
       const effort = roles.iHaveRole('deploy', this.myRole, this.myOtherRoles) ? 1 : 2
       if (this.myEffort.available >= effort) {
         this.$store.dispatch('updateMyAssignedEffort', {effort: effort})
-        this.socket.emit('incrementAutoDeploy', {gameName: this.gameName, teamName: this.teamName})
+        this.socket.emit('incrementAutoDeploy', {gameName: this.gameName, teamName: this.teamName, effort: effort})
         this.socket.emit('updatePersonAutoDeployEffort', {gameName: this.gameName, teamName: this.teamName, name: this.myName})
       }
     }

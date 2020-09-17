@@ -20,7 +20,7 @@
         <li class="nav-item" :class="{ active: !showFacilitator }">
           <a class="nav-link pointer" @click="updateShowFacilitator(false)">Game</a>
         </li>
-        <li class="nav-item" :class="{ active: showFacilitator }">
+        <li v-if="isHost" class="nav-item" :class="{ active: showFacilitator }">
           <a class="nav-link pointer" @click="updateShowFacilitator(true)">Facilitator</a>
         </li>
       </ul>
@@ -31,6 +31,9 @@
 <script>
 export default {
   computed: {
+    isHost() {
+      return this.$store.getters.getHost
+    },
     showFacilitator() {
       return this.$store.getters.getShowFacilitator
     },

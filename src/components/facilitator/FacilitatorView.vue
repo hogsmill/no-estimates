@@ -72,7 +72,7 @@
     <table class="game-state">
       <tr>
         <td class="left" colspan="16">
-          <h4>Game State</h4>
+          <h4>Game State: (Game: {{ gameName }}) <span v-if="gameName" title="Restart Game" class="restart" @click="restartGame">&#8635;</span></h4>
           <span v-if="showGameState" @click="setShowGameState(false)" title="collapse" class="toggle">&#9650;</span>
           <span v-if="!showGameState" @click="setShowGameState(true)" title="expand" class="toggle">&#9660;</span>
         </td>
@@ -207,6 +207,12 @@ export default {
       const mvp = team.mvpEstimate ? team.mvpEstimate : '-'
       const re = team.reEstimate ? team.reEstimate : '-'
       return proj + ' / ' + mvp + ' / ' + re
+    },
+    restartGame() {
+      const restartGame = confirm('Are you sure you want to re-start this game?')
+      if (restartGame) {
+        this.socket.emit('restartGame', {gameName: this.gameName})
+      }
     }
   }
 }
@@ -286,6 +292,11 @@ export default {
       vertical-align: middle;
       text-align: center;
       font-weight: bold;
+    }
+
+    .restart {
+      position: relative;
+      left: 6px;
     }
 
     td {

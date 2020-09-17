@@ -97,7 +97,10 @@
         </td>
         <td v-if="showTeamState(team)">
           <div v-for="(member, m) in team.members" :key="m">
-            <b>{{ member.name.name }}</b> (<i>{{ member.role }}</i>)
+            <b>{{ member.name.name }}</b>
+            <div class="white rounded-circle member-role" :class="roleClass(member.role)">
+              {{ role(member.role) }}
+            </div>
           </div>
         </td>
         <td v-if="showTeamState(team) && !team.autoDeploy.doing && !team.autoDeploy.done">
@@ -213,12 +216,20 @@ export default {
       if (restartGame) {
         this.socket.emit('restartGame', {gameName: this.gameName})
       }
+    },
+    role(role) {
+      return role.charAt(0)
+    },
+    roleClass(role) {
+      return role.toLowerCase()
     }
   }
 }
 </script>
 
 <style lang="scss">
+
+   @import '../../assets/colours.scss';
 
   .connections {
     text-align: right;
@@ -310,6 +321,26 @@ export default {
     .white {
       color: #fff;
       font-weight: bold
+    }
+
+    .member-role {
+      width: 20px;
+      position: relative;
+      left: 2px;
+      display: inline-block;
+    }
+
+    .designer {
+      background-color: $design;
+    }
+    .developer {
+      background-color: $develop;
+    }
+    .tester {
+      background-color: $test;
+    }
+    .deployer {
+      background-color: $deploy;
     }
   }
 </style>

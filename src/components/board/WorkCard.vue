@@ -89,7 +89,7 @@
 </template>
 
 <script>
-import stringFuns from '../../lib/stringFuns.js'
+import roles from '../../lib/roles.js'
 
 export default {
   props: [
@@ -159,20 +159,6 @@ export default {
       concurrent = concurrent && (column == 'develop' || column == 'test')
       return this.column == column || concurrent
     },
-    iHaveRole(column) {
-      let haveRole = false
-      if (column == stringFuns.roleToColumn(this.myRole)) {
-        haveRole = true
-      } else {
-        const roles = this.myOtherRoles
-        for (let i = 0; i < roles.length; i++) {
-          if (column == stringFuns.roleToColumn(roles[i])) {
-            haveRole = true
-          }
-        }
-      }
-      return haveRole
-    },
     storeEffort() {
       localStorage.setItem('myEffort', JSON.stringify(this.myEffort))
     },
@@ -186,7 +172,7 @@ export default {
         } else if (this.workCard.effort[column] == this.workCard[column]) {
           message = 'Can\'t assign - all work completed'
         } else {
-          if (this.iHaveRole(column)) {
+          if (roles.iHaveRole(column, this.myRole, this.myOtherRoles)) {
             this.workCard.effort[column] = this.workCard.effort[column] + 1
             this.$store.dispatch('updateMyAssignedEffort', {effort: 1})
             this.storeEffort()

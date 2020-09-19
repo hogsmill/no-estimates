@@ -1,7 +1,7 @@
 
 function updateTodayCard(card, name) {
-  var i, names = []
-  for (i = 0; i < card.names.length; i++) {
+  const names = []
+  for (let i = 0; i < card.names.length; i++) {
     if (card.names[i].name.id != name.id) {
       names.push(card.names[i])
     }
@@ -12,38 +12,35 @@ function updateTodayCard(card, name) {
 }
 
 function updateTodayColumn(column, card, name) {
-  var i,
-      card = {number: card.number, names: []},
-      cards = []
-  for (i = 0; i < column.cards.length; i++) {
-    if (column.cards[i].number != card.number) {
+  const fullCard = {number: card.number, names: []}, cards = []
+  for (let i = 0; i < column.cards.length; i++) {
+    if (column.cards[i].number != fullCard.number) {
       cards.push(column.cards[i])
     } else {
       card = column.cards[i]
     }
   }
-  cards.push(updateTodayCard(card, name))
+  cards.push(updateTodayCard(fullCard, name))
   column.cards = cards
   return column
 }
 
 function updateToday(today, column, card, name) {
-  var column = {column: column.name, cards: []},
-      columns = []
+  const fullColumn = {column: column.name, cards: []}, columns = []
   for (let i = 0; i < today.columns.length; i++) {
-    if (today.columns[i].column == column.column) {
+    if (today.columns[i].column == fullColumn.column) {
       column = today.columns[i]
     } else {
       columns.push(today.columns[i])
     }
   }
-  columns.push(updateTodayColumn(column, card, name))
+  columns.push(updateTodayColumn(fullColumn, card, name))
   today.columns = columns
   return today
 }
 
 function addExtraPointToCardForPairing(column, card) {
-  var pairedCard = column.cards.find(function(c) { return c.number == card})
+  const pairedCard = column.cards.find(function(c) { return c.number == card})
   if (pairedCard && pairedCard.effort) {
     pairedCard.effort[column.name] = pairedCard.effort[column.name] + 1
   }
@@ -53,8 +50,9 @@ function addExtraPointToCardForPairing(column, card) {
 module.exports = {
 
   updateTodaysEffort: function(res, column, card, name) {
-    var todaysEffort = [], day = res.currentDay, today = {day: day, columns: []}
-    for (var i = 0; i < res.daysEffort.length; i++) {
+    const day = res.currentDay, todaysEffort = []
+    let today = {day: day, columns: []}
+    for (let i = 0; i < res.daysEffort.length; i++) {
       if (res.daysEffort[i].day != day) {
         todaysEffort.push(res.daysEffort[i])
       } else {
@@ -66,7 +64,7 @@ module.exports = {
   },
 
   addExtraPointForPairing: function(day, columns, daysEffort) {
-    var todaysEffort = daysEffort.find(function(d) { return day == d.day })
+    const todaysEffort = daysEffort.find(function(d) { return day == d.day })
     if (todaysEffort) {
       for (let i = 0; i < columns.length; i++) {
         for (let j = 0; j < todaysEffort.columns.length; j++) {
@@ -84,10 +82,10 @@ module.exports = {
   },
 
   addSecondarySkill: function(roles, column, name) {
-    var role = column.charAt(0).toUpperCase() + column.slice(1) + 'er'
-    for (var i = 0; i < roles.length; i++) {
+    const role = column.charAt(0).toUpperCase() + column.slice(1) + 'er'
+    for (let i = 0; i < roles.length; i++) {
       if (roles[i].role == role) {
-        var roleExists = false
+        let roleExists = false
         for (let j = 0; j < roles[i].otherNames.length; j++) {
           if (roles[i].otherNames[j].id == name.id) {
             roleExists = true

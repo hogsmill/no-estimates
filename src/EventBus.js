@@ -13,6 +13,7 @@ export class EventBus extends Vue {
       this.meddler(event, ...args)
     }
     console.log('$EMIT', event, args)
+    this.socket.emit(event, ...args)
     return super.$emit(event, ...args)
   }
 
@@ -21,9 +22,9 @@ export class EventBus extends Vue {
       this.meddler(event, ...args)
     }
     console.log('$ON', event, args)
+    this.socket.on(event, ...args)
     return super.$on(event, ...args)
   }
-  // We can also override $on() to listen to callbacks being registered.
 
   setupSocket(socket) {
     this.socket = socket

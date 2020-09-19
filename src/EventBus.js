@@ -24,6 +24,10 @@ export class EventBus extends Vue {
     return super.$on(event, ...args)
   }
   // We can also override $on() to listen to callbacks being registered.
+
+  setupSocket(socket) {
+    this.socket = socket
+  }
 }
 
 export default new EventBus()

@@ -53,6 +53,7 @@ import Board from './components/Board.vue'
 import EventBus from './EventBus'
 window.bus = EventBus
 
+
 export default {
   name: 'App',
   components: {
@@ -105,7 +106,7 @@ export default {
     const connStr = 'http://' + host + ':3007'
     console.log('Connecting to: ' + connStr)
     this.socket = io(connStr)
-
+    window.bus.setupSocket(this.socket)
     if (params.isParam('host')) {
       this.$store.dispatch('updateHost', true)
     }

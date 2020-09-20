@@ -78,7 +78,7 @@
         <span @click="hide" class="glyphicon glyphicon-star">x</span>
       </div>
       <h4>Unable to Assign Effort</h4>
-      <p>{{ message }}</p>
+      <p v-html="message"></p>
       <div class="button">
         <button class="btn btn-sm btn-info" @click="hide()">
           OK
@@ -163,14 +163,13 @@ export default {
       localStorage.setItem('myEffort', JSON.stringify(this.myEffort))
     },
     addEffort(column) {
-      let message = ''
       if (this.workCard.blocked) {
-        message = 'Can\'t assign - card is blocked'
+        this.message = 'Can\'t assign - card is blocked'
       } else if (this.canAssign(column)) {
         if (this.myEffort.available == 0) {
-          message = 'Can\'t assign - all effort assigned'
+          this.message = 'Can\'t assign - all effort assigned'
         } else if (this.workCard.effort[column] == this.workCard[column]) {
-          message = 'Can\'t assign - all work completed'
+          this.message = 'Can\'t assign - all work completed'
         } else {
           if (roles.iHaveRole(column, this.myRole, this.myOtherRoles)) {
             this.workCard.effort[column] = this.workCard.effort[column] + 1
@@ -179,7 +178,7 @@ export default {
             this.socket.emit('updateAssignedEffort', {gameName: this.gameName, teamName: this.teamName, name: this.myName, effort: this.myEffort})
           } else {
             if (this.myEffort.available < 2) {
-              message = 'Can\'t assign - you only have one effort point left'
+              this.message = 'Can\'t assign - you only have one effort point left'
             } else {
               this.workCard.effort[column] = this.workCard.effort[column] + 1
               this.$store.dispatch('updateMyAssignedEffort', {effort: 2})
@@ -190,12 +189,10 @@ export default {
           }
         }
       } else if (!this.canAssign(column)) {
-        message = 'Can\'t assign - wrong column'
+        this.message = 'Can\'t assign - wrong column'
       }
-      if (message) {
+      if (this.message) {
         this.show()
-        const self = this
-        setTimeout(function() { self.message = message }, 100)
       } else {
         this.socket.emit('updatePersonEffort', {gameName: this.gameName, teamName: this.teamName, workCard: this.workCard, name: this.myName, column: column})
         this.socket.emit('updateEffort', {gameName: this.gameName, teamName: this.teamName, name: this.myName, workCard: this.workCard})

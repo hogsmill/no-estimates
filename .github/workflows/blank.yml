@@ -15,7 +15,7 @@ jobs:
       - name: Setup packages
         run: npm install
       - name: Run Server
-        run: npm run serve:socket
+        run: npm run serve:socket &
       - name: Run Cypress
         uses: cypress-io/github-action@v2
         with:

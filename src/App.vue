@@ -105,8 +105,7 @@ export default {
     }
     const connStr = 'http://' + host + ':3007'
     console.log('Connecting to: ' + connStr)
-    this.socket = io(connStr)
-    window.bus.setupSocket(this.socket)
+    window.bus.setupSocket(io(connStr))
     if (params.isParam('host')) {
       this.$store.dispatch('updateHost', true)
     }
@@ -143,71 +142,71 @@ export default {
     const gameName = localStorage.getItem('gameName')
     if (gameName) {
       this.$store.dispatch('updateGameName', gameName)
-      this.socket.emit('gameState', {gameName: gameName})
+      window.bus.$emit('gameState', {gameName: gameName})
     }
 
-    this.socket.on('restartGame', (data) => {
+    window.bus.$on('restartGame', (data) => {
       localStorage.removeItem('myEffort')
       if (this.gameName == data.gameName) {
         location.reload()
       }
     })
 
-    this.socket.on('loadGame', (data) => {
+    window.bus.$on('loadGame', (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         this.$store.dispatch('loadGame', data)
       }
     })
 
-    this.socket.on('percentageBlocked', (data) => {
+    window.bus.$on('percentageBlocked', (data) => {
       if (this.gameName == data.gameName) {
         this.$store.dispatch('percentageBlocked', data)
       }
     })
 
-    this.socket.on('percentageDeployFail', (data) => {
+    window.bus.$on('percentageDeployFail', (data) => {
       if (this.gameName == data.gameName) {
         this.$store.dispatch('percentageDeployFail', data)
       }
     })
 
-    this.socket.on('updateRoles', (data) => {
+    window.bus.$on('updateRoles', (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         this.$store.dispatch('updateRoles', data)
       }
     })
 
-    this.socket.on('updateColumns', (data) => {
+    window.bus.$on('updateColumns', (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         this.$store.dispatch('updateColumns', data)
       }
     })
 
-    this.socket.on('updateTeams', (data) => {
+    window.bus.$on('updateTeams', (data) => {
       if (this.gameName == data.gameName) {
         this.$store.dispatch('updateTeams', data)
       }
     })
 
-    this.socket.on('updateWorkCards', (data) => {
+    window.bus.$on('updateWorkCards', (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         this.$store.dispatch('updateWorkCards', data)
       }
     })
 
-    this.socket.on('updatePairing', (data) => {
+    window.bus.$on('updatePairing', (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         this.$store.dispatch('updatePairing', data)
       }
     })
 
-    this.socket.on('updateGameState', (data) => {
+    window.bus.$on('updateGameState', (data) => {
       if (this.gameName == data.gameName) {
         this.$store.dispatch('updateGameState', data)
       }
     })
 
-    this.socket.on('updateConnections', (data) => {
+    window.bus.$on('updateConnections', (data) => {
       this.$store.dispatch('updateConnections', data)
     })
   },
@@ -226,8 +225,8 @@ export default {
         localStorage.setItem('teamName', this.teamName)
         localStorage.setItem('myRole', this.myRole)
         localStorage.setItem('gameName', this.gameName)
-        this.socket.emit('updateRole', {gameName: this.gameName, teamName: this.teamName, name: this.myName, role: this.myRole})
-        this.socket.emit('loadGame', {gameName: this.gameName, teamName: this.teamName})
+        window.bus.$emit('updateRole', {gameName: this.gameName, teamName: this.teamName, name: this.myName, role: this.myRole})
+        window.bus.$emit('loadGame', {gameName: this.gameName, teamName: this.teamName})
       }
       return setUp
     }

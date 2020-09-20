@@ -211,7 +211,7 @@ export default {
     restartGame() {
       const restartGame = confirm('Are you sure you want to re-start this game?')
       if (restartGame) {
-        this.socket.emit('restartGame', {gameName: this.gameName})
+        window.bus.$emit('restartGame', {gameName: this.gameName})
       }
     },
     role(role) {

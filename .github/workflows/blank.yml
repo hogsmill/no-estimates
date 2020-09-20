@@ -12,6 +12,8 @@ jobs:
           mongodb-version: 4.2
       - name: Start Node 
         uses: actions/setup-node@v1
+      - name: Setup packages
+        run: npm install
       - name: Run Server
         run: npm run serve:socket
       - name: Run Cypress

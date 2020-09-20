@@ -78,7 +78,7 @@
         <span @click="hide" class="glyphicon glyphicon-star">x</span>
       </div>
       <h4>Unable to Assign Effort</h4>
-      <p v-html="message"></p>
+      <p v-html="message" />
       <div class="button">
         <button class="btn btn-sm btn-info" @click="hide()">
           OK

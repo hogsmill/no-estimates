@@ -13,6 +13,8 @@
 </template>
 
 <script>
+import roles from '../../lib/roles.js'
+
 export default {
   computed: {
     gameName() {
@@ -27,6 +29,12 @@ export default {
     myName() {
       return this.$store.getters.getMyName
     },
+    myRole() {
+      return this.$store.getters.getMyRole
+    },
+    myOtherRoles() {
+      return this.$store.getters.getMyOtherRoles
+    },
     myEffort() {
       return this.$store.getters.getMyEffort
     }
@@ -40,9 +48,10 @@ export default {
   },
   methods: {
     addEffort() {
-      if (this.myEffort.available > 0) {
-        this.$store.dispatch('updateMyAssignedEffort', {effort: 1})
-        window.bus.$emit('incrementAutoDeploy', {gameName: this.gameName, teamName: this.teamName})
+      const effort = roles.iHaveRole('deploy', this.myRole, this.myOtherRoles) ? 1 : 2
+      if (this.myEffort.available >= effort) {
+        this.$store.dispatch('updateMyAssignedEffort', {effort: effort})
+        window.bus.$emit('incrementAutoDeploy', {gameName: this.gameName, teamName: this.teamName, effort: effort})
         window.bus.$emit('updatePersonAutoDeployEffort', {gameName: this.gameName, teamName: this.teamName, name: this.myName})
       }
     }

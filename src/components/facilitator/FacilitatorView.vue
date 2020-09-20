@@ -72,7 +72,7 @@
     <table class="game-state">
       <tr>
         <td class="left" colspan="16">
-          <h4>Game State</h4>
+          <h4>Game State: (Game: {{ gameName }}) <span v-if="gameName" title="Restart Game" class="restart" @click="restartGame">&#8635;</span></h4>
           <span v-if="showGameState" @click="setShowGameState(false)" title="collapse" class="toggle">&#9650;</span>
           <span v-if="!showGameState" @click="setShowGameState(true)" title="expand" class="toggle">&#9660;</span>
         </td>
@@ -97,7 +97,10 @@
         </td>
         <td v-if="showTeamState(team)">
           <div v-for="(member, m) in team.members" :key="m">
-            <b>{{ member.name.name }}</b> (<i>{{ member.role }}</i>)
+            <b>{{ member.name.name }}</b>
+            <div class="white rounded-circle member-role" :class="roleClass(member.role)">
+              {{ role(member.role) }}
+            </div>
           </div>
         </td>
         <td v-if="showTeamState(team) && !team.autoDeploy.doing && !team.autoDeploy.done">
@@ -204,12 +207,26 @@ export default {
       const mvp = team.mvpEstimate ? team.mvpEstimate : '-'
       const re = team.reEstimate ? team.reEstimate : '-'
       return proj + ' / ' + mvp + ' / ' + re
+    },
+    restartGame() {
+      const restartGame = confirm('Are you sure you want to re-start this game?')
+      if (restartGame) {
+        this.socket.emit('restartGame', {gameName: this.gameName})
+      }
+    },
+    role(role) {
+      return role.charAt(0)
+    },
+    roleClass(role) {
+      return role.toLowerCase()
     }
   }
 }
 </script>
 
 <style lang="scss">
+
+   @import '../../assets/colours.scss';
 
   .connections {
     text-align: right;
@@ -285,6 +302,11 @@ export default {
       font-weight: bold;
     }
 
+    .restart {
+      position: relative;
+      left: 6px;
+    }
+
     td {
       text-align: center;
 
@@ -296,6 +318,26 @@ export default {
     .white {
       color: #fff;
       font-weight: bold
+    }
+
+    .member-role {
+      width: 20px;
+      position: relative;
+      left: 2px;
+      display: inline-block;
+    }
+
+    .designer {
+      background-color: $design;
+    }
+    .developer {
+      background-color: $develop;
+    }
+    .tester {
+      background-color: $test;
+    }
+    .deployer {
+      background-color: $deploy;
     }
   }
 </style>

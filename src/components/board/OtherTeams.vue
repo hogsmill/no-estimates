@@ -117,7 +117,11 @@ export default {
     color: #444;
     margin: 6px;
     width: 122px;
-    height: 72px;
+
+    .urgent {
+      background-color: red;
+      color: #fff;
+    }
 
     .other-work-card-header {
       padding: 2px 2px 0 0;

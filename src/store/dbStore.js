@@ -657,7 +657,7 @@ module.exports = {
         const teams = res.teams
         for (let i = 0; i < teams.length; i++) {
           if (teams[i].name == data.teamName) {
-            teams[i].autoDeploy.effort = teams[i].autoDeploy.effort + data.effort
+            teams[i].autoDeploy.effort = teams[i].autoDeploy.effort + 1
             if (teams[i].autoDeploy.effort >= 8) {
               teams[i].autoDeploy.doing = false
               teams[i].autoDeploy.done = true

@@ -729,21 +729,19 @@ module.exports = {
     db.collection('noEstimates').find({gameName: data.gameName}).toArray(function(err, res) {
       if (err) throw err
       if (res.length) {
-        const teams = res[0].teams
-        for (let i = 0; i < teams.length; i++) {
-          if (teams[i].name == data.team.name) {
-            teams[i] = data.team
-          }
-        }
-        data.teams = teams
         for (let r = 0; r < res.length; r++) {
-          if (typeof(res[r]) != 'undefined') {
-            data.teamName = res[r].teamName
-            io.emit('updateTeams', data)
-            db.collection('noEstimates').updateOne({'_id': res[r]._id}, {$set: {teams: data.teams}}, function(err, ) {
-              if (err) throw err
-            })
+          let teams = res[r].teams
+          for (let i = 0; i < teams.length; i++) {
+            if (teams[i].name == data.team.name) {
+              teams[i].include = data.team.include
+            }
           }
+          data.teamName = res[r].teamName
+          data.teams = teams
+          io.emit('updateTeams', data)
+          db.collection('noEstimates').updateOne({'_id': res[r]._id}, {$set: {teams: teams}}, function(err, ) {
+            if (err) throw err
+          })
         }
         gameState.update(err, client, db, io, data, debugOn)
       }

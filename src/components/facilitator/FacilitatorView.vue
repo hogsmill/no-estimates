@@ -62,8 +62,8 @@
           Teams
         </td>
         <td colspan="3">
-          <div v-for="(team, index) in teams" :key="index">
-            <input type="checkbox" :checked="team.include" @click="toggleActive(team)"> {{ team.name }}
+          <div v-for="(team, index) in gameState" :key="index">
+            <input type="checkbox" :checked="team.include" @click="toggleActive(team)" :disabled="team.otherCards.length > 0"> {{ team.name }}
           </div>
         </td>
       </tr>

@@ -17,33 +17,29 @@
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav ml-auto">
-        <li class="nav-item">
-          <router-link :to="{ name: 'game'}">
-            Game
-          </router-link>
-        </li>
-        <li class="nav-item">
-          <router-link :to="{ name: 'status'}">
-            Status
-          </router-link>
-        </li>
-        <li class="nav-item">
-          <router-link to="/home/walkthrough">
-            Walkthrough
-          </router-link>
-        </li>
-        <li v-if="isHost" class="nav-item">
-          <router-link to="/facilitator">
-            Facilitator
-          </router-link>
-        </li>
+        <MenuItem :to="{ name: 'game'}">
+          Game
+        </MenuItem>
+        <MenuItem :to="{ name: 'status'}">
+          Status
+        </MenuItem>
+        <MenuItem to="/home/walkthrough">
+          Walkthrough
+        </MenuItem>
+        <MenuItem v-if="isHost" to="/facilitator">
+          Facilitator
+        </MenuItem>
       </ul>
     </div>
   </nav>
 </template>
 
 <script>
+import MenuItem from './MenuItem'
 export default {
+  components: {
+    MenuItem
+  },
   computed: {
     isHost() {
       return this.$store.getters.getHost

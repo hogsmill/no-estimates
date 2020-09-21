@@ -25,7 +25,8 @@ const routes = [
   { name: 'status', path: '/status', component: Status }
 ]
 const router = new VueRouter({
-  routes // short for `routes: routes`
+  routes,
+  mode: 'history'
 })
 
 const app = new Vue({

@@ -19,10 +19,19 @@
       <ul class="navbar-nav ml-auto">
         <li class="nav-item" :class="{ active: !showFacilitator }">
           <a class="nav-link pointer" @click="updateShowFacilitator(false)">Game</a>
+          <router-link :to="{ name: 'game'}">
+            Game
+          </router-link>
+        </li>
+        <li class="nav-item" :class="{ active: !showFacilitator }">
+          <router-link :to="{ name: 'status'}">
+            Status
+          </router-link>
         </li>
         <li v-if="isHost" class="nav-item" :class="{ active: showFacilitator }">
           <a class="nav-link pointer" @click="updateShowFacilitator(true)">Facilitator</a>
         </li>
+
       </ul>
     </div>
   </nav>

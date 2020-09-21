@@ -58,7 +58,7 @@
 <script>
 const axios = require('axios')
 
-import params from '../../lib/params.js'
+//import params from '../../lib/params.js'
 
 export default {
   data() {
@@ -75,15 +75,13 @@ export default {
       return this.$store.getters.getWalkThrough
     },
     showFacilitator() {
-      return this.$store.getters.getShowFacilitator
+      return this.$store.getters.getHost
     },
   },
   mounted() {
     const self = this
-    if (params.isParam('walkThrough') || params.isParam('walkThrough')) {
-      self.$store.dispatch('updateWalkThrough', true)
-      self.$modal.show('walk-through')
-    }
+    self.$store.dispatch('updateWalkThrough', true)
+    self.$modal.show('walk-through')
   },
   methods: {
     noOfScreens() {

@@ -1,10 +1,7 @@
 <template>
-  <div id="app" class="mb-4">
-    <WalkThroughView />
-    <div v-if="showFacilitator">
-      <FacilitatorView />
-    </div>
-    <div class="main" v-else>
+  <div>
+    <router-view />
+    <div class="main">
       <div v-if="isHost" class="right" @click="clear()">
         Clear Storage
       </div>
@@ -41,8 +38,6 @@ import MyRole from './components/MyRole.vue'
 import TeamName from './components/TeamName.vue'
 import GameName from './components/GameName.vue'
 import Status from './components/Status.vue'
-import FacilitatorView from './components/facilitator/FacilitatorView.vue'
-import WalkThroughView from './components/about/WalkThroughView.vue'
 
 import Roles from './components/Roles.vue'
 import Day from './components/Day.vue'
@@ -55,8 +50,6 @@ window.bus = EventBus
 export default {
   name: 'App',
   components: {
-    FacilitatorView,
-    WalkThroughView,
     MyName,
     TeamName,
     MyRole,
@@ -80,7 +73,7 @@ export default {
       return this.$store.getters.getWalkThrough
     },
     showFacilitator() {
-      return this.$store.getters.getShowFacilitator
+      return this.$store.getters.getHost
     },
     teamName() {
       return this.$store.getters.getTeamName

@@ -7,7 +7,6 @@ export const store = new Vuex.Store({
   state: {
     connections: 0,
     walkThrough: false,
-    showFacilitator: false,
     host: false,
     currency: '&#163;',
     gameName: '',
@@ -96,9 +95,6 @@ export const store = new Vuex.Store({
     gameState: []
   },
   getters: {
-    getShowFacilitator: (state) => {
-      return state.showFacilitator
-    },
     getWalkThrough: (state) => {
       return state.walkThrough
     },
@@ -201,9 +197,6 @@ export const store = new Vuex.Store({
     }
   },
   mutations: {
-    updateShowFacilitator: (state, payload) => {
-      state.showFacilitator = payload
-    },
     updateWalkThrough: (state, payload) => {
       state.walkThrough = payload
     },
@@ -314,9 +307,6 @@ export const store = new Vuex.Store({
     }
   },
   actions: {
-    updateShowFacilitator: ({ commit }, payload) => {
-      commit('updateShowFacilitator', payload)
-    },
     updateWalkThrough: ({ commit }, payload) => {
       commit('updateWalkThrough', payload)
     },

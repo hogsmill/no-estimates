@@ -17,21 +17,26 @@
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav ml-auto">
-        <li class="nav-item" :class="{ active: !showFacilitator }">
-          <a class="nav-link pointer" @click="updateShowFacilitator(false)">Game</a>
+        <li class="nav-item">
           <router-link :to="{ name: 'game'}">
             Game
           </router-link>
         </li>
-        <li class="nav-item" :class="{ active: !showFacilitator }">
+        <li class="nav-item">
           <router-link :to="{ name: 'status'}">
             Status
           </router-link>
         </li>
-        <li v-if="isHost" class="nav-item" :class="{ active: showFacilitator }">
-          <a class="nav-link pointer" @click="updateShowFacilitator(true)">Facilitator</a>
+        <li class="nav-item">
+          <router-link to="/home/walkthrough">
+            Walkthrough
+          </router-link>
         </li>
-
+        <li v-if="isHost" class="nav-item">
+          <router-link to="/facilitator">
+            Facilitator
+          </router-link>
+        </li>
       </ul>
     </div>
   </nav>
@@ -42,15 +47,7 @@ export default {
   computed: {
     isHost() {
       return this.$store.getters.getHost
-    },
-    showFacilitator() {
-      return this.$store.getters.getShowFacilitator
-    },
-  },
-  methods: {
-    updateShowFacilitator(payload) {
-      this.$store.dispatch('updateShowFacilitator', payload)
-    },
-  },
+    }
+  }
 }
 </script>

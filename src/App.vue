@@ -1,6 +1,5 @@
 <template>
   <div id="app" class="mb-4">
-    <appHeader />
     <WalkThroughView />
     <div v-if="showFacilitator">
       <FacilitatorView />
@@ -36,7 +35,6 @@ import io from 'socket.io-client'
 
 import params from './lib/params.js'
 
-import Header from './components/Header.vue'
 import Report from './components/report/Report.vue'
 import MyName from './components/MyName.vue'
 import MyRole from './components/MyRole.vue'
@@ -57,7 +55,6 @@ window.bus = EventBus
 export default {
   name: 'App',
   components: {
-    appHeader: Header,
     FacilitatorView,
     WalkThroughView,
     MyName,

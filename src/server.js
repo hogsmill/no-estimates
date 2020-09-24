@@ -101,6 +101,9 @@ function doDb(fun, data) {
       case 'updateTeamActive':
         dbStore.updateTeamActive(err, client, db, io, data, debugOn)
         break
+      case 'updateStealth':
+        dbStore.updateStealth(err, client, db, io, data, debugOn)
+        break
 
      // Game State
      //
@@ -189,6 +192,8 @@ io.on('connection', (socket) => {
   socket.on('percentageBlocked', (data) => { doDb('percentageBlocked', data) })
 
   socket.on('percentageDeployFail', (data) => { doDb('percentageDeployFail', data) })
+
+  socket.on('updateStealth', (data) => { doDb('updateStealth', data) })
 
   socket.on('updateTeamActive', (data) => { doDb('updateTeamActive', data) })
 

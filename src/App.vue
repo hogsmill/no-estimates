@@ -107,6 +107,13 @@ export default {
       this.$store.dispatch('updateHost', true)
     }
 
+    this.socket.on('updateStealth', (data) => {
+      if (this.gameName == data.gameName) {
+      console.log(data)
+        this.$store.dispatch('updateStealth', data)
+      }
+    })
+
     const self = this
     window.onload = function() {
       let myEffort = localStorage.getItem('myEffort')

@@ -1,6 +1,6 @@
 <template>
   <div class="container about">
-    <h1>No Estimates - Facilitator View</h1>
+    <h1>No Estimates - <span v-if="stealth">(Stealth)</span> Facilitator View</h1>
 
     <div class="connections">
       Current server connections: {{ connections.connections }} / {{ connections.maxConnections }}
@@ -55,6 +55,14 @@
           <button class="btn btn-sm btn-site-primary" @click="savePercentageDeployFail">
             Save
           </button>
+        </td>
+      </tr>
+      <tr v-if="showGameParams">
+        <td class="left-col">
+          Hosts
+        </td>
+        <td colspan="3" class="stealth">
+          <input type="checkbox" :checked="stealth" @click="toggleStealth()"> Hosts are in "Stealth" mode?
         </td>
       </tr>
       <tr v-if="showGameParams">
@@ -155,6 +163,9 @@ export default {
     showFacilitator() {
       return this.$store.getters.getShowFacilitator
     },
+    stealth() {
+      return this.$store.getters.getStealth
+    },
     gameName() {
       return this.$store.getters.getGameName
     },
@@ -190,6 +201,9 @@ export default {
         this.socket.emit('broadcastMessage', {gameName: this.gameName, message: message})
       }
     },
+    toggleStealth() {
+      this.socket.emit('updateStealth', {gameName: this.gameName, stealth: !this.stealth})
+    },
     toggleActive(team) {
       team.include = !team.include
       this.socket.emit('updateTeamActive', {gameName: this.gameName, team: team})
@@ -214,7 +228,7 @@ export default {
     restartGame() {
       const restartGame = confirm('Are you sure you want to re-start this game?')
       if (restartGame) {
-        this.socket.emit('restartGame', {gameName: this.gameName})
+        this.socket.emit('restartGame', {gameName: this.gameName, stealth: this.stealth})
       }
     },
     role(role) {

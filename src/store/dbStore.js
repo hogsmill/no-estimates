@@ -63,6 +63,7 @@ const initialCards = [
 function createNewGame(data) {
 
   const game = data
+  game.stealth = false
   game.roles = initialRoles
   game.pairing = []
   game.teams = initialTeams
@@ -263,7 +264,7 @@ module.exports = {
 
     if (debugOn) { console.log('restartGame', data) }
 
-    db.collection('noEstimates').deleteMany({gameName: data.gameName}, function(err, ) {
+    db.collection('noEstimates').deleteMany({gameName: data.gameName}, function(err) {
       _loadGame(err, client, db, io, data, debugOn)
       io.emit('restartGame', data)
     })
@@ -744,6 +745,23 @@ module.exports = {
           })
         }
         gameState.update(err, client, db, io, data, debugOn)
+      }
+    })
+  },
+
+  updateStealth: function(err, client, db, io, data, debugOn) {
+
+    if (debugOn) { console.log('updateStealth', data) }
+
+    db.collection('noEstimates').find({gameName: data.gameName}).toArray(function(err, res) {
+      if (err) throw err
+      if (res.length) {
+        io.emit('updateStealth', data)
+        for (let r = 0; r < res.length; r++) {
+          db.collection('noEstimates').updateOne({'_id': res[r]._id}, {$set: {stealth: data.stealth}}, function(err, ) {
+            if (err) throw err
+          })
+        }
       }
     })
   }

@@ -62,7 +62,7 @@
           Hosts
         </td>
         <td colspan="3" class="stealth">
-          <input type="checkbox" :checked="stealth" @click="toggleStealth()"> Hosts are in "Stealth" mode?
+          <input id="stealth" type="checkbox" :checked="stealth" @click="toggleStealth()"> Hosts are in "Stealth" mode?
         </td>
       </tr>
       <tr v-if="showGameParams">
@@ -202,7 +202,8 @@ export default {
       }
     },
     toggleStealth() {
-      this.socket.emit('updateStealth', {gameName: this.gameName, stealth: !this.stealth})
+      const stealth = document.getElementById('stealth').checked
+      this.socket.emit('updateStealth', {gameName: this.gameName, stealth: stealth})
     },
     toggleActive(team) {
       team.include = !team.include

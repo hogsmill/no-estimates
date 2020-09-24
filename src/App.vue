@@ -109,7 +109,6 @@ export default {
 
     this.socket.on('updateStealth', (data) => {
       if (this.gameName == data.gameName) {
-      console.log(data)
         this.$store.dispatch('updateStealth', data)
       }
     })

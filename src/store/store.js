@@ -12,7 +12,7 @@ export const store = new Vuex.Store({
     stealth: false,
     currency: '&#163;',
     gameName: '',
-    myName: {id: '', name: '', captain: false},
+    myName: {id: '', name: '', captain: false, host: false},
     myRole: '',
     teamName: '',
     teams: [
@@ -236,6 +236,7 @@ export const store = new Vuex.Store({
       if (payload.uuid && payload.uuid == state.myName.uuid) {
         state.myName.name = payload.name
         state.myName.captain = payload.captain
+        state.myName.host = payload.host
       } else {
         state.myName = payload
       }

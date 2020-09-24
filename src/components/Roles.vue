@@ -4,8 +4,11 @@
       <tr>
         <td class="role" :class="role.role.toLowerCase()" v-for="(role, index) in roles" :key="index">
           <div v-for="(name, m) in roles[index].names" :key="'name-' + m">
-            {{ name.name }} <Captain :captain="name.captain" />
-            <span v-if="name.effort">({{ name.effort.available }})</span>
+            {{ name.host }} {{ stealth }}
+            <div v-if="!(name.isHost && stealth)">
+              {{ name.name }} <Captain :captain="name.captain" />
+              <span v-if="name.effort">({{ name.effort.available }})</span>
+            </div>
           </div>
           <div v-for="(otherName, n) in roles[index].otherNames" :key="'otherName-' + n">
             (<i>{{ otherName.name }}</i>)
@@ -24,6 +27,15 @@ export default {
     Captain
   },
   computed: {
+    isHost() {
+      return this.$store.getters.getHost
+    },
+    stealth() {
+      return this.$store.getters.getStealth
+    },
+    myName() {
+      return this.$store.getters.getMyName
+    },
     roles() {
       return this.$store.getters.getRoles
     }

@@ -3,7 +3,7 @@
     <button class="btn btn-sm btn-site-primary" @click="show()">
       Report
     </button>
-    <span class="current-value">Current Project Value: <span v-html="currency" /><span>{{ total() }}</span></span>
+    <span class="current-value">Current Project Value: {{ currencyLabel() }}{{ total() }}</span>
 
     <modal class="report-modal" name="report-modal" :height="500" :classes="['rounded']">
       <div class="mt-4">
@@ -62,7 +62,7 @@
                 <th>Commit<br>Day</th>
                 <th>Delivery<br>Day</th>
                 <th>Delivery<br>Time</th>
-                <th>Total<br><span>{{ currency }}{{ total() }}</span></th>
+                <th>Total<br><span>{{ currencyLabel() }}{{ total() }}</span></th>
               </tr>
             </thead>
             <tbody>
@@ -96,6 +96,7 @@
 
 <script>
 import stats from '../../lib/stats.js'
+import stringFuns from '../../lib/stringFuns.js'
 
 export default {
   data() {
@@ -155,6 +156,9 @@ export default {
     },
     selectTab(tab) {
       this.tab = tab
+    },
+    currencyLabel() {
+      return stringFuns.htmlDecode(this.currency)
     },
     time(card) {
       let t

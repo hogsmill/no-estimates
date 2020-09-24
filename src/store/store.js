@@ -9,6 +9,7 @@ export const store = new Vuex.Store({
     walkThrough: false,
     showFacilitator: false,
     host: false,
+    stealth: false,
     currency: '&#163;',
     gameName: '',
     myName: {id: '', name: '', captain: false},
@@ -104,6 +105,9 @@ export const store = new Vuex.Store({
     },
     getHost: (state) => {
       return state.host
+    },
+    getStealth: (state) => {
+      return state.stealth
     },
     getCurrency: (state) => {
       return state.currency
@@ -209,6 +213,9 @@ export const store = new Vuex.Store({
     },
     updateHost: (state, payload) => {
       state.host = payload
+    },
+    updateStealth: (state, payload) => {
+      state.stealth = payload.stealth
     },
     loadGame: (state, payload) => {
       state.teams = payload.teams
@@ -322,6 +329,9 @@ export const store = new Vuex.Store({
     },
     updateHost: ({ commit }, payload) => {
       commit('updateHost', payload)
+    },
+    updateStealth: ({ commit }, payload) => {
+      commit('updateStealth', payload)
     },
     loadGame: ({ commit }, payload) => {
       commit('loadGame', payload)

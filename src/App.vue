@@ -9,6 +9,9 @@
       <div v-if="isHost" class="right" @click="clear()">
         Clear Storage
       </div>
+      <div v-if="!connections.connections" class="not-connected">
+        WARNING: You are not connected to the server
+      </div>
       <h1>No Estimates <span v-if="teamName">(Team: {{ teamName }})</span></h1>
       <h3 class="setup-header" v-if="!isSetUp()">
         Before we start the game, please set the game name, your name, your team and your speciality.
@@ -74,6 +77,9 @@ export default {
   computed: {
     isHost() {
       return this.$store.getters.getHost
+    },
+    connections() {
+      return this.$store.getters.getConnections
     },
     walkThrough() {
       return this.$store.getters.getWalkThrough
@@ -238,6 +244,12 @@ export default {
 </script>
 
 <style lang="scss">
+
+  .not-connected {
+    background-color: red;
+    color: #fff;
+    font-weight: bold;
+  }
 
   .right {
     text-align: right;

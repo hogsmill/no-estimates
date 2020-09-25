@@ -218,6 +218,7 @@ export const store = new Vuex.Store({
       state.stealth = payload.stealth
     },
     loadGame: (state, payload) => {
+      state.stealth = payload.stealth
       state.teams = payload.teams
       state.columns = payload.columns
       state.currentDay = payload.currentDay

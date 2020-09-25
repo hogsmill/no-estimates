@@ -4,8 +4,7 @@
       <tr>
         <td class="role" :class="role.role.toLowerCase()" v-for="(role, index) in roles" :key="index">
           <div v-for="(name, m) in roles[index].names" :key="'name-' + m">
-            {{ name.host }} {{ stealth }}
-            <div v-if="!(name.isHost && stealth)">
+            <div v-if="!(name.host && stealth)">
               {{ name.name }} <Captain :captain="name.captain" />
               <span v-if="name.effort">({{ name.effort.available }})</span>
             </div>

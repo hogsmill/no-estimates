@@ -19,8 +19,10 @@ const initialTeams = [
   { name: 'Red', include: true, recharting: false, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
   { name: 'Orange', include: false, recharting: false, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
   { name: 'Black', include: false, recharting: false, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
-  { name: 'Grey', include: false, recharting: false, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } }
-
+  { name: 'Grey', include: false, recharting: false, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
+  { name: 'Brown', include: false, recharting: false, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
+  { name: 'Magenta', include: false, recharting: false, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
+  { name: 'Salmon', include: false, recharting: false, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } }
 ]
 
 const initialColumns = [

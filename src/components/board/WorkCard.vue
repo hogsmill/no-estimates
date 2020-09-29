@@ -72,19 +72,6 @@
         </td>
       </tr>
     </table>
-
-    <modal class="work-card-popup" name="work-card-popup" :height="150" :classes="['rounded']">
-      <div class="text-right">
-        <span @click="hide" class="glyphicon glyphicon-star">x</span>
-      </div>
-      <h4>Unable to Assign Effort</h4>
-      <p v-html="message" />
-      <div class="button">
-        <button class="btn btn-sm btn-info" @click="hide()">
-          OK
-        </button>
-      </div>
-    </modal>
   </div>
 </template>
 
@@ -97,7 +84,7 @@ export default {
   ],
   data() {
     return {
-      message: ''
+      timeout: false,
     }
   },
   computed: {
@@ -127,13 +114,6 @@ export default {
     }
   },
   methods: {
-    show () {
-      this.$modal.show('work-card-popup')
-    },
-    hide () {
-      this.message = ''
-      this.$modal.hide('work-card-popup')
-    },
     teamClass() {
       return this.workCard.dependentOn ? this.workCard.dependentOn.name.toLowerCase() : ''
     },
@@ -163,13 +143,14 @@ export default {
       localStorage.setItem('myEffort', JSON.stringify(this.myEffort))
     },
     addEffort(column) {
+      let message = ''
       if (this.workCard.blocked) {
-        this.message = 'Can\'t assign - card is blocked'
+        message = 'card is blocked'
       } else if (this.canAssign(column)) {
         if (this.myEffort.available == 0) {
-          this.message = 'Can\'t assign - all effort assigned'
+          message = 'all effort assigned'
         } else if (this.workCard.effort[column] == this.workCard[column]) {
-          this.message = 'Can\'t assign - all work completed'
+          message = 'all work completed'
         } else {
           if (roles.iHaveRole(column, this.myRole, this.myOtherRoles)) {
             this.workCard.effort[column] = this.workCard.effort[column] + 1
@@ -178,7 +159,7 @@ export default {
             this.socket.emit('updateAssignedEffort', {gameName: this.gameName, teamName: this.teamName, name: this.myName, effort: this.myEffort})
           } else {
             if (this.myEffort.available < 2) {
-              this.message = 'Can\'t assign - you only have one effort point left'
+              message = 'you only have one effort point left'
             } else {
               this.workCard.effort[column] = this.workCard.effort[column] + 1
               this.$store.dispatch('updateMyAssignedEffort', {effort: 2})
@@ -189,10 +170,18 @@ export default {
           }
         }
       } else if (!this.canAssign(column)) {
-        this.message = 'Can\'t assign - wrong column'
+        message = 'wrong column'
       }
-      if (this.message) {
-        this.show()
+      if (message != '') {
+        // TBD this is a bit messy...
+        if (this.timeout) {
+          window.clearTimeout(this.timeout)
+        }
+        this.$store.dispatch('updateMessage', message)
+        const self = this
+        this.timeout = window.setTimeout(function() {
+          self.$store.dispatch('updateMessage', '')
+        }, 2000)
       } else {
         this.socket.emit('updatePersonEffort', {gameName: this.gameName, teamName: this.teamName, workCard: this.workCard, name: this.myName, column: column})
         this.socket.emit('updateEffort', {gameName: this.gameName, teamName: this.teamName, name: this.myName, workCard: this.workCard})

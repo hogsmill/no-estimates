@@ -26,6 +26,7 @@
           <Report :socket="socket" />
         </div>
         <Roles />
+        <Message :socket="socket" />
         <Day :socket="socket" />
         <Board :socket="socket" />
       </div>
@@ -44,6 +45,7 @@ import SetGame from './components/SetGame.vue'
 import SetEstimates from './components/SetEstimates.vue'
 import SetRole from './components/SetRole.vue'
 import Status from './components/Status.vue'
+import Message from './components/Message.vue'
 import FacilitatorView from './components/facilitator/FacilitatorView.vue'
 import WalkThroughView from './components/about/WalkThroughView.vue'
 
@@ -61,6 +63,7 @@ export default {
     SetEstimates,
     SetRole,
     Status,
+    Message,
     Report,
     Roles,
     Day,

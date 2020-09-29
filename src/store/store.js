@@ -25,6 +25,7 @@ export const store = new Vuex.Store({
       { name: 'Grey', include: false, recharting: false, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } }
     ],
     pairing: [],
+    message: '',
     myEffort: {
       available: 4,
       assigned: 0,
@@ -40,7 +41,7 @@ export const store = new Vuex.Store({
     percentageBlocked: 0,
     percentageDeployFail: 0,
     eventCards: [
-      {number: 1, text: 'Good Luck!<br/><br/>. Have you submitted an initial estimate for the project?<br/><br/>Click \'Report\' and create your estimate now.'},
+      {number: 1, text: 'Good Luck!<br/><br/>. Have you submitted an initial estimate for the project?<br/><br/>If not, click \'Report\' or \'Set Estimates\' and create your estimate now.'},
       {number: 2, text: 'Remember that manual deployments will fail a certain percentage of the time. In this case, you will need to re-do the deployment effort.'},
       {number: 3, function: 'Add 1 Point To Everyones Capacity', text: 'Pizza inspires your team to greatness! Add one to each person\'s capacity tomorrow.'},
       {number: 4, text: 'Did you remember that people can work in areas outside their speciality? They require two effort points to make one effort point in another area.'},
@@ -131,6 +132,9 @@ export const store = new Vuex.Store({
         }
       }
       return roles
+    },
+    getMessage: (state) => {
+      return state.message
     },
     getMyEffort: (state) => {
       return state.myEffort
@@ -250,6 +254,9 @@ export const store = new Vuex.Store({
       state.myRole = payload
       state.myEffort.role = payload
     },
+    updateMessage: (state, payload) => {
+      state.message = payload
+    },
     updateMyEffort: (state, payload) => {
       state.myEffort.available = payload.available
       state.myEffort.assigned = payload.assigned
@@ -349,6 +356,9 @@ export const store = new Vuex.Store({
     },
     updateMyRole: ({ commit }, payload) => {
       commit('updateMyRole', payload)
+    },
+    updateMessage: ({ commit }, payload) => {
+      commit('updateMessage', payload)
     },
     updateMyEffort: ({ commit }, payload) => {
       commit('updateMyEffort', payload)

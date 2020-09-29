@@ -6,7 +6,7 @@
           <div v-for="(name, m) in roles[index].names" :key="'name-' + m">
             <div v-if="!(name.host && stealth)" :class="{ 'me': name.id == myName.id }">
               {{ name.name }} <Captain :captain="name.captain" />
-              <span v-if="name.effort">({{ name.effort.available }})</span>
+              <span>({{ myEffort.available }})</span>
             </div>
           </div>
           <div v-for="(otherName, n) in roles[index].otherNames" :key="'otherName-' + n">
@@ -34,6 +34,9 @@ export default {
     },
     myName() {
       return this.$store.getters.getMyName
+    },
+    myEffort() {
+      return this.$store.getters.getMyEffort
     },
     roles() {
       return this.$store.getters.getRoles

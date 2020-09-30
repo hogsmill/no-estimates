@@ -127,7 +127,7 @@ export const store = new Vuex.Store({
       return state.myRole
     },
     getMyOtherRoles: (state) => {
-      const roles = []
+      let roles = []
       for (let i = 0; i < state.roles.length; i++) {
         for (let j = 0; j < state.roles[i].otherNames.length; j++) {
           if (state.myName.id == state.roles[i].otherNames[j].id) {
@@ -153,7 +153,7 @@ export const store = new Vuex.Store({
       return state.teams
     },
     getActiveTeams: (state) => {
-      const teams = []
+      let teams = []
       for (let i = 0; i < state.teams.length; i++) {
         if (state.teams[i].include) {
           teams.push(state.teams[i])

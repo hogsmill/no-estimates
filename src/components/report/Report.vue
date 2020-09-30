@@ -178,19 +178,7 @@ export default {
         }
       }
       return effort.length == 0 ? 0 : stats.pCorrelation(effort, deliveryTime).toFixed(2)
-    },
-    //saveTotalProject() {
-    //  const estimate = document.getElementById('project-estimate').value
-    //  this.socket.emit('updateProjectEstimate', {gameName: this.gameName, teamName: this.teamName, projectEstimate: estimate})
-    //},
-    //saveMVP() {
-    //  const estimate = document.getElementById('mvp-estimate').value
-    //  this.socket.emit('updateMVPEstimate', {gameName: this.gameName, teamName: this.teamName, mvpEstimate: estimate})
-    //},
-    //saveReEstimate() {
-    //  const estimate = document.getElementById('re-estimate').value
-    //  this.socket.emit('updateReEstimate', {gameName: this.gameName, teamName: this.teamName, reEstimate: estimate})
-    //}
+    }
   }
 }
 </script>

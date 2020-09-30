@@ -100,7 +100,7 @@ export default {
         setTimeout(function() { self.message = message }, 100)
       } else {
         this.socket.emit('addEffortToOthersCard', {gameName: this.gameName, teamName: this.teamName, card: card, myName: this.myName})
-        //this.socket.emit("updateOtherTeamEffort", {gameName: this.gameName, teamName: this.teamName, card: card})
+        this.socket.emit('updateOtherTeamEffort', {gameName: this.gameName, teamName: this.teamName, card: card, name: this.myName, effort: this.myEffort})
         this.$store.dispatch('updateMyAssignedEffort', {effort: 1})
       }
     }

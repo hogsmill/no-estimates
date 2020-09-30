@@ -279,7 +279,7 @@ module.exports = {
     db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
       if (err) throw err
       if (res) {
-        const teams = res.teams, columns = res.columns, workCards = res.workCards, roles = res.roles, currentDay = res.currentDay + 1
+        let teams = res.teams, columns = res.columns, workCards = res.workCards, roles = res.roles, currentDay = res.currentDay + 1
         for (let i = 0; i < teams.length; i++) {
           if (teams[i].name == data.teamName) {
             if (data.autoDeploy) {

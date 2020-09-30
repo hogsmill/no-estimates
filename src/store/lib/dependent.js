@@ -34,9 +34,9 @@ module.exports = {
   },
 
   addEffortToMyCard: function(teams, team, card) {
-    let newTeams = []
+    const newTeams = []
     for (let i = 0; i < teams.length; i++) {
-      let newTeam = teams[i]
+      const newTeam = teams[i]
       if (newTeam.name == team) {
         for (let j = 0; j < teams[i].otherCards.length; j++) {
           if (teams[i].otherCards[j].number == card.number) {

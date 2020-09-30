@@ -303,7 +303,7 @@ module.exports = {
         }
         for (let i = 1; i < columns.length; i++) {
           for (let j = 0; j < columns[i].cards.length; j++) {
-            const card = columns[i].cards[j]
+            let card = columns[i].cards[j]
             const colName = columns[i].name
             if (card.blocked || card.failed) {
               card.blocked = false
@@ -369,7 +369,7 @@ module.exports = {
     db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
       if (err) throw err
       if (res) {
-        const workCards = res.workCards
+        let workCards = res.workCards
         workCards[data.workCard].commit = data.commit
         db.collection('noEstimates').updateOne({'_id': res._id}, {$set: {workCards: workCards}}, function(err, ) {
           if (err) throw err
@@ -388,7 +388,7 @@ module.exports = {
     db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
       if (err) throw err
       if (res) {
-        const columns = data.columns, workCards = res.workCards
+        let columns = data.columns, workCards = res.workCards
         for (let i = 1; i < columns.length; i++) {
           for (let j = 0; j < columns[i].cards.length; j++) {
             const card = columns[i].cards[j]
@@ -446,8 +446,7 @@ module.exports = {
     db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
       if (err) throw err
       if (res) {
-        const columns = res.columns,
-          workCards = res.workCards
+        let columns = res.columns, workCards = res.workCards
         let todaysEffort = []
         for (let i = 1; i < columns.length; i++) {
           for (let j = 0; j < columns[i].cards.length; j++) {
@@ -480,12 +479,12 @@ module.exports = {
     db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
       if (err) throw err
       if (res) {
-        const roles = []
+        let roles = []
         for (let i = 0; i < res.roles.length; i++) {
-          const role = res.roles[i]
-          const names = []
+          let role = res.roles[i]
+          let names = []
           for (let j = 0; j < res.roles[i].names.length; j++) {
-            const name = res.roles[i].names[j]
+            let name = res.roles[i].names[j]
             if (res.roles[i].names[j].id == data.name.id) {
               name.effort = data.effort
             }
@@ -510,8 +509,7 @@ module.exports = {
     db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
       if (err) throw err
       if (res) {
-        let i, player, roles = res.roles
-        const pairing = []
+        let i, player, roles = res.roles, pairing = []
         for (i = 0; i < res.pairing.length; i++) {
           if (res.pairing[i].name.id == data.name.id) {
             player = res.pairing[i]
@@ -543,7 +541,7 @@ module.exports = {
             if (column.days.length >= 5) {
               roles = pairingFuns.addSecondarySkill(roles, column.column, data.name)
             }
-            const columns = []
+            let columns = []
             for (i = 0; i < player.columns.length; i++) {
               if (player.columns[i].column == data.column) {
                 columns.push(column)
@@ -590,12 +588,11 @@ module.exports = {
         for (let r = 0; r < res.length; r++) {
           if (res[r].teamName == data.card.team) {
             // this team
-            let i, j
-            const columns = res[r].columns, workCards = res[r].workCards
+            let i, j, columns = res[r].columns, workCards = res[r].workCards
             for (i = 1; i < columns.length; i++) {
               for (j = 0; j < columns[i].cards.length; j++) {
                 if (columns[i].cards[j].number == data.card.number) {
-                  const card = columns[i].cards[j]
+                  let card = columns[i].cards[j]
                   const colName = columns[i].name
                   card.dependencyDone = card.dependencyDone + 1
                   if (cardFuns.cardCompleteInColumn(card, colName, res[r].teamName, res[r].teams, res[r].percentageBlocked, res[r].percentageDeployFail)) {
@@ -634,7 +631,7 @@ module.exports = {
     db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
       if (err) throw err
       if (res) {
-        const teams = res.teams
+        let teams = res.teams
         for (let i = 0; i < teams.length; i++) {
           if (teams[i].name == data.teamName) {
             teams[i].autoDeploy.doing = true
@@ -657,7 +654,7 @@ module.exports = {
     db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
       if (err) throw err
       if (res) {
-        const teams = res.teams
+        let teams = res.teams
         for (let i = 0; i < teams.length; i++) {
           if (teams[i].name == data.teamName) {
             teams[i].autoDeploy.effort = teams[i].autoDeploy.effort + 1

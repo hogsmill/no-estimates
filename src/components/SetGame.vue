@@ -17,6 +17,7 @@
           <GameName :socket="socket" />
           <MyName :socket="socket" />
           <TeamName :socket="socket" />
+          <MyRole :socket="socket" />
         </table>
         <button class="btn btn-sm btn-primary smaller-font" @click="hide">
           Done
@@ -31,12 +32,14 @@
 import GameName from './setup/GameName.vue'
 import MyName from './setup/MyName.vue'
 import TeamName from './setup/TeamName.vue'
+import MyRole from './setup/MyRole.vue'
 
 export default {
   components: {
     GameName,
     MyName,
-    TeamName
+    TeamName,
+    MyRole
   },
   props: [
     'socket'

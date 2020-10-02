@@ -64,7 +64,7 @@ export const store = new Vuex.Store({
       {number: 17, text: 'If you restructured your team yesterday, how do you expect the change to impact your forecast.'},
       {number: 18, text: 'Jim from accounting sales sends an email directing employees to make sure they\'re fully utilised (i.e. follow a policy that you do not leave capacity on the table). Do you obey or silently ignore him?'},
       {number: 19, text: 'How much work in progress do you have? Has that changed from earlier?'},
-      {number: 20, text: 'When you have completed the MVP (cards 1 to 11), look at your estimates from earlier. How did you do? This time, try creating a probabilistic forecast for the rest of the backlog using the delivery-time data (ask the facilitator for help).'}
+      {number: 20, text: 'When you have completed the MVP (cards 1 to [MVPCARDS]), look at your estimates from earlier. How did you do? This time, try creating a probabilistic forecast for the rest of the backlog using the delivery-time data (ask the facilitator for help).'}
     ],
     currentEventCard: 0,
     workCards: [
@@ -94,10 +94,13 @@ export const store = new Vuex.Store({
       {number: 24, design: 0, develop: 6, test: 4, deploy: 6, urgent: false, teamDependency: 0, dependentOn: '', commit: 0, blocked: false, effort: {design: 0, develop: 0, test: 0, deploy: 0}},
       {number: 25, design: 3, develop: 2, test: 2, deploy: 4, urgent: false, teamDependency: 0, dependentOn: '', commit: 0, blocked: false, effort: {design: 0, develop: 0, test: 0, deploy: 0}}
     ],
+    mvpCards: 11,
     recharting: false,
     currentWorkCard: 0,
     projectEstimate: 0,
+    projectActual: 0,
     mvpEstimate: 0,
+    mvpActual: 0,
     reEstimate: 0,
     gameState: []
   },
@@ -170,6 +173,9 @@ export const store = new Vuex.Store({
     getPercentageDeployFail: (state) => {
       return state.percentageDeployFail
     },
+    getMvpCards: (state) => {
+      return state.mvpCards
+    },
     getCurrentDay: (state) => {
       return state.currentDay
     },
@@ -227,6 +233,7 @@ export const store = new Vuex.Store({
     },
     loadGame: (state, payload) => {
       state.stealth = payload.stealth
+      state.mvpCards = payload.mvpCards
       state.teams = payload.teams
       state.columns = payload.columns
       state.currentDay = payload.currentDay
@@ -283,6 +290,9 @@ export const store = new Vuex.Store({
     },
     percentageDeployFail: (state, payload) => {
       state.percentageDeployFail = payload.percentageDeployFail
+    },
+    updateMvpCards: (state, payload) => {
+      state.mvpCards = payload.mvpCards
     },
     updateTeams: (state, payload) => {
       state.teams = payload.teams
@@ -387,6 +397,9 @@ export const store = new Vuex.Store({
     },
     percentageDeployFail: ({ commit }, payload) => {
       commit('percentageDeployFail', payload)
+    },
+    updateMvpCards: ({ commit }, payload) => {
+      commit('updateMvpCards', payload)
     },
     updateTeamName: ({ commit }, payload) => {
       commit('updateTeamName', payload)

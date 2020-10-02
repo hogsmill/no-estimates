@@ -72,6 +72,7 @@ function createNewGame(data) {
   game.teams = initialTeams
   game.columns = initialColumns
   game.workCards = initialCards
+  game.mvpCards = 11
   game.gameName = data.gameName
   game.daysEffort = []
   game.currentDay = 1
@@ -713,6 +714,23 @@ module.exports = {
           })
         }
         gameState.update(err, client, db, io, data, debugOn)
+      }
+    })
+  },
+
+  updateMvpCards: function(err, client, db, io, data, debugOn) {
+
+    if (debugOn) { console.log('updateMvpCards', data) }
+
+    db.collection('noEstimates').find({gameName: data.gameName}).toArray(function(err, res) {
+      if (err) throw err
+      if (res.length) {
+        io.emit('updateMvpCards', data)
+        for (let r = 0; r < res.length; r++) {
+          db.collection('noEstimates').updateOne({'_id': res[r]._id}, {$set: {mvpCards: data.mvpCards}}, function(err, ) {
+            if (err) throw err
+          })
+        }
       }
     })
   },

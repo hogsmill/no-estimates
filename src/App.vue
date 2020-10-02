@@ -14,7 +14,6 @@
       </div>
       <SetGame :socket="socket" />
       <SetEstimates :socket="socket" />
-      <SetRole :socket="socket" />
       <Status :socket="socket" />
       <div v-if="isSetUp()" class="container board">
         <h3 class="board-title">
@@ -43,7 +42,6 @@ import Header from './components/Header.vue'
 import Report from './components/report/Report.vue'
 import SetGame from './components/SetGame.vue'
 import SetEstimates from './components/SetEstimates.vue'
-import SetRole from './components/SetRole.vue'
 import Status from './components/Status.vue'
 import Message from './components/Message.vue'
 import FacilitatorView from './components/facilitator/FacilitatorView.vue'
@@ -61,7 +59,6 @@ export default {
     WalkThroughView,
     SetGame,
     SetEstimates,
-    SetRole,
     Status,
     Message,
     Report,
@@ -118,6 +115,12 @@ export default {
       this.$store.dispatch('updateGameName', game)
       localStorage.setItem('gameName', game)
     }
+
+    this.socket.on('updateMvpCards', (data) => {
+      if (this.gameName == data.gameName) {
+        this.$store.dispatch('updateMvpCards', data)
+      }
+    })
 
     this.socket.on('updateStealth', (data) => {
       if (this.gameName == data.gameName) {

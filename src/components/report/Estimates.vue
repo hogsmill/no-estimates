@@ -2,29 +2,41 @@
   <table class="estimates">
     <tr>
       <td>Estimate for Total Project: </td>
-      <td><input type="text" id="project-estimate" class="form-control" :value="projectEstimate"></td>
       <td>
-        <button class="btn btn-sm btn-site-primary" :disabled="!gameName || !teamName" @click="saveTotalProject">
+        <input v-if="!projectEstimate" type="text" id="project-estimate" class="form-control" :value="projectEstimate">
+        <span v-if="projectEstimate">Estimate {{ projectEstimate }}</span>
+      </td>
+      <td>
+        <button v-if="!projectEstimate" class="btn btn-sm btn-site-primary" :disabled="!gameName || !teamName" @click="saveTotalProject">
           Save
         </button>
+        <span v-if="projectEstimate">Actual: TBD</span>
       </td>
     </tr>
     <tr>
-      <td>Estimate for MVP (#1-11): </td>
-      <td><input type="text" id="mvp-estimate" class="form-control" :value="mvpEstimate"></td>
+      <td>Estimate for MVP (Cards 1-{{ mvpCards }}): </td>
       <td>
-        <button class="btn btn-sm btn-site-primary" @click="saveMVP">
+        <input v-if="!mvpEstimate" type="text" id="mvp-estimate" class="form-control" :value="mvpEstimate">
+        <span v-if="mvpEstimate">Estimate {{ mvpEstimate }}</span>
+      </td>
+      <td>
+        <button v-if="!mvpEstimate" class="btn btn-sm btn-site-primary" @click="saveMVP">
           Save
         </button>
+        <span v-if="mvpEstimate">Actual: TBD</span>
       </td>
     </tr>
     <tr>
       <td>Re-estimate for Total project: </td>
-      <td><input type="text" id="re-estimate" class="form-control" :value="reEstimate"></td>
       <td>
-        <button class="btn btn-sm btn-site-primary" @click="saveReEstimate">
+        <input v-if="!reEstimate" type="text" id="re-estimate" class="form-control" :value="reEstimate">
+        <span v-if="reEstimate">Estimate {{ reEstimate }}</span>
+      </td>
+      <td>
+        <button v-if="!reEstimate" class="btn btn-sm btn-site-primary" @click="saveReEstimate">
           Save
         </button>
+        <span v-if="reEstimate">Actual: TBD</span>
       </td>
     </tr>
   </table>
@@ -45,11 +57,17 @@ export default {
     projectEstimate() {
       return this.$store.getters.getProjectEstimate
     },
+    mvpCards() {
+      return this.$store.getters.getMvpCards
+    },
     mvpEstimate() {
       return this.$store.getters.getMVPEstimate
     },
     reEstimate() {
       return this.$store.getters.getReEstimate
+    },
+    currentDay() {
+      return this.$store.getters.getCurrentDay
     }
   },
   mounted() {
@@ -85,3 +103,14 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+  .estimates {
+    width: 90%;
+    margin: 0 auto;
+    span {
+      height: 36px;
+      line-height: 36px;
+    }
+  }
+</style>

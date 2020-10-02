@@ -112,6 +112,9 @@ function doDb(fun, data) {
       case 'percentageDeployFail':
         dbStore.percentageDeployFail(err, client, db, io, data, debugOn)
         break
+      case 'updateMvpCards':
+        dbStore.updateMvpCards(err, client, db, io, data, debugOn)
+        break
       case 'updateTeamActive':
         dbStore.updateTeamActive(err, client, db, io, data, debugOn)
         break
@@ -206,6 +209,8 @@ io.on('connection', (socket) => {
   socket.on('percentageBlocked', (data) => { doDb('percentageBlocked', data) })
 
   socket.on('percentageDeployFail', (data) => { doDb('percentageDeployFail', data) })
+
+  socket.on('updateMvpCards', (data) => { doDb('updateMvpCards', data) })
 
   socket.on('updateStealth', (data) => { doDb('updateStealth', data) })
 

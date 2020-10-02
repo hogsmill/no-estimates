@@ -5,8 +5,8 @@
     </td>
     <td v-if="myRole && !change">
       <span class="setup-label">{{ myRole }}</span>
-      <button class="btn btn-sm btn-secondary smaller-font" @click="changeMyRole">
-        Change
+      <button class="btn btn-sm btn-secondary smaller-font" :disabled="!canChangeRole()" @click="changeMyRole">
+        &#128393;
       </button>
     </td>
     <td v-if="!myRole || change">
@@ -47,11 +47,20 @@ export default {
     },
     roles() {
       return this.$store.getters.getRoles
+    },
+    myTeam() {
+      return this.$store.getters.getMyTeam
+    },
+    currentDay() {
+      return this.$store.getters.getCurrentDay
     }
   },
   methods: {
     changeMyRole: function() {
       this.change = true
+    },
+    canChangeRole: function() {
+      return this.currentDay == 1 || this.myTeam.recharting
     },
     saveMyRole: function() {
       const myRole = document.getElementById('role-select').value

@@ -59,6 +59,19 @@
       </tr>
       <tr v-if="showGameParams">
         <td class="left-col">
+          <span class="mvp-label">MVP: </span> <span class="mvp-cards">Cards 1 to</span>
+        </td>
+        <td class="center">
+          <input type="text" id="mvpCards" class="form-control" :value="mvpCards">
+        </td>
+        <td colspan="2" class="left">
+          <button class="btn btn-sm btn-site-primary" @click="saveMvpCards">
+            Save
+          </button>
+        </td>
+      </tr>
+      <tr v-if="showGameParams">
+        <td class="left-col">
           Hosts
         </td>
         <td colspan="3" class="stealth">
@@ -178,6 +191,9 @@ export default {
     percentageDeployFail() {
       return this.$store.getters.getPercentageDeployFail
     },
+    mvpCards() {
+      return this.$store.getters.getMvpCards
+    },
     gameState() {
       return this.$store.getters.getGameState
     },
@@ -213,6 +229,10 @@ export default {
     savePercentageBlocked: function() {
       const percentageBlocked = document.getElementById('percentageBlocked').value
       this.socket.emit('percentageBlocked', {gameName: this.gameName, percentageBlocked: percentageBlocked})
+    },
+    saveMvpCards: function() {
+      const mvpCards = document.getElementById('mvpCards').value
+      this.socket.emit('updateMvpCards', {gameName: this.gameName, mvpCards: parseInt(mvpCards)})
     },
     savePercentageDeployFail: function() {
       const percentageDeployFail = document.getElementById('percentageDeployFail').value
@@ -297,6 +317,10 @@ export default {
       text-align: right;
       margin: 0 auto;
     }
+  }
+
+  .mvp-label {
+    left: 0;
   }
 
   .game-messaging {

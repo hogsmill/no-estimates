@@ -6,7 +6,7 @@
     <td v-if="teamName && !change">
       <span class="setup-label">{{ teamName }}</span>
       <button class="btn btn-sm btn-secondary smaller-font" @click="changeTeamName">
-        Change
+        &#128393;
       </button>
     </td>
     <td v-if="!teamName || change">

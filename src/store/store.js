@@ -5,6 +5,12 @@ Vue.use(Vuex)
 
 export const store = new Vuex.Store({
   state: {
+    settingUp: {
+      'Game Name': false,
+      'My Name': false,
+      'Team Name': false,
+      'My Role': false
+    },
     connections: 0,
     walkThrough: false,
     showFacilitator: false,
@@ -105,6 +111,10 @@ export const store = new Vuex.Store({
     gameState: []
   },
   getters: {
+    settingUp: (state) => {
+      console.log(state.settingUp)
+      return state.settingUp['Game Name'] || state.settingUp['My Name'] || state.settingUp['Team Name'] || state.settingUp['My Role']
+    },
     getShowFacilitator: (state) => {
       return state.showFacilitator
     },
@@ -219,6 +229,9 @@ export const store = new Vuex.Store({
     }
   },
   mutations: {
+    settingUp: (state, payload) => {
+      state.settingUp[payload.setting] = payload.value
+    },
     updateShowFacilitator: (state, payload) => {
       state.showFacilitator = payload
     },
@@ -344,6 +357,9 @@ export const store = new Vuex.Store({
     }
   },
   actions: {
+    settingUp: ({ commit }, payload) => {
+      commit('settingUp', payload)
+    },
     updateShowFacilitator: ({ commit }, payload) => {
       commit('updateShowFacilitator', payload)
     },

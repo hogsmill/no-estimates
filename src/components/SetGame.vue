@@ -44,12 +44,21 @@ export default {
   props: [
     'socket'
   ],
+  computed: {
+    settingUp() {
+      return this.$store.getters.settingUp
+    },
+  },
   methods: {
     show () {
       this.$modal.show('set-up')
     },
     hide () {
-      this.$modal.hide('set-up')
+      if (this.settingUp) {
+        alert('PLease save all fields before clicking Done')
+      } else {
+        this.$modal.hide('set-up')
+      }
     }
   }
 }
@@ -69,6 +78,12 @@ export default {
       display: inline-block;
       width: 200px;
       line-height: 1.5;
+    }
+
+    .setup-change {
+      background-color: transparent;
+      color: #212529;
+      border-color: transparent;
     }
 
     .setup-input {

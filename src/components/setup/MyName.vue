@@ -5,13 +5,13 @@
     </td>
     <td v-if="myName.id && !change">
       <span class="setup-label">{{ myName.name }}</span>
-      <button class="btn btn-sm btn-secondary smaller-font" @click="changeMyName">
+      <button class="btn btn-sm btn-secondary smaller-font setup-change" @click="changeMyName">
         &#128393;
       </button>
     </td>
     <td v-if="!myName.id || change">
       <input type="text" id="my-name" class="form-control setup-input" :value="myName.name">
-      <button class="btn btn-sm btn-secondary smaller-font" @click="saveMyName">
+      <button class="btn btn-sm btn-secondary smaller-font save-button" @click="saveMyName">
         Save
       </button>
     </td>
@@ -49,6 +49,7 @@ export default {
   methods: {
     changeMyName: function() {
       this.change = true
+      this.$store.dispatch('settingUp', {setting: 'My Name', value: true})
     },
     saveMyName: function() {
       const oldName = this.myName
@@ -72,6 +73,7 @@ export default {
         }
       }
       this.change = false
+      this.$store.dispatch('settingUp', {setting: 'My Name', value: false})
     }
   }
 }

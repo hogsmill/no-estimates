@@ -5,7 +5,7 @@
     </td>
     <td v-if="teamName && !change">
       <span class="setup-label">{{ teamName }}</span>
-      <button class="btn btn-sm btn-secondary smaller-font" @click="changeTeamName">
+      <button class="btn btn-sm btn-secondary smaller-font setup-change" @click="changeTeamName">
         &#128393;
       </button>
     </td>
@@ -15,7 +15,7 @@
           {{ team.name }}
         </option>
       </select>
-      <button class="btn btn-sm btn-secondary smaller-font" @click="saveTeamName">
+      <button class="btn btn-sm btn-secondary smaller-font save-button" @click="saveTeamName">
         Save
       </button>
     </td>
@@ -52,6 +52,7 @@ export default {
   methods: {
     changeTeamName: function() {
       this.change = true
+      this.$store.dispatch('settingUp', {setting: 'Team Name', value: true})
     },
     saveTeamName: function() {
       const teamName = document.getElementById('team-name-select').value
@@ -63,6 +64,7 @@ export default {
         this.socket.emit('updateTeamName', {gameName: this.gameName, teamName: teamName, role: this.myRole, name: this.myName})
       }
       this.change = false
+      this.$store.dispatch('settingUp', {setting: 'Team Name', value: false})
     }
   }
 }

@@ -5,7 +5,7 @@
     </td>
     <td v-if="myRole && !change">
       <span class="setup-label">{{ myRole }}</span>
-      <button class="btn btn-sm btn-secondary smaller-font" :disabled="!canChangeRole()" @click="changeMyRole">
+      <button class="btn btn-sm btn-secondary smaller-font setup-change" :disabled="!canChangeRole()" @click="changeMyRole">
         &#128393;
       </button>
     </td>
@@ -15,7 +15,7 @@
           {{ role.role }}
         </option>
       </select>
-      <button class="btn btn-sm btn-secondary smaller-font" @click="saveMyRole">
+      <button class="btn btn-sm btn-secondary smaller-font save-button" @click="saveMyRole">
         Save
       </button>
     </td>
@@ -58,6 +58,7 @@ export default {
   methods: {
     changeMyRole: function() {
       this.change = true
+      this.$store.dispatch('settingUp', {setting: 'My Role', value: true})
     },
     canChangeRole: function() {
       return this.currentDay == 1 || this.myTeam.recharting
@@ -70,6 +71,7 @@ export default {
         this.socket.emit('updateRole', {gameName: this.gameName, teamName: this.teamName, name: this.myName, role: myRole })
       }
       this.change = false
+      this.$store.dispatch('settingUp', {setting: 'My Role', value: false})
     }
   }
 }

@@ -5,13 +5,13 @@
     </td>
     <td v-if="gameName && !change">
       <span class="setup-label">{{ gameName }}</span>
-      <button class="btn btn-sm btn-secondary smaller-font" @click="changeGameName">
+      <button class="btn btn-sm btn-secondary smaller-font setup-change" @click="changeGameName">
         &#128393;
       </button>
     </td>
     <td v-if="!gameName || change">
       <input type="text" id="game-name" class="form-control setup-input" :value="gameName">
-      <button class="btn btn-sm btn-secondary smaller-font" @click="saveGameName">
+      <button class="btn btn-sm btn-secondary smaller-font save-button" @click="saveGameName">
         Save
       </button>
     </td>
@@ -41,6 +41,7 @@ export default {
   methods: {
     changeGameName: function() {
       this.change = true
+      this.$store.dispatch('settingUp', {setting: 'Game Name', value: true})
     },
     saveGameName: function() {
       let game = document.getElementById('game-name').value
@@ -53,6 +54,7 @@ export default {
         }
       }
       this.change = false
+      this.$store.dispatch('settingUp', {setting: 'Game Name', value: false})
     }
   }
 }

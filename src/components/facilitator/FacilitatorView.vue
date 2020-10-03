@@ -217,7 +217,7 @@ export default {
     toggleStealth() {
       const isStealth = document.getElementById('isStealth').checked
       localStorage.setItem('stealth', isStealth)
-      this.socket.emit('updateStealth', {gameName: this.gameName, stealth: isStealth})
+      window.bus.$emit('updateStealth', {gameName: this.gameName, stealth: isStealth})
     },
     toggleActive(team) {
       team.include = !team.include
@@ -229,7 +229,7 @@ export default {
     },
     saveMvpCards: function() {
       const mvpCards = document.getElementById('mvpCards').value
-      this.socket.emit('updateMvpCards', {gameName: this.gameName, mvpCards: parseInt(mvpCards)})
+      window.bus.$emit('updateMvpCards', {gameName: this.gameName, mvpCards: parseInt(mvpCards)})
     },
     savePercentageDeployFail: function() {
       const percentageDeployFail = document.getElementById('percentageDeployFail').value

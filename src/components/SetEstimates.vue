@@ -18,7 +18,7 @@
         <p>You are currently on day <b>{{ currentDay }}</b>, and have completed <b>{{ completed() }}</b>
           card<span v-if="completed() != 1">s</span>.</p>
         <p>Estimates are in days to complete the work.</p>
-        <Estimates :socket="socket" />
+        <Estimates />
         <button class="btn btn-sm btn-primary smaller-font" @click="hide">
           Done
         </button>

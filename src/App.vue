@@ -9,23 +9,27 @@
       <div v-if="isHost" class="right" @click="clear()">
         Clear Storage
       </div>
-      <h1>No Estimates <span v-if="teamName">(Team: {{ teamName }})</span></h1>
-      <h3 class="setup-header" v-if="!isSetUp()">
-        Before we start the game, please set the game name, your name, your team and your speciality.
-      </h3>
-      <GameName />
-      <MyName />
-      <TeamName />
-      <MyRole />
 
+      <div v-if="!connections.connections" class="not-connected">
+        WARNING: You are not connected to the server
+      </div>
+      <SetGame />
+      <SetEstimates />
       <Status />
+
       <div v-if="isSetUp()" class="container board">
+        <h3 class="board-title">
+          <span v-if="gameName">Game: {{ gameName }}</span>
+          <span v-if="gameName && teamName"> - </span>
+          <span v-if="teamName">Team: {{ teamName }}</span>
+        </h3>
         <div class="game-buttons">
           <Report />
         </div>
         <Roles />
         <Day />
         <Board />
+        <Message />
       </div>
     </div>
   </div>
@@ -38,11 +42,10 @@ import params from './lib/params.js'
 
 import Header from './components/Header.vue'
 import Report from './components/report/Report.vue'
-import MyName from './components/MyName.vue'
-import MyRole from './components/MyRole.vue'
-import TeamName from './components/TeamName.vue'
-import GameName from './components/GameName.vue'
+import SetGame from './components/SetGame.vue'
+import SetEstimates from './components/SetEstimates.vue'
 import Status from './components/Status.vue'
+import Message from './components/Message.vue'
 import FacilitatorView from './components/facilitator/FacilitatorView.vue'
 import WalkThroughView from './components/about/WalkThroughView.vue'
 
@@ -60,11 +63,10 @@ export default {
     appHeader: Header,
     FacilitatorView,
     WalkThroughView,
-    MyName,
-    TeamName,
-    MyRole,
-    GameName,
+    SetGame,
+    SetEstimates,
     Status,
+    Message,
     Report,
     Roles,
     Day,
@@ -78,6 +80,9 @@ export default {
   computed: {
     isHost() {
       return this.$store.getters.getHost
+    },
+    connections() {
+      return this.$store.getters.getConnections
     },
     walkThrough() {
       return this.$store.getters.getWalkThrough
@@ -110,9 +115,20 @@ export default {
       this.$store.dispatch('updateHost', true)
     }
 
+    if (params.getParam('game')) {
+      const game = params.getParam('game')
+      this.$store.dispatch('updateGameName', game)
+      localStorage.setItem('gameName', game)
+    }
+
+    this.socket.on('updateMvpCards', (data) => {
+      if (this.gameName == data.gameName) {
+        this.$store.dispatch('updateMvpCards', data)
+      }
+    })
+
     this.socket.on('updateStealth', (data) => {
       if (this.gameName == data.gameName) {
-      console.log(data)
         this.$store.dispatch('updateStealth', data)
       }
     })
@@ -201,7 +217,13 @@ export default {
       }
     })
 
-    window.bus.$on('updatePairing', (data) => {
+    window.bus.on('updateActuals', (data) => {
+      if (this.gameName == data.gameName && this.teamName == data.teamName) {
+        this.$store.dispatch('updateActuals', data)
+      }
+    })
+
+    window.bus.on('updatePairing', (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         this.$store.dispatch('updatePairing', data)
       }
@@ -225,7 +247,7 @@ export default {
       localStorage.removeItem('gameName')
     },
     isSetUp() {
-      const setUp = this.myName && this.teamName && this.myRole && this.gameName
+      const setUp = this.gameName && this.myName && this.teamName && this.myRole
       if (setUp && !this.setUp) {
         this.setUp = true
         localStorage.setItem('myName', JSON.stringify(this.myName))
@@ -242,6 +264,12 @@ export default {
 </script>
 
 <style lang="scss">
+
+  .not-connected {
+    background-color: red;
+    color: #fff;
+    font-weight: bold;
+  }
 
   .right {
     text-align: right;
@@ -260,6 +288,13 @@ export default {
   .setup-header {
     width: 700px;
     margin: 0 auto 16px auto;
+  }
+
+  .board-title {
+    padding-top: 8px;
+    span {
+      margin: 6px;
+    }
   }
 
   .board {

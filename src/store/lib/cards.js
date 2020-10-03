@@ -46,7 +46,7 @@ module.exports = {
   moveCard: function(columns, workCards, card, n, currentDay) {
     const fromCol = columns[n]
     const toCol = columns[n + 1]
-    let i 
+    let i
     const cards = []
     for (i = 0; i < fromCol.cards.length; i++) {
       if (fromCol.cards[i].number != card.number) {
@@ -61,5 +61,28 @@ module.exports = {
       cardValue(workCards, card)
     }
     toCol.cards.push(card)
+  },
+
+  calculateActuals: function(columns, workCards, mvpCards, day, mvp, project) {
+    let actuals = {
+      mvp: mvp,
+      project: project
+    }
+    const done = columns.find(function(c) { return c.name == 'done' })
+    if (!project && done.cards.length == workCards.length) {
+      actuals.project = day
+    }
+    if (!mvp && done.cards.length >= mvpCards) {
+      let mvpDone = true
+      for (let i = 1; i <= mvpCards; i++) {
+        if (!done.cards.find(function(c) { return c.number == i})) {
+          mvpDone = false
+        }
+      }
+      if (mvpDone) {
+        actuals.mvp = day
+      }
+    }
+    return actuals
   }
 }

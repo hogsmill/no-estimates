@@ -1,3 +1,17 @@
+const fs = require('fs')
+const ON_DEATH = require('death')({uncaughtException: true})
+
+ON_DEATH(function(signal, err) {
+  let logStr = new Date() + ' ' + signal + '\n'
+  if (err && err.stack) {
+    logStr = '  ' + err.stack + '\n'
+  }
+  fs.appendFile('server.log', logStr, function (err) {
+    if (err) console.log(err)
+    process.exit()
+  })
+})
+
 const app = require('express')()
 const http = require('http').createServer(app)
 const io = require('socket.io')(http)
@@ -14,7 +28,7 @@ const connectDebugOff = prod
 const debugOn = !prod
 
 const connections = {}
-const maxConnections = 200
+const maxConnections = 2000
 
 function emit(event, data) {
   if (debugOn) {
@@ -97,6 +111,9 @@ function doDb(fun, data) {
         break
       case 'percentageDeployFail':
         dbStore.percentageDeployFail(err, client, db, io, data, debugOn)
+        break
+      case 'updateMvpCards':
+        dbStore.updateMvpCards(err, client, db, io, data, debugOn)
         break
       case 'updateTeamActive':
         dbStore.updateTeamActive(err, client, db, io, data, debugOn)
@@ -192,6 +209,8 @@ io.on('connection', (socket) => {
   socket.on('percentageBlocked', (data) => { doDb('percentageBlocked', data) })
 
   socket.on('percentageDeployFail', (data) => { doDb('percentageDeployFail', data) })
+
+  socket.on('updateMvpCards', (data) => { doDb('updateMvpCards', data) })
 
   socket.on('updateStealth', (data) => { doDb('updateStealth', data) })
 

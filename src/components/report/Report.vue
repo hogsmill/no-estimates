@@ -3,8 +3,7 @@
     <button class="btn btn-sm btn-site-primary" @click="show()">
       Report
     </button>
-    <span class="current-value">Current Project Value: {{ currencyLabel() }}{{ total() }}</span>
-
+    <ProjectValue />
     <modal class="report-modal" name="report-modal" :height="500" :classes="['rounded']">
       <div class="mt-4">
         <h4>
@@ -12,6 +11,7 @@
             Close
           </button>
         </h4>
+        <!--
         <div class="tabs">
           <div class="tab rounded-top" :class="{'selected': tab == 'Report'}" @click="selectTab('Report')">
             Report
@@ -23,36 +23,8 @@
             Graphs
           </div>
         </div>
-        <table class="estimates">
-          <tr>
-            <td>Estimate for Total Project: </td>
-            <td><input type="text" id="project-estimate" class="form-control" :value="projectEstimate"></td>
-            <td>
-              <button class="btn btn-sm btn-site-primary" @click="saveTotalProject">
-                Save
-              </button>
-            </td>
-          </tr>
-          <tr>
-            <td>Estimate for MVP (#1-11): </td>
-            <td><input type="text" id="mvp-estimate" class="form-control" :value="mvpEstimate"></td>
-            <td>
-              <button class="btn btn-sm btn-site-primary" @click="saveMVP">
-                Save
-              </button>
-            </td>
-          </tr>
-          <tr>
-            <td>Re-estimate for Total project: </td>
-            <td><input type="text" id="re-estimate" class="form-control" :value="reEstimate"></td>
-            <td>
-              <button class="btn btn-sm btn-site-primary" @click="saveReEstimate">
-                Save
-              </button>
-            </td>
-          </tr>
-        </table>
-
+        -->
+        <Estimates :socket="socket" />
         <div v-if="tab == 'Report'" class="scroller">
           <table class="results">
             <thead>
@@ -98,7 +70,17 @@
 import stats from '../../lib/stats.js'
 import stringFuns from '../../lib/stringFuns.js'
 
+import Estimates from './Estimates.vue'
+import ProjectValue from './ProjectValue.vue'
+
 export default {
+  components: {
+    Estimates,
+    ProjectValue
+  },
+  props: [
+    'socket'
+  ],
   data() {
     return {
       tab: 'Report'

@@ -10,7 +10,8 @@
         <button v-if="!projectEstimate" class="btn btn-sm btn-site-primary" :disabled="!gameName || !teamName" @click="saveTotalProject">
           Save
         </button>
-        <span v-if="projectEstimate">Actual: TBD</span>
+        <span v-if="projectEstimate && !projectActual">Actual: TBD</span>
+        <span v-if="projectEstimate && projectActual">Actual: {{ projectActual }}</span>
       </td>
     </tr>
     <tr>
@@ -23,7 +24,8 @@
         <button v-if="!mvpEstimate" class="btn btn-sm btn-site-primary" @click="saveMVP">
           Save
         </button>
-        <span v-if="mvpEstimate">Actual: TBD</span>
+        <span v-if="mvpEstimate && !mvpActual">Actual: TBD</span>
+        <span v-if="mvpEstimate && mvpActual">Actual: {{ mvpActual }}</span>
       </td>
     </tr>
     <tr>
@@ -36,7 +38,9 @@
         <button v-if="!reEstimate" class="btn btn-sm btn-site-primary" @click="saveReEstimate">
           Save
         </button>
-        <span v-if="reEstimate">Actual: TBD</span>
+        <span v-if="reEstimate && !projectActual">Actual: TBD</span>
+        <span v-if="reEstimate && projectActual">Actual: {{ projectActual }}</span>
+
       </td>
     </tr>
   </table>
@@ -57,11 +61,17 @@ export default {
     projectEstimate() {
       return this.$store.getters.getProjectEstimate
     },
+    projectActual() {
+      return this.$store.getters.getProjectActual
+    },
     mvpCards() {
       return this.$store.getters.getMvpCards
     },
     mvpEstimate() {
-      return this.$store.getters.getMVPEstimate
+      return this.$store.getters.getMvpEstimate
+    },
+    mvpActual() {
+      return this.$store.getters.getMvpActual
     },
     reEstimate() {
       return this.$store.getters.getReEstimate

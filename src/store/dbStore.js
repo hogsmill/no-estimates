@@ -316,16 +316,28 @@ module.exports = {
             }
           }
         }
+        const actuals = cardFuns.calculateActuals(columns, res.workCards, res.mvpCards, currentDay, res.mvpActual, res.projectActual)
+        const update  = {
+          currentDay: currentDay,
+          teams: teams,
+          columns: columns,
+          workCards: workCards,
+          roles: roles,
+          mvpActual: actuals.mvp,
+          projectActual: actuals.project
+        }
+        data.actuals = actuals
         data.roles = roleFuns.setRolesEffort(roles, data)
         data.teams = teams
         data.columns = columns
         data.workCards = workCards
-        db.collection('noEstimates').updateOne({'_id': res._id}, {$set: {currentDay: currentDay, teams: teams, columns: columns, workCards: workCards, roles: roles}}, function() {
+        db.collection('noEstimates').updateOne({'_id': res._id}, {$set: update}, function() {
           io.emit('updateCurrentDay', data)
           io.emit('updateRoles', data)
           io.emit('updateTeams', data)
           io.emit('updateColumns', data)
           io.emit('updateWorkCards', data)
+          io.emit('updateActuals', data)
         })
       }
       gameState.update(err, client, db, io, data, debugOn)

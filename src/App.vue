@@ -212,6 +212,12 @@ export default {
       }
     })
 
+    this.socket.on('updateActuals', (data) => {
+      if (this.gameName == data.gameName && this.teamName == data.teamName) {
+        this.$store.dispatch('updateActuals', data)
+      }
+    })
+
     this.socket.on('updatePairing', (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         this.$store.dispatch('updatePairing', data)

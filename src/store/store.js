@@ -112,7 +112,6 @@ export const store = new Vuex.Store({
   },
   getters: {
     settingUp: (state) => {
-      console.log(state.settingUp)
       return state.settingUp['Game Name'] || state.settingUp['My Name'] || state.settingUp['Team Name'] || state.settingUp['My Role']
     },
     getShowFacilitator: (state) => {
@@ -215,8 +214,14 @@ export const store = new Vuex.Store({
     getProjectEstimate: (state) => {
       return state.projectEstimate
     },
-    getMVPEstimate: (state) => {
+    getProjectActual: (state) => {
+      return state.projectActual
+    },
+    getMvpEstimate: (state) => {
       return state.mvpEstimate
+    },
+    getMvpActual: (state) => {
+      return state.mvpActual
     },
     getReEstimate: (state) => {
       return state.reEstimate
@@ -255,7 +260,9 @@ export const store = new Vuex.Store({
       state.currentEventCard = payload.currentEventCard
       state.currentWorkCard = payload.currentWorkCard
       state.projectEstimate = payload.projectEstimate
+      state.projectActual = payload.projectActual
       state.mvpEstimate = payload.mvpEstimate
+      state.mvpActual = payload.mvpActual
       state.reEstimate = payload.reEstimate
     },
     updateGameName: (state, payload) => {
@@ -348,6 +355,14 @@ export const store = new Vuex.Store({
     },
     updateReEstimate: (state, payload) => {
       state.reEstimate = payload.reEstimate
+    },
+    updateActuals: (state, payload) => {
+      if (payload.actuals.mvp) {
+        state.mvpActual = payload.actuals.mvp
+      }
+      if (payload.actuals.project) {
+        state.project = payload.actuals.project
+      }
     },
     updateGameState: (state, payload) => {
       state.gameState = payload.gameState
@@ -443,6 +458,9 @@ export const store = new Vuex.Store({
     },
     updateReEstimate: ({ commit }, payload) => {
       commit('updateReEstimate', payload)
+    },
+    updateActuals: ({ commit }, payload) => {
+      commit('updateActuals', payload)
     },
     updateGameState: ({ commit }, payload) => {
       commit('updateGameState', payload)

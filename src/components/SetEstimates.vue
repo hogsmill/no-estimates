@@ -35,9 +35,6 @@ export default {
   components: {
     Estimates
   },
-  props: [
-    'socket'
-  ],
 
   computed: {
     gameState() {

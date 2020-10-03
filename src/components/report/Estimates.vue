@@ -47,9 +47,6 @@
 
 <script>
 export default {
-  props: [
-    'socket'
-  ],
   computed: {
     gameName() {
       return this.$store.getters.getGameName

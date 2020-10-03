@@ -41,9 +41,6 @@ export default {
     TeamName,
     MyRole
   },
-  props: [
-    'socket'
-  ],
   computed: {
     settingUp() {
       return this.$store.getters.settingUp

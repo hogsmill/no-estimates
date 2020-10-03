@@ -31,9 +31,6 @@ export default {
   components: {
     MyRole
   },
-  props: [
-    'socket'
-  ],
   computed: {
     gameName() {
       return this.$store.getters.getGameName

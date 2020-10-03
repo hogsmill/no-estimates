@@ -24,9 +24,6 @@
 
 <script>
 export default {
-  props: [
-    'socket'
-  ],
   data() {
     return {
       change: false

@@ -22,9 +22,6 @@
 import stringFuns from '../../lib/stringFuns.js'
 
 export default {
-  props: [
-    'socket'
-  ],
   data() {
     return {
       change: false

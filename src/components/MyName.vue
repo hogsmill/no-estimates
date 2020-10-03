@@ -49,6 +49,9 @@ export default {
     Captain
   },
   computed: {
+    isHost() {
+      return this.$store.getters.getHost
+    },
     showFacilitator() {
       return this.$store.getters.getHost
     },
@@ -89,11 +92,12 @@ export default {
         let myNameData
         if (!oldName.id) {
           const uuid = uuidv4()
-          myNameData = {id: uuid, name: newName, captain: captain}
+          myNameData = {id: uuid, name: newName, captain: captain, host: this.isHost}
+          localStorage.setItem('myName', JSON.stringify(myNameData))
           this.$store.dispatch('setMyName', myNameData)
         } else {
-          myNameData = {id: this.myName.id, name: newName, captain: captain}
-          this.$store.dispatch('changeName', {name: newName, captain: captain})
+          myNameData = {id: this.myName.id, name: newName, captain: captain, host: this.isHost}
+          this.$store.dispatch('changeName', {name: newName, captain: captain, host: this.isHost})
           localStorage.setItem('myName', JSON.stringify(myNameData))
           if (this.gameName) {
             window.bus.$emit('changeName', {gameName: this.gameName, name: oldName, newName: newName, captain: captain})

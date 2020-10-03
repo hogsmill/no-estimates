@@ -30,7 +30,7 @@
       </div>
     </div>
 
-    <modal class="work-card-popup" name="work-card-popup" :height="150" :classes="['rounded']">
+    <modal class="work-card-other-popup" name="work-card-other-popup" :height="150" :classes="['rounded']">
       <div class="text-right">
         <span @click="hide" class="glyphicon glyphicon-star">x</span>
       </div>
@@ -78,11 +78,11 @@ export default {
   },
   methods: {
     show () {
-      this.$modal.show('work-card-popup')
+      this.$modal.show('work-card-other-popup')
     },
     hide () {
       this.message = ''
-      this.$modal.hide('work-card-popup')
+      this.$modal.hide('work-card-other-popup')
     },
     addEffort(card) {
       let message = ''
@@ -98,6 +98,7 @@ export default {
       } else {
         window.bus.$emit('addEffortToOthersCard', {gameName: this.gameName, teamName: this.teamName, card: card, myName: this.myName})
         //window.bus.$emit("updateOtherTeamEffort", {gameName: this.gameName, teamName: this.teamName, card: card})
+        window.bus.$emit('updateOtherTeamEffort', {gameName: this.gameName, teamName: this.teamName, card: card, name: this.myName, effort: this.myEffort})
         this.$store.dispatch('updateMyAssignedEffort', {effort: 1})
       }
     }

@@ -4,8 +4,10 @@
       <tr>
         <td class="role" :class="role.role.toLowerCase()" v-for="(role, index) in roles" :key="index">
           <div v-for="(name, m) in roles[index].names" :key="'name-' + m">
-            {{ name.name }} <Captain :captain="name.captain" />
-            <span v-if="name.effort">({{ name.effort.available }})</span>
+            <div v-if="!(name.host && stealth)" :class="{ 'me': name.id == myName.id }">
+              {{ name.name }} <Captain :captain="name.captain" />
+              <span>({{ myEffort.available }})</span>
+            </div>
           </div>
           <div v-for="(otherName, n) in roles[index].otherNames" :key="'otherName-' + n">
             (<i>{{ otherName.name }}</i>)
@@ -24,6 +26,18 @@ export default {
     Captain
   },
   computed: {
+    isHost() {
+      return this.$store.getters.getHost
+    },
+    stealth() {
+      return this.$store.getters.getStealth
+    },
+    myName() {
+      return this.$store.getters.getMyName
+    },
+    myEffort() {
+      return this.$store.getters.getMyEffort
+    },
     roles() {
       return this.$store.getters.getRoles
     }
@@ -66,6 +80,11 @@ export default {
     }
     &.deployer {
       background-image: url("../assets/img/deployer.png");
+    }
+
+    .me {
+      background-color: #888;
+      color: #fff;
     }
 
     .captain {

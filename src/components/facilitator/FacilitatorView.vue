@@ -2,7 +2,7 @@
   <div>
     <div v-if="showFacilitator">
       <div class="container about">
-        <h1>No Estimates - Facilitator View</h1>
+        <h1>No Estimates - <span v-if="stealth">(Stealth)</span> Facilitator View</h1>
 
         <div class="connections">
           Current server connections: {{ connections.connections }} / {{ connections.maxConnections }}
@@ -61,6 +61,27 @@
           </tr>
           <tr v-if="showGameParams">
             <td class="left-col">
+              <span class="mvp-label">MVP: </span> <span class="mvp-cards">Cards 1 to</span>
+            </td>
+            <td class="center">
+              <input type="text" id="mvpCards" class="form-control" :value="mvpCards">
+            </td>
+            <td colspan="2" class="left">
+              <button class="btn btn-sm btn-site-primary" @click="saveMvpCards">
+                Save
+              </button>
+            </td>
+          </tr>
+          <tr v-if="showGameParams">
+            <td class="left-col">
+              Hosts
+            </td>
+            <td colspan="3" class="stealth">
+              <input id="isStealth" type="checkbox" :checked="stealth" @click="toggleStealth()"> Hosts are in "Stealth" mode? {{ stealth }}
+            </td>
+          </tr>
+          <tr v-if="showGameParams">
+            <td class="left-col">
               Teams
             </td>
             <td colspan="3">
@@ -70,6 +91,7 @@
             </td>
           </tr>
         </table>
+
 
         <table class="game-state">
           <tr>
@@ -156,6 +178,9 @@ export default {
     showFacilitator() {
       return this.$store.getters.getHost
     },
+    stealth() {
+      return this.$store.getters.getStealth
+    },
     gameName() {
       return this.$store.getters.getGameName
     },
@@ -167,6 +192,9 @@ export default {
     },
     percentageDeployFail() {
       return this.$store.getters.getPercentageDeployFail
+    },
+    mvpCards() {
+      return this.$store.getters.getMvpCards
     },
     gameState() {
       return this.$store.getters.getGameState
@@ -191,6 +219,11 @@ export default {
         window.bus.$emit('broadcastMessage', {gameName: this.gameName, message: message})
       }
     },
+    toggleStealth() {
+      const isStealth = document.getElementById('isStealth').checked
+      localStorage.setItem('stealth', isStealth)
+      this.socket.emit('updateStealth', {gameName: this.gameName, stealth: isStealth})
+    },
     toggleActive(team) {
       team.include = !team.include
       window.bus.$emit('updateTeamActive', {gameName: this.gameName, team: team})
@@ -198,6 +231,10 @@ export default {
     savePercentageBlocked: function() {
       const percentageBlocked = document.getElementById('percentageBlocked').value
       window.bus.$emit('percentageBlocked', {gameName: this.gameName, percentageBlocked: percentageBlocked})
+    },
+    saveMvpCards: function() {
+      const mvpCards = document.getElementById('mvpCards').value
+      this.socket.emit('updateMvpCards', {gameName: this.gameName, mvpCards: parseInt(mvpCards)})
     },
     savePercentageDeployFail: function() {
       const percentageDeployFail = document.getElementById('percentageDeployFail').value
@@ -215,7 +252,7 @@ export default {
     restartGame() {
       const restartGame = confirm('Are you sure you want to re-start this game?')
       if (restartGame) {
-        window.bus.$emit('restartGame', {gameName: this.gameName})
+        window.bus.$emit('restartGame', {gameName: this.gameName, stealth: this.stealth})
       }
     },
     role(role) {
@@ -282,6 +319,10 @@ export default {
       text-align: right;
       margin: 0 auto;
     }
+  }
+
+  .mvp-label {
+    left: 0;
   }
 
   .game-messaging {

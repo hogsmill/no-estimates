@@ -1,3 +1,17 @@
+const fs = require('fs')
+const ON_DEATH = require('death')({uncaughtException: true})
+
+ON_DEATH(function(signal, err) {
+  let logStr = new Date() + ' ' + signal + '\n'
+  if (err && err.stack) {
+    logStr = '  ' + err.stack + '\n'
+  }
+  fs.appendFile('server.log', logStr, function (err) {
+    if (err) console.log(err)
+    process.exit()
+  })
+})
+
 const app = require('express')()
 const http = require('http').createServer(app)
 const io = require('socket.io')(http)
@@ -11,10 +25,10 @@ const prod = os.hostname() == 'agilesimulations' ? true : false
 const url = prod ?  'mongodb://127.0.0.1:27017/' : 'mongodb://localhost:27017/'
 
 const connectDebugOff = prod
-const debugOn = false // !prod
+const debugOn = !prod
 
 const connections = {}
-const maxConnections = 200
+const maxConnections = 2000
 
 function emit(event, data) {
   if (debugOn) {
@@ -98,8 +112,14 @@ function doDb(fun, data) {
       case 'percentageDeployFail':
         dbStore.percentageDeployFail(err, client, db, io, data, debugOn)
         break
+      case 'updateMvpCards':
+        dbStore.updateMvpCards(err, client, db, io, data, debugOn)
+        break
       case 'updateTeamActive':
         dbStore.updateTeamActive(err, client, db, io, data, debugOn)
+        break
+      case 'updateStealth':
+        dbStore.updateStealth(err, client, db, io, data, debugOn)
         break
 
      // Game State
@@ -189,6 +209,10 @@ io.on('connection', (socket) => {
   socket.on('percentageBlocked', (data) => { doDb('percentageBlocked', data) })
 
   socket.on('percentageDeployFail', (data) => { doDb('percentageDeployFail', data) })
+
+  socket.on('updateMvpCards', (data) => { doDb('updateMvpCards', data) })
+
+  socket.on('updateStealth', (data) => { doDb('updateStealth', data) })
 
   socket.on('updateTeamActive', (data) => { doDb('updateTeamActive', data) })
 

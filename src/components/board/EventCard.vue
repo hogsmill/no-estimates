@@ -11,7 +11,7 @@
     </div>
     <div v-if="currentEventCard">
       <h4>Event Card {{ currentEventCard.number }}</h4>
-      <p v-html="currentEventCard.text" />
+      <p v-html="currentEventCard.text.replace('[MVPCARDS]', mvpCards)" />
       <div>
         <button v-if="!currentEventCard || !currentEventCard.function" class="btn btn-sm btn-info" @click="done()">
           Done
@@ -49,7 +49,10 @@ export default {
     },
     currentDay() {
       return this.$store.getters.getCurrentDay
-    }
+    },
+    mvpCards() {
+      return this.$store.getters.getMvpCards
+    },
   },
   mounted() {
     const self = this

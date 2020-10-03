@@ -2,7 +2,7 @@
   <div>
     <button
       v-if="walkThrough && !showFacilitator"
-      class="btn btn-sm btn-info"
+      class="btn btn-sm btn-info explain"
       @click="help"
     >
       Explain this for me...
@@ -154,6 +154,10 @@ export default {
     padding: 24px 0 6px 0;
   }
 
+  .explain {
+    margin-bottom: 6px;
+  }
+  
   #facilitate {
     width: 50%;
   }

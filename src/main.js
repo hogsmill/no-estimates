@@ -16,7 +16,9 @@ Vue.config.productionTip = false
 Vue.use(VModal)
 Vue.use(VueRouter)
 const routes = [
-  { name: 'game', path: '/', component: App },
+  { name: 'home', path: '/', component: App },
+  { name: 'game', path: '/game/:game', component: App },
+
   { name: 'walkthrough', path: '/home', component: App,  children: 
   [
     { path: 'walkthrough', component: WalkThroughView },

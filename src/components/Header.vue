@@ -17,7 +17,7 @@
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav ml-auto">
-        <MenuItem :to="{ name: 'game'}">
+        <MenuItem :to="{ name: 'home'}">
           Game
         </MenuItem>
         <MenuItem :to="{ name: 'status'}">

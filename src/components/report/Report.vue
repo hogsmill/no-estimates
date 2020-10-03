@@ -24,7 +24,7 @@
           </div>
         </div>
         -->
-        <Estimates :socket="socket" />
+        <Estimates />
         <div v-if="tab == 'Report'" class="scroller">
           <table class="results">
             <thead>
@@ -78,9 +78,6 @@ export default {
     Estimates,
     ProjectValue
   },
-  props: [
-    'socket'
-  ],
   data() {
     return {
       tab: 'Report'

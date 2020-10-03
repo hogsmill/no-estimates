@@ -121,13 +121,13 @@ export default {
       localStorage.setItem('gameName', game)
     }
 
-    this.socket.on('updateMvpCards', (data) => {
+    window.bus.$on('updateMvpCards', (data) => {
       if (this.gameName == data.gameName) {
         this.$store.dispatch('updateMvpCards', data)
       }
     })
 
-    this.socket.on('updateStealth', (data) => {
+    window.bus.$on('updateStealth', (data) => {
       if (this.gameName == data.gameName) {
         this.$store.dispatch('updateStealth', data)
       }
@@ -217,13 +217,13 @@ export default {
       }
     })
 
-    window.bus.on('updateActuals', (data) => {
+    window.bus.$on('updateActuals', (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         this.$store.dispatch('updateActuals', data)
       }
     })
 
-    window.bus.on('updatePairing', (data) => {
+    window.bus.$on('updatePairing', (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         this.$store.dispatch('updatePairing', data)
       }

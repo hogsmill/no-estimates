@@ -3,8 +3,7 @@
     <button class="btn btn-sm btn-site-primary" @click="show()">
       Report
     </button>
-    <span class="current-value">Current Project Value: <span v-html="currency" /><span>{{ total() }}</span></span>
-
+    <ProjectValue />
     <modal class="report-modal" name="report-modal" :height="500" :classes="['rounded']">
       <div class="mt-4">
         <h4>
@@ -12,6 +11,7 @@
             Close
           </button>
         </h4>
+        <!--
         <div class="tabs">
           <div class="tab rounded-top" :class="{'selected': tab == 'Report'}" @click="selectTab('Report')">
             Report
@@ -23,36 +23,8 @@
             Graphs
           </div>
         </div>
-        <table class="estimates">
-          <tr>
-            <td>Estimate for Total Project: </td>
-            <td><input type="text" id="project-estimate" class="form-control" :value="projectEstimate"></td>
-            <td>
-              <button class="btn btn-sm btn-site-primary" @click="saveTotalProject">
-                Save
-              </button>
-            </td>
-          </tr>
-          <tr>
-            <td>Estimate for MVP (#1-11): </td>
-            <td><input type="text" id="mvp-estimate" class="form-control" :value="mvpEstimate"></td>
-            <td>
-              <button class="btn btn-sm btn-site-primary" @click="saveMVP">
-                Save
-              </button>
-            </td>
-          </tr>
-          <tr>
-            <td>Re-estimate for Total project: </td>
-            <td><input type="text" id="re-estimate" class="form-control" :value="reEstimate"></td>
-            <td>
-              <button class="btn btn-sm btn-site-primary" @click="saveReEstimate">
-                Save
-              </button>
-            </td>
-          </tr>
-        </table>
-
+        -->
+        <Estimates :socket="socket" />
         <div v-if="tab == 'Report'" class="scroller">
           <table class="results">
             <thead>
@@ -62,7 +34,7 @@
                 <th>Commit<br>Day</th>
                 <th>Delivery<br>Day</th>
                 <th>Delivery<br>Time</th>
-                <th>Total<br><span>{{ currency }}{{ total() }}</span></th>
+                <th>Total<br><span>{{ currencyLabel() }}{{ total() }}</span></th>
               </tr>
             </thead>
             <tbody>
@@ -96,8 +68,16 @@
 
 <script>
 import stats from '../../lib/stats.js'
+import stringFuns from '../../lib/stringFuns.js'
+
+import Estimates from './Estimates.vue'
+import ProjectValue from './ProjectValue.vue'
 
 export default {
+  components: {
+    Estimates,
+    ProjectValue
+  },
   props: [
     'socket'
   ],
@@ -159,6 +139,9 @@ export default {
     selectTab(tab) {
       this.tab = tab
     },
+    currencyLabel() {
+      return stringFuns.htmlDecode(this.currency)
+    },
     time(card) {
       let t
       if (card.delivery) {
@@ -195,18 +178,6 @@ export default {
         }
       }
       return effort.length == 0 ? 0 : stats.pCorrelation(effort, deliveryTime).toFixed(2)
-    },
-    saveTotalProject() {
-      const estimate = document.getElementById('project-estimate').value
-      this.socket.emit('updateProjectEstimate', {gameName: this.gameName, teamName: this.teamName, projectEstimate: estimate})
-    },
-    saveMVP() {
-      const estimate = document.getElementById('mvp-estimate').value
-      this.socket.emit('updateMVPEstimate', {gameName: this.gameName, teamName: this.teamName, mvpEstimate: estimate})
-    },
-    saveReEstimate() {
-      const estimate = document.getElementById('re-estimate').value
-      this.socket.emit('updateReEstimate', {gameName: this.gameName, teamName: this.teamName, reEstimate: estimate})
     }
   }
 }

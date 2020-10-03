@@ -11,6 +11,11 @@ const StringFuns = {
 
   sanitize: function(s) {
     return s.replaceAll(/[^a-zA-Z0-9' ]/g, '').trim()
+  },
+
+  htmlDecode: function(input) {
+    const doc = new DOMParser().parseFromString(input, 'text/html')
+    return doc.documentElement.textContent
   }
 }
 

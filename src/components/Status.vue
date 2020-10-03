@@ -39,7 +39,7 @@ export default {
       }
     })
     this.socket.on('updateOtherTeamEffort', (data) => {
-      if (this.gameName == data.gameName) {
+      if (this.gameName == data.gameName && this.teamName != data.teamName) {
         self.setStatus('Team ' + data.teamName + ' has added effort to card #' + data.card.number, false)
       }
     })

@@ -9,19 +9,6 @@
       </div>
       <div v-for="n in 8" :key="n" class="deploy-card-column rounded-circle" :class="{'assigned' : n <= myTeam.autoDeploy.effort}" />
     </div>
-
-    <modal class="autodeploy-popup" name="autodeploy-popup" :height="150" :classes="['rounded']">
-      <div class="text-right">
-        <span @click="hide" class="glyphicon glyphicon-star">x</span>
-      </div>
-      <h4>Unable to Assign Effort</h4>
-      <p v-html="message"></p>
-      <div class="button">
-        <button class="btn btn-sm btn-info" @click="hide()">
-          OK
-        </button>
-      </div>
-    </modal>
   </div>
 </template>
 
@@ -68,13 +55,6 @@ export default {
     })
   },
   methods: {
-    show () {
-      this.$modal.show('autodeploy-popup')
-    },
-    hide () {
-      this.message = ''
-      this.$modal.hide('autodeploy-popup')
-    },
     addEffort() {
       const effort = roles.iHaveRole('deploy', this.myRole, this.myOtherRoles) ? 1 : 2
       if (this.myEffort.available >= effort) {
@@ -82,8 +62,11 @@ export default {
         this.socket.emit('incrementAutoDeploy', {gameName: this.gameName, teamName: this.teamName})
         this.socket.emit('updatePersonAutoDeployEffort', {gameName: this.gameName, teamName: this.teamName, name: this.myName})
       } else {
-        this.message = 'No effort available'
-        this.show()
+        this.$store.dispatch('updateMessage', 'No effort available (Autodeploy)')
+        const self = this
+        this.timeout = window.setTimeout(function() {
+          self.$store.dispatch('updateMessage', '')
+        }, 2000)
       }
     }
   }

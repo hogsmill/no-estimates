@@ -24,7 +24,7 @@
           </div>
         </div>
         -->
-        <Estimates :socket="socket" />
+        <Estimates />
         <div v-if="tab == 'Report'" class="scroller">
           <table class="results">
             <thead>
@@ -67,6 +67,7 @@
 </template>
 
 <script>
+
 import stats from '../../lib/stats.js'
 import stringFuns from '../../lib/stringFuns.js'
 
@@ -78,9 +79,6 @@ export default {
     Estimates,
     ProjectValue
   },
-  props: [
-    'socket'
-  ],
   data() {
     return {
       tab: 'Report'
@@ -113,21 +111,21 @@ export default {
     },
   },
   mounted() {
-    this.socket.on('updateProjectEstimate', (data) => {
+    this.$bus.$on('updateProjectEstimate', function (data) {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         this.$store.dispatch('updateProjectEstimate', data)
       }
-    })
-    this.socket.on('updateMVPEstimate', (data) => {
+    }.bind(this))
+    this.$bus.$on('updateMVPEstimate', function (data) {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         this.$store.dispatch('updateMVPEstimate', data)
       }
-    })
-    this.socket.on('updateReEstimate', (data) => {
+    }.bind(this))
+    this.$bus.$on('updateReEstimate', function (data) {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         this.$store.dispatch('updateReEstimate', data)
       }
-    })
+    }.bind(this))
   },
   methods: {
     show () {

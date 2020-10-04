@@ -19,10 +19,8 @@
 </template>
 
 <script>
+
 export default {
-  props: [
-    'socket'
-  ],
   computed: {
     gameName() {
       return this.$store.getters.getGameName
@@ -41,11 +39,11 @@ export default {
     }
   },
   mounted() {
-    this.socket.on('updateCurrentDay', (data) => {
+    this.$bus.$on('updateCurrentDay', function (data) {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         this.$store.dispatch('updateCurrentDay', data)
       }
-    })
+    }.bind(this))
   },
   methods: {
     getClass(day) {
@@ -66,7 +64,7 @@ export default {
       return days
     },
     next() {
-      this.socket.emit('showEventCard', {gameName: this.gameName, teamName: this.teamName})
+      this.$bus.$emit('showEventCard', {gameName: this.gameName, teamName: this.teamName})
     }
   }
 }

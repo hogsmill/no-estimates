@@ -40,17 +40,14 @@
         </button>
         <span v-if="reEstimate && !projectActual">Actual: TBD</span>
         <span v-if="reEstimate && projectActual">Actual: {{ projectActual }}</span>
-
       </td>
     </tr>
   </table>
 </template>
 
 <script>
+
 export default {
-  props: [
-    'socket'
-  ],
   computed: {
     gameName() {
       return this.$store.getters.getGameName
@@ -81,34 +78,34 @@ export default {
     }
   },
   mounted() {
-    this.socket.on('updateProjectEstimate', (data) => {
+    this.$bus.$on('updateProjectEstimate', function (data) {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         this.$store.dispatch('updateProjectEstimate', data)
       }
-    })
-    this.socket.on('updateMVPEstimate', (data) => {
+    }.bind(this))
+    this.$bus.$on('updateMVPEstimate', function (data) {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         this.$store.dispatch('updateMVPEstimate', data)
       }
-    })
-    this.socket.on('updateReEstimate', (data) => {
+    }.bind(this))
+    this.$bus.$on('updateReEstimate', function (data) {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         this.$store.dispatch('updateReEstimate', data)
       }
-    })
+    }.bind(this))
   },
   methods: {
     saveTotalProject() {
       const estimate = document.getElementById('project-estimate').value
-      this.socket.emit('updateProjectEstimate', {gameName: this.gameName, teamName: this.teamName, projectEstimate: estimate})
+      this.$bus.$emit('updateProjectEstimate', {gameName: this.gameName, teamName: this.teamName, projectEstimate: estimate})
     },
     saveMVP() {
       const estimate = document.getElementById('mvp-estimate').value
-      this.socket.emit('updateMVPEstimate', {gameName: this.gameName, teamName: this.teamName, mvpEstimate: estimate})
+      this.$bus.$emit('updateMVPEstimate', {gameName: this.gameName, teamName: this.teamName, mvpEstimate: estimate})
     },
     saveReEstimate() {
       const estimate = document.getElementById('re-estimate').value
-      this.socket.emit('updateReEstimate', {gameName: this.gameName, teamName: this.teamName, reEstimate: estimate})
+      this.$bus.$emit('updateReEstimate', {gameName: this.gameName, teamName: this.teamName, reEstimate: estimate})
     }
   }
 }

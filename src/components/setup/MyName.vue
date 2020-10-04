@@ -23,13 +23,9 @@
 
 <script>
 import { v4 as uuidv4 } from 'uuid'
-
 import stringFuns from '../../lib/stringFuns.js'
 
 export default {
-  props: [
-    'socket'
-  ],
   data() {
     return {
       change: false
@@ -68,7 +64,7 @@ export default {
           this.$store.dispatch('changeName', {name: newName, captain: captain, host: this.isHost})
           localStorage.setItem('myName', JSON.stringify(myNameData))
           if (this.gameName) {
-            this.socket.emit('changeName', {gameName: this.gameName, name: oldName, newName: newName, captain: captain})
+            this.$bus.$emit('changeName', {gameName: this.gameName, name: oldName, newName: newName, captain: captain})
           }
         }
       }

@@ -30,9 +30,6 @@
 import stringFuns from '../lib/stringFuns.js'
 
 export default {
-  props: [
-    'socket'
-  ],
   computed: {
     showFacilitator() {
       return this.$store.getters.getShowFacilitator
@@ -42,11 +39,11 @@ export default {
     }
   },
   mounted() {
-    this.socket.on('restartGame', (data) => {
+    this.$bus.$on('restartGame', function (data) {
       if (this.gameName == data.gameName) {
         location.reload()
       }
-    })
+    }.bind(this))
   },
   methods: {
     show () {
@@ -62,7 +59,7 @@ export default {
         this.$store.dispatch('updateGameName', game)
         localStorage.setItem('gameName', game)
         if (game && this.teamName) {
-          this.socket.emit('loadGame', {gameName: this.gameName, teamName: this.teamName})
+          this.$bus.$emit('loadGame', {gameName: this.gameName, teamName: this.teamName})
         }
       }
       this.hide()

@@ -4,18 +4,32 @@ jobs:
   cypress-run:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - uses: cypress-io/github-action@v2
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Start MongoDB
+        uses: supercharge/mongodb-github-action@1.3.0
+        with:
+          mongodb-version: 4.2
+      - name: Start Node 
+        uses: actions/setup-node@v1
+      - name: Setup packages
+        run: npm install
+      - name: Run Server
+        run: npm run serve:socket &
+      - name: Run Cypress
+        uses: cypress-io/github-action@v2
         with:
           command: npm run test:e2e:ci --env circle=true 
           browser: chrome
           headless: true
-      - uses: actions/upload-artifact@v1
+      - name: upload video
+        uses: actions/upload-artifact@v1
         if: always()
         with:
           name: cypress-videos
           path: tests/e2e/videos
-      - uses: actions/upload-artifact@v1
+      - name: upload screenshots
+        uses: actions/upload-artifact@v1
         if: always()
         with:
           name: cypress-screenshots

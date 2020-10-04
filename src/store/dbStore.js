@@ -81,7 +81,7 @@ function createNewGame(data) {
   game.percentageBlocked = 0.05
   game.percentageDeployFail = 0.5
   game.created = new Date().toISOString()
-
+  console.log('create game', game)
   return game
 }
 
@@ -281,7 +281,8 @@ module.exports = {
     db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
       if (err) throw err
       if (res) {
-        let teams = res.teams, columns = res.columns, workCards = res.workCards, roles = res.roles, currentDay = res.currentDay + 1
+        const teams = res.teams, workCards = res.workCards, roles = res.roles, currentDay = res.currentDay + 1
+        let columns = res.columns
         for (let i = 0; i < teams.length; i++) {
           if (teams[i].name == data.teamName) {
             if (data.autoDeploy) {
@@ -522,7 +523,8 @@ module.exports = {
     db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
       if (err) throw err
       if (res) {
-        let i, player, roles = res.roles, pairing = []
+        let i, player, roles = res.roles
+        const pairing = []
         for (i = 0; i < res.pairing.length; i++) {
           if (res.pairing[i].name.id == data.name.id) {
             player = res.pairing[i]

@@ -80,7 +80,7 @@ import roles from '../../lib/roles.js'
 
 export default {
   props: [
-    'column', 'workCard', 'socket'
+    'column', 'workCard'
   ],
   data() {
     return {
@@ -156,7 +156,7 @@ export default {
             this.workCard.effort[column] = this.workCard.effort[column] + 1
             this.$store.dispatch('updateMyAssignedEffort', {effort: 1})
             this.storeEffort()
-            this.socket.emit('updateAssignedEffort', {gameName: this.gameName, teamName: this.teamName, name: this.myName, effort: this.myEffort})
+            this.$bus.$emit('updateAssignedEffort', {gameName: this.gameName, teamName: this.teamName, name: this.myName, effort: this.myEffort})
           } else {
             if (this.myEffort.available < 2) {
               message = 'you only have one effort point left'
@@ -164,8 +164,8 @@ export default {
               this.workCard.effort[column] = this.workCard.effort[column] + 1
               this.$store.dispatch('updateMyAssignedEffort', {effort: 2})
               this.storeEffort()
-              this.socket.emit('updateAssignedEffort', {gameName: this.gameName, teamName: this.teamName, name: this.myName, effort: this.myEffort})
-              this.socket.emit('pairingDay', {gameName: this.gameName, teamName: this.teamName, name: this.myName, column: column, day: this.currentDay})
+              this.$bus.$emit('updateAssignedEffort', {gameName: this.gameName, teamName: this.teamName, name: this.myName, effort: this.myEffort})
+              this.$bus.$emit('pairingDay', {gameName: this.gameName, teamName: this.teamName, name: this.myName, column: column, day: this.currentDay})
             }
           }
         }
@@ -178,13 +178,12 @@ export default {
           window.clearTimeout(this.timeout)
         }
         this.$store.dispatch('updateMessage', message)
-        const self = this
         this.timeout = window.setTimeout(function() {
-          self.$store.dispatch('updateMessage', '')
-        }, 2000)
+          this.$store.dispatch('updateMessage', '')
+        }.bind(this), 2000)
       } else {
-        this.socket.emit('updatePersonEffort', {gameName: this.gameName, teamName: this.teamName, workCard: this.workCard, name: this.myName, column: column})
-        this.socket.emit('updateEffort', {gameName: this.gameName, teamName: this.teamName, name: this.myName, workCard: this.workCard})
+        this.$bus.$emit('updatePersonEffort', {gameName: this.gameName, teamName: this.teamName, workCard: this.workCard, name: this.myName, column: column})
+        this.$bus.$emit('updateEffort', {gameName: this.gameName, teamName: this.teamName, name: this.myName, workCard: this.workCard})
       }
     }
   }

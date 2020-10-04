@@ -20,11 +20,7 @@
 
 <script>
 import stringFuns from '../../lib/stringFuns.js'
-
 export default {
-  props: [
-    'socket'
-  ],
   data() {
     return {
       change: false
@@ -50,7 +46,7 @@ export default {
         this.$store.dispatch('updateGameName', game)
         localStorage.setItem('gameName', game)
         if (game && this.teamName) {
-          this.socket.emit('loadGame', {gameName: this.gameName, teamName: this.teamName})
+          this.$bus.$emit('loadGame', {gameName: this.gameName, teamName: this.teamName})
         }
       }
       this.change = false

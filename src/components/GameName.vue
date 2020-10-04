@@ -32,7 +32,7 @@ import stringFuns from '../lib/stringFuns.js'
 export default {
   computed: {
     showFacilitator() {
-      return this.$store.getters.getShowFacilitator
+      return this.$store.getters.getHost
     },
     gameName() {
       return this.$store.getters.getGameName

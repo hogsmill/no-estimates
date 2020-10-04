@@ -1,155 +1,160 @@
 <template>
-  <div class="container about">
-    <h1>No Estimates - <span v-if="stealth">(Stealth)</span> Facilitator View</h1>
+  <div>
+    <div v-if="showFacilitator">
+      <div class="container about">
+        <h1>No Estimates - <span v-if="stealth">(Stealth)</span> Facilitator View</h1>
 
-    <div class="connections">
-      Current server connections: {{ connections.connections }} / {{ connections.maxConnections }}
+        <div class="connections">
+          Current server connections: {{ connections.connections }} / {{ connections.maxConnections }}
+        </div>
+
+        <table class="game-messaging">
+          <tr>
+            <td>
+              <h4>Messaging</h4>
+              <span v-if="showGameMessaging" @click="setShowGameMessaging(false)" title="collapse" class="toggle">&#9650;</span>
+              <span v-if="!showGameMessaging" @click="setShowGameMessaging(true)" title="expand" class="toggle">&#9660;</span>
+            </td>
+          </tr>
+          <tr v-if="showGameMessaging" class="message-params">
+            <td>
+              <div>Message: </div>
+              <input type="text" id="gameMessageText">
+              <button class="btn btn-sm btn-site-primary" @click="sendMessage">
+                Send
+              </button>
+            </td>
+          </tr>
+        </table>
+
+        <table class="game-params">
+          <tr>
+            <td colspan="4">
+              <h4>Game Params</h4>
+              <span v-if="showGameParams" @click="setShowGameParams(false)" title="collapse" class="toggle">&#9650;</span>
+              <span v-if="!showGameParams" @click="setShowGameParams(true)" title="expand" class="toggle">&#9660;</span>
+            </td>
+          </tr>
+          <tr v-if="showGameParams">
+            <td>Blocked frequency: </td>
+            <td class="center">
+              <input type="text" id="percentageBlocked" class="form-control" :value="percentageBlocked">
+            </td>
+            <td>x 10 out of every 10 cards</td>
+            <td class="center">
+              <button class="btn btn-sm btn-site-primary" @click="savePercentageBlocked">
+                Save
+              </button>
+            </td>
+          </tr>
+          <tr v-if="showGameParams">
+            <td>Deployment fail: </td>
+            <td class="center">
+              <input type="text" id="percentageDeployFail" class="form-control" :value="percentageDeployFail">
+            </td>
+            <td>x 10 out of every 10 deployments</td>
+            <td class="center">
+              <button class="btn btn-sm btn-site-primary" @click="savePercentageDeployFail">
+                Save
+              </button>
+            </td>
+          </tr>
+          <tr v-if="showGameParams">
+            <td class="left-col">
+              <span class="mvp-label">MVP: </span> <span class="mvp-cards">Cards 1 to</span>
+            </td>
+            <td class="center">
+              <input type="text" id="mvpCards" class="form-control" :value="mvpCards">
+            </td>
+            <td colspan="2" class="left">
+              <button class="btn btn-sm btn-site-primary" @click="saveMvpCards">
+                Save
+              </button>
+            </td>
+          </tr>
+          <tr v-if="showGameParams">
+            <td class="left-col">
+              Hosts
+            </td>
+            <td colspan="3" class="stealth">
+              <input id="isStealth" type="checkbox" :checked="stealth" @click="toggleStealth()"> Hosts are in "Stealth" mode? {{ stealth }}
+            </td>
+          </tr>
+          <tr v-if="showGameParams">
+            <td class="left-col">
+              Teams
+            </td>
+            <td colspan="3">
+              <div v-for="(team, index) in gameState" :key="index">
+                <input type="checkbox" :checked="team.include" @click="toggleActive(team)" :disabled="team.otherCards.length > 0"> {{ team.name }}
+              </div>
+            </td>
+          </tr>
+        </table>
+
+
+        <table class="game-state">
+          <tr>
+            <td class="left" colspan="16">
+              <h4>Game State: (Game: {{ gameName }}) <span v-if="gameName" title="Restart Game" class="restart" @click="restartGame">&#8635;</span></h4>
+              <span v-if="showGameState" @click="setShowGameState(false)" title="collapse" class="toggle">&#9650;</span>
+              <span v-if="!showGameState" @click="setShowGameState(true)" title="expand" class="toggle">&#9660;</span>
+            </td>
+          </tr>
+          <tr v-if="showGameState" class="header">
+            <td>Team</td>
+            <td>Members</td>
+            <td>Autodeploy?</td>
+            <td>Current<br>Day</td>
+            <td>Last<br>Card<br>Played</td>
+            <td>Other<br>Team<br>Cards</td>
+            <td colspan="5">
+              Columns
+            </td>
+            <td colspan="3">
+              Estimates<br>Proj./MVP/Re-est.
+            </td>
+          </tr>
+          <tr v-for="(team, index) in gameState" :key="index">
+            <td v-if="showTeamState(team)" class="white" :style="{'background-color': team.name.toLowerCase()}">
+              {{ team.name }}
+            </td>
+            <td v-if="showTeamState(team)">
+              <div v-for="(member, m) in team.members" :key="m">
+                <b>{{ member.name.name }}</b>
+                <div class="white rounded-circle member-role" :class="roleClass(member.role)">
+                  {{ role(member.role) }}
+                </div>
+              </div>
+            </td>
+            <td v-if="showTeamState(team) && !team.autoDeploy.doing && !team.autoDeploy.done">
+              &#9746;
+            </td>
+            <td v-if="showTeamState(team) && team.autoDeploy.doing">
+              {{ team.autoDeploy.effort }} / 8
+            </td>
+            <td v-if="showTeamState(team) && team.autoDeploy.done">
+              &#9745;
+            </td>
+            <td v-if="showTeamState(team)">
+              {{ team.currentDay }}
+            </td>
+            <td v-if="showTeamState(team)">
+              {{ team.currentWorkCard }}
+            </td>
+            <OtherCards v-if="showTeamState(team)" :cards="team.otherCards" />
+            <Column v-if="showTeamState(team)" :column="team.columns.design" :name="'Design'" />
+            <Column v-if="showTeamState(team)" :column="team.columns.develop" :name="'Develop'" />
+            <Column v-if="showTeamState(team)" :column="team.columns.test" :name="'Test'" />
+            <Column v-if="showTeamState(team)" :column="team.columns.deploy" :name="'Deploy'" />
+            <Column v-if="showTeamState(team)" :column="team.columns.done" :name="'Done'" />
+            <td v-if="showTeamState(team)">
+              {{ estimates(team) }}
+            </td>
+          </tr>
+        </table>
+      </div>
     </div>
-
-    <table class="game-messaging">
-      <tr>
-        <td>
-          <h4>Messaging</h4>
-          <span v-if="showGameMessaging" @click="setShowGameMessaging(false)" title="collapse" class="toggle">&#9650;</span>
-          <span v-if="!showGameMessaging" @click="setShowGameMessaging(true)" title="expand" class="toggle">&#9660;</span>
-        </td>
-      </tr>
-      <tr v-if="showGameMessaging" class="message-params">
-        <td>
-          <div>Message: </div>
-          <input type="text" id="gameMessageText">
-          <button class="btn btn-sm btn-site-primary" @click="sendMessage">
-            Send
-          </button>
-        </td>
-      </tr>
-    </table>
-
-    <table class="game-params">
-      <tr>
-        <td colspan="4">
-          <h4>Game Params</h4>
-          <span v-if="showGameParams" @click="setShowGameParams(false)" title="collapse" class="toggle">&#9650;</span>
-          <span v-if="!showGameParams" @click="setShowGameParams(true)" title="expand" class="toggle">&#9660;</span>
-        </td>
-      </tr>
-      <tr v-if="showGameParams">
-        <td>Blocked frequency: </td>
-        <td class="center">
-          <input type="text" id="percentageBlocked" class="form-control" :value="percentageBlocked">
-        </td>
-        <td>x 10 out of every 10 cards</td>
-        <td class="center">
-          <button class="btn btn-sm btn-site-primary" @click="savePercentageBlocked">
-            Save
-          </button>
-        </td>
-      </tr>
-      <tr v-if="showGameParams">
-        <td>Deployment fail: </td>
-        <td class="center">
-          <input type="text" id="percentageDeployFail" class="form-control" :value="percentageDeployFail">
-        </td>
-        <td>x 10 out of every 10 deployments</td>
-        <td class="center">
-          <button class="btn btn-sm btn-site-primary" @click="savePercentageDeployFail">
-            Save
-          </button>
-        </td>
-      </tr>
-      <tr v-if="showGameParams">
-        <td class="left-col">
-          <span class="mvp-label">MVP: </span> <span class="mvp-cards">Cards 1 to</span>
-        </td>
-        <td class="center">
-          <input type="text" id="mvpCards" class="form-control" :value="mvpCards">
-        </td>
-        <td colspan="2" class="left">
-          <button class="btn btn-sm btn-site-primary" @click="saveMvpCards">
-            Save
-          </button>
-        </td>
-      </tr>
-      <tr v-if="showGameParams">
-        <td class="left-col">
-          Hosts
-        </td>
-        <td colspan="3" class="stealth">
-          <input id="isStealth" type="checkbox" :checked="stealth" @click="toggleStealth()"> Hosts are in "Stealth" mode? {{ stealth }}
-        </td>
-      </tr>
-      <tr v-if="showGameParams">
-        <td class="left-col">
-          Teams
-        </td>
-        <td colspan="3">
-          <div v-for="(team, index) in gameState" :key="index">
-            <input type="checkbox" :checked="team.include" @click="toggleActive(team)" :disabled="team.otherCards.length > 0"> {{ team.name }}
-          </div>
-        </td>
-      </tr>
-    </table>
-
-    <table class="game-state">
-      <tr>
-        <td class="left" colspan="16">
-          <h4>Game State: (Game: {{ gameName }}) <span v-if="gameName" title="Restart Game" class="restart" @click="restartGame">&#8635;</span></h4>
-          <span v-if="showGameState" @click="setShowGameState(false)" title="collapse" class="toggle">&#9650;</span>
-          <span v-if="!showGameState" @click="setShowGameState(true)" title="expand" class="toggle">&#9660;</span>
-        </td>
-      </tr>
-      <tr v-if="showGameState" class="header">
-        <td>Team</td>
-        <td>Members</td>
-        <td>Autodeploy?</td>
-        <td>Current<br>Day</td>
-        <td>Last<br>Card<br>Played</td>
-        <td>Other<br>Team<br>Cards</td>
-        <td colspan="5">
-          Columns
-        </td>
-        <td colspan="3">
-          Estimates<br>Proj./MVP/Re-est.
-        </td>
-      </tr>
-      <tr v-for="(team, index) in gameState" :key="index">
-        <td v-if="showTeamState(team)" class="white" :style="{'background-color': team.name.toLowerCase()}">
-          {{ team.name }}
-        </td>
-        <td v-if="showTeamState(team)">
-          <div v-for="(member, m) in team.members" :key="m">
-            <b>{{ member.name.name }}</b>
-            <div class="white rounded-circle member-role" :class="roleClass(member.role)">
-              {{ role(member.role) }}
-            </div>
-          </div>
-        </td>
-        <td v-if="showTeamState(team) && !team.autoDeploy.doing && !team.autoDeploy.done">
-          &#9746;
-        </td>
-        <td v-if="showTeamState(team) && team.autoDeploy.doing">
-          {{ team.autoDeploy.effort }} / 8
-        </td>
-        <td v-if="showTeamState(team) && team.autoDeploy.done">
-          &#9745;
-        </td>
-        <td v-if="showTeamState(team)">
-          {{ team.currentDay }}
-        </td>
-        <td v-if="showTeamState(team)">
-          {{ team.currentWorkCard }}
-        </td>
-        <OtherCards v-if="showTeamState(team)" :cards="team.otherCards" />
-        <Column v-if="showTeamState(team)" :column="team.columns.design" :name="'Design'" />
-        <Column v-if="showTeamState(team)" :column="team.columns.develop" :name="'Develop'" />
-        <Column v-if="showTeamState(team)" :column="team.columns.test" :name="'Test'" />
-        <Column v-if="showTeamState(team)" :column="team.columns.deploy" :name="'Deploy'" />
-        <Column v-if="showTeamState(team)" :column="team.columns.done" :name="'Done'" />
-        <td v-if="showTeamState(team)">
-          {{ estimates(team) }}
-        </td>
-      </tr>
-    </table>
   </div>
 </template>
 
@@ -163,6 +168,9 @@ export default {
     OtherCards,
     Column
   },
+  mounted() {
+    this.$store.dispatch('updateHost', true)
+  },
   data() {
     return {
       showGameMessaging: false,
@@ -172,7 +180,7 @@ export default {
   },
   computed: {
     showFacilitator() {
-      return this.$store.getters.getShowFacilitator
+      return this.$store.getters.getHost
     },
     stealth() {
       return this.$store.getters.getStealth

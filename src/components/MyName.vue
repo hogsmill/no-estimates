@@ -53,7 +53,7 @@ export default {
       return this.$store.getters.getHost
     },
     showFacilitator() {
-      return this.$store.getters.getShowFacilitator
+      return this.$store.getters.getHost
     },
     gameName() {
       return this.$store.getters.getGameName

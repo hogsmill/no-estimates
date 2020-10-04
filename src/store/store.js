@@ -13,7 +13,6 @@ export const store = new Vuex.Store({
     },
     connections: 0,
     walkThrough: false,
-    showFacilitator: false,
     host: false,
     stealth: false,
     currency: '&#163;',
@@ -113,9 +112,6 @@ export const store = new Vuex.Store({
   getters: {
     settingUp: (state) => {
       return state.settingUp['Game Name'] || state.settingUp['My Name'] || state.settingUp['Team Name'] || state.settingUp['My Role']
-    },
-    getShowFacilitator: (state) => {
-      return state.showFacilitator
     },
     getWalkThrough: (state) => {
       return state.walkThrough
@@ -236,9 +232,6 @@ export const store = new Vuex.Store({
   mutations: {
     settingUp: (state, payload) => {
       state.settingUp[payload.setting] = payload.value
-    },
-    updateShowFacilitator: (state, payload) => {
-      state.showFacilitator = payload
     },
     updateWalkThrough: (state, payload) => {
       state.walkThrough = payload
@@ -374,9 +367,6 @@ export const store = new Vuex.Store({
   actions: {
     settingUp: ({ commit }, payload) => {
       commit('settingUp', payload)
-    },
-    updateShowFacilitator: ({ commit }, payload) => {
-      commit('updateShowFacilitator', payload)
     },
     updateWalkThrough: ({ commit }, payload) => {
       commit('updateWalkThrough', payload)

@@ -1,11 +1,7 @@
 <template>
-  <div id="app" class="mb-4">
-    <appHeader />
-    <WalkThroughView />
-    <div v-if="showFacilitator">
-      <FacilitatorView />
-    </div>
-    <div class="main" v-else>
+  <div>
+    <router-view />
+    <div class="main">
       <div v-if="isHost" class="right" @click="clear()">
         Clear Storage
       </div>
@@ -40,14 +36,12 @@ import io from 'socket.io-client'
 
 import params from './lib/params.js'
 
-import Header from './components/Header.vue'
 import Report from './components/report/Report.vue'
 import SetGame from './components/SetGame.vue'
 import SetEstimates from './components/SetEstimates.vue'
 import Status from './components/Status.vue'
+
 import Message from './components/Message.vue'
-import FacilitatorView from './components/facilitator/FacilitatorView.vue'
-import WalkThroughView from './components/about/WalkThroughView.vue'
 
 import Roles from './components/Roles.vue'
 import Day from './components/Day.vue'
@@ -59,9 +53,11 @@ import Board from './components/Board.vue'
 export default {
   name: 'App',
   components: {
-    appHeader: Header,
-    FacilitatorView,
-    WalkThroughView,
+    // MyName,
+    // TeamName,
+    // MyRole,
+    // GameName,
+    // appHeader: Header,
     SetGame,
     SetEstimates,
     Status,
@@ -87,7 +83,7 @@ export default {
       return this.$store.getters.getWalkThrough
     },
     showFacilitator() {
-      return this.$store.getters.getShowFacilitator
+      return this.$store.getters.getHost
     },
     teamName() {
       return this.$store.getters.getTeamName

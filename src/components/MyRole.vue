@@ -41,7 +41,7 @@
 export default {
   computed: {
     showFacilitator() {
-      return this.$store.getters.getShowFacilitator
+      return this.$store.getters.getHost
     },
     myName() {
       return this.$store.getters.getMyName

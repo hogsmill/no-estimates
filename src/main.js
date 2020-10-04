@@ -1,5 +1,11 @@
 import Vue from 'vue'
+import VueRouter from 'vue-router'
 import App from './App.vue'
+import Template from './Template.vue'
+import Status from './Status.vue'
+import WalkThroughView from './components/about/WalkThroughView.vue'
+import FacilitatorView from './components/facilitator/FacilitatorView.vue'
+
 import VModal from 'vue-js-modal'
 import { store } from './store/store'
 import { EventBus } from './EventBus'
@@ -9,15 +15,30 @@ require('./assets/site.css')
 Vue.config.productionTip = false
 
 Vue.use(VModal)
+Vue.use(VueRouter)
+const routes = [
+  { name: 'home', path: '/', component: App },
+  { name: 'game', path: '/game/:game', component: App },
+
+  { name: 'walkthrough', path: '/home', component: App,  children: 
+    [
+      { path: 'walkthrough', component: WalkThroughView },
+    ] 
+  },
+  { name: 'facilitator', path: '/facilitator', component: FacilitatorView },
+  { name: 'status', path: '/status', component: Status }
+]
+const router = new VueRouter({
+  routes,
+  mode: 'history'
+})
 Vue.prototype.$bus = EventBus
 
 const app = new Vue({
-  el: '#app',
   store,
-  //EventBus,
-  render: (h) => h(App),
-})
-
+  router,
+  render: (h) => h(Template)
+}).$mount('#app')
 
 if (window.Cypress) {
   // only available during E2E tests

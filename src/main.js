@@ -21,9 +21,10 @@ const routes = [
   { name: 'game', path: '/game/:game', component: App },
 
   { name: 'walkthrough', path: '/home', component: App,  children: 
-  [
-    { path: 'walkthrough', component: WalkThroughView },
-  ] },
+    [
+      { path: 'walkthrough', component: WalkThroughView },
+    ] 
+  },
   { name: 'facilitator', path: '/facilitator', component: FacilitatorView },
   { name: 'status', path: '/status', component: Status }
 ]

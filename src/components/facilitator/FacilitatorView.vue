@@ -168,6 +168,9 @@ export default {
     OtherCards,
     Column
   },
+  mounted() {
+    this.$store.dispatch('updateHost', true)
+  },
   data() {
     return {
       showGameMessaging: false,

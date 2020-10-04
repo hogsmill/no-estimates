@@ -93,8 +93,9 @@ export default {
       }
       if (message) {
         this.show()
-        const self = this
-        setTimeout(function() { self.message = message }, 100)
+        setTimeout(function() { 
+          this.message = message 
+        }.bind(this), 100)
       } else {
         this.$bus.$emit('addEffortToOthersCard', {gameName: this.gameName, teamName: this.teamName, card: card, myName: this.myName})
         //this.$bus.$emit("updateOtherTeamEffort", {gameName: this.gameName, teamName: this.teamName, card: card})

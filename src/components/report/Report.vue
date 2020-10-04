@@ -176,18 +176,6 @@ export default {
         }
       }
       return effort.length == 0 ? 0 : stats.pCorrelation(effort, deliveryTime).toFixed(2)
-    },
-    saveTotalProject() {
-      const estimate = document.getElementById('project-estimate').value
-      this.$bus.$emit('updateProjectEstimate', {gameName: this.gameName, teamName: this.teamName, projectEstimate: estimate})
-    },
-    saveMVP() {
-      const estimate = document.getElementById('mvp-estimate').value
-      this.$bus.$emit('updateMVPEstimate', {gameName: this.gameName, teamName: this.teamName, mvpEstimate: estimate})
-    },
-    saveReEstimate() {
-      const estimate = document.getElementById('re-estimate').value
-      this.$bus.$emit('updateReEstimate', {gameName: this.gameName, teamName: this.teamName, reEstimate: estimate})
     }
   }
 }

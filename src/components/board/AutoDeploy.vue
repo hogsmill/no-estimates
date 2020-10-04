@@ -59,10 +59,9 @@ export default {
         this.$bus.$emit('updatePersonAutoDeployEffort', {gameName: this.gameName, teamName: this.teamName, name: this.myName})
       } else {
         this.$store.dispatch('updateMessage', 'No effort available (Autodeploy)')
-        const self = this
         this.timeout = window.setTimeout(function() {
-          self.$store.dispatch('updateMessage', '')
-        }, 2000)
+          this.$store.dispatch('updateMessage', '')
+        }.bind(this), 2000)
       }
     }
   }

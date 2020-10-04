@@ -178,10 +178,9 @@ export default {
           window.clearTimeout(this.timeout)
         }
         this.$store.dispatch('updateMessage', message)
-        const self = this
         this.timeout = window.setTimeout(function() {
-          self.$store.dispatch('updateMessage', '')
-        }, 2000)
+          this.$store.dispatch('updateMessage', '')
+        }.bind(this), 2000)
       } else {
         this.$bus.$emit('updatePersonEffort', {gameName: this.gameName, teamName: this.teamName, workCard: this.workCard, name: this.myName, column: column})
         this.$bus.$emit('updateEffort', {gameName: this.gameName, teamName: this.teamName, name: this.myName, workCard: this.workCard})

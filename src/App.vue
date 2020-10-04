@@ -132,14 +132,13 @@ export default {
       }
     }.bind(this))
 
-    const self = this
     window.onload = function() {
       let myEffort = localStorage.getItem('myEffort')
       if (myEffort) {
         myEffort = JSON.parse(myEffort)
-        self.$store.dispatch('updateMyEffort', myEffort)
+        this.$store.dispatch('updateMyEffort', myEffort)
       }
-    }
+    }.bind(this)
 
     let myName = localStorage.getItem('myName')
     if (myName) {

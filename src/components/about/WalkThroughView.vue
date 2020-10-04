@@ -79,10 +79,9 @@ export default {
     },
   },
   mounted() {
-    const self = this
     if (params.isParam('walkThrough') || params.isParam('walkThrough')) {
-      self.$store.dispatch('updateWalkThrough', true)
-      self.$modal.show('walk-through')
+      this.$store.dispatch('updateWalkThrough', true)
+      this.$modal.show('walk-through')
     }
   },
   methods: {

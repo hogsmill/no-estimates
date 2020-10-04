@@ -42,8 +42,6 @@ import SetEstimates from './components/SetEstimates.vue'
 import Status from './components/Status.vue'
 
 import Message from './components/Message.vue'
-// import FacilitatorView from './components/facilitator/FacilitatorView.vue'
-// import WalkThroughView from './components/about/WalkThroughView.vue'
 
 import Roles from './components/Roles.vue'
 import Day from './components/Day.vue'
@@ -60,8 +58,6 @@ export default {
     // MyRole,
     // GameName,
     // appHeader: Header,
-    // FacilitatorView,
-    // WalkThroughView,
     SetGame,
     SetEstimates,
     Status,

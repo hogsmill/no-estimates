@@ -39,11 +39,11 @@ export default {
     }
   },
   mounted() {
-    window.bus.$on('restartGame', (data) => {
+    this.$bus.$on('restartGame', function (data) {
       if (this.gameName == data.gameName) {
         location.reload()
       }
-    })
+    }.bind(this))
   },
   methods: {
     show () {
@@ -59,7 +59,7 @@ export default {
         this.$store.dispatch('updateGameName', game)
         localStorage.setItem('gameName', game)
         if (game && this.teamName) {
-          window.bus.$emit('loadGame', {gameName: this.gameName, teamName: this.teamName})
+          this.$bus.$emit('loadGame', {gameName: this.gameName, teamName: this.teamName})
         }
       }
       this.hide()

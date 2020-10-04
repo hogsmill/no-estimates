@@ -19,6 +19,7 @@
 </template>
 
 <script>
+
 export default {
   computed: {
     gameName() {
@@ -38,11 +39,11 @@ export default {
     }
   },
   mounted() {
-    window.bus.$on('updateCurrentDay', (data) => {
+    this.$bus.$on('updateCurrentDay', function (data) {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         this.$store.dispatch('updateCurrentDay', data)
       }
-    })
+    }.bind(this))
   },
   methods: {
     getClass(day) {
@@ -63,7 +64,7 @@ export default {
       return days
     },
     next() {
-      window.bus.$emit('showEventCard', {gameName: this.gameName, teamName: this.teamName})
+      this.$bus.$emit('showEventCard', {gameName: this.gameName, teamName: this.teamName})
     }
   }
 }

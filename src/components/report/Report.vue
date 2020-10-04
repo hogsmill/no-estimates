@@ -67,6 +67,7 @@
 </template>
 
 <script>
+
 import stats from '../../lib/stats.js'
 import stringFuns from '../../lib/stringFuns.js'
 
@@ -110,21 +111,21 @@ export default {
     },
   },
   mounted() {
-    window.bus.$on('updateProjectEstimate', (data) => {
+    this.$bus.$on('updateProjectEstimate', function (data) {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         this.$store.dispatch('updateProjectEstimate', data)
       }
-    })
-    window.bus.$on('updateMVPEstimate', (data) => {
+    }.bind(this))
+    this.$bus.$on('updateMVPEstimate', function (data) {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         this.$store.dispatch('updateMVPEstimate', data)
       }
-    })
-    window.bus.$on('updateReEstimate', (data) => {
+    }.bind(this))
+    this.$bus.$on('updateReEstimate', function (data) {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         this.$store.dispatch('updateReEstimate', data)
       }
-    })
+    }.bind(this))
   },
   methods: {
     show () {
@@ -175,18 +176,6 @@ export default {
         }
       }
       return effort.length == 0 ? 0 : stats.pCorrelation(effort, deliveryTime).toFixed(2)
-    },
-    saveTotalProject() {
-      const estimate = document.getElementById('project-estimate').value
-      window.bus.$emit('updateProjectEstimate', {gameName: this.gameName, teamName: this.teamName, projectEstimate: estimate})
-    },
-    saveMVP() {
-      const estimate = document.getElementById('mvp-estimate').value
-      window.bus.$emit('updateMVPEstimate', {gameName: this.gameName, teamName: this.teamName, mvpEstimate: estimate})
-    },
-    saveReEstimate() {
-      const estimate = document.getElementById('re-estimate').value
-      window.bus.$emit('updateReEstimate', {gameName: this.gameName, teamName: this.teamName, reEstimate: estimate})
     }
   }
 }

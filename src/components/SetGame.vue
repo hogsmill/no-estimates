@@ -14,10 +14,10 @@
       <div class="mt-4">
         <h4>Game Set Up</h4>
         <table class="setup-table">
-          <GameName :socket="socket" />
-          <MyName :socket="socket" />
-          <TeamName :socket="socket" />
-          <MyRole :socket="socket" />
+          <GameName />
+          <MyName />
+          <TeamName />
+          <MyRole />
         </table>
         <button class="btn btn-sm btn-primary smaller-font" @click="hide">
           Done
@@ -41,9 +41,6 @@ export default {
     TeamName,
     MyRole
   },
-  props: [
-    'socket'
-  ],
   computed: {
     settingUp() {
       return this.$store.getters.settingUp

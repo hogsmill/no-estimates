@@ -6,7 +6,6 @@
 
 <script>
 import stringFuns from '../lib/stringFuns.js'
-
 export default {
   data() {
     return {
@@ -23,28 +22,27 @@ export default {
     }
   },
   mounted() {
-    const self = this
-    window.bus.$on('updatePersonEffort', (data) => {
+    this.$bus.$on('updatePersonEffort', function (data) {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         const column = stringFuns.properCase(data.column)
-        self.setStatus(data.name.name + ' has added effort to card #' + data.workCard.number + ' in ' + column, false)
+        this.setStatus(data.name.name + ' has added effort to card #' + data.workCard.number + ' in ' + column, false)
       }
-    })
-    window.bus.$on('updatePersonAutoDeployEffort', (data) => {
+    }.bind(this))
+    this.$bus.$on('updatePersonAutoDeployEffort', function (data) {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
-        self.setStatus(data.name.name + ' has added Auto Deploy effort', false)
+        this.setStatus(data.name.name + ' has added Auto Deploy effort', false)
       }
-    })
-    window.bus.$on('updateOtherTeamEffort', (data) => {
+    }.bind(this))
+    this.$bus.$on('updateOtherTeamEffort', function (data) {
       if (this.gameName == data.gameName && this.teamName != data.teamName) {
-        self.setStatus('Team ' + data.teamName + ' has added effort to card #' + data.card.number, false)
+        this.setStatus('Team ' + data.teamName + ' has added effort to card #' + data.card.number, false)
       }
-    })
-    window.bus.$on('broadcastMessage', (data) => {
+    }.bind(this))
+    this.$bus.$on('broadcastMessage', function (data) {
       if (this.gameName == data.gameName) {
-        self.setStatus(data.message, true)
+        this.setStatus(data.message, true)
       }
-    })
+    }.bind(this))
   },
   methods: {
     setStatus(status, urgent) {

@@ -14,7 +14,7 @@
       <div class="mt-4">
         <h4>Role Set Up</h4>
         <table class="setup-table">
-          <MyRole :socket="socket" />
+          <MyRole />
         </table>
         <button class="btn btn-sm btn-primary smaller-font" @click="hide">
           Done
@@ -31,9 +31,6 @@ export default {
   components: {
     MyRole
   },
-  props: [
-    'socket'
-  ],
   computed: {
     gameName() {
       return this.$store.getters.getGameName

@@ -55,23 +55,22 @@ export default {
     },
   },
   mounted() {
-    const self = this
-    window.bus.$on('updateCurrentEventCard', (data) => {
+    this.$bus.$on('updateCurrentEventCard', function (data) {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
-        self.hide()
+        this.hide()
         this.$store.dispatch('updateCurrentEventCard', data)
       }
-    })
+    }.bind(this))
 
-    window.bus.$on('showEventCard', (data) => {
+    this.$bus.$on('showEventCard', function (data) {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
-        self.$modal.show('event-card-popup')
+        this.$modal.show('event-card-popup')
       }
-    })
+    }.bind(this))
   },
   methods: {
     show() {
-      window.bus.$emit('showEventCard', {gameName: this.gameName, teamName: this.teamName})
+      this.$bus.$emit('showEventCard', {gameName: this.gameName, teamName: this.teamName})
     },
     hide() {
       this.$modal.hide('event-card-popup')
@@ -88,9 +87,9 @@ export default {
         if (this.currentEventCard.autoDeployCard) {
           updateData.canStartAutoDeploy = true
         }
-        window.bus.$emit('updateCurrentEventCard', {gameName: this.gameName, teamName: this.teamName, currentEventCard: this.currentEventCard.number})
+        this.$bus.$emit('updateCurrentEventCard', {gameName: this.gameName, teamName: this.teamName, currentEventCard: this.currentEventCard.number})
       }
-      window.bus.$emit('updateCurrentDay', updateData)
+      this.$bus.$emit('updateCurrentDay', updateData)
     },
     doFunction() {
       let data

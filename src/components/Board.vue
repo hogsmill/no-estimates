@@ -34,6 +34,7 @@ import stringFuns from '../lib/stringFuns.js'
 import EventCard from './board/EventCard.vue'
 import Column from './board/Column.vue'
 
+
 export default {
   components: {
     Column,
@@ -54,23 +55,23 @@ export default {
     }
   },
   mounted() {
-    window.bus.$on('updateColumns', (data) => {
+    this.$bus.$on('updateColumns', function (data) {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         this.$store.dispatch('updateColumns', data)
       }
-    })
+    }.bind(this))
 
-    window.bus.$on('updateDependentTeam', (data) => {
+    this.$bus.$on('updateDependentTeam', function (data) {
       if (this.gameName == data.gameName) {
         this.$store.dispatch('updateDependentTeam', data)
       }
-    })
+    }.bind(this))
 
-    window.bus.$on('startAutoDeploy', (data) => {
+    this.$bus.$on('startAutoDeploy', function (data) {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         this.$store.dispatch('startAutoDeploy', data)
       }
-    })
+    }.bind(this))
   },
   methods: {
     columnDisplayName(s) {
@@ -89,7 +90,7 @@ export default {
       return this.teamName && !this.myTeam.autoDeploy.doing && !this.myTeam.autoDeploy.done && this.myTeam.canStartAutoDeploy && column.name == 'deploy'
     },
     startAutoDeploy() {
-      window.bus.$emit('startAutoDeploy', {gameName: this.gameName, teamName: this.teamName})
+      this.$bus.$emit('startAutoDeploy', {gameName: this.gameName, teamName: this.teamName})
     }
   }
 }

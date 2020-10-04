@@ -8,6 +8,7 @@ import FacilitatorView from './components/facilitator/FacilitatorView.vue'
 
 import VModal from 'vue-js-modal'
 import { store } from './store/store'
+import { EventBus } from './EventBus'
 
 require('./assets/site.css')
 
@@ -30,6 +31,7 @@ const router = new VueRouter({
   routes,
   mode: 'history'
 })
+Vue.prototype.$bus = EventBus
 
 const app = new Vue({
   store,

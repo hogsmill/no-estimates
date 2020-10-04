@@ -32,9 +32,6 @@
 
 <script>
 export default {
-  props: [
-    'socket'
-  ],
   data() {
     return {
       showing: false
@@ -58,23 +55,22 @@ export default {
     },
   },
   mounted() {
-    const self = this
-    this.socket.on('updateCurrentEventCard', (data) => {
+    this.$bus.$on('updateCurrentEventCard', function (data) {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
-        self.hide()
+        this.hide()
         this.$store.dispatch('updateCurrentEventCard', data)
       }
-    })
+    }.bind(this))
 
-    this.socket.on('showEventCard', (data) => {
+    this.$bus.$on('showEventCard', function (data) {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
-        self.$modal.show('event-card-popup')
+        this.$modal.show('event-card-popup')
       }
-    })
+    }.bind(this))
   },
   methods: {
     show() {
-      this.socket.emit('showEventCard', {gameName: this.gameName, teamName: this.teamName})
+      this.$bus.$emit('showEventCard', {gameName: this.gameName, teamName: this.teamName})
     },
     hide() {
       this.$modal.hide('event-card-popup')
@@ -91,9 +87,9 @@ export default {
         if (this.currentEventCard.autoDeployCard) {
           updateData.canStartAutoDeploy = true
         }
-        this.socket.emit('updateCurrentEventCard', {gameName: this.gameName, teamName: this.teamName, currentEventCard: this.currentEventCard.number})
+        this.$bus.$emit('updateCurrentEventCard', {gameName: this.gameName, teamName: this.teamName, currentEventCard: this.currentEventCard.number})
       }
-      this.socket.emit('updateCurrentDay', updateData)
+      this.$bus.$emit('updateCurrentDay', updateData)
     },
     doFunction() {
       let data

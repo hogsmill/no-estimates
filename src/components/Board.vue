@@ -1,6 +1,6 @@
 <template>
   <div class="board-container">
-    <EventCard :socket="socket" />
+    <EventCard />
     <div class="game-board">
       <table class="board-table rounded">
         <thead>
@@ -19,7 +19,7 @@
         <tbody>
           <tr>
             <td v-for="(column, index) in columns" :key="index">
-              <Column :column="column" :socket="socket" />
+              <Column :column="column" />
             </td>
           </tr>
         </tbody>
@@ -34,14 +34,12 @@ import stringFuns from '../lib/stringFuns.js'
 import EventCard from './board/EventCard.vue'
 import Column from './board/Column.vue'
 
+
 export default {
   components: {
     Column,
     EventCard
   },
-  props: [
-    'socket'
-  ],
   computed: {
     gameName() {
       return this.$store.getters.getGameName
@@ -57,23 +55,23 @@ export default {
     }
   },
   mounted() {
-    this.socket.on('updateColumns', (data) => {
+    this.$bus.$on('updateColumns', function (data) {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         this.$store.dispatch('updateColumns', data)
       }
-    })
+    }.bind(this))
 
-    this.socket.on('updateDependentTeam', (data) => {
+    this.$bus.$on('updateDependentTeam', function (data) {
       if (this.gameName == data.gameName) {
         this.$store.dispatch('updateDependentTeam', data)
       }
-    })
+    }.bind(this))
 
-    this.socket.on('startAutoDeploy', (data) => {
+    this.$bus.$on('startAutoDeploy', function (data) {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         this.$store.dispatch('startAutoDeploy', data)
       }
-    })
+    }.bind(this))
   },
   methods: {
     columnDisplayName(s) {
@@ -92,7 +90,7 @@ export default {
       return this.teamName && !this.myTeam.autoDeploy.doing && !this.myTeam.autoDeploy.done && this.myTeam.canStartAutoDeploy && column.name == 'deploy'
     },
     startAutoDeploy() {
-      this.socket.emit('startAutoDeploy', {gameName: this.gameName, teamName: this.teamName})
+      this.$bus.$emit('startAutoDeploy', {gameName: this.gameName, teamName: this.teamName})
     }
   }
 }

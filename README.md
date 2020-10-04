@@ -34,6 +34,13 @@ npm run build
 npm run lint
 ```
 
+
+### Run Mongo DB server
+
+```
+mongod --config /usr/local/etc/mongod.conf
+```
+
 ### Customize configuration
 
 See [Configuration Reference](https://cli.vuejs.org/config/).

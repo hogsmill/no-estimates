@@ -129,7 +129,7 @@ function doDb(fun, data) {
        break
 
       default:
-        console.log('Unknown function: \'' + fun + '\'')
+        console.warn('Unknown function: \'' + fun + '\'')
     }
   })
 }

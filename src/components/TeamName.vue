@@ -32,9 +32,6 @@
 
 <script>
 export default {
-  props: [
-    'socket'
-  ],
   data() {
     return {
       myTeamName: ''
@@ -42,7 +39,7 @@ export default {
   },
   computed: {
     showFacilitator() {
-      return this.$store.getters.getShowFacilitator
+      return this.$store.getters.getHost
     },
     gameName() {
       return this.$store.getters.getGameName
@@ -72,9 +69,9 @@ export default {
       this.$store.dispatch('updateTeamName', teamName)
       localStorage.setItem('teamName', teamName)
       if (!this.teamName) {
-        this.socket.emit('loadGame', {gameName: this.gameName, teamName: teamName})
+        this.$bus.$emit('loadGame', {gameName: this.gameName, teamName: teamName})
       } else if (teamName && this.gameName) {
-        this.socket.emit('updateTeamName', {gameName: this.gameName, teamName: teamName, role: this.myRole, name: this.myName})
+        this.$bus.$emit('updateTeamName', {gameName: this.gameName, teamName: teamName, role: this.myRole, name: this.myName})
       }
       this.hide()
     }

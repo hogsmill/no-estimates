@@ -39,12 +39,9 @@
 
 <script>
 export default {
-  props: [
-    'socket'
-  ],
   computed: {
     showFacilitator() {
-      return this.$store.getters.getShowFacilitator
+      return this.$store.getters.getHost
     },
     myName() {
       return this.$store.getters.getMyName
@@ -83,7 +80,7 @@ export default {
       this.$store.dispatch('updateMyRole', myRole)
       localStorage.setItem('myRole', myRole)
       if (myRole && this.gameName && this.teamName) {
-        this.socket.emit('updateRole', {gameName: this.gameName, teamName: this.teamName, name: this.myName, role: myRole })
+        this.$bus.$emit('updateRole', {gameName: this.gameName, teamName: this.teamName, name: this.myName, role: myRole })
       }
       this.hide()
     }

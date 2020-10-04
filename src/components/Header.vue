@@ -17,31 +17,33 @@
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav ml-auto">
-        <li class="nav-item" :class="{ active: !showFacilitator }">
-          <a class="nav-link pointer" @click="updateShowFacilitator(false)">Game</a>
-        </li>
-        <li v-if="isHost" class="nav-item" :class="{ active: showFacilitator }">
-          <a class="nav-link pointer" @click="updateShowFacilitator(true)">Facilitator</a>
-        </li>
+        <MenuItem :to="{ name: 'home'}">
+          Game
+        </MenuItem>
+        <MenuItem :to="{ name: 'status'}">
+          Status
+        </MenuItem>
+        <MenuItem to="/home/walkthrough">
+          Walkthrough
+        </MenuItem>
+        <MenuItem v-if="isHost" to="/facilitator">
+          Facilitator
+        </MenuItem>
       </ul>
     </div>
   </nav>
 </template>
 
 <script>
+import MenuItem from './MenuItem'
 export default {
+  components: {
+    MenuItem
+  },
   computed: {
     isHost() {
       return this.$store.getters.getHost
-    },
-    showFacilitator() {
-      return this.$store.getters.getShowFacilitator
-    },
-  },
-  methods: {
-    updateShowFacilitator(payload) {
-      this.$store.dispatch('updateShowFacilitator', payload)
-    },
-  },
+    }
+  }
 }
 </script>

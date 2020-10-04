@@ -48,15 +48,12 @@ export default {
   components: {
     Captain
   },
-  props: [
-    'socket'
-  ],
   computed: {
     isHost() {
       return this.$store.getters.getHost
     },
     showFacilitator() {
-      return this.$store.getters.getShowFacilitator
+      return this.$store.getters.getHost
     },
     gameName() {
       return this.$store.getters.getGameName
@@ -103,7 +100,7 @@ export default {
           this.$store.dispatch('changeName', {name: newName, captain: captain, host: this.isHost})
           localStorage.setItem('myName', JSON.stringify(myNameData))
           if (this.gameName) {
-            this.socket.emit('changeName', {gameName: this.gameName, name: oldName, newName: newName, captain: captain})
+            this.$bus.$emit('changeName', {gameName: this.gameName, name: oldName, newName: newName, captain: captain})
           }
         }
       }

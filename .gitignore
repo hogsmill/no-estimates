@@ -21,3 +21,7 @@ yarn-error.log*
 *.sln
 *.sw?
 *.mp4
+tests/e2e/screenshots/
+tests/e2e/videos/
+tests/results/
+

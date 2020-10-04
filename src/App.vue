@@ -174,7 +174,7 @@ export default {
     }.bind(this))
 
     this.$bus.$on('loadGame', function (data) {
-      if (this.gameName == data.gameName && this.teamName == data.teamName) {
+      if (this.gameName == data.gameName && this.teamName == data.teamName && data._id) {
         this.$store.dispatch('loadGame', data)
       }
     }.bind(this))

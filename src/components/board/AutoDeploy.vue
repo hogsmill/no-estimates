@@ -14,7 +14,6 @@
 
 <script>
 import roles from '../../lib/roles.js'
-
 export default {
   data() {
     return {
@@ -45,19 +44,19 @@ export default {
     }
   },
   mounted() {
-    window.bus.$on('incrementAutoDeploy', (data) => {
+    this.$bus.$on('incrementAutoDeploy', function (data) {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         this.$store.dispatch('incrementAutoDeploy', data)
       }
-    })
+    }.bind(this))
   },
   methods: {
     addEffort() {
       const effort = roles.iHaveRole('deploy', this.myRole, this.myOtherRoles) ? 1 : 2
       if (this.myEffort.available >= effort) {
         this.$store.dispatch('updateMyAssignedEffort', {effort: effort})
-        window.bus.$emit('incrementAutoDeploy', {gameName: this.gameName, teamName: this.teamName})
-        window.bus.$emit('updatePersonAutoDeployEffort', {gameName: this.gameName, teamName: this.teamName, name: this.myName})
+        this.$bus.$emit('incrementAutoDeploy', {gameName: this.gameName, teamName: this.teamName})
+        this.$bus.$emit('updatePersonAutoDeployEffort', {gameName: this.gameName, teamName: this.teamName, name: this.myName})
       } else {
         this.$store.dispatch('updateMessage', 'No effort available (Autodeploy)')
         const self = this

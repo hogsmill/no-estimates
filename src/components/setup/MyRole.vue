@@ -65,7 +65,7 @@ export default {
       this.$store.dispatch('updateMyRole', myRole)
       localStorage.setItem('myRole', myRole)
       if (myRole && this.gameName && this.teamName) {
-        window.bus.$emit('updateRole', {gameName: this.gameName, teamName: this.teamName, name: this.myName, role: myRole })
+        this.$bus.$emit('updateRole', {gameName: this.gameName, teamName: this.teamName, name: this.myName, role: myRole })
       }
       this.change = false
       this.$store.dispatch('settingUp', {setting: 'My Role', value: false})

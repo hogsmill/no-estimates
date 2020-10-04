@@ -1,6 +1,6 @@
 import Vue from 'vue'
 
-export class EventBus extends Vue {
+export class VueEventBus extends Vue {
   // Register a custom callback as meddler that gets called upon each event emission.
   // It can be bound to $on as well. 
   $meddle (callback) {
@@ -31,4 +31,4 @@ export class EventBus extends Vue {
   }
 }
 
-export default new EventBus()
+export const EventBus = new VueEventBus()

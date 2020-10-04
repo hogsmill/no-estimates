@@ -53,8 +53,7 @@ import Roles from './components/Roles.vue'
 import Day from './components/Day.vue'
 import Board from './components/Board.vue'
 
-import EventBus from './EventBus'
-window.bus = EventBus
+
 
 
 export default {
@@ -110,7 +109,7 @@ export default {
     }
     const connStr = 'http://' + host + ':3007'
     console.log('Connecting to: ' + connStr)
-    window.bus.setupSocket(io(connStr))
+    this.$bus.setupSocket(io(connStr))
     if (params.isParam('host')) {
       this.$store.dispatch('updateHost', true)
     }
@@ -121,17 +120,17 @@ export default {
       localStorage.setItem('gameName', game)
     }
 
-    window.bus.$on('updateMvpCards', (data) => {
+    this.$bus.$on('updateMvpCards', function (data) {
       if (this.gameName == data.gameName) {
         this.$store.dispatch('updateMvpCards', data)
       }
-    })
+    }.bind(this))
 
-    window.bus.$on('updateStealth', (data) => {
+    this.$bus.$on('updateStealth', function (data) {
       if (this.gameName == data.gameName) {
         this.$store.dispatch('updateStealth', data)
       }
-    })
+    }.bind(this))
 
     const self = this
     window.onload = function() {
@@ -165,79 +164,79 @@ export default {
     const gameName = localStorage.getItem('gameName')
     if (gameName) {
       this.$store.dispatch('updateGameName', gameName)
-      window.bus.$emit('gameState', {gameName: gameName})
+      this.$bus.$emit('gameState', {gameName: gameName})
     }
 
-    window.bus.$on('restartGame', (data) => {
+    this.$bus.$on('restartGame', function (data) {
       localStorage.removeItem('myEffort')
       if (this.gameName == data.gameName) {
         location.reload()
       }
-    })
+    }.bind(this))
 
-    window.bus.$on('loadGame', (data) => {
+    this.$bus.$on('loadGame', function (data) {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         this.$store.dispatch('loadGame', data)
       }
-    })
+    }.bind(this))
 
-    window.bus.$on('percentageBlocked', (data) => {
+    this.$bus.$on('percentageBlocked', function (data) {
       if (this.gameName == data.gameName) {
         this.$store.dispatch('percentageBlocked', data)
       }
-    })
+    }.bind(this))
 
-    window.bus.$on('percentageDeployFail', (data) => {
+    this.$bus.$on('percentageDeployFail', function (data) {
       if (this.gameName == data.gameName) {
         this.$store.dispatch('percentageDeployFail', data)
       }
-    })
+    }.bind(this))
 
-    window.bus.$on('updateRoles', (data) => {
+    this.$bus.$on('updateRoles', function (data) {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         this.$store.dispatch('updateRoles', data)
       }
-    })
+    }.bind(this))
 
-    window.bus.$on('updateColumns', (data) => {
+    this.$bus.$on('updateColumns', function (data) {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         this.$store.dispatch('updateColumns', data)
       }
-    })
+    }.bind(this))
 
-    window.bus.$on('updateTeams', (data) => {
+    this.$bus.$on('updateTeams', function (data) {
       if (this.gameName == data.gameName) {
         this.$store.dispatch('updateTeams', data)
       }
-    })
+    }.bind(this))
 
-    window.bus.$on('updateWorkCards', (data) => {
+    this.$bus.$on('updateWorkCards', function (data) {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         this.$store.dispatch('updateWorkCards', data)
       }
-    })
+    }.bind(this))
 
-    window.bus.$on('updateActuals', (data) => {
+    this.$bus.$on('updateActuals', function (data) {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         this.$store.dispatch('updateActuals', data)
       }
-    })
+    }.bind(this))
 
-    window.bus.$on('updatePairing', (data) => {
+    this.$bus.$on('updatePairing', function (data) {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         this.$store.dispatch('updatePairing', data)
       }
-    })
+    }.bind(this))
 
-    window.bus.$on('updateGameState', (data) => {
+    this.$bus.$on('updateGameState', function (data) {
       if (this.gameName == data.gameName) {
         this.$store.dispatch('updateGameState', data)
       }
-    })
+    }.bind(this))
 
-    window.bus.$on('updateConnections', (data) => {
+    this.$bus.$on('updateConnections', function (data) {
       this.$store.dispatch('updateConnections', data)
-    })
+    }.bind(this))
   },
   methods: {
     clear() {
@@ -254,8 +253,8 @@ export default {
         localStorage.setItem('teamName', this.teamName)
         localStorage.setItem('myRole', this.myRole)
         localStorage.setItem('gameName', this.gameName)
-        window.bus.$emit('updateRole', {gameName: this.gameName, teamName: this.teamName, name: this.myName, role: this.myRole})
-        window.bus.$emit('loadGame', {gameName: this.gameName, teamName: this.teamName})
+        this.$bus.$emit('updateRole', {gameName: this.gameName, teamName: this.teamName, name: this.myName, role: this.myRole})
+        this.$bus.$emit('loadGame', {gameName: this.gameName, teamName: this.teamName})
       }
       return setUp
     }

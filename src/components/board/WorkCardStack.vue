@@ -10,6 +10,7 @@
 </template>
 
 <script>
+
 export default {
   computed: {
     showFacilitator() {
@@ -38,11 +39,11 @@ export default {
     }
   },
   mounted() {
-    window.bus.$on('updateCurrentWorkCard', (data) => {
+    this.$bus.$on('updateCurrentWorkCard', function (data) {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         this.$store.dispatch('updateCurrentWorkCard', data)
       }
-    })
+    }.bind(this))
   },
   methods: {
     pullInCard() {
@@ -52,12 +53,12 @@ export default {
         const columns = this.columns
         workCards[currentWorkCard].commit = this.currentDay
         columns[1].cards.push(workCards[currentWorkCard])
-        window.bus.$emit('updateCommit', {gameName: this.gameName, teamName: this.teamName, workCard: currentWorkCard, commit: this.currentDay})
-        window.bus.$emit('updateColumns', {gameName: this.gameName, teamName: this.teamName, columns: columns})
-        window.bus.$emit('updateCurrentWorkCard', {gameName: this.gameName, teamName: this.teamName, currentWorkCard: currentWorkCard + 1})
+        this.$bus.$emit('updateCommit', {gameName: this.gameName, teamName: this.teamName, workCard: currentWorkCard, commit: this.currentDay})
+        this.$bus.$emit('updateColumns', {gameName: this.gameName, teamName: this.teamName, columns: columns})
+        this.$bus.$emit('updateCurrentWorkCard', {gameName: this.gameName, teamName: this.teamName, currentWorkCard: currentWorkCard + 1})
         if (workCards[currentWorkCard].teamDependency > 0) {
           const dependentOn = this.selectDependentTeam()
-          window.bus.$emit('updateDependentTeam', {gameName: this.gameName, teamName: this.teamName, workCard: workCards[currentWorkCard], dependentOn: dependentOn})
+          this.$bus.$emit('updateDependentTeam', {gameName: this.gameName, teamName: this.teamName, workCard: workCards[currentWorkCard], dependentOn: dependentOn})
         }
       }
     },

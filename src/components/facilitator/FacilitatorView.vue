@@ -154,6 +154,7 @@
 </template>
 
 <script>
+
 import OtherCards from './OtherCards.vue'
 import Column from './Column.vue'
 
@@ -211,29 +212,29 @@ export default {
     sendMessage() {
       const message = document.getElementById('gameMessageText').value
       if (message) {
-        window.bus.$emit('broadcastMessage', {gameName: this.gameName, message: message})
+        this.$bus.$emit('broadcastMessage', {gameName: this.gameName, message: message})
       }
     },
     toggleStealth() {
       const isStealth = document.getElementById('isStealth').checked
       localStorage.setItem('stealth', isStealth)
-      window.bus.$emit('updateStealth', {gameName: this.gameName, stealth: isStealth})
+      this.$bus.$emit('updateStealth', {gameName: this.gameName, stealth: isStealth})
     },
     toggleActive(team) {
       team.include = !team.include
-      window.bus.$emit('updateTeamActive', {gameName: this.gameName, team: team})
+      this.$bus.$emit('updateTeamActive', {gameName: this.gameName, team: team})
     },
     savePercentageBlocked: function() {
       const percentageBlocked = document.getElementById('percentageBlocked').value
-      window.bus.$emit('percentageBlocked', {gameName: this.gameName, percentageBlocked: percentageBlocked})
+      this.$bus.$emit('percentageBlocked', {gameName: this.gameName, percentageBlocked: percentageBlocked})
     },
     saveMvpCards: function() {
       const mvpCards = document.getElementById('mvpCards').value
-      window.bus.$emit('updateMvpCards', {gameName: this.gameName, mvpCards: parseInt(mvpCards)})
+      this.$bus.$emit('updateMvpCards', {gameName: this.gameName, mvpCards: parseInt(mvpCards)})
     },
     savePercentageDeployFail: function() {
       const percentageDeployFail = document.getElementById('percentageDeployFail').value
-      window.bus.$emit('percentageDeployFail', {gameName: this.gameName, percentageDeployFail: percentageDeployFail})
+      this.$bus.$emit('percentageDeployFail', {gameName: this.gameName, percentageDeployFail: percentageDeployFail})
     },
     showTeamState(team) {
       return this.showGameState && team.include
@@ -247,7 +248,7 @@ export default {
     restartGame() {
       const restartGame = confirm('Are you sure you want to re-start this game?')
       if (restartGame) {
-        window.bus.$emit('restartGame', {gameName: this.gameName, stealth: this.stealth})
+        this.$bus.$emit('restartGame', {gameName: this.gameName, stealth: this.stealth})
       }
     },
     role(role) {

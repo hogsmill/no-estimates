@@ -100,7 +100,7 @@ export default {
           this.$store.dispatch('changeName', {name: newName, captain: captain, host: this.isHost})
           localStorage.setItem('myName', JSON.stringify(myNameData))
           if (this.gameName) {
-            window.bus.$emit('changeName', {gameName: this.gameName, name: oldName, newName: newName, captain: captain})
+            this.$bus.$emit('changeName', {gameName: this.gameName, name: oldName, newName: newName, captain: captain})
           }
         }
       }

@@ -20,7 +20,6 @@
 
 <script>
 import stringFuns from '../../lib/stringFuns.js'
-
 export default {
   data() {
     return {
@@ -47,7 +46,7 @@ export default {
         this.$store.dispatch('updateGameName', game)
         localStorage.setItem('gameName', game)
         if (game && this.teamName) {
-          window.bus.$emit('loadGame', {gameName: this.gameName, teamName: this.teamName})
+          this.$bus.$emit('loadGame', {gameName: this.gameName, teamName: this.teamName})
         }
       }
       this.change = false

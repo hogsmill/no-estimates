@@ -69,9 +69,9 @@ export default {
       this.$store.dispatch('updateTeamName', teamName)
       localStorage.setItem('teamName', teamName)
       if (!this.teamName) {
-        window.bus.$emit('loadGame', {gameName: this.gameName, teamName: teamName})
+        this.$bus.$emit('loadGame', {gameName: this.gameName, teamName: teamName})
       } else if (teamName && this.gameName) {
-        window.bus.$emit('updateTeamName', {gameName: this.gameName, teamName: teamName, role: this.myRole, name: this.myName})
+        this.$bus.$emit('updateTeamName', {gameName: this.gameName, teamName: teamName, role: this.myRole, name: this.myName})
       }
       this.hide()
     }

@@ -128,23 +128,16 @@ export default {
       }
     })
 
-    const self = this
-    window.onload = function() {
-      let myEffort = localStorage.getItem('myEffort')
-      if (myEffort) {
-        myEffort = JSON.parse(myEffort)
-        self.$store.dispatch('updateMyEffort', myEffort)
-      }
+    const gameName = localStorage.getItem('gameName')
+    if (gameName) {
+      this.$store.dispatch('updateGameName', gameName)
+      // this.socket.emit('gameState', {gameName: gameName})
     }
 
     let myName = localStorage.getItem('myName')
     if (myName) {
-      if (!myName.match(/"id":/)) {
-        localStorage.removeItem('myName')
-      } else {
-        myName = JSON.parse(myName)
-        this.$store.dispatch('setMyName', myName)
-      }
+      myName = JSON.parse(myName)
+      this.$store.dispatch('updateMyName', myName)
     }
 
     const teamName = localStorage.getItem('teamName')
@@ -157,10 +150,16 @@ export default {
       this.$store.dispatch('updateMyRole', myRole)
     }
 
-    const gameName = localStorage.getItem('gameName')
-    if (gameName) {
-      this.$store.dispatch('updateGameName', gameName)
-      this.socket.emit('gameState', {gameName: gameName})
+    const self = this
+    window.onload = function() {
+      let myEffort = localStorage.getItem('myEffort')
+      if (myEffort) {
+        myEffort = JSON.parse(myEffort)
+        self.$store.dispatch('updateMyEffort', myEffort)
+      }
+      if (gameName &&  myName && teamName) {
+        self.socket.emit('loadGame', {gameName: gameName, teamName: teamName, myName: myName, myRole: myRole})
+      }
     }
 
     this.socket.on('restartGame', (data) => {
@@ -172,6 +171,7 @@ export default {
 
     this.socket.on('loadGame', (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
+        console.log('here')
         this.$store.dispatch('loadGame', data)
       }
     })
@@ -242,17 +242,18 @@ export default {
       localStorage.removeItem('gameName')
     },
     isSetUp() {
-      const setUp = this.gameName && this.myName && this.teamName && this.myRole
-      if (setUp && !this.setUp) {
-        this.setUp = true
-        localStorage.setItem('myName', JSON.stringify(this.myName))
-        localStorage.setItem('teamName', this.teamName)
-        localStorage.setItem('myRole', this.myRole)
-        localStorage.setItem('gameName', this.gameName)
-        this.socket.emit('updateRole', {gameName: this.gameName, teamName: this.teamName, name: this.myName, role: this.myRole})
-        this.socket.emit('loadGame', {gameName: this.gameName, teamName: this.teamName})
-      }
-      return setUp
+      return true
+    //  const setUp = this.gameName && this.myName && this.teamName && this.myRole
+    //  if (setUp && !this.setUp) {
+    //    this.setUp = true
+    //    localStorage.setItem('myName', JSON.stringify(this.myName))
+    //    localStorage.setItem('teamName', this.teamName)
+    //    localStorage.setItem('myRole', this.myRole)
+    //    localStorage.setItem('gameName', this.gameName)
+    //    this.socket.emit('updateRole', {gameName: this.gameName, teamName: this.teamName, name: this.myName, role: this.myRole})
+    //    this.socket.emit('loadGame', {gameName: this.gameName, teamName: this.teamName})
+    //  }
+    //  return setUp
     }
   },
 }

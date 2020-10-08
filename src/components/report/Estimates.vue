@@ -4,42 +4,57 @@
       <td>Estimate for Total Project: </td>
       <td>
         <input v-if="!projectEstimate" type="text" id="project-estimate" class="form-control" :value="projectEstimate">
-        <span v-if="projectEstimate">Estimate {{ projectEstimate }}</span>
+        <span v-if="projectEstimate"><b>{{ projectEstimate }}</b></span>
       </td>
       <td>
         <button v-if="!projectEstimate" class="btn btn-sm btn-site-primary" :disabled="!gameName || !teamName" @click="saveTotalProject">
           Save
         </button>
+        <button v-if="projectEstimate && currentDay < 2" class="btn btn-sm btn-site-primary" :disabled="!gameName || !teamName" @click="saveTotalProject">
+          Change
+        </button>
+      </td>
+      <td>
         <span v-if="projectEstimate && !projectActual">Actual: TBD</span>
-        <span v-if="projectEstimate && projectActual">Actual: {{ projectActual }}</span>
+        <span v-if="projectEstimate && projectActual">Actual: <b>{{ projectActual }}</b></span>
       </td>
     </tr>
     <tr>
       <td>Estimate for MVP (Cards 1-{{ mvpCards }}): </td>
       <td>
         <input v-if="!mvpEstimate" type="text" id="mvp-estimate" class="form-control" :value="mvpEstimate">
-        <span v-if="mvpEstimate">Estimate {{ mvpEstimate }}</span>
+        <span v-if="mvpEstimate"><b>{{ mvpEstimate }}</b></span>
       </td>
       <td>
         <button v-if="!mvpEstimate" class="btn btn-sm btn-site-primary" @click="saveMVP">
           Save
         </button>
+        <button v-if="mvpEstimate && currentWorkCard < mvpCards" class="btn btn-sm btn-site-primary" @click="saveMVP">
+          Change
+        </button>
+      </td>
+      <td>
         <span v-if="mvpEstimate && !mvpActual">Actual: TBD</span>
-        <span v-if="mvpEstimate && mvpActual">Actual: {{ mvpActual }}</span>
+        <span v-if="mvpEstimate && mvpActual">Actual: <b>{{ mvpActual }}</b></span>
       </td>
     </tr>
     <tr>
       <td>Re-estimate for Total project: </td>
       <td>
         <input v-if="!reEstimate" type="text" id="re-estimate" class="form-control" :value="reEstimate">
-        <span v-if="reEstimate">Estimate {{ reEstimate }}</span>
+        <span v-if="reEstimate"><b>{{ reEstimate }}</b></span>
       </td>
       <td>
         <button v-if="!reEstimate" class="btn btn-sm btn-site-primary" @click="saveReEstimate">
           Save
         </button>
+        <button v-if="reEstimate" class="btn btn-sm btn-site-primary" @click="saveReEstimate">
+          Change
+        </button>
+      </td>
+      <td>
         <span v-if="reEstimate && !projectActual">Actual: TBD</span>
-        <span v-if="reEstimate && projectActual">Actual: {{ projectActual }}</span>
+        <span v-if="reEstimate && projectActual">Actual: <b>{{ projectActual }}</b></span>
 
       </td>
     </tr>
@@ -78,7 +93,10 @@ export default {
     },
     currentDay() {
       return this.$store.getters.getCurrentDay
-    }
+    },
+    currentWorkCard() {
+      return this.$store.getters.getCurrentWorkCard
+    },
   },
   mounted() {
     this.socket.on('updateProjectEstimate', (data) => {

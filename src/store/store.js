@@ -5,12 +5,6 @@ Vue.use(Vuex)
 
 export const store = new Vuex.Store({
   state: {
-    settingUp: {
-      'Game Name': false,
-      'My Name': false,
-      'Team Name': false,
-      'My Role': false
-    },
     connections: 0,
     walkThrough: false,
     showFacilitator: false,
@@ -42,10 +36,18 @@ export const store = new Vuex.Store({
       role: ''
     },
     roles: [
-      {role: 'Designer', order: 1, names: [], otherNames: []}, {role: 'Developer', order: 2, names: [], otherNames: []}, {role: 'Tester', order: 3, names: [], otherNames: []}, {role: 'Deployer', order: 4, names: [], otherNames: []}
+      {role: 'Designer', order: 1, names: [], otherNames: []},
+      {role: 'Developer', order: 2, names: [], otherNames: []},
+      {role: 'Tester', order: 3, names: [], otherNames: []},
+      {role: 'Deployer', order: 4, names: [], otherNames: []}
     ],
     columns: [
-      {name: 'options', order: 1}, {name: 'design', order: 2, cards: []}, {name: 'develop', order: 3, cards: []}, {name: 'test', order: 4, cards: []}, {name: 'deploy', order: 5, cards: []}, {name: 'done', order: 6, cards: []}
+      {name: 'options', order: 1},
+      {name: 'design', order: 2, cards: []},
+      {name: 'develop', order: 3, cards: []},
+      {name: 'test', order: 4, cards: []},
+      {name: 'deploy', order: 5, cards: []},
+      {name: 'done', order: 6, cards: []}
     ],
     currentDay: 1,
     percentageBlocked: 0,
@@ -111,9 +113,6 @@ export const store = new Vuex.Store({
     gameState: []
   },
   getters: {
-    settingUp: (state) => {
-      return state.settingUp['Game Name'] || state.settingUp['My Name'] || state.settingUp['Team Name'] || state.settingUp['My Role']
-    },
     getShowFacilitator: (state) => {
       return state.showFacilitator
     },
@@ -234,9 +233,6 @@ export const store = new Vuex.Store({
     }
   },
   mutations: {
-    settingUp: (state, payload) => {
-      state.settingUp[payload.setting] = payload.value
-    },
     updateShowFacilitator: (state, payload) => {
       state.showFacilitator = payload
     },
@@ -264,11 +260,12 @@ export const store = new Vuex.Store({
       state.mvpEstimate = payload.mvpEstimate
       state.mvpActual = payload.mvpActual
       state.reEstimate = payload.reEstimate
+      state.roles = payload.roles
     },
     updateGameName: (state, payload) => {
       state.gameName = payload
     },
-    setMyName: (state, payload) => {
+    updateMyName: (state, payload) => {
       if (payload.uuid && payload.uuid == state.myName.uuid) {
         state.myName.name = payload.name
         state.myName.captain = payload.captain
@@ -372,9 +369,6 @@ export const store = new Vuex.Store({
     }
   },
   actions: {
-    settingUp: ({ commit }, payload) => {
-      commit('settingUp', payload)
-    },
     updateShowFacilitator: ({ commit }, payload) => {
       commit('updateShowFacilitator', payload)
     },
@@ -393,8 +387,8 @@ export const store = new Vuex.Store({
     updateGameName: ({ commit }, payload) => {
       commit('updateGameName', payload)
     },
-    setMyName: ({ commit }, payload) => {
-      commit('setMyName', payload)
+    updateMyName: ({ commit }, payload) => {
+      commit('updateMyName', payload)
     },
     changeName: ({ commit }, payload) => {
       commit('changeName', payload)

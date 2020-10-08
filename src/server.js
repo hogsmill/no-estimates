@@ -7,7 +7,7 @@ ON_DEATH(function(signal, err) {
     logStr = '  ' + err.stack + '\n'
   }
   fs.appendFile('server.log', logStr, function (err) {
-    if (err) console.log(err)
+    if (err) console.log(logStr)
     process.exit()
   })
 })
@@ -25,7 +25,7 @@ const prod = os.hostname() == 'agilesimulations' ? true : false
 const url = prod ?  'mongodb://127.0.0.1:27017/' : 'mongodb://localhost:27017/'
 
 const connectDebugOff = prod
-const debugOn = !prod
+const debugOn = false // !prod
 
 const connections = {}
 const maxConnections = 2000
@@ -49,15 +49,15 @@ function doDb(fun, data) {
       case 'restartGame':
         dbStore.restartGame(err, client, db, io, data, debugOn)
         break
-      case 'updateTeamName':
-        dbStore.updateTeamName(err, client, db, io, data, debugOn)
-        break
-      case 'updateRole':
-        dbStore.updateRole(err, client, db, io, data, debugOn)
-        break
-      case 'changeName':
-        dbStore.changeName(err, client, db, io, data, debugOn)
-        break
+      //case 'updateTeamName':
+      //  dbStore.updateTeamName(err, client, db, io, data, debugOn)
+      //  break
+      //case 'updateRole':
+      //  dbStore.updateRole(err, client, db, io, data, debugOn)
+      //  break
+      //case 'changeName':
+      //  dbStore.changeName(err, client, db, io, data, debugOn)
+      //  break
       case 'updateCurrentDay':
         dbStore.updateCurrentDay(err, client, db, io, data, debugOn)
         break
@@ -156,11 +156,11 @@ io.on('connection', (socket) => {
 
   socket.on('restartGame', (data) => { doDb('restartGame', data) })
 
-  socket.on('updateTeamName', (data) => { doDb('updateTeamName', data) })
+  //socket.on('updateTeamName', (data) => { doDb('updateTeamName', data) })
 
-  socket.on('updateRole', (data) => { doDb('updateRole', data) })
+  //socket.on('updateRole', (data) => { doDb('updateRole', data) })
 
-  socket.on('changeName', (data) => { doDb('changeName', data) })
+  // socket.on('changeName', (data) => { doDb('changeName', data) })
 
   socket.on('showEventCard', (data) => { emit('showEventCard', data) })
 

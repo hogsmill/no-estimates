@@ -6,8 +6,14 @@ ON_DEATH(function(signal, err) {
   if (signal) {
     logStr = logStr + ' ' + signal + '\n'
   }
+  if (currentAction) {
+    logStr = logstr + '  Action: ' + currentAction + '\n'
+  }
+  if (currentData) {
+    logStr = logstr + '  Data: ' + currentData + '\n'
+  }
   if (err && err.stack) {
-    logStr = logStr + '  ' + err.stack + '\n'
+    logStr = logStr + '  Error: ' + err.stack + '\n'
   }
   fs.appendFile('server.log', logStr, function (err) {
     if (err) console.log(logStr)
@@ -40,7 +46,11 @@ function emit(event, data) {
   io.emit(event, data)
 }
 
+let currentAction = ''
+let currentData = ''
 function doDb(fun, data) {
+  currentAction = fun
+  currentData = data
   MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
     if (err) throw err
     const db = client.db('db')

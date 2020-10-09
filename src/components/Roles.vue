@@ -5,7 +5,8 @@
         <td class="role" :class="role.role.toLowerCase()" v-for="(role, index) in roles" :key="index">
           <div v-for="(name, m) in roles[index].names" :key="'name-' + m">
             <div v-if="!(name.host && stealth)" :class="{ 'me': name.id == myName.id }">
-              {{ name.name }} <Captain :captain="name.captain" />
+              {{ name.name }}
+              <span v-if="name.captain" class="captain">&#9733;</span>
               <span>({{ myEffort.available }})</span>
             </div>
           </div>
@@ -19,12 +20,7 @@
 </template>
 
 <script>
-import Captain from './specialities/Captain.vue'
-
 export default {
-  components: {
-    Captain
-  },
   computed: {
     isHost() {
       return this.$store.getters.getHost

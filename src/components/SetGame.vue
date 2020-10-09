@@ -40,7 +40,7 @@
                 <input type="text" id="my-name" class="form-control" :value="myName.name">
               </div>
               <div>
-                <input type="checkbox" id="captain" :disabled="!myNameEditing" :checked="myName.captain"> Team Captain?
+                <input type="checkbox" id="captain" :disabled="!myNameEditing" :checked="myName.captain"> Team Captain? {{ myNameEditing }}
               </div>
             </td>
             <td class="button">
@@ -184,7 +184,7 @@ export default {
       }
       if (document.getElementById('my-name')) {
         const myName = document.getElementById('my-name').value
-        const captain = document.getElementById('captain').value
+        const captain = document.getElementById('captain').checked
         myNameData.name = stringFuns.sanitize(myName)
         myNameData.captain = captain
       }

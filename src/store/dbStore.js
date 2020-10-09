@@ -232,7 +232,7 @@ module.exports = {
         for (let r = 0; r < res.length; r++) {
           res[r] = addMyNameAndRole(res[r], data)
           res[r] = roleFuns.generateRoles(res[r])
-          db.collection('noEstimates').updateOne({'_id': res[r]._id}, {$set: {teams: res[r].teams}}, function(err) {
+          db.collection('noEstimates').updateOne({'_id': res[r]._id}, {$set: {teams: res[r].teams, roles: res[r].roles}}, function(err) {
             if (err) throw err
             io.emit('loadGame', res[r])
           })

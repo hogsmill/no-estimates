@@ -23,8 +23,8 @@ function generateRolesFromMembers(members, role) {
 function generateRolesForTeam(team, roles) {
   let teamRoles = []
   for (let i = 0; i < roles.length; i++) {
-    let names = generateRolesFromMembers(team.members, roles[i])
-    teamRoles.push({role: roles[i].role, order: roles[i].order, names: names})
+    roles[i].names = generateRolesFromMembers(team.members, roles[i])
+    teamRoles.push(roles[i])
   }
   return teamRoles
 }

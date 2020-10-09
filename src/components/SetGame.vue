@@ -63,7 +63,7 @@
               </select>
             </td>
             <td class="button">
-              <button v-if="teamName && !teamNameEditing" class="btn btn-sm btn-secondary smaller-font" @click="changeTeamName">
+              <button v-if="teamName && !teamNameEditing" :disabled="!canRestructure()" class="btn btn-sm btn-secondary smaller-font" @click="changeTeamName">
                 &#128393;
               </button>
             </td>
@@ -82,7 +82,7 @@
               </select>
             </td>
             <td class="button">
-              <button v-if="myRole && !myRoleEditing" class="btn btn-sm btn-secondary smaller-font" @click="changeMyRole">
+              <button v-if="myRole && !myRoleEditing" :disabled="!canRestructure()" class="btn btn-sm btn-secondary smaller-font" @click="changeMyRole">
                 &#128393;
               </button>
             </td>
@@ -128,6 +128,9 @@ export default {
     myName() {
       return this.$store.getters.getMyName
     },
+    myTeam() {
+      return this.$store.getters.getMyTeam
+    },
     teamName() {
       return this.$store.getters.getTeamName
     },
@@ -140,6 +143,9 @@ export default {
     myRole() {
       return this.$store.getters.getMyRole
     },
+    currentDay() {
+      return this.$store.getters.getCurrentDay
+    }
   },
   methods: {
     show () {
@@ -147,6 +153,9 @@ export default {
     },
     hide () {
       this.$modal.hide('set-up')
+    },
+    canRestructure: function() {
+      return this.currentDay == 1 || this.myTeam.recharting
     },
     changeGameName: function() {
       this.gameNameEditing = true

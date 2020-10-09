@@ -15,7 +15,7 @@
         </button>
       </td>
       <td>
-        <span v-if="projectEstimate && !projectActual">Actual: TBD</span>
+        <span v-if="!projectActual">Actual: TBD</span>
         <span v-if="projectEstimate && projectActual">Actual: <b>{{ projectActual }}</b></span>
       </td>
     </tr>
@@ -34,7 +34,7 @@
         </button>
       </td>
       <td>
-        <span v-if="mvpEstimate && !mvpActual">Actual: TBD</span>
+        <span v-if="!mvpActual">Actual: TBD</span>
         <span v-if="mvpEstimate && mvpActual">Actual: <b>{{ mvpActual }}</b></span>
       </td>
     </tr>
@@ -55,7 +55,6 @@
       <td>
         <span v-if="reEstimate && !projectActual">Actual: TBD</span>
         <span v-if="reEstimate && projectActual">Actual: <b>{{ projectActual }}</b></span>
-
       </td>
     </tr>
   </table>

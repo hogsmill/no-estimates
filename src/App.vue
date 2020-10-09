@@ -7,7 +7,9 @@
     </div>
     <div class="main" v-else>
       <div v-if="isHost" class="right">
-        <button class="btn btn-sm btn-outline-secondary smaller-font" @click="clearLocalStorage()">Clear Local Storage</button>
+        <button class="btn btn-sm btn-outline-secondary smaller-font" @click="clearLocalStorage()">
+          Clear Local Storage
+        </button>
       </div>
       <div v-if="!connections.connections" class="not-connected">
         WARNING: You are not connected to the server
@@ -132,7 +134,7 @@ export default {
     const gameName = localStorage.getItem('gameName')
     if (gameName) {
       this.$store.dispatch('updateGameName', gameName)
-      // this.socket.emit('gameState', {gameName: gameName})
+      this.socket.emit('gameState', {gameName: gameName})
     }
 
     let myName = localStorage.getItem('myName')

@@ -81,6 +81,11 @@ function createNewGame(data) {
   game.currentWorkCard = 0
   game.percentageBlocked = 0.05
   game.percentageDeployFail = 0.5
+  game.mvpEstimate = null
+  game.mvpActual = null
+  game.projectEstimate = null
+  game.projectActual = null
+  game.reEstimate = null
   game.created = new Date().toISOString()
   game.restarted = []
 
@@ -99,7 +104,12 @@ function resetGame(game) {
     currentDay: 1,
     currentEventCard: 0,
     currentWorkCard: 0,
-    restarted: restarted
+    mvpEstimate: null,
+    mvpActual: null,
+    projectEstimate: null,
+    projectActual: null,
+    reEstimate: null,
+    restarted: restarted,
   }
 }
 
@@ -254,7 +264,7 @@ module.exports = {
           }
         })
       }
-      //gameState.update(err, client, db, io, data, debugOn)
+      gameState.update(err, client, db, io, data, debugOn)
     })
   },
 

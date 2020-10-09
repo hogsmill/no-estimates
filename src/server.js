@@ -52,15 +52,6 @@ function doDb(fun, data) {
       case 'restartGame':
         dbStore.restartGame(err, client, db, io, data, debugOn)
         break
-      //case 'updateTeamName':
-      //  dbStore.updateTeamName(err, client, db, io, data, debugOn)
-      //  break
-      //case 'updateRole':
-      //  dbStore.updateRole(err, client, db, io, data, debugOn)
-      //  break
-      //case 'changeName':
-      //  dbStore.changeName(err, client, db, io, data, debugOn)
-      //  break
       case 'updateCurrentDay':
         dbStore.updateCurrentDay(err, client, db, io, data, debugOn)
         break
@@ -159,12 +150,6 @@ io.on('connection', (socket) => {
 
   socket.on('restartGame', (data) => { doDb('restartGame', data) })
 
-  //socket.on('updateTeamName', (data) => { doDb('updateTeamName', data) })
-
-  //socket.on('updateRole', (data) => { doDb('updateRole', data) })
-
-  // socket.on('changeName', (data) => { doDb('changeName', data) })
-
   socket.on('showEventCard', (data) => { emit('showEventCard', data) })
 
   socket.on('updateCurrentEventCard', (data) => { doDb('updateCurrentEventCard', data) })
@@ -222,8 +207,6 @@ io.on('connection', (socket) => {
   // Game State
 
   socket.on('gameState', (data) => { doDb('gameState', data) })
-
-
 })
 
 const port = process.argv[2] || 3007

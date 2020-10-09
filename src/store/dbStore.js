@@ -121,79 +121,11 @@ function addMyNameAndRole(game, data) {
   return game
 }
 
-//function _updateRole(err, client, db, io, data, debugOn) {
-//
-//  db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
-//    if (err) throw err
-//    if (res) {
-//      let i, j
-//      const roles = res.roles
-//      for (i = 0; i < roles.length; i++) {
-//        const names = []
-//        for (j = 0; j < roles[i].names.length; j++) {
-//          if (roles[i].names[j].id != data.name.id) {
-//            names.push(roles[i].names[j])
-//          }
-//        }
-//        roles[i].names = names
-//      }
-//      for (i = 0; i < roles.length; i++) {
-//        if (roles[i].role == data.role) {
-//          roles[i].names.push(data.name)
-//        }
-//      }
-//      db.collection('noEstimates').updateOne({'_id': res._id}, {$set: {roles: roles}}, function(err) {
-//        if (err) throw err
-//        data.roles = roles
-//        io.emit('updateRoles', data)
-//      })
-//    }
-//    gameState.update(err, client, db, io, data, debugOn)
-//  })
-//}
-
 module.exports = {
 
   gameState: function(err, client, db, io, data, debugOn) {
     gameState.update(err, client, db, io, data, debugOn)
   },
-
-//  updateRole: function(err, client, db, io, data, debugOn) {
-//
-//    if (debugOn) { console.log('updateRole', data) }
-//
-//    _updateRole(err, client, db, io, data, debugOn)
-//  },
-//
-//  changeName: function(err, client, db, io, data, debugOn) {
-//
-//    if (debugOn) { console.log('changeName', data) }
-//
-//    db.collection('noEstimates').find({gameName: data.gameName}).toArray(function(err, res) {
-//      if (err) throw err
-//      if (res.length) {
-//        for (let r = 0; r < res.length; r++) {
-//          for (let i = 0; i < res[r].roles.length; i++) {
-//            const names = []
-//            for (let j = 0; j < res[r].roles[i].names.length; j++) {
-//              const name = res[r].roles[i].names[j]
-//              if (name.id == data.name.id) {
-//                name.name = data.newName
-//              }
-//              names.push(name)
-//            }
-//            res[r].roles[i].names = names
-//          }
-//          data.roles = res[r].roles
-//          data.teamName = res[r].teamName
-//          io.emit('updateRoles', data)
-//          db.collection('noEstimates').updateOne({'_id': res[r]._id}, {$set: {roles: data.roles}}, function(err) {
-//            if (err) throw err
-//          })
-//        }
-//      }
-//    })
-//  },
 
   percentageBlocked: function(err, client, db, io, data, debugOn) {
 

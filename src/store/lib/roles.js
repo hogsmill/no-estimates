@@ -50,40 +50,6 @@ module.exports = {
     return game
   },
 
-  // Existing stuff...
-  //
-  //addNameToRoles: function(name, role, roles) {
-  //  for (let i = 0; i < roles.length; i++) {
-  //    if (roles[i].role == role) {
-  //      roles[i].names.push(name)
-  //    }
-  //  }
-  //  return roles
-  //},
-  //
-  //removeNameFromRoles: function(name, roles) {
-  //  let i, j
-  //  const newRoles = []
-  //  for (i = 0; i < roles.length; i++) {
-  //    const names = []
-  //    for (j = 0; j < roles[i].names.length; j++) {
-  //      if (name.id != roles[i].names[j].id) {
-  //        names.push(roles[i].names[j])
-  //      }
-  //    }
-  //    roles[i].names = names
-  //    const otherNames = []
-  //    for (j = 0; j < roles[i].otherNames.length; j++) {
-  //      if (name.id != roles[i].otherNames[j].id) {
-  //        otherNames.push(roles[i].names[j])
-  //      }
-  //    }
-  //    roles[i].otherNames = otherNames
-  //    newRoles.push(roles[i])
-  //  }
-  //  return newRoles
-  //},
-
   setRolesEffort: function(roles, data) {
     let capacity = data.capacity ? data.capacity : 4
     for (let i = 0; i < roles.length; i++) {

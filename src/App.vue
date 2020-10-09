@@ -6,20 +6,20 @@
       <FacilitatorView :socket="socket" />
     </div>
     <div class="main" v-else>
-      <div v-if="isHost" class="right" @click="clear()">
-        Clear Storage
+      <div v-if="isHost" class="right" @click="clearLocalStorage()">
+        Clear Local Storage
       </div>
       <div v-if="!connections.connections" class="not-connected">
         WARNING: You are not connected to the server
       </div>
       <SetGame :socket="socket" />
-      <SetEstimates :socket="socket" />
+      <SetEstimates v-if="gameName" :socket="socket" />
       <Status :socket="socket" />
-      <div v-if="isSetUp()" class="container board">
+      <div class="container board">
         <h3 class="board-title">
           <span v-if="gameName">Game: {{ gameName }}</span>
           <span v-if="gameName && teamName"> - </span>
-          <span v-if="teamName">Team: {{ teamName }}</span>
+          <span v-if="teamName">Team: {{ teamName }} ({{ myTeamMembers }} {{ membersString() }})</span>
         </h3>
         <div class="game-buttons">
           <Report :socket="socket" />
@@ -37,6 +37,7 @@
 import io from 'socket.io-client'
 
 import params from './lib/params.js'
+import stringFuns from './lib/stringFuns.js'
 
 import Header from './components/Header.vue'
 import Report from './components/report/Report.vue'
@@ -93,9 +94,9 @@ export default {
     myName() {
       return this.$store.getters.getMyName
     },
-    myRole() {
-      return this.$store.getters.getMyRole
-    },
+    myTeamMembers() {
+      return this.$store.getters.getMyTeamMembers
+    }
   },
   created() {
     let host = '77.68.122.69'
@@ -157,7 +158,7 @@ export default {
         myEffort = JSON.parse(myEffort)
         self.$store.dispatch('updateMyEffort', myEffort)
       }
-      if (gameName &&  myName && teamName) {
+      if (gameName && myName && teamName) {
         self.socket.emit('loadGame', {gameName: gameName, teamName: teamName, myName: myName, myRole: myRole})
       }
     }
@@ -171,7 +172,6 @@ export default {
 
     this.socket.on('loadGame', (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
-        console.log('here')
         this.$store.dispatch('loadGame', data)
       }
     })
@@ -235,25 +235,16 @@ export default {
     })
   },
   methods: {
-    clear() {
-      localStorage.removeItem('myName')
-      localStorage.removeItem('teamName')
-      localStorage.removeItem('myRole')
-      localStorage.removeItem('gameName')
+    membersString() {
+      return stringFuns.pluralString(this.myTeamMembers, 'member')
     },
-    isSetUp() {
-      return true
-    //  const setUp = this.gameName && this.myName && this.teamName && this.myRole
-    //  if (setUp && !this.setUp) {
-    //    this.setUp = true
-    //    localStorage.setItem('myName', JSON.stringify(this.myName))
-    //    localStorage.setItem('teamName', this.teamName)
-    //    localStorage.setItem('myRole', this.myRole)
-    //    localStorage.setItem('gameName', this.gameName)
-    //    this.socket.emit('updateRole', {gameName: this.gameName, teamName: this.teamName, name: this.myName, role: this.myRole})
-    //    this.socket.emit('loadGame', {gameName: this.gameName, teamName: this.teamName})
-    //  }
-    //  return setUp
+    clearLocalStorage() {
+      if (confirm('Clear localStorage?')) {
+        localStorage.removeItem('myName')
+        localStorage.removeItem('teamName')
+        localStorage.removeItem('myRole')
+        localStorage.removeItem('gameName')
+      }
     }
   },
 }

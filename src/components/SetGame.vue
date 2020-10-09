@@ -5,7 +5,7 @@
       Set Up
     </button>
 
-    <modal name="set-up" :height="330" class="rounded">
+    <modal name="set-up" :height="360" class="rounded">
       <div class="float-right mr-2 mt-1">
         <button type="button" class="close" @click="hide" aria-label="Close">
           <span aria-hidden="true">&times;</span>
@@ -19,14 +19,14 @@
 
           <tr :class="{ 'error': gameNameError }">
             <td>Game Name: </td>
-            <td v-if="gameName && !gameNameEditing">
-              {{ gameName }}
-              <button class="btn btn-sm btn-secondary smaller-font" @click="changeGameName">
+            <td>
+              <div v-if="gameName && !gameNameEditing">{{ gameName }}</div>
+              <input v-if="!gameName || gameNameEditing" type="text" id="game-name" class="form-control" :value="gameName">
+            </td>
+            <td class="button">
+              <button v-if="gameName && !gameNameEditing" class="btn btn-sm btn-secondary smaller-font" @click="changeGameName">
                 &#128393;
               </button>
-            </td>
-            <td v-if="!gameName || gameNameEditing">
-              <input type="text" id="game-name" class="form-control setup-input" :value="gameName">
             </td>
           </tr>
 
@@ -34,51 +34,57 @@
 
           <tr :class="{ 'error': myNameError }">
             <td>My Name: </td>
-            <td v-if="myName.id && !myNameEditing" class="setup-input">
-              {{ myName.name }}
-              <button class="btn btn-sm btn-secondary smaller-font" @click="changeMyName">
+            <td>
+              <div v-if="myName.id && !myNameEditing" class="my-name">{{ myName.name }}</div>
+              <div v-if="!myName.id || myNameEditing" class="my-name-edit">
+                <input type="text" id="my-name" class="form-control" :value="myName.name">
+              </div>
+              <div>
+                <input type="checkbox" id="captain" :disabled="!myNameEditing" :checked="myName.captain"> Team Captain?
+              </div>
+            </td>
+            <td class="button">
+              <button v-if="myName.id && !myNameEditing" class="btn btn-sm btn-secondary smaller-font" @click="changeMyName">
                 &#128393;
               </button>
-            </td>
-            <td v-if="!myName.id || myNameEditing">
-              <input type="text" id="my-name" class="form-control setup-input" :value="myName.name">
-            </td>
-            <td>
-              <input type="checkbox" id="captain" :checked="myName.captain"> Team Captain?
             </td>
           </tr>
 
+          <!-- Team Name -->
+
           <tr :class="{ 'error': teamNameError }">
             <td>Team: </td>
-            <td v-if="teamName && !teamNameEditing">
-              {{ teamName.name }}
-              <button class="btn btn-sm btn-secondary smaller-font" @click="changeTeamName">
-                &#128393;
-              </button>
-            </td>
-            <td v-if="!teamName || teamNameEditing">
-              <select :class="{ 'hidden': activeTeams.length == 0}" id="team-name-select" class="form-control offset-md-2 mr-2 setup-input ">
+            <td>
+              <div v-if="teamName && !teamNameEditing">{{ teamName }}</div>
+              <select v-if="!teamName || teamNameEditing" :class="{ 'hidden': activeTeams.length == 0}" id="team-name-select" class="form-control">
                 <option v-for="(team, index) in activeTeams" :key="index" :selected="team.name == teamName">
                   {{ team.name }}
                 </option>
               </select>
             </td>
-          </tr>
-
-          <tr :class="{ 'error': myRoleError }">
-            <td>My Role: </td>
-            <td v-if="myRole && !myRoleEditing">
-              {{ myRole.role }}
-              <button class="btn btn-sm btn-secondary smaller-font" @click="changeMyRole">
+            <td class="button">
+              <button v-if="teamName && !teamNameEditing" class="btn btn-sm btn-secondary smaller-font" @click="changeTeamName">
                 &#128393;
               </button>
             </td>
-            <td v-if="!myRole || myRoleEditing">
-              <select id="role-select" class="form-control setup-input offset-md-2 mr-2 setup-input ">
+          </tr>
+
+          <!-- Role -->
+
+          <tr :class="{ 'error': myRoleError }">
+            <td>My Role: </td>
+            <td>
+              <div v-if="myRole && !myRoleEditing">{{ myRole }}</div>
+              <select v-if="!myRole || myRoleEditing" id="role-select" class="form-control">
                 <option v-for="(role, index) in roles" :key="index" :selected="role.role == myRole">
                   {{ role.role }}
                 </option>
               </select>
+            </td>
+            <td class="button">
+              <button v-if="myRole && !myRoleEditing" class="btn btn-sm btn-secondary smaller-font" @click="changeMyRole">
+                &#128393;
+              </button>
             </td>
           </tr>
         </table>
@@ -178,7 +184,9 @@ export default {
       }
       if (document.getElementById('my-name')) {
         const myName = document.getElementById('my-name').value
+        const captain = document.getElementById('captain').value
         myNameData.name = stringFuns.sanitize(myName)
+        myNameData.captain = captain
       }
       return myNameData
     },
@@ -186,6 +194,8 @@ export default {
       let teamName = ''
       if (document.getElementById('team-name-select')) {
         teamName = document.getElementById('team-name-select').value
+      } else {
+        teamName = this.teamName
       }
       return teamName
     },
@@ -193,6 +203,8 @@ export default {
       let myRole = ''
       if (document.getElementById('role-select')) {
         myRole = document.getElementById('role-select').value
+      } else {
+        myRole = this.myRole
       }
       return myRole
     },
@@ -202,6 +214,7 @@ export default {
       if (! teamName) { this.teamNameError = true }
     },
     setLocalStorage: function(gameName, myName, teamName, myRole) {
+      console.log('Setting localStorage', gameName, myName, teamName, myRole)
       localStorage.setItem('gameName', gameName)
       localStorage.setItem('myName', JSON.stringify(myName))
       localStorage.setItem('teamName', teamName)
@@ -217,7 +230,7 @@ export default {
         this.$store.dispatch('updateGameName', gameName)
         this.$store.dispatch('updateMyName', myName)
         this.$store.dispatch('updateTeamName', teamName)
-        this.socket.emit('loadGame', {gameName: this.gameName, teamName: this.teamName, myName: myName, myRole: myRole})
+        this.socket.emit('loadGame', {gameName: gameName, teamName: teamName, myName: myName, myRole: myRole})
         this.hide()
       } else {
         this.showErrors(gameName, myName, teamName)
@@ -231,38 +244,43 @@ export default {
 <style lang="scss">
 
   .setup-table {
-
-    margin-bottom: 20px;
+    margin: 0 auto 20px auto;
 
     td {
       height: 45px;
+
+      div {
+        padding: 6px;
+        text-align: left;
+
+        &.my-name {
+        margin-top: 6px;
+        margin-bottom: 6px;
+        }
+
+        &.my-name-edit {
+          padding-bottom: 0;
+        }
+      }
 
       &:nth-child(1) {
         padding: 2px 10px;
       }
       &:nth-child(2) {
-        width: 300px; ;
+        width: 200px; ;
+      }
+
+      select {
+        padding: 0;
+      }
+
+      &.button {
+        width: 50px;
       }
     }
 
     .error {
       background-color: red;
-    }
-    .setup-label {
-      display: inline-block;
-      width: 200px;
-      line-height: 1.5;
-    }
-
-    .setup-change {
-      background-color: transparent;
-      color: #212529;
-      border-color: transparent;
-    }
-
-    .setup-input {
-      display: inline-block;
-      width: 200px;
     }
   }
 

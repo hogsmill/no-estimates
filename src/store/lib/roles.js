@@ -40,13 +40,13 @@ module.exports = {
     return game
   },
 
-  generateRoles: function(game, data, roles) {
+  generateRoles: function(game) {
     for (let i = 0; i < game.teams.length; i++) {
-      if (game.teams[i].name == data.teamName) {
+      if (game.teams[i].name == game.teamName) {
+        const roles = game.roles
         game.roles = generateRolesForTeam(game.teams[i], roles)
       }
     }
-    console.log(game.gameName, game.teamName, game.roles)
     return game
   },
 

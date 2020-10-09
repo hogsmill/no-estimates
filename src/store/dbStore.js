@@ -70,6 +70,7 @@ function createNewGame(data) {
   game.stealth = false
   game.pairing = []
   game.teams = initialTeams
+  game.roles = roles
   game.columns = initialColumns
   game.workCards = initialCards
   game.mvpCards = 11
@@ -81,8 +82,25 @@ function createNewGame(data) {
   game.percentageBlocked = 0.05
   game.percentageDeployFail = 0.5
   game.created = new Date().toISOString()
+  game.restarted = []
 
   return game
+}
+
+function resetGame(game) {
+  let restarted = game.restarted
+  restarted.push(new Date().toISOString())
+  return {
+    teams: initialTeams,
+    pairing: [],
+    columns: initialColumns,
+    workCards: initialCards,
+    daysEffort: [],
+    currentDay: 1,
+    currentEventCard: 0,
+    currentWorkCard: 0,
+    restarted: restarted
+  }
 }
 
 function addMyNameAndRole(game, data) {
@@ -90,41 +108,7 @@ function addMyNameAndRole(game, data) {
   if (data.myRole) {
     game = roleFuns.addMyRole(game, data)
   }
-  game = roleFuns.generateRoles(game, data, roles)
   return game
-}
-
-function _loadGame(err, client, db, io, data, debugOn) {
-
-  db.collection('noEstimates').find({gameName: data.gameName}).toArray(function(err, res) {
-    if (err) throw err
-    if (res.length) {
-      console.log('Loading game \'' + data.gameName + '\'')
-      for (let r = 0; r < res.length; r++) {
-        res[r] = addMyNameAndRole(res[r], data)
-        db.collection('noEstimates').updateOne({'_id': res[r]._id}, {$set: {teams: res[r].teams}}, function(err) {
-          if (err) throw err
-          io.emit('loadGame', res[r])
-        })
-      }
-    } else {
-      console.log('Created new game \'' + data.gameName + '\'')
-      let games = []
-      for (let i = 0; i < initialTeams.length; i++) {
-        let game = createNewGame(data)
-        game.teamName = initialTeams[i].name
-        game = addMyNameAndRole(game, data)
-        games.push(JSON.parse(JSON.stringify(game)))
-      }
-      db.collection('noEstimates').insertMany(games, function(err) {
-        if (err) throw err
-        for (let i = 0; i < games.length; i++) {
-          io.emit('loadGame', games[i])
-        }
-      })
-    }
-    //gameState.update(err, client, db, io, data, debugOn)
-  })
 }
 
 //function _updateRole(err, client, db, io, data, debugOn) {
@@ -164,35 +148,6 @@ module.exports = {
     gameState.update(err, client, db, io, data, debugOn)
   },
 
-//  updateTeamName: function(err, client, db, io, data, debugOn) {
-//
-//    if (debugOn) { console.log('updateTeamName', data) }
-//
-//    db.collection('noEstimates').find({gameName: data.gameName}).toArray(function(err, res) {
-//      if (err) throw err
-//      if (res.length) {
-//        const newTeamName = data.teamName
-//        res.forEach(function(r) {
-//          let roles
-//          if (r.teamName != newTeamName) {
-//            roles = roleFuns.removeNameFromRoles(data.name, r.roles, r.teamName)
-//          } else {
-//            roles = roleFuns.addNameToRoles(data.name, data.role, r.roles, r.teamName)
-//          }
-//          data.teamName = r.teamName
-//          data.roles = roles
-//          io.emit('updateRoles', data)
-//          db.collection('noEstimates').updateOne({'_id': r._id}, {$set: {roles: data.roles}}, function(err) {
-//            if (err) throw err
-//          })
-//        })
-//        res.forEach(function(r) {
-//          _loadGame(err, client, db, io, {gameName: data.gameName, teamName: r.teamName}, debugOn)
-//        })
-//      }
-//    })
-//  },
-//
 //  updateRole: function(err, client, db, io, data, debugOn) {
 //
 //    if (debugOn) { console.log('updateRole', data) }
@@ -268,18 +223,59 @@ module.exports = {
 
   loadGame: function(err, client, db, io, data, debugOn) {
 
-    if (debugOn || true) { console.log('loadGame', data) }
+    if (debugOn) { console.log('loadGame', data) }
 
-    _loadGame(err, client, db, io, data, debugOn)
+    db.collection('noEstimates').find({gameName: data.gameName}).toArray(function(err, res) {
+      if (err) throw err
+      if (res.length) {
+        console.log('Loading game \'' + data.gameName + '\'')
+        for (let r = 0; r < res.length; r++) {
+          res[r] = addMyNameAndRole(res[r], data)
+          res[r] = roleFuns.generateRoles(res[r])
+          db.collection('noEstimates').updateOne({'_id': res[r]._id}, {$set: {teams: res[r].teams}}, function(err) {
+            if (err) throw err
+            io.emit('loadGame', res[r])
+          })
+        }
+      } else {
+        console.log('Created new game \'' + data.gameName + '\'')
+        let games = []
+        for (let i = 0; i < initialTeams.length; i++) {
+          let game = createNewGame(data)
+          game.teamName = initialTeams[i].name
+          game = addMyNameAndRole(game, data)
+          game = roleFuns.generateRoles(game)
+          games.push(JSON.parse(JSON.stringify(game)))
+        }
+        db.collection('noEstimates').insertMany(games, function(err) {
+          if (err) throw err
+          for (let i = 0; i < games.length; i++) {
+            io.emit('loadGame', games[i])
+          }
+        })
+      }
+      //gameState.update(err, client, db, io, data, debugOn)
+    })
   },
 
   restartGame: function(err, client, db, io, data, debugOn) {
 
     if (debugOn) { console.log('restartGame', data) }
 
-    db.collection('noEstimates').deleteMany({gameName: data.gameName}, function(err) {
-      _loadGame(err, client, db, io, data, debugOn)
-      io.emit('restartGame', data)
+    db.collection('noEstimates').find({gameName: data.gameName}).toArray(function(err, res) {
+      if (err) throw err
+      if (res.length) {
+        for (let r = 0; r < res.length; r++) {
+          let reset = resetGame(res[r])
+          db.collection('noEstimates').updateOne({'_id': res[r]._id}, {$set:reset}, function(err) {
+            if (err) throw err
+            for (var key in Object.keys(reset)) {
+              res[r][key] == reset[key]
+            }
+            io.emit('loadGame', res[r])
+          })
+        }
+      }
     })
   },
 

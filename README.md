@@ -38,10 +38,17 @@ npm run lint
 
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
+## Setup MongoDB
+
+https://zellwk.com/blog/install-mongodb/
+
+## Run Mongo
+
+```mongod --config /usr/local/etc/mongod.conf```
+
 ## Running the node.js server for socket.io
 
 ```
-Navigate to coin-game/coin-game/src
-Then run 'node server.js'
+Then run 'node src/server.js'
 This is will listen on localhost:3007
 ```

@@ -25,7 +25,10 @@
           <p>
             This activity is best facilitated by someone familiar with the game,
             so do get in touch and we can either facilitate a workshop for you, or
-            or teach you how to do it yourself.
+            or teach you how to do it yourself. More details on facilitation can be found at
+            <a href="https://noestimates.wordpress.com/facilitator-guide" target="blank">
+              https://noestimates.wordpress.com/facilitator-guide
+            </a>
           </p>
           <p>
             Contact us via LinkedIn at <a href="https://www.linkedin.com/in/hogsmill/">https://www.linkedin.com/in/hogsmill/</a>
@@ -64,7 +67,7 @@ export default {
   data() {
     return {
       step: 1,
-      default: { width: 600, height: 260 },
+      default: { width: 650, height: 260 },
       positions: {
         2: { height: 290 }
       }
@@ -159,7 +162,7 @@ export default {
   .explain {
     margin-bottom: 6px;
   }
-  
+
   #facilitate {
     width: 50%;
   }
@@ -167,7 +170,7 @@ export default {
   #walk-through {
 
     .vm--modal {
-      height: 400px !important;
+      height: 420px !important;
     }
 
     p {

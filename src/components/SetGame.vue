@@ -219,8 +219,8 @@ export default {
       return myRole
     },
     showErrors: function(gameName, myName, teamName) {
-      if (! gameName) { this.gameNameError = true }
-      if (! myName.name) { this.myNameError = true }
+      if (! gameName || gameName == '') { this.gameNameError = true }
+      if (!myName.name || myName.name == '') { this.myNameError = true }
       if (! teamName) { this.teamNameError = true }
     },
     setLocalStorage: function(gameName, myName, teamName, myRole) {
@@ -235,16 +235,16 @@ export default {
       const myName = this.getMyName()
       const teamName =  this.getTeamName()
       const myRole = this.getMyRole()
-      if (gameName && myName && teamName) {
+      this.showErrors(gameName, myName, teamName)
+      if (this.gameNameError || this.myNameError || this.teamNameError) {
+        alert('Please set all fields before saving')
+      } else {
         this.setLocalStorage(gameName, myName, teamName, myRole)
         this.$store.dispatch('updateGameName', gameName)
         this.$store.dispatch('updateMyName', myName)
         this.$store.dispatch('updateTeamName', teamName)
         this.socket.emit('loadGame', {gameName: gameName, teamName: teamName, myName: myName, myRole: myRole})
         this.hide()
-      } else {
-        this.showErrors(gameName, myName, teamName)
-        alert('Please set all fields before saving')
       }
     }
   }
@@ -291,6 +291,7 @@ export default {
 
     .error {
       background-color: red;
+      color: #fff;
     }
   }
 

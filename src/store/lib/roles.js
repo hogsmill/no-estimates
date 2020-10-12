@@ -1,9 +1,7 @@
 
 function addRole(members, name, role) {
-  let found = false
   for (let i = 0; i < members.length; i++) {
     if (members[i].id == name.id) {
-      found = true
       members[i].role = role
     }
   }
@@ -11,7 +9,7 @@ function addRole(members, name, role) {
 }
 
 function generateRolesFromMembers(members, role) {
-  let roleMembers = []
+  const roleMembers = []
   for (let i = 0; i < members.length; i++) {
     if (role.role == members[i].role) {
       roleMembers.push(members[i])
@@ -21,7 +19,7 @@ function generateRolesFromMembers(members, role) {
 }
 
 function generateRolesForTeam(team, roles) {
-  let teamRoles = []
+  const teamRoles = []
   for (let i = 0; i < roles.length; i++) {
     roles[i].names = generateRolesFromMembers(team.members, roles[i])
     teamRoles.push(roles[i])

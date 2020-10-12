@@ -31,7 +31,10 @@
             </a>
           </p>
           <p>
-            Contact us via LinkedIn at <a href="https://www.linkedin.com/in/hogsmill/">https://www.linkedin.com/in/hogsmill/</a>
+            If you'd like more info, contact us via LinkedIn at
+            <a href="https://www.linkedin.com/in/hogsmill/">
+              https://www.linkedin.com/in/hogsmill/
+            </a>
             and we can discuss your needs.
           </p>
           <div v-if="false">

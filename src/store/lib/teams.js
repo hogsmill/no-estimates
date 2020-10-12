@@ -16,7 +16,7 @@ function addNameToTeam(members, name) {
 }
 
 function removeNameFromTeam(members, name) {
-  let newMembers = []
+  const newMembers = []
   for (let i = 0; i < members.length; i++) {
     if (members[i].id != name.id) {
       newMembers.push(members[i])

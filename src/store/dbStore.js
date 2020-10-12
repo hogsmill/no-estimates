@@ -93,7 +93,7 @@ function createNewGame(data) {
 }
 
 function resetGame(game) {
-  let restarted = game.restarted
+  const restarted = game.restarted
   restarted.push(new Date().toISOString())
   return {
     teams: initialTeams,
@@ -181,7 +181,7 @@ module.exports = {
         }
       } else {
         console.log('Created new game \'' + data.gameName + '\'')
-        let games = []
+        const games = []
         for (let i = 0; i < initialTeams.length; i++) {
           let game = createNewGame(data)
           game.teamName = initialTeams[i].name
@@ -208,10 +208,10 @@ module.exports = {
       if (err) throw err
       if (res.length) {
         for (let r = 0; r < res.length; r++) {
-          let reset = resetGame(res[r])
+          const reset = resetGame(res[r])
           db.collection('noEstimates').updateOne({'_id': res[r]._id}, {$set:reset}, function(err) {
             if (err) throw err
-            for (var key in Object.keys(reset)) {
+            for (const key in Object.keys(reset)) {
               res[r][key] == reset[key]
             }
             io.emit('loadGame', res[r])
@@ -228,7 +228,8 @@ module.exports = {
     db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
       if (err) throw err
       if (res) {
-        let teams = res.teams, columns = res.columns, workCards = res.workCards, roles = res.roles, currentDay = res.currentDay + 1
+        const teams = res.teams, workCards = res.workCards, roles = res.roles, currentDay = res.currentDay + 1
+        let columns = res.columns
         for (let i = 0; i < teams.length; i++) {
           if (teams[i].name == data.teamName) {
             if (data.autoDeploy) {
@@ -469,7 +470,8 @@ module.exports = {
     db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
       if (err) throw err
       if (res) {
-        let i, player, roles = res.roles, pairing = []
+        let i, player, roles = res.roles
+        const pairing = []
         for (i = 0; i < res.pairing.length; i++) {
           if (res.pairing[i].name.id == data.name.id) {
             player = res.pairing[i]

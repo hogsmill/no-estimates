@@ -64,7 +64,7 @@ module.exports = {
   },
 
   calculateActuals: function(columns, workCards, mvpCards, day, mvp, project) {
-    let actuals = {
+    const actuals = {
       mvp: mvp,
       project: project
     }

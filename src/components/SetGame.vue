@@ -189,8 +189,9 @@ export default {
         myNameData = this.myName
       } else {
         const uuid = uuidv4()
-        myNameData = {id: uuid, name: '', captain: false, host: this.isHost}
+        myNameData = {id: uuid, name: '', captain: false}
       }
+      myNameData.host = this.isHost
       if (document.getElementById('my-name')) {
         const myName = document.getElementById('my-name').value
         const captain = document.getElementById('captain').checked

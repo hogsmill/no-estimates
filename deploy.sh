@@ -26,10 +26,4 @@ if [ -f "src/server.js" ]; then
   if [ "$KEEP" != "" ]; then
     kill -9 $KEEP
   fi
-  #
-  node src/server.js $PORT 'No Estimates' &
-  sleep 5
-  ./keep.sh $PORT &
 fi
-
-ps -ef | grep node  | sort -k10

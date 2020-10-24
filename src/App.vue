@@ -174,6 +174,9 @@ export default {
 
     this.socket.on('loadGame', (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
+        if (data.new) {
+          localStorage.removeItem('myEffort')
+        }
         this.$store.dispatch('loadGame', data)
       }
     })

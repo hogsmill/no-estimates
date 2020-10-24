@@ -88,6 +88,7 @@ function createNewGame(data) {
   game.reEstimate = null
   game.created = new Date().toISOString()
   game.restarted = []
+  game.new = true
 
   return game
 }
@@ -110,6 +111,7 @@ function resetGame(game) {
     projectActual: null,
     reEstimate: null,
     restarted: restarted,
+    new: false
   }
 }
 
@@ -127,42 +129,6 @@ module.exports = {
     gameState.update(err, client, db, io, data, debugOn)
   },
 
-  percentageBlocked: function(err, client, db, io, data, debugOn) {
-
-    if (debugOn) { console.log('percentageBlocked', data) }
-
-    db.collection('noEstimates').find({gameName: data.gameName}).toArray(function(err, res) {
-      if (err) throw err
-      if (res.length) {
-        for (let r = 0; r < res.length; r++) {
-          db.collection('noEstimates').updateOne({'_id': res[r]._id}, {$set: {percentageBlocked: data.percentageBlocked}}, function(err, rec) {
-            if (err) throw err
-            data.teamName = rec.teamName
-            io.emit('percentageBlocked', data)
-          })
-        }
-      }
-    })
-  },
-
-  percentageDeployFail: function(err, client, db, io, data, debugOn) {
-
-    if (debugOn) { console.log('percentageDeployFail', data) }
-
-    db.collection('noEstimates').find({gameName: data.gameName}).toArray(function(err, res) {
-      if (err) throw err
-      if (res.length) {
-        for (let r = 0; r < res.length; r++) {
-          db.collection('noEstimates').updateOne({'_id': res[r]._id}, {$set: {percentageDeployFail: data.percentageDeployFail}}, function(err, rec) {
-            if (err) throw err
-            data.teamName = rec.teamName
-            io.emit('percentageDeployFail', data)
-          })
-        }
-      }
-    })
-  },
-
   loadGame: function(err, client, db, io, data, debugOn) {
 
     if (debugOn) { console.log('loadGame', data) }
@@ -174,6 +140,7 @@ module.exports = {
         for (let r = 0; r < res.length; r++) {
           res[r] = addMyNameAndRole(res[r], data)
           res[r] = roleFuns.generateRoles(res[r])
+          res[r].new = false
           db.collection('noEstimates').updateOne({'_id': res[r]._id}, {$set: {teams: res[r].teams, roles: res[r].roles}}, function(err) {
             if (err) throw err
             io.emit('loadGame', res[r])
@@ -675,6 +642,42 @@ module.exports = {
           })
         }
         gameState.update(err, client, db, io, data, debugOn)
+      }
+    })
+  },
+
+  percentageBlocked: function(err, client, db, io, data, debugOn) {
+
+    if (debugOn) { console.log('percentageBlocked', data) }
+
+    db.collection('noEstimates').find({gameName: data.gameName}).toArray(function(err, res) {
+      if (err) throw err
+      if (res.length) {
+        for (let r = 0; r < res.length; r++) {
+          db.collection('noEstimates').updateOne({'_id': res[r]._id}, {$set: {percentageBlocked: data.percentageBlocked}}, function(err, rec) {
+            if (err) throw err
+            data.teamName = rec.teamName
+            io.emit('percentageBlocked', data)
+          })
+        }
+      }
+    })
+  },
+
+  percentageDeployFail: function(err, client, db, io, data, debugOn) {
+
+    if (debugOn) { console.log('percentageDeployFail', data) }
+
+    db.collection('noEstimates').find({gameName: data.gameName}).toArray(function(err, res) {
+      if (err) throw err
+      if (res.length) {
+        for (let r = 0; r < res.length; r++) {
+          db.collection('noEstimates').updateOne({'_id': res[r]._id}, {$set: {percentageDeployFail: data.percentageDeployFail}}, function(err, rec) {
+            if (err) throw err
+            data.teamName = rec.teamName
+            io.emit('percentageDeployFail', data)
+          })
+        }
       }
     })
   },

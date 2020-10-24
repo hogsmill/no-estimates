@@ -1,6 +1,9 @@
 const fs = require('fs')
 const ON_DEATH = require('death')({uncaughtException: true})
+const logFile = process.argv[3]
 
+let currentAction = ''
+let currentData = ''
 ON_DEATH(function(signal, err) {
   let logStr = new Date()
   if (signal) {
@@ -15,7 +18,7 @@ ON_DEATH(function(signal, err) {
   if (err && err.stack) {
     logStr = logStr + '  Error: ' + err.stack + '\n'
   }
-  fs.appendFile('server.log', logStr, function (err) {
+  fs.appendFile(logFile, logStr, function (err) {
     if (err) console.log(logStr)
     process.exit()
   })
@@ -46,8 +49,6 @@ function emit(event, data) {
   io.emit(event, data)
 }
 
-let currentAction = ''
-let currentData = ''
 function doDb(fun, data) {
   currentAction = fun
   currentData = data

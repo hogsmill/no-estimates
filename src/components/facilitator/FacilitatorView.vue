@@ -118,9 +118,9 @@
         </td>
         <td v-if="showTeamState(team)">
           <div v-for="(member, m) in team.members" :key="m">
-            <b>{{ member.name.name }}</b>
+            <b>{{ member.name }}</b>
             <div class="white rounded-circle member-role" :class="roleClass(member.role)">
-              {{ role(member.role) }}
+              {{ effort(member) }}
             </div>
           </div>
         </td>
@@ -253,8 +253,8 @@ export default {
         this.socket.emit('restartGame', {gameName: this.gameName, stealth: this.stealth})
       }
     },
-    role(role) {
-      return role.charAt(0)
+    effort(role) {
+      return role.effort ? role.effort.available : '?'
     },
     roleClass(role) {
       return role.toLowerCase()

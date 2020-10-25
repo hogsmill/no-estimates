@@ -38,15 +38,26 @@ function columnDetails(res) {
   return cols
 }
 
+function addRole(member, roles) {
+  for (let i = 0; i < roles.length; i++) {
+    for (let j = 0; j < roles[i].names.length; j++) {
+      if (member.id == roles[i].names[j].id) {
+        member.role = roles[i].role
+        member.effort = roles[i].names[j].effort
+      }
+    }
+  }
+  return member
+}
+
 function memberDetails(res) {
   const members = []
-  for (let i = 0; i < res.roles.length; i++) {
-    for (let j = 0; j < res.roles[i].names.length; j++) {
-      members.push({
-        name: res.roles[i].names[j],
-        role: res.roles[i].role
-      })
-    }
+  const team = res.teams.find(function(t) {
+    return t.name == res.teamName
+  })
+  for (let i = 0; i < team.members.length; i++) {
+    const member = addRole(team.members[i], res.roles)
+    members.push(member)
   }
   return members
 }

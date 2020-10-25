@@ -149,6 +149,12 @@ export default {
       return this.$store.getters.getCurrentDay
     }
   },
+  created() {
+    this.gameNameEditing = !this.gameName
+    this.myNameEditing = !this.myName.id
+    this.teamNameEditing = !this.teamName
+    this.myRoleEditing = !this.myRole
+  },
   methods: {
     show () {
       this.$modal.show('set-up')
@@ -245,16 +251,11 @@ export default {
         this.$store.dispatch('updateGameName', gameName)
         this.$store.dispatch('updateMyName', myName)
         this.$store.dispatch('updateTeamName', teamName)
+        this.$store.dispatch('updateMyRole', myRole)
         this.socket.emit('loadGame', {gameName: gameName, teamName: teamName, myName: myName, myRole: myRole})
         this.hide()
       }
     }
-  },
-  created() {
-    this.gameNameEditing = !this.gameName
-    this.myNameEditing = !this.myName.id
-    this.teamNameEditing = !this.teamName
-    this.myRoleEditing = !this.myRole
   }
 }
 </script>

@@ -130,6 +130,9 @@ export default {
     myName() {
       return this.$store.getters.getMyName
     },
+    myEffort() {
+      return this.$store.getters.getMyEffort
+    },
     myTeam() {
       return this.$store.getters.getMyTeam
     },
@@ -252,7 +255,7 @@ export default {
         this.$store.dispatch('updateMyName', myName)
         this.$store.dispatch('updateTeamName', teamName)
         this.$store.dispatch('updateMyRole', myRole)
-        this.socket.emit('loadGame', {gameName: gameName, teamName: teamName, myName: myName, myRole: myRole})
+        this.socket.emit('loadGame', {gameName: gameName, teamName: teamName, myName: myName, myRole: myRole, myEffort: this.myEffort})
         this.hide()
       }
     }

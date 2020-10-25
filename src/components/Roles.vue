@@ -7,7 +7,7 @@
             <div v-if="!(name.host && stealth)" :class="{ 'me': name.id == myName.id }">
               {{ name.name }}
               <span v-if="name.captain" class="captain">&#9733;</span>
-              <span>({{ name.effort ? name.effort.available : 4 }})</span>
+              <span>({{ name.effort ? name.effort.available : '?' }})</span>
             </div>
           </div>
           <div v-for="(otherName, n) in roles[index].otherNames" :key="'otherName-' + n">

@@ -161,7 +161,7 @@ export default {
         self.$store.dispatch('updateMyEffort', myEffort)
       }
       if (gameName && myName && teamName) {
-        self.socket.emit('loadGame', {gameName: gameName, teamName: teamName, myName: myName, myRole: myRole})
+        self.socket.emit('loadGame', {gameName: gameName, teamName: teamName, myName: myName, myRole: myRole, myEffort: myEffort})
       }
     }
 

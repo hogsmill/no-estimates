@@ -98,6 +98,7 @@ function resetGame(game) {
   restarted.push(new Date().toISOString())
   return {
     teams: initialTeams,
+    roles: roles,
     pairing: [],
     columns: initialColumns,
     workCards: initialCards,

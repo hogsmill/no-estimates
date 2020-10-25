@@ -1,8 +1,9 @@
 
-function addRole(members, name, role) {
+function addRole(members, name, role, effort) {
   for (let i = 0; i < members.length; i++) {
     if (members[i].id == name.id) {
       members[i].role = role
+      members[i].effort = effort
     }
   }
   return members
@@ -32,7 +33,7 @@ module.exports = {
   addMyRole: function(game, data) {
     for (let i = 0; i < game.teams.length; i++) {
       if (game.teams[i].name == data.teamName) {
-        game.teams[i].members = addRole(game.teams[i].members, data.myName, data.myRole)
+        game.teams[i].members = addRole(game.teams[i].members, data.myName, data.myRole, data.myEffort)
       }
     }
     return game

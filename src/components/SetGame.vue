@@ -40,7 +40,7 @@
                 <input type="text" id="my-name" class="form-control" :value="myName.name">
               </div>
               <div>
-                <input type="checkbox" id="captain" :disabled="!myNameEditing" :checked="myName.captain"> Team Captain? {{ myNameEditing }}
+                <input type="checkbox" id="captain" :disabled="!myNameEditing" :checked="myName.captain"> Team Captain?
               </div>
             </td>
             <td class="button">
@@ -57,6 +57,7 @@
             <td>
               <div v-if="teamName && !teamNameEditing">{{ teamName }}</div>
               <select v-if="!teamName || teamNameEditing" :class="{ 'hidden': activeTeams.length == 0}" id="team-name-select" class="form-control">
+                <option value=""> -- Select -- </option>
                 <option v-for="(team, index) in activeTeams" :key="index" :selected="team.name == teamName">
                   {{ team.name }}
                 </option>
@@ -76,6 +77,7 @@
             <td>
               <div v-if="myRole && !myRoleEditing">{{ myRole }}</div>
               <select v-if="!myRole || myRoleEditing" id="role-select" class="form-control">
+                <option value=""> -- Select -- </option>
                 <option v-for="(role, index) in roles" :key="index" :selected="role.role == myRole">
                   {{ role.role }}
                 </option>
@@ -237,7 +239,7 @@ export default {
       const myRole = this.getMyRole()
       this.showErrors(gameName, myName, teamName)
       if (this.gameNameError || this.myNameError || this.teamNameError) {
-        alert('Please set all fields before saving')
+        alert('Please set all required fields before saving')
       } else {
         this.setLocalStorage(gameName, myName, teamName, myRole)
         this.$store.dispatch('updateGameName', gameName)
@@ -247,6 +249,12 @@ export default {
         this.hide()
       }
     }
+  },
+  created() {
+    this.gameNameEditing = !this.gameName
+    this.myNameEditing = !this.myName.id
+    this.teamNameEditing = !this.teamName
+    this.myRoleEditing = !this.myRole
   }
 }
 </script>

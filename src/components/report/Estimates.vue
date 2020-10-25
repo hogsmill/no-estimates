@@ -1,7 +1,7 @@
 <template>
   <table class="estimates">
     <tr>
-      <td>Estimate for Total Project: </td>
+      <td>Days to complete the entire project: </td>
       <td>
         <input v-if="!projectEstimate" type="text" id="project-estimate" class="form-control" :value="projectEstimate">
         <span v-if="projectEstimate"><b>{{ projectEstimate }}</b></span>
@@ -20,7 +20,7 @@
       </td>
     </tr>
     <tr>
-      <td>Estimate for MVP (Cards 1-{{ mvpCards }}): </td>
+      <td>Days to complete the MVP (Cards 1-{{ mvpCards }}): </td>
       <td>
         <input v-if="!mvpEstimate" type="text" id="mvp-estimate" class="form-control" :value="mvpEstimate">
         <span v-if="mvpEstimate"><b>{{ mvpEstimate }}</b></span>
@@ -39,7 +39,7 @@
       </td>
     </tr>
     <tr>
-      <td>Re-estimate for Total project: </td>
+      <td>Re-estimate of days to <br /> complete the entire project: </td>
       <td>
         <input v-if="!reEstimate" type="text" id="re-estimate" class="form-control" :value="reEstimate">
         <span v-if="reEstimate"><b>{{ reEstimate }}</b></span>

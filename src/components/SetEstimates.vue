@@ -5,7 +5,7 @@
       Set Estimates
     </button>
 
-    <modal name="set-up-estimates" :height="400" class="rounded">
+    <modal name="set-up-estimates" :height="400" :width="800" class="rounded">
       <div class="float-right mr-2 mt-1">
         <button type="button" class="close" @click="hide" aria-label="Close">
           <span aria-hidden="true">&times;</span>
@@ -17,7 +17,7 @@
         <p>There are <b>{{ myTeamMembers }}</b> team {{ membersString() }}, and each has up to <b>4</b> effort points per day</p>
         <p>You are currently on day <b>{{ currentDay }}</b>, and have completed <b>{{ completed() }}</b>
           card<span v-if="completed() != 1">s</span>.</p>
-        <p>Estimates are in days to complete the work.</p>
+        <p>Estimates are <b>the number of days to complete the work</b>.</p>
         <Estimates :socket="socket" />
         <button class="btn btn-sm btn-primary smaller-font" @click="hide">
           Done

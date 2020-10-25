@@ -39,7 +39,7 @@
       </td>
     </tr>
     <tr>
-      <td>Re-estimate of days to <br /> complete the entire project: </td>
+      <td>Re-estimate of days to <br> complete the entire project: </td>
       <td>
         <input v-if="!reEstimate" type="text" id="re-estimate" class="form-control" :value="reEstimate">
         <span v-if="reEstimate"><b>{{ reEstimate }}</b></span>

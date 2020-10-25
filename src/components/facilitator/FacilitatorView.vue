@@ -100,7 +100,22 @@
       </tr>
       <tr v-if="showGameState" class="header">
         <td>Team</td>
-        <td>Members</td>
+        <td>
+          <div class="white rounded-circle member-role designer">
+            D
+          </div>
+          <div class="white rounded-circle member-role developer">
+            D
+          </div>
+          <div class="white rounded-circle member-role tester">
+            T
+          </div>
+          <div class="white rounded-circle member-role deployer">
+            D
+          </div>
+          <br>
+          Members
+        </td>
         <td>Autodeploy?</td>
         <td>Current<br>Day</td>
         <td>Last<br>Card<br>Played</td>

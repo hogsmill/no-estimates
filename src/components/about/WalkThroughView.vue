@@ -24,7 +24,7 @@
           </p>
           <p>
             This activity is best facilitated by someone familiar with the game,
-            so do get in touch and we can either facilitate a workshop for you, 
+            so do get in touch and we can either facilitate a workshop for you,
             or teach you how to do it yourself. More details on facilitation can be found at
             <a href="https://noestimates.wordpress.com/facilitator-guide" target="blank">
               https://noestimates.wordpress.com/facilitator-guide
@@ -82,7 +82,7 @@ export default {
     },
     showFacilitator() {
       return this.$store.getters.getShowFacilitator
-    },
+    }
   },
   mounted() {
     const self = this
@@ -143,7 +143,8 @@ export default {
     facilitate() {
       mailFuns.post({
         action: 'Facilitation request from ' + this.thisGame,
-        email: encodeURIComponent(document.getElementById('email').value)
+        email: encodeURIComponent(document.getElementById('email').value),
+        comments: ''
         },
         'Thanks for your request - we\'ll get back to you as soon as we can with details'
       )

@@ -31,12 +31,12 @@
             </a>
           </p>
           <p>
-            If you'd like more info, or would like to discuss failitation, send us your email
+            If you'd like more info, or would like to discuss facilitation, send us your email
             in the box below, and we can discuss your needs.
           </p>
           <div>
-            Email: <input type="email" id="facilitate" placeholder="Email address">
-            <button class="btn btn-info btn-sm" @click="facilitate">
+            Email: <input type="email" id="email" placeholder="Email address">
+            <button class="btn btn-info btn-sm" @click="facilitate()">
               Submit
             </button>
           </div>
@@ -169,7 +169,7 @@ export default {
   #walk-through {
 
     .vm--modal {
-      height: 420px !important;
+      height: 450px !important;
     }
 
     p {

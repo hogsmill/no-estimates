@@ -24,7 +24,7 @@
           </p>
           <p>
             This activity is best facilitated by someone familiar with the game,
-            so do get in touch and we can either facilitate a workshop for you, or
+            so do get in touch and we can either facilitate a workshop for you, 
             or teach you how to do it yourself. More details on facilitation can be found at
             <a href="https://noestimates.wordpress.com/facilitator-guide" target="blank">
               https://noestimates.wordpress.com/facilitator-guide
@@ -164,12 +164,13 @@ export default {
 
   #email {
     width: 50%;
+    margin: 6px;
   }
 
   #walk-through {
 
     .vm--modal {
-      height: 450px !important;
+      height: 460px !important;
     }
 
     p {

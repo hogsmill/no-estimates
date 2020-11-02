@@ -31,14 +31,12 @@
             </a>
           </p>
           <p>
-            If you'd like more info, contact us via LinkedIn at
-            <a href="https://www.linkedin.com/in/hogsmill/">
-              https://www.linkedin.com/in/hogsmill/
-            </a>
-            and we can discuss your needs.
+            If you'd like more info, or would like to discuss failitation, send us your email
+            in the box below, and we can discuss your needs.
           </p>
-          <div v-if="false">
-            Email: <input type="text" id="facilitate"> <button class="btn btn-info btn-sm" @click="facilitate">
+          <div>
+            Email: <input type="email" id="facilitate" placeholder="Email address">
+            <button class="btn btn-info btn-sm" @click="facilitate">
               Submit
             </button>
           </div>
@@ -62,8 +60,7 @@
 </template>
 
 <script>
-const axios = require('axios')
-
+import mailFuns from '../../lib/mail.js'
 import params from '../../lib/params.js'
 
 export default {
@@ -77,6 +74,9 @@ export default {
     }
   },
   computed: {
+    thisGame() {
+      return this.$store.getters.thisGame
+    },
     walkThrough() {
       return this.$store.getters.getWalkThrough
     },
@@ -141,16 +141,12 @@ export default {
       elem.style.height = positions.height +'px'
     },
     facilitate() {
-      axios.post('http://agilesimulations.co.uk/mail.php', {
-        action: 'facilitation',
-        email: encodeURIComponent(document.getElementById('facilitate').value)
-      })
-      .then(function (response) {
-        console.log(response)
-      })
-      .catch(function (error) {
-        console.log(error)
-      })
+      mailFuns.post({
+        action: 'Facilitation request from ' + this.thisGame,
+        email: encodeURIComponent(document.getElementById('email').value)
+        },
+        'Thanks for your request - we\'ll get back to you as soon as we can with details'
+      )
     }
   },
 }

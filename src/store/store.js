@@ -5,6 +5,7 @@ Vue.use(Vuex)
 
 export const store = new Vuex.Store({
   state: {
+    thisGame: 'No Estimates',
     connections: 0,
     walkThrough: false,
     showFacilitator: false,
@@ -113,6 +114,9 @@ export const store = new Vuex.Store({
     gameState: []
   },
   getters: {
+    thisGame: (state) => {
+      return state.thisGame
+    },
     getShowFacilitator: (state) => {
       return state.showFacilitator
     },

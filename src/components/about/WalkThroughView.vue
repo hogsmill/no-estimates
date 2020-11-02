@@ -162,7 +162,7 @@ export default {
     margin-bottom: 6px;
   }
 
-  #facilitate {
+  #email {
     width: 50%;
   }
 

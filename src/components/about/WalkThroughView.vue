@@ -144,7 +144,7 @@ export default {
       mailFuns.post({
         action: 'Facilitation request from ' + this.thisGame,
         email: encodeURIComponent(document.getElementById('email').value),
-        comments: ''
+        comments: 'Facilitation Request'
         },
         'Thanks for your request - we\'ll get back to you as soon as we can with details'
       )

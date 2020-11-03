@@ -28,7 +28,7 @@
         </li>
       </ul>
 
-      <modal name="feedback" :height="400" :classes="['rounded', 'feedback']">
+      <modal name="feedback" :height="420" :classes="['rounded', 'feedback']">
         <div class="float-right mr-2 mt-1">
           <button type="button" class="close" @click="hide" aria-label="Close">
             <span aria-hidden="true">&times;</span>
@@ -86,8 +86,10 @@ export default {
         email: encodeURIComponent(document.getElementById('email').value),
         comments: encodeURIComponent(document.getElementById('comments').value)
         },
-        'Thanks for your feedback - we appreciate it!'
+        'Thanks for your feedback - we appreciate it!',
+        'feedback'
       )
+      this.hide()
     }
   },
 }

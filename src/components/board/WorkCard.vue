@@ -207,6 +207,7 @@ export default {
     color: #444;
     margin: 6px;
     position: relative;
+    box-shadow: 2px 2px 3px #444;
 
     &.blocked {
       background-color: red;

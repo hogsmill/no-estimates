@@ -78,7 +78,8 @@ export default {
     background-color: #fff;
     color: #444;
     margin: 6px;
-
+    box-shadow: 2px 2px 3px #444;
+    
     .deploy-card-header {
       font-weight: bold;
     }

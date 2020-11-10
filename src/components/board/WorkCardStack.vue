@@ -83,11 +83,12 @@ export default {
 
   .work-card-back {
     margin: 6px;
-    height: 100px;
+    height: 86px;
     background-image: url("../../assets/img/work-card-back.png");
     background-size: contain;
     background-repeat: no-repeat;
     background-position-x: center;
+    box-shadow: 2px 2px 3px #444;
 
     &:hover {
       cursor: pointer;

@@ -64,6 +64,7 @@ export default {
     margin: 0 6px;
     background-repeat: no-repeat;
     background-size: contain;
+    box-shadow: 2px 2px 3px #444;
 
     &.designer {
       background-image: url("../assets/img/designer.png");

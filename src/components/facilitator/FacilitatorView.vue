@@ -84,7 +84,7 @@
         </td>
         <td colspan="3">
           <div v-for="(team, index) in gameState" :key="index">
-            <input type="checkbox" :checked="team.include" @click="toggleActive(team)" :disabled="team.otherCards.length > 0"> {{ team.name }}
+            <input type="checkbox" :checked="team.include" @click="toggleTeamActive(team)" :disabled="team.otherCards.length > 0"> {{ team.name }}
           </div>
         </td>
       </tr>
@@ -165,6 +165,43 @@
         </td>
       </tr>
     </table>
+
+    <table class="games">
+      <tr>
+        <td class="left" colspan="16">
+          <h4>Games</h4>
+          <span v-if="showGames" @click="setShowGames(false)" title="collapse" class="toggle">&#9650;</span>
+          <span v-if="!showGames" @click="setShowGames(true)" title="expand" class="toggle">&#9660;</span>
+        </td>
+      </tr>
+      <tr v-if="showGames" class="header">
+        <td>Games</td>
+        <td>
+          <table class="games-table">
+            <thead>
+              <th>Include?</th>
+              <th>Game Name</th>
+              <th />
+            </thead>
+            <tbody>
+              <tr v-for="(game, index) in games" :key="index">
+                <td>
+                  <input type="checkbox" :checked="game.include" @click="toggleGameActive(game)" :disabled="game.name == gameName">
+                </td>
+                <td>
+                  {{ game.name }}
+                </td>
+                <td>
+                  <button class="btn btn-sm btn-site-primary" @click="deleteGame(game.name)" :disabled="game.name == gameName">
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+      </tr>
+    </table>
   </div>
 </template>
 
@@ -183,8 +220,9 @@ export default {
   data() {
     return {
       showGameMessaging: false,
-      showGameParams: true,
-      showGameState: true
+      showGameParams: false,
+      showGameState: true,
+      showGames: false
     }
   },
   computed: {
@@ -212,9 +250,15 @@ export default {
     gameState() {
       return this.$store.getters.getGameState
     },
+    games() {
+      return this.$store.getters.getGames
+    },
     connections() {
       return this.$store.getters.getConnections
     }
+  },
+  created() {
+    this.socket.emit('getGames')
   },
   methods: {
     setShowGameMessaging(val) {
@@ -225,6 +269,9 @@ export default {
     },
     setShowGameState(val) {
       this.showGameState = val
+    },
+    setShowGames(val) {
+      this.showGames = val
     },
     sendMessage() {
       const message = document.getElementById('gameMessageText').value
@@ -237,9 +284,16 @@ export default {
       localStorage.setItem('stealth', isStealth)
       this.socket.emit('updateStealth', {gameName: this.gameName, stealth: isStealth})
     },
-    toggleActive(team) {
+    toggleTeamActive(team) {
       team.include = !team.include
       this.socket.emit('updateTeamActive', {gameName: this.gameName, team: team})
+    },
+    toggleGameActive(game) {
+      game.include = !game.include
+      this.socket.emit('updateGameActive', {game: game})
+    },
+    deleteGame(game) {
+      this.socket.emit('deleteGame', {game: game})
     },
     savePercentageBlocked: function() {
       const percentageBlocked = document.getElementById('percentageBlocked').value
@@ -286,7 +340,7 @@ export default {
     text-align: right;
   }
 
-  .game-messaging, .game-params, .game-state {
+  .game-messaging, .game-params, .game-state, .games {
 
     width: 100%;
     margin: 12px;
@@ -396,6 +450,13 @@ export default {
     }
     .deployer {
       background-color: $deploy;
+    }
+  }
+
+  .games {
+
+    .games-table {
+      border: none;
     }
   }
 </style>

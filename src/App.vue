@@ -235,6 +235,11 @@ export default {
       }
     })
 
+    this.socket.on('updateGames', (data) => {
+    console.log(data)
+      this.$store.dispatch('updateGames', data)
+    })
+
     this.socket.on('updateConnections', (data) => {
       this.$store.dispatch('updateConnections', data)
     })

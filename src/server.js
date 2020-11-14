@@ -38,7 +38,7 @@ const MongoClient = require('mongodb').MongoClient
 const url = prod ?  'mongodb://127.0.0.1:27017/' : 'mongodb://localhost:27017/'
 
 const connectDebugOff = prod
-const debugOn = false // !prod
+const debugOn = !prod
 
 const connections = {}
 const maxConnections = 2000
@@ -63,6 +63,9 @@ function doDb(fun, data) {
         break
       case 'restartGame':
         dbStore.restartGame(err, client, db, io, data, debugOn)
+        break
+      case 'deleteGame':
+        dbStore.deleteGame(err, client, db, io, data, debugOn)
         break
       case 'updateCurrentDay':
         dbStore.updateCurrentDay(err, client, db, io, data, debugOn)
@@ -124,6 +127,9 @@ function doDb(fun, data) {
       case 'updateTeamActive':
         dbStore.updateTeamActive(err, client, db, io, data, debugOn)
         break
+      case 'updateGameActive':
+        dbStore.updateGameActive(err, client, db, io, data, debugOn)
+        break
       case 'updateStealth':
         dbStore.updateStealth(err, client, db, io, data, debugOn)
         break
@@ -133,6 +139,9 @@ function doDb(fun, data) {
      case 'gameState':
        dbStore.gameState(err, client, db, io, data, debugOn)
        break
+    case 'getGames':
+      dbStore.getGames(err, client, db, io, data, debugOn)
+      break
 
       default:
         console.log('Unknown function: \'' + fun + '\'')
@@ -161,6 +170,10 @@ io.on('connection', (socket) => {
   socket.on('loadGame', (data) => { doDb('loadGame', data) })
 
   socket.on('restartGame', (data) => { doDb('restartGame', data) })
+
+  socket.on('deleteGame', (data) => { doDb('deleteGame', data) })
+
+  socket.on('updateGameActive', (data) => { doDb('updateGameActive', data) })
 
   socket.on('showEventCard', (data) => { emit('showEventCard', data) })
 
@@ -215,6 +228,8 @@ io.on('connection', (socket) => {
   socket.on('updateStealth', (data) => { doDb('updateStealth', data) })
 
   socket.on('updateTeamActive', (data) => { doDb('updateTeamActive', data) })
+
+  socket.on('getGames', (data) => { doDb('getGames', data) })
 
   // Game State
 

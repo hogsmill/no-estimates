@@ -130,6 +130,19 @@ module.exports = {
     gameState.update(err, client, db, io, data, debugOn)
   },
 
+  getGames: function(err, client, db, io, data, debugOn) {
+
+    if (debugOn) { console.log('getGames') }
+
+    db.collection('noEstimatesGames').find().toArray(function(err, res) {
+      if (err) throw err
+      if (res.length) {
+        io.emit('updateGames', { games: res })
+        client.close()
+      }
+    })
+  },
+
   loadGame: function(err, client, db, io, data, debugOn) {
 
     if (debugOn) { console.log('loadGame', data) }
@@ -157,6 +170,9 @@ module.exports = {
           game = roleFuns.generateRoles(game)
           games.push(JSON.parse(JSON.stringify(game)))
         }
+        db.collection('noEstimatesGames').insertOne({ name: data.gameName, include: true }, function(err) {
+          if (err) throw err
+        })
         db.collection('noEstimates').insertMany(games, function(err) {
           if (err) throw err
           for (let i = 0; i < games.length; i++) {
@@ -187,6 +203,11 @@ module.exports = {
         }
       }
     })
+  },
+
+  deleteGame: function(err, client, db, io, data, debugOn) {
+
+    if (debugOn) { console.log('deleteGame', data) }
   },
 
   updateCurrentDay: function(err, client, db, io, data, debugOn) {
@@ -643,6 +664,21 @@ module.exports = {
           })
         }
         gameState.update(err, client, db, io, data, debugOn)
+      }
+    })
+  },
+
+  updateGameActive: function(err, client, db, io, data, debugOn) {
+
+    if (debugOn) { console.log('updateGameActive', data) }
+
+    db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, res) {
+      if (err) throw err
+      if (res) {
+        db.collection('noEstimatesGames').updateOne({'_id': res._id}, {$set: {include: data.include}}, function(err) {
+          if (err) throw err
+          client.close()
+        })
       }
     })
   },

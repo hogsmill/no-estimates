@@ -111,7 +111,8 @@ export const store = new Vuex.Store({
     mvpEstimate: 0,
     mvpActual: 0,
     reEstimate: 0,
-    gameState: []
+    gameState: [],
+    games: []
   },
   getters: {
     thisGame: (state) => {
@@ -234,6 +235,9 @@ export const store = new Vuex.Store({
     },
     getGameState: (state) => {
       return state.gameState
+    },
+    getGames: (state) => {
+      return state.games
     },
     getConnections: (state) => {
       return state.connections
@@ -371,6 +375,9 @@ export const store = new Vuex.Store({
     updateGameState: (state, payload) => {
       state.gameState = payload.gameState
     },
+    updateGames: (state, payload) => {
+      state.games = payload.games
+    },
     updateConnections: (state, payload) => {
       state.connections = payload
     }
@@ -465,6 +472,9 @@ export const store = new Vuex.Store({
     },
     updateGameState: ({ commit }, payload) => {
       commit('updateGameState', payload)
+    },
+    updateGames: ({ commit }, payload) => {
+      commit('updateGames', payload)
     },
     updateConnections: ({ commit }, payload) => {
       commit('updateConnections', payload)

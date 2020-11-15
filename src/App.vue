@@ -47,7 +47,7 @@ import SetGame from './components/SetGame.vue'
 import SetEstimates from './components/SetEstimates.vue'
 import Status from './components/Status.vue'
 import Message from './components/Message.vue'
-import FacilitatorView from './components/facilitator/FacilitatorView.vue'
+import FacilitatorView from './components/FacilitatorView.vue'
 import WalkThroughView from './components/about/WalkThroughView.vue'
 
 import Roles from './components/Roles.vue'

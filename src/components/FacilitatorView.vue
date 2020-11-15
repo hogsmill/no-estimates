@@ -6,24 +6,7 @@
       Current server connections: {{ connections.connections }} / {{ connections.maxConnections }}
     </div>
 
-    <table class="game-messaging">
-      <tr>
-        <td>
-          <h4>Messaging</h4>
-          <span v-if="showGameMessaging" @click="setShowGameMessaging(false)" title="collapse" class="toggle">&#9650;</span>
-          <span v-if="!showGameMessaging" @click="setShowGameMessaging(true)" title="expand" class="toggle">&#9660;</span>
-        </td>
-      </tr>
-      <tr v-if="showGameMessaging" class="message-params">
-        <td>
-          <div>Message: </div>
-          <input type="text" id="gameMessageText">
-          <button class="btn btn-sm btn-site-primary" @click="sendMessage">
-            Send
-          </button>
-        </td>
-      </tr>
-    </table>
+    <GameMessaging :socket="socket" />
 
     <table class="game-params">
       <tr>
@@ -166,51 +149,21 @@
       </tr>
     </table>
 
-    <table class="games">
-      <tr>
-        <td class="left" colspan="16">
-          <h4>Games</h4>
-          <span v-if="showGames" @click="setShowGames(false)" title="collapse" class="toggle">&#9650;</span>
-          <span v-if="!showGames" @click="setShowGames(true)" title="expand" class="toggle">&#9660;</span>
-        </td>
-      </tr>
-      <tr v-if="showGames" class="header">
-        <td>Games</td>
-        <td>
-          <table class="games-table">
-            <thead>
-              <th>Include?</th>
-              <th>Game Name</th>
-              <th />
-            </thead>
-            <tbody>
-              <tr v-for="(game, index) in games" :key="index">
-                <td>
-                  <input type="checkbox" :checked="game.include" @click="toggleGameActive(game)" :disabled="game.name == gameName">
-                </td>
-                <td>
-                  {{ game.name }}
-                </td>
-                <td>
-                  <button class="btn btn-sm btn-site-primary" @click="deleteGame(game.name)" :disabled="game.name == gameName">
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </td>
-      </tr>
-    </table>
+    <Games :socket="socket" />
+
   </div>
 </template>
 
 <script>
-import OtherCards from './OtherCards.vue'
-import Column from './Column.vue'
+import GameMessaging from './facilitator/GameMessaging.vue'
+import Games from './facilitator/Games.vue'
+import OtherCards from './facilitator/OtherCards.vue'
+import Column from './facilitator/Column.vue'
 
 export default {
   components: {
+    GameMessaging,
+    Games,
     OtherCards,
     Column
   },
@@ -219,7 +172,6 @@ export default {
   ],
   data() {
     return {
-      showGameMessaging: false,
       showGameParams: false,
       showGameState: true,
       showGames: false
@@ -250,34 +202,16 @@ export default {
     gameState() {
       return this.$store.getters.getGameState
     },
-    games() {
-      return this.$store.getters.getGames
-    },
     connections() {
       return this.$store.getters.getConnections
     }
   },
-  created() {
-    this.socket.emit('getGames')
-  },
   methods: {
-    setShowGameMessaging(val) {
-      this.showGameMessaging = val
-    },
     setShowGameParams(val) {
       this.showGameParams = val
     },
     setShowGameState(val) {
       this.showGameState = val
-    },
-    setShowGames(val) {
-      this.showGames = val
-    },
-    sendMessage() {
-      const message = document.getElementById('gameMessageText').value
-      if (message) {
-        this.socket.emit('broadcastMessage', {gameName: this.gameName, message: message})
-      }
     },
     toggleStealth() {
       const isStealth = document.getElementById('isStealth').checked
@@ -287,13 +221,6 @@ export default {
     toggleTeamActive(team) {
       team.include = !team.include
       this.socket.emit('updateTeamActive', {gameName: this.gameName, team: team})
-    },
-    toggleGameActive(game) {
-      game.include = !game.include
-      this.socket.emit('updateGameActive', {game: game})
-    },
-    deleteGame(game) {
-      this.socket.emit('deleteGame', {game: game})
     },
     savePercentageBlocked: function() {
       const percentageBlocked = document.getElementById('percentageBlocked').value
@@ -334,7 +261,7 @@ export default {
 
 <style lang="scss">
 
-   @import '../../assets/colours.scss';
+   @import '../assets/colours.scss';
 
   .connections {
     text-align: right;
@@ -390,21 +317,6 @@ export default {
 
   .mvp-label {
     left: 0;
-  }
-
-  .game-messaging {
-    .message-params {
-      div, input, button {
-        display: inline-block;
-        margin: 2px 6px;
-      }
-
-      input {
-        width: 80%;
-        border: 1px solid #ccc;
-        text-align: left;
-      }
-    }
   }
 
   .game-state {

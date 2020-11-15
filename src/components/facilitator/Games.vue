@@ -72,3 +72,11 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+  .games {
+    .games-table {
+      border: none;
+    }
+  }
+</style>

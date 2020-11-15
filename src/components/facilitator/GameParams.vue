@@ -129,3 +129,9 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+  .mvp-label {
+    left: 0;
+  }
+</style>

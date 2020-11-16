@@ -15,6 +15,7 @@
             <th>Include?</th>
             <th>Game Name</th>
             <th />
+            <th>Last Accessed</th>
           </thead>
           <tbody>
             <tr v-for="(game, index) in games" :key="index">
@@ -29,6 +30,9 @@
                   Delete
                 </button>
               </td>
+              <td>
+                {{ lastAccessed(game) }}
+              </td>
             </tr>
           </tbody>
         </table>
@@ -38,6 +42,11 @@
 </template>
 
 <script>
+import TimeAgo from 'javascript-time-ago'
+import en from 'javascript-time-ago/locale/en'
+TimeAgo.addDefaultLocale(en)
+const timeAgo = new TimeAgo('en-GB')
+
 export default {
   props: [
     'socket'
@@ -62,12 +71,15 @@ export default {
     setShowGames(val) {
       this.showGames = val
     },
+    lastAccessed(game) {
+      return game.lastaccess ? timeAgo.format(new Date(game.lastaccess)) : ''
+    },
     toggleGameActive(game) {
       game.include = !game.include
       this.socket.emit('updateGameActive', {game: game})
     },
-    deleteGame(game) {
-      this.socket.emit('deleteGame', {game: game})
+    deleteGame(gameName) {
+      this.socket.emit('deleteGame', {gameName: gameName})
     }
   }
 }

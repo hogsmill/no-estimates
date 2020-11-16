@@ -167,6 +167,7 @@ export default {
       position: relative;
       left: 2px;
       display: inline-block;
+      text-align: center;
     }
 
     .designer {

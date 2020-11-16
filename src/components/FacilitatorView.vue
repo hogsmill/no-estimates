@@ -6,6 +6,9 @@
     <GameParams :socket="socket" />
     <GameState :socket="socket" />
     <Games :socket="socket" />
+    <div v-if="isDev()">
+      <Utils />
+    </div>
   </div>
 </template>
 
@@ -15,6 +18,7 @@ import GameMessaging from './facilitator/GameMessaging.vue'
 import GameParams from './facilitator/GameParams.vue'
 import GameState from './facilitator/GameState.vue'
 import Games from './facilitator/Games.vue'
+import Utils from './facilitator/Utils.vue'
 
 export default {
   components: {
@@ -22,11 +26,22 @@ export default {
     GameMessaging,
     GameParams,
     GameState,
-    Games
+    Games,
+    Utils
   },
   props: [
     'socket'
-  ]
+  ],
+  computed: {
+    stealth() {
+      return this.$store.getters.getStealth
+    }
+  },
+  methods: {
+    isDev() {
+      return window.location.href.match('localhost')
+    }
+  }
 }
 </script>
 

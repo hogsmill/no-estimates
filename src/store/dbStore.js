@@ -6,7 +6,7 @@ const pairingFuns = require('./lib/pairing.js')
 const dependent = require('./lib/dependent.js')
 const gameState = require('./lib/gameState.js')
 
-const roles = [
+const initialRoles = [
   {role: 'Designer', order: 1, names: [], otherNames: []},
   {role: 'Developer', order: 2, names: [], otherNames: []},
   {role: 'Tester', order: 3, names: [], otherNames: []},
@@ -69,10 +69,10 @@ function createNewGame(data) {
   const game = JSON.parse(JSON.stringify(data))
   game.stealth = false
   game.pairing = []
-  game.teams = initialTeams
-  game.roles = roles
-  game.columns = initialColumns
-  game.workCards = initialCards
+  game.teams = JSON.parse(JSON.stringify(initialTeams))
+  game.roles = JSON.parse(JSON.stringify(initialRoles))
+  game.columns = JSON.parse(JSON.stringify(initialColumns))
+  game.workCards = JSON.parse(JSON.stringify(initialCards))
   game.mvpCards = 11
   game.gameName = data.gameName
   game.daysEffort = []
@@ -94,26 +94,21 @@ function createNewGame(data) {
 }
 
 function resetGame(game) {
-  const restarted = game.restarted
-  restarted.push(new Date().toISOString())
-  return {
-    teams: initialTeams,
-    roles: roles,
-    pairing: [],
-    columns: initialColumns,
-    workCards: initialCards,
-    daysEffort: [],
-    currentDay: 1,
-    currentEventCard: 0,
-    currentWorkCard: 0,
-    mvpEstimate: null,
-    mvpActual: null,
-    projectEstimate: null,
-    projectActual: null,
-    reEstimate: null,
-    restarted: restarted,
-    new: false
-  }
+  game.columns = JSON.parse(JSON.stringify(initialColumns))
+  game.workCards = JSON.parse(JSON.stringify(initialCards))
+  game.pairing = []
+  game.daysEffort = []
+  game.currentDay = 1
+  game.currentEventCard = 0
+  game.currentWorkCard = 0
+  game.mvpEstimate = null
+  game.mvpActual = null
+  game.projectEstimate = null
+  game.projectActual = null
+  game.reEstimate = null
+  game.restarted.push(new Date().toISOString())
+
+  return game
 }
 
 function addMyNameAndRole(game, data) {
@@ -124,6 +119,19 @@ function addMyNameAndRole(game, data) {
   return game
 }
 
+function _getGames(err, client, db, io, data, debugOn) {
+
+  if (debugOn) { console.log('getGames') }
+
+  db.collection('noEstimatesGames').find().toArray(function(err, res) {
+    if (err) throw err
+    if (res.length) {
+      io.emit('updateGames', { games: res })
+      client.close()
+    }
+  })
+}
+
 module.exports = {
 
   gameState: function(err, client, db, io, data, debugOn) {
@@ -131,16 +139,7 @@ module.exports = {
   },
 
   getGames: function(err, client, db, io, data, debugOn) {
-
-    if (debugOn) { console.log('getGames') }
-
-    db.collection('noEstimatesGames').find().toArray(function(err, res) {
-      if (err) throw err
-      if (res.length) {
-        io.emit('updateGames', { games: res })
-        client.close()
-      }
-    })
+    _getGames(err, client, db, io, data, debugOn)
   },
 
   loadGame: function(err, client, db, io, data, debugOn) {
@@ -159,6 +158,11 @@ module.exports = {
             if (err) throw err
             io.emit('loadGame', res[r])
           })
+          db.collection('noEstimatesGames').findOne({ name: data.gameName }, function(err, res) {
+            if (err) throw err
+            db.collection('noEstimatesGames').updateOne({'_id': res._id}, {$set: {lastaccess: new Date().toISOString()}}, function(err, res) {
+            })
+          })
         }
       } else {
         console.log('Created new game \'' + data.gameName + '\'')
@@ -170,7 +174,7 @@ module.exports = {
           game = roleFuns.generateRoles(game)
           games.push(JSON.parse(JSON.stringify(game)))
         }
-        db.collection('noEstimatesGames').insertOne({ name: data.gameName, include: true }, function(err) {
+        db.collection('noEstimatesGames').insertOne({ name: data.gameName, include: true, lastaccess: new Date().toISOString() }, function(err) {
           if (err) throw err
         })
         db.collection('noEstimates').insertMany(games, function(err) {
@@ -208,6 +212,26 @@ module.exports = {
   deleteGame: function(err, client, db, io, data, debugOn) {
 
     if (debugOn) { console.log('deleteGame', data) }
+
+    db.collection('noEstimatesGames').findOne({name: data.gameName}, function(err, res) {
+      if (err) throw err
+      if (res) {
+        db.collection('noEstimatesGames').deleteOne({'_id': res._id}, function(err, res) {
+          if (err) throw err
+          _getGames(err, client, db, io, data, debugOn)
+        })
+      }
+    })
+    db.collection('noEstimates').find({gameName: data.gameName}).toArray(function(err, res) {
+      if (err) throw err
+      if (res.length) {
+        for (let i = 0; i < res.length; i++) {
+          db.collection('noEstimates').deleteOne({'_id': res[i]._id}, function(err, res) {
+            if (err) throw err
+          })
+        }
+      }
+    })
   },
 
   updateCurrentDay: function(err, client, db, io, data, debugOn) {

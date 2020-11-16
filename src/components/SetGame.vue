@@ -187,8 +187,12 @@ export default {
     getGameName: function() {
       let gameName = ''
       if (document.getElementById('game-name')) {
+        const currentGame = this.gameName
         gameName = document.getElementById('game-name').value
         gameName = stringFuns.sanitize(gameName)
+        if (currentGame != gameName) {
+          this.$store.dispatch('resetMyEffort')
+        }
       } else if (this.gameName) {
         gameName = this.gameName
       }

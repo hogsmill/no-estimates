@@ -31,6 +31,7 @@ export const store = new Vuex.Store({
     ],
     pairing: [],
     message: '',
+    myStartEffort: 4,
     myEffort: {
       available: 4,
       assigned: 0,
@@ -300,6 +301,10 @@ export const store = new Vuex.Store({
       state.myEffort.available = payload.available
       state.myEffort.assigned = payload.assigned
     },
+    resetMyEffort: (state) => {
+      state.myEffort.available = state.myStartEffort
+      state.myEffort.assigned = 0
+    },
     updateMyAssignedEffort: (state, payload) => {
       state.myEffort.available = state.myEffort.available - payload.effort
       state.myEffort.assigned = state.myEffort.assigned + payload.effort
@@ -415,6 +420,9 @@ export const store = new Vuex.Store({
     },
     updateMyEffort: ({ commit }, payload) => {
       commit('updateMyEffort', payload)
+    },
+    resetMyEffort: ({ commit }, payload) => {
+      commit('resetMyEffort', payload)
     },
     updateMyAssignedEffort: ({ commit }, payload) => {
       commit('updateMyAssignedEffort', payload)

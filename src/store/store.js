@@ -166,6 +166,18 @@ export const store = new Vuex.Store({
     getMyTeam: (state) => {
       return state.teams.find(function(t) { return state.teamName == t.name})
     },
+    getHosts: (state) => {
+      const members = state.teams.find(function(t) {
+        return state.teamName == t.name
+      }).members
+      const hosts = []
+      for (let i = 0; i < members.length; i++) {
+        if (members[i].host) {
+          hosts.push(members[i].name)
+        }
+      }
+      return hosts.join(', ')
+    },
     getMyTeamMembers: (state) => {
       const members = state.teams.find(function(t) {
         return state.teamName == t.name

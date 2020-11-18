@@ -14,6 +14,7 @@
           <thead>
             <th>Include?</th>
             <th>Game Name</th>
+            <th>Hosts</th>
             <th />
             <th>Last Accessed</th>
           </thead>
@@ -24,6 +25,9 @@
               </td>
               <td>
                 {{ game.name }}
+              </td>
+              <td>
+                {{ hosts }}
               </td>
               <td>
                 <button class="btn btn-sm btn-site-primary" @click="deleteGame(game.name)" :disabled="game.name == gameName">
@@ -62,6 +66,9 @@ export default {
     },
     games() {
       return this.$store.getters.getGames
+    },
+    hosts() {
+      return this.$store.getters.getHosts
     }
   },
   created() {
@@ -89,6 +96,11 @@ export default {
   .games {
     .games-table {
       border: none;
+
+      th {
+        text-align: center;
+        padding: 3px 8px
+      }
     }
   }
 </style>

@@ -385,9 +385,9 @@ module.exports = {
           if (err) throw err
           io.emit('updateColumns', data)
           io.emit('updateWorkCards', data)
+          gameState.update(err, client, db, io, data, debugOn)
         })
       }
-      gameState.update(err, client, db, io, data, debugOn)
     })
   },
 
@@ -446,9 +446,9 @@ module.exports = {
         db.collection('noEstimates').updateOne({'_id': res._id}, {$set: {columns: columns, workCards: workCards, daysEffort: todaysEffort}}, function() {
           io.emit('updateColumns', data)
           io.emit('updateWorkCards', data)
+          gameState.update(err, client, db, io, data, debugOn)
         })
       }
-      gameState.update(err, client, db, io, data, debugOn)
     })
   },
 
@@ -474,9 +474,10 @@ module.exports = {
           roles.push(role)
         }
         data.roles = roles
-        io.emit('updateRoles', data)
         db.collection('noEstimates').updateOne({'_id': res._id}, {$set: {roles: roles}}, function(err) {
           if (err) throw err
+          io.emit('updateRoles', data)
+          gameState.update(err, client, db, io, data, debugOn)
         })
       }
     })

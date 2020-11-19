@@ -64,6 +64,9 @@ function doDb(fun, data) {
       case 'restartGame':
         dbStore.restartGame(err, client, db, io, data, debugOn)
         break
+      case 'deleteGameMeta':
+        dbStore.deleteGameMeta(err, client, db, io, data, debugOn)
+        break
       case 'deleteGame':
         dbStore.deleteGame(err, client, db, io, data, debugOn)
         break
@@ -171,7 +174,10 @@ io.on('connection', (socket) => {
 
   socket.on('restartGame', (data) => { doDb('restartGame', data) })
 
-  socket.on('deleteGame', (data) => { doDb('deleteGame', data) })
+  socket.on('deleteGame', (data) => {
+    doDb('deleteGameMeta', data) 
+    doDb('deleteGame', data)
+  })
 
   socket.on('updateGameActive', (data) => { doDb('updateGameActive', data) })
 

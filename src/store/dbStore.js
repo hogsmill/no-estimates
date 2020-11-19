@@ -209,9 +209,9 @@ module.exports = {
     })
   },
 
-  deleteGame: function(err, client, db, io, data, debugOn) {
+  deleteGameMeta: function(err, client, db, io, data, debugOn) {
 
-    if (debugOn) { console.log('deleteGame', data) }
+    if (debugOn) { console.log('deleteGameMeta', data) }
 
     db.collection('noEstimatesGames').findOne({name: data.gameName}, function(err, res) {
       if (err) throw err
@@ -222,6 +222,12 @@ module.exports = {
         })
       }
     })
+  },
+
+  deleteGame: function(err, client, db, io, data, debugOn) {
+
+    if (debugOn) { console.log('deleteGame', data) }
+
     db.collection('noEstimates').find({gameName: data.gameName}).toArray(function(err, res) {
       if (err) throw err
       if (res.length) {

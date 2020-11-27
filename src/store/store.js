@@ -331,7 +331,6 @@ export const store = new Vuex.Store({
       state.concurrentDevAndTest = payload.concurrentDevAndTest
       state.canStartAutoDeploy = payload.canStartAutoDeploy
       state.autoDeploy = payload.autoDeploy
-      console.log(state)
     },
     loadGame: (state, payload) => {
       state.teams = payload.teams

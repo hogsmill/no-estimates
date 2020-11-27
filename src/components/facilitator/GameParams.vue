@@ -58,7 +58,7 @@
       </td>
       <td colspan="3">
         <div v-for="(team, index) in teams" :key="index">
-          <input type="checkbox" :checked="team.include" @click="toggleTeamActive(team.name)" :disabled="otherCards(team)"> {{ team.name }}
+          <input :id="'team-active-' + team.name" type="checkbox" :checked="team.include" @click="toggleTeamActive(team.name)" :disabled="otherCards(team)"> {{ team.name }}
         </div>
       </td>
     </tr>
@@ -111,7 +111,7 @@ export default {
       this.socket.emit('updateStealth', {gameName: this.gameName, stealth: isStealth})
     },
     toggleTeamActive(team) {
-      const include = !team.include
+      const include = document.getElementById('team-active-' + team).checked
       this.socket.emit('updateTeamActive', {gameName: this.gameName, teamName: team, include: include})
     },
     savePercentageBlocked: function() {

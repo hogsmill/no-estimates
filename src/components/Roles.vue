@@ -22,17 +22,11 @@
 <script>
 export default {
   computed: {
-    isHost() {
-      return this.$store.getters.getHost
-    },
     stealth() {
       return this.$store.getters.getStealth
     },
     myName() {
       return this.$store.getters.getMyName
-    },
-    myEffort() {
-      return this.$store.getters.getMyEffort
     },
     roles() {
       return this.$store.getters.getRoles

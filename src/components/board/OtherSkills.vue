@@ -26,12 +26,6 @@ import stringFuns from '../../lib/stringFuns.js'
 
 export default {
   computed: {
-    gameName() {
-      return this.$store.getters.getGameName
-    },
-    teamName() {
-      return this.$store.getters.getTeamName
-    },
     myName() {
       return this.$store.getters.getMyName
     },

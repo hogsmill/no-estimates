@@ -39,16 +39,13 @@ export default {
     teamName() {
       return this.$store.getters.getTeamName
     },
-    myTeam() {
-      return this.$store.getters.getMyTeam
-    },
-    nColumns() {
-      return this.$store.getters.getColumns.length
+    capabilities() {
+      return this.$store.getters.getCapabilities
     }
   },
   methods: {
     showAutoDeploy(column) {
-      return this.teamName && this.myTeam.autoDeploy.doing && column.name == 'deploy'
+      return this.teamName && this.capabilities.autoDeploy.doing && column.name == 'deploy'
     }
   },
 }

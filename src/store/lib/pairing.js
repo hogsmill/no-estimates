@@ -81,22 +81,27 @@ module.exports = {
     return columns
   },
 
-  addSecondarySkill: function(roles, column, name) {
+  addSecondarySkill: function(members, column, name) {
     const role = column.charAt(0).toUpperCase() + column.slice(1) + 'er'
-    for (let i = 0; i < roles.length; i++) {
-      if (roles[i].role == role) {
-        let roleExists = false
-        for (let j = 0; j < roles[i].otherNames.length; j++) {
-          if (roles[i].otherNames[j].id == name.id) {
-            roleExists = true
+    const newMembers = []
+    for (let j = 0; j < members.length; j++) {
+      const member = members[j]
+      if (member.id == name.id) {
+        const otherRoles = member.otherRoles
+        let found = false
+        for (let k = 0; k < member.otherRoles.length; k++) {
+          if (member.otherRoles[k] == role) {
+            found = true
           }
         }
-        if (!roleExists) {
-          roles[i].otherNames.push(name)
+        if (!found) {
+          otherRoles.push(role)
         }
+        member.otherRoles = otherRoles
       }
+      newMembers.push(member)
     }
-    return roles
+    return newMembers
   }
 
 }

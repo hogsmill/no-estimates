@@ -1,51 +1,53 @@
 
 module.exports = {
 
-  addDependencyToCard: function(columns, card, dependentOn) {
+  addDependencyToCard: function(columns, workCard, dependentOn) {
+    const newColumns = []
+    newColumns.push(columns[0])
     for (let i = 1; i < columns.length; i++) {
-      for (let j = 0; j < columns[i].cards.length; j++) {
-        if (columns[i].cards[j].number == card.number && !columns[i].cards[j].dependentOn) {
-          columns[i].cards[j].dependentOn = dependentOn
+      const column = columns[i]
+      const cards = column.cards
+      column.cards = []
+      for (let j = 0; j < cards.length; j++) {
+        const card = cards[j]
+        if (card.number == workCard.number && !workCard.dependentOn) {
+          card.dependentOn = dependentOn
         }
+        column.cards.push(card)
       }
+      newColumns.push(column)
     }
-    return columns
+    return newColumns
   },
 
-  addCardToOtherCards: function(teams, card, dependentOnTeam, team) {
-    for (let i = 0; i < teams.length; i++) {
-      if (teams[i].name == dependentOnTeam) {
-        card.team = team
-        teams[i].otherCards.push(card)
-      }
-    }
-    return teams
-  },
-
-  addEffortToOthersCard: function(columns, team, card) {
+  addDependentEffort: function(columns, workCard, effort) {
+    const newColumns = []
+    newColumns.push(columns[0])
     for (let i = 1; i < columns.length; i++) {
-      for (let j = 0; j < columns[i].cards.length; j++) {
-        if (columns[i].cards[j].number == card.number) {
-          columns[i].cards[j].dependencyDone = columns[i].cards[j].dependencyDone + 1
+      const column = columns[i]
+      const cards = column.cards
+      column.cards = []
+      for (let j = 0; j < cards.length; j++) {
+        const card = cards[j]
+        if (card.number == workCard.number) {
+          card.dependencyDone = card.dependencyDone + effort
         }
+        column.cards.push(card)
       }
+      newColumns.push(column)
     }
-    return columns
+    return newColumns
   },
 
-  addEffortToMyCard: function(teams, team, card) {
-    const newTeams = []
-    for (let i = 0; i < teams.length; i++) {
-      const newTeam = teams[i]
-      if (newTeam.name == team) {
-        for (let j = 0; j < teams[i].otherCards.length; j++) {
-          if (teams[i].otherCards[j].number == card.number) {
-            teams[i].otherCards[j].dependencyDone = teams[i].otherCards[j].dependencyDone + 1
-          }
-        }
+  addOtherCardEffort: function(otherCards, workCard, effort) {
+    const newOtherCards = []
+    for (let i = 0; i < otherCards.length; i++) {
+      const otherCard = otherCards[i]
+      if (otherCard.number == workCard.number) {
+        otherCard.dependencyDone = otherCard.dependencyDone + effort
       }
-      newTeams.push(newTeam)
+      newOtherCards.push(otherCard)
     }
-    return newTeams
+    return newOtherCards
   }
 }

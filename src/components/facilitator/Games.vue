@@ -3,8 +3,8 @@
     <tr>
       <td class="left" colspan="16">
         <h4>Games</h4>
-        <span v-if="showGames" @click="setShowGames(false)" title="collapse" class="toggle">&#9650;</span>
-        <span v-if="!showGames" @click="setShowGames(true)" title="expand" class="toggle">&#9660;</span>
+        <i v-if="showGames" @click="setShowGames(false)" title="collapse" class="fas fa-caret-up toggle" />
+        <i v-if="!showGames" @click="setShowGames(true)" title="expand" class="fas fa-caret-down toggle" />
       </td>
     </tr>
     <tr v-if="showGames" class="header">

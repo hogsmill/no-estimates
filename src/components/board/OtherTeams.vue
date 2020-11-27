@@ -3,45 +3,30 @@
     <div class="other-team-header">
       Other Teams
     </div>
-    <div v-for="(team, teamIndex) in teams" :key="teamIndex">
-      <div v-if="team.name == teamName">
-        <div v-for="(card, cardIndex) in team.otherCards" :key="cardIndex" class="other-work-card">
-          <div class="urgent" v-if="card.urgent">
-            URGENT
+    <div>
+      <div v-for="(card, index) in otherCards" :key="index" class="other-work-card">
+        <div class="urgent" v-if="card.urgent">
+          URGENT
+        </div>
+        <div class="other-work-card-header">
+          <div class="card-number">
+            #{{ card.number }}
           </div>
-          <div class="other-work-card-header">
-            <div class="card-number">
-              #{{ card.number }}
-            </div>
-            <div class="card-team">
-              <span :style="{ 'background-color': card.team.toLowerCase()}">{{ card.team }}</span>
-            </div>
+          <div class="card-team">
+            <span :style="{ 'background-color': card.team.toLowerCase()}">{{ card.team }}</span>
           </div>
-          <div class="other-work-card-effort" @click="addEffort(card)">
-            <div class="other-work-card-column column rounded-circle">
-              X
-            </div>
-            <div v-for="n in card.teamDependency" :key="n" :class="{'assigned' : n <= card.dependencyDone}" class="other-work-card-column rounded-circle" />
+        </div>
+        <div class="other-work-card-effort" @click="addEffort(card)">
+          <div class="other-work-card-column column rounded-circle">
+            X
           </div>
-          <div v-if="card.dependencyDone == card.teamDependency">
-            COMPLETE
-          </div>
+          <div v-for="n in card.teamDependency" :key="n" :class="{'assigned' : n <= card.dependencyDone}" class="other-work-card-column rounded-circle" />
+        </div>
+        <div v-if="card.dependencyDone == card.teamDependency">
+          COMPLETE
         </div>
       </div>
     </div>
-
-    <modal class="work-card-other-popup" name="work-card-other-popup" :height="150" :classes="['rounded']">
-      <div class="text-right">
-        <span @click="hide" class="glyphicon glyphicon-star">x</span>
-      </div>
-      <h4>Unable to Assign Effort</h4>
-      <p>{{ message }}</p>
-      <div class="button">
-        <button class="btn btn-sm btn-info" @click="hide()">
-          OK
-        </button>
-      </div>
-    </modal>
   </div>
 </template>
 
@@ -68,25 +53,11 @@ export default {
     myEffort() {
       return this.$store.getters.getMyEffort
     },
-    teams() {
-      return this.$store.getters.getTeams
+    otherCards() {
+      return this.$store.getters.getOtherCards
     }
   },
-  mounted() {
-    this.socket.on('addEffortToOthersCard', (data) => {
-      if (this.gameName == data.gameName) {
-        this.$store.dispatch('addEffortToOthersCard', data)
-      }
-    })
-  },
   methods: {
-    show () {
-      this.$modal.show('work-card-other-popup')
-    },
-    hide () {
-      this.message = ''
-      this.$modal.hide('work-card-other-popup')
-    },
     addEffort(card) {
       let message = ''
       if (this.myEffort.available == 0) {
@@ -95,13 +66,18 @@ export default {
         message = 'Can\'t assign - card complete'
       }
       if (message) {
-        this.show()
+        // TBD this is a bit messy...
+        if (this.timeout) {
+          window.clearTimeout(this.timeout)
+        }
+        this.$store.dispatch('updateMessage', message)
         const self = this
-        setTimeout(function() { self.message = message }, 100)
+        this.timeout = window.setTimeout(function() {
+          self.$store.dispatch('updateMessage', '')
+        }, 2000)
       } else {
-        this.socket.emit('addEffortToOthersCard', {gameName: this.gameName, teamName: this.teamName, card: card, myName: this.myName})
+        this.socket.emit('addEffortToOthersCard', {gameName: this.gameName, teamName: this.teamName, card: card, myName: this.myName, effort: 1})
         this.socket.emit('updateOtherTeamEffort', {gameName: this.gameName, teamName: this.teamName, card: card, name: this.myName, effort: this.myEffort})
-        this.$store.dispatch('updateMyAssignedEffort', {effort: 1})
       }
     }
   }

@@ -110,24 +110,7 @@ export default {
     },
     reEstimate() {
       return this.$store.getters.getReEstimate
-    },
-  },
-  mounted() {
-    this.socket.on('updateProjectEstimate', (data) => {
-      if (this.gameName == data.gameName && this.teamName == data.teamName) {
-        this.$store.dispatch('updateProjectEstimate', data)
-      }
-    })
-    this.socket.on('updateMVPEstimate', (data) => {
-      if (this.gameName == data.gameName && this.teamName == data.teamName) {
-        this.$store.dispatch('updateMVPEstimate', data)
-      }
-    })
-    this.socket.on('updateReEstimate', (data) => {
-      if (this.gameName == data.gameName && this.teamName == data.teamName) {
-        this.$store.dispatch('updateReEstimate', data)
-      }
-    })
+    }
   },
   methods: {
     show () {

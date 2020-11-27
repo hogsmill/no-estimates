@@ -13,20 +13,18 @@
       </div>
       <div class="mt-4">
         <h4>Game Set Up</h4>
-        <table class="setup-table" border>
+        <table class="setup-table">
 
           <!-- Game Name -->
 
-          <tr :class="{ 'error': gameNameError }">
+          <tr class="rounded" :class="{ 'error': gameNameError }">
             <td>Game Name: </td>
             <td>
               <div v-if="gameName && !gameNameEditing">{{ gameName }}</div>
               <input v-if="!gameName || gameNameEditing" type="text" id="game-name" class="form-control" :value="gameName">
             </td>
             <td class="button">
-              <button v-if="gameName && !gameNameEditing" class="btn btn-sm btn-secondary smaller-font" @click="changeGameName">
-                &#128393;
-              </button>
+              <i v-if="gameName && !gameNameEditing" class="fas fa-edit" @click="changeGameName" />
             </td>
           </tr>
 
@@ -44,9 +42,7 @@
               </div>
             </td>
             <td class="button">
-              <button v-if="myName.id && !myNameEditing" class="btn btn-sm btn-secondary smaller-font" @click="changeMyName">
-                &#128393;
-              </button>
+              <i v-if="myName.id && !myNameEditing" class="fas fa-edit" @click="changeMyName" />
             </td>
           </tr>
 
@@ -64,9 +60,7 @@
               </select>
             </td>
             <td class="button">
-              <button v-if="teamName && !teamNameEditing" :disabled="!canRestructure()" class="btn btn-sm btn-secondary smaller-font" @click="changeTeamName">
-                &#128393;
-              </button>
+              <i v-if="teamName && !teamNameEditing && canRestructure()" class="fas fa-edit" @click="changeTeamName" />
             </td>
           </tr>
 
@@ -78,15 +72,13 @@
               <div v-if="myRole && !myRoleEditing">{{ myRole }}</div>
               <select v-if="!myRole || myRoleEditing" id="role-select" class="form-control">
                 <option value=""> -- Select -- </option>
-                <option v-for="(role, index) in roles" :key="index" :selected="role.role == myRole">
-                  {{ role.role }}
+                <option v-for="(role, index) in roles" :key="index" :selected="role == myRole">
+                  {{ role }}
                 </option>
               </select>
             </td>
             <td class="button">
-              <button v-if="myRole && !myRoleEditing" :disabled="!canRestructure()" class="btn btn-sm btn-secondary smaller-font" @click="changeMyRole">
-                &#128393;
-              </button>
+              <i v-if="myRole && !myRoleEditing && canRestructure()" class="fas fa-edit" @click="changeMyRole" />
             </td>
           </tr>
         </table>
@@ -121,20 +113,14 @@ export default {
     }
   },
   computed: {
-    isHost() {
-      return this.$store.getters.getHost
-    },
     gameName() {
       return this.$store.getters.getGameName
     },
     myName() {
       return this.$store.getters.getMyName
     },
-    myEffort() {
-      return this.$store.getters.getMyEffort
-    },
-    myTeam() {
-      return this.$store.getters.getMyTeam
+    capabilities() {
+      return this.$store.getters.getCapabilities
     },
     teamName() {
       return this.$store.getters.getTeamName
@@ -143,7 +129,7 @@ export default {
       return this.$store.getters.getActiveTeams
     },
     roles() {
-      return this.$store.getters.getRoles
+      return this.$store.getters.getRoleNames
     },
     myRole() {
       return this.$store.getters.getMyRole
@@ -166,7 +152,7 @@ export default {
       this.$modal.hide('set-up')
     },
     canRestructure: function() {
-      return this.currentDay == 1 || this.myTeam.recharting
+      return this.currentDay == 1 || this.capabilities.recharting
     },
     changeGameName: function() {
       this.gameNameEditing = true
@@ -187,12 +173,8 @@ export default {
     getGameName: function() {
       let gameName = ''
       if (document.getElementById('game-name')) {
-        const currentGame = this.gameName
         gameName = document.getElementById('game-name').value
         gameName = stringFuns.sanitize(gameName)
-        if (currentGame != gameName) {
-          this.$store.dispatch('resetMyEffort')
-        }
       } else if (this.gameName) {
         gameName = this.gameName
       }
@@ -246,10 +228,20 @@ export default {
       localStorage.setItem('myRole', myRole)
     },
     save () {
+      const oldTeam = this.teamName
       const gameName = this.getGameName()
       const myName = this.getMyName()
       const teamName =  this.getTeamName()
       const myRole = this.getMyRole()
+      const data = {
+        gameName: gameName,
+        teamName: teamName,
+        myName: myName,
+        myRole: myRole
+      }
+      if (oldTeam && oldTeam != teamName) {
+        data.oldTeam = oldTeam
+      }
       this.showErrors(gameName, myName, teamName)
       if (this.gameNameError || this.myNameError || this.teamNameError) {
         alert('Please set all required fields before saving')
@@ -258,8 +250,7 @@ export default {
         this.$store.dispatch('updateGameName', gameName)
         this.$store.dispatch('updateMyName', myName)
         this.$store.dispatch('updateTeamName', teamName)
-        this.$store.dispatch('updateMyRole', myRole)
-        this.socket.emit('loadGame', {gameName: gameName, teamName: teamName, myName: myName, myRole: myRole, myEffort: this.myEffort})
+        this.socket.emit('loadGame', data)
         this.hide()
       }
     }
@@ -271,9 +262,11 @@ export default {
 
   .setup-table {
     margin: 0 auto 20px auto;
+    border: 1px solid #ccc;
 
     td {
       height: 45px;
+      border: 1px solid #ccc;
 
       div {
         padding: 6px;
@@ -302,6 +295,16 @@ export default {
 
       &.button {
         width: 50px;
+      }
+
+      .fas {
+        color: #888;
+        font-size: x-large;
+
+        &:hover {
+          cursor: pointer;
+          color: #5a6268
+        }
       }
     }
 

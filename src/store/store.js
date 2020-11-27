@@ -13,35 +13,30 @@ export const store = new Vuex.Store({
     stealth: false,
     currency: '&#163;',
     gameName: '',
+    members: [],
     myName: {id: '', name: '', captain: false, host: false},
     myRole: '',
     teamName: '',
     teams: [
-      { name: 'Blue', include: true, members: [], recharting: false, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
-      { name: 'Green', include: true, members: [], recharting: false, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
-      { name: 'Purple', include: true, members: [], recharting: false, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
-      { name: 'Red', include: true, members: [], recharting: false, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
-      { name: 'Orange', include: false, members: [], recharting: false, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
-      { name: 'Black', include: false, members: [], recharting: false, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
-      { name: 'Grey', include: false, members: [], recharting: false, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
-      { name: 'Brown', include: false, members: [], recharting: false, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
-      { name: 'Magenta', include: false, members: [], recharting: false, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
-      { name: 'Salmon', include: false, members: [], recharting: false, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
-      { name: 'Teal', include: false, members: [], recharting: false, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } }
+      { name: 'Blue', include: true },
+      { name: 'Green', include: true },
+      { name: 'Purple', include: true },
+      { name: 'Red', include: true },
+      { name: 'Orange', include: false },
+      { name: 'Black', include: false },
+      { name: 'Grey', include: false },
+      { name: 'Brown', include: false },
+      { name: 'Magenta', include: false },
+      { name: 'Salmon', include: false },
+      { name: 'Teal', include: false }
     ],
     pairing: [],
     message: '',
-    myStartEffort: 4,
-    myEffort: {
-      available: 4,
-      assigned: 0,
-      role: ''
-    },
     roles: [
-      {role: 'Designer', order: 1, names: [], otherNames: []},
-      {role: 'Developer', order: 2, names: [], otherNames: []},
-      {role: 'Tester', order: 3, names: [], otherNames: []},
-      {role: 'Deployer', order: 4, names: [], otherNames: []}
+      'Designer',
+      'Developer',
+      'Tester',
+      'Deployer'
     ],
     columns: [
       {name: 'options', order: 1},
@@ -76,7 +71,6 @@ export const store = new Vuex.Store({
       {number: 19, text: 'How much work in progress do you have? Has that changed from earlier?'},
       {number: 20, text: 'When you have completed the MVP (cards 1 to [MVPCARDS]), look at your estimates from earlier. How did you do? This time, try creating a probabilistic forecast for the rest of the backlog using the delivery-time data (ask the facilitator for help).'}
     ],
-    currentEventCard: 0,
     workCards: [
       {number: 1, design: 6, develop: 7, test: 8, deploy: 2, urgent: false, teamDependency: 0, dependentOn: '', commit: 0, blocked: false, effort: {design: 0, develop: 0, test: 0, deploy: 0}},
       {number: 2, design: 0, develop: 8, test: 6, deploy: 4, urgent: false, teamDependency: 0, dependentOn: '', commit: 0, blocked: false, effort: {design: 0, develop: 0, test: 0, deploy: 0}},
@@ -104,9 +98,16 @@ export const store = new Vuex.Store({
       {number: 24, design: 0, develop: 6, test: 4, deploy: 6, urgent: false, teamDependency: 0, dependentOn: '', commit: 0, blocked: false, effort: {design: 0, develop: 0, test: 0, deploy: 0}},
       {number: 25, design: 3, develop: 2, test: 2, deploy: 4, urgent: false, teamDependency: 0, dependentOn: '', commit: 0, blocked: false, effort: {design: 0, develop: 0, test: 0, deploy: 0}}
     ],
+    otherCards: [],
+    currentWorkCard: 0,
     mvpCards: 11,
     recharting: false,
-    currentWorkCard: 0,
+    concurrentDevAndTest: false,
+    autoDeploy: {
+      doing: false,
+      effort: 0,
+      done: false
+    },
     projectEstimate: 0,
     projectActual: 0,
     mvpEstimate: 0,
@@ -134,6 +135,9 @@ export const store = new Vuex.Store({
     getCurrency: (state) => {
       return state.currency
     },
+    getAvailableGames: (state) => {
+      return state.availableGames
+    },
     getGameName: (state) => {
       return state.gameName
     },
@@ -141,54 +145,58 @@ export const store = new Vuex.Store({
       return state.myName
     },
     getMyRole: (state) => {
-      return state.myRole
+      let role = ''
+      const me = state.members.find(function(m) {
+        return m.id == state.myName.id
+      })
+      role = me ? me.role : ''
+      return role
     },
     getMyOtherRoles: (state) => {
-      const roles = []
-      for (let i = 0; i < state.roles.length; i++) {
-        for (let j = 0; j < state.roles[i].otherNames.length; j++) {
-          if (state.myName.id == state.roles[i].otherNames[j].id) {
-            roles.push(state.roles[i].role)
-          }
-        }
-      }
+      let roles = []
+      const me = state.members.find(function(m) {
+        return m.id == state.myName.id
+      })
+      roles = me ? me.otherRoles : []
       return roles
     },
     getMessage: (state) => {
       return state.message
     },
     getMyEffort: (state) => {
-      return state.myEffort
+      let effort
+      const me = state.members.find(function(m) {
+        return m.id == state.myName.id
+      })
+      if (me) {
+        effort = me.effort
+      }
+      return effort
     },
     getTeamName: (state) => {
       return state.teamName
     },
-    getMyTeam: (state) => {
-      return state.teams.find(function(t) { return state.teamName == t.name})
+    getOtherCards: (state) => {
+      return state.otherCards
+    },
+    getCapabilities: (state) => {
+      return {
+        concurrentDevAndTest: state.concurrentDevAndTest,
+        autoDeploy: state.autoDeploy,
+        recharting: state.recharting
+      }
     },
     getHosts: (state) => {
-      const members = state.teams.find(function(t) {
-        return state.teamName == t.name
-      }).members
       const hosts = []
-      for (let i = 0; i < members.length; i++) {
-        if (members[i].host) {
-          hosts.push(members[i].name)
+      for (let i = 0; i < state.members.length; i++) {
+        if (state.members[i].host) {
+          hosts.push(state.members[i].name)
         }
       }
       return hosts.join(', ')
     },
     getMyTeamMembers: (state) => {
-      const members = state.teams.find(function(t) {
-        return state.teamName == t.name
-      }).members
-      let n = 0
-      for (let i = 0; i < members.length; i++) {
-        if (!state.stealth || !members[i].host) {
-          n = n + 1
-        }
-      }
-      return n
+      return state.members ? state.members.length : 0
     },
     getTeams: (state) => {
       return state.teams
@@ -217,18 +225,40 @@ export const store = new Vuex.Store({
     getCurrentDay: (state) => {
       return state.currentDay
     },
+    getRoleNames: (state) => {
+      return state.roles
+    },
     getRoles: (state) => {
-      return state.roles.sort(function(a, b) { return a.order > b.order })
+      const roles = []
+      for (let r = 0; r < state.roles.length; r++) {
+        const role = {
+          role: state.roles[r]
+        }
+        const names = []
+        const otherNames = []
+        for (let i = 0; i < state.members.length; i++) {
+          if (state.roles[r] == state.members[i].role) {
+            names.push(state.members[i])
+          }
+          for (let j = 0; j < state.members[i].otherRoles.length; j++) {
+            if (state.roles[r] == state.members[i].otherRoles[j]) {
+              otherNames.push(state.members[i])
+            }
+          }
+        }
+        role.names = names
+        role.otherNames = otherNames
+        roles.push(role)
+      }
+      return roles
     },
     getColumns: (state) => {
       return state.columns
     },
     getCurrentEventCard: (state) => {
-      if (state.currentEventCard < state.eventCards.length) {
-        return state.eventCards[state.currentEventCard]
-      } else {
-        return false
-      }
+      return state.eventCards.find(function(c) {
+        return c.number == state.currentDay
+      })
     },
     getCurrentWorkCard: (state) => {
       if (state.currentWorkCard < state.workCards.length) {
@@ -278,22 +308,36 @@ export const store = new Vuex.Store({
     updateStealth: (state, payload) => {
       state.stealth = payload.stealth
     },
-    loadGame: (state, payload) => {
-      state.stealth = payload.stealth
-      state.mvpCards = payload.mvpCards
-      state.teams = payload.teams
+    loadAvailableGames: (state, payload) => {
+      state.availableGames = payload.games
+    },
+
+    loadTeam: (state, payload) => {
+      state.members = payload.members
+      state.workCards = payload.workCards
+      state.otherCards = payload.otherCards
       state.columns = payload.columns
+      state.daysEffort = payload.daysEffort
       state.currentDay = payload.currentDay
-      state.percentageBlocked = payload.percentageBlocked
-      state.percentageDeployFail = payload.percentageDeployFail
-      state.currentEventCard = payload.currentEventCard
       state.currentWorkCard = payload.currentWorkCard
+      state.mvpCards = payload.mvpCards
       state.projectEstimate = payload.projectEstimate
+      state.reEstimate = payload.reEstimate
       state.projectActual = payload.projectActual
       state.mvpEstimate = payload.mvpEstimate
       state.mvpActual = payload.mvpActual
-      state.reEstimate = payload.reEstimate
-      state.roles = payload.roles
+      state.pairing = payload.pairing
+      state.recharting = payload.recharting
+      state.concurrentDevAndTest = payload.concurrentDevAndTest
+      state.canStartAutoDeploy = payload.canStartAutoDeploy
+      state.autoDeploy = payload.autoDeploy
+      console.log(state)
+    },
+    loadGame: (state, payload) => {
+      state.teams = payload.teams
+      state.stealth = payload.stealth
+      state.percentageBlocked = payload.percentageBlocked
+      state.percentageDeployFail = payload.percentageDeployFail
     },
     updateGameName: (state, payload) => {
       state.gameName = payload
@@ -307,37 +351,8 @@ export const store = new Vuex.Store({
         state.myName = payload
       }
     },
-    changeName: (state, payload) => {
-      state.myName.name = payload.name
-      state.myName.captain = payload.captain
-    },
-    updateMyRole: (state, payload) => {
-      state.myRole = payload
-      state.myEffort.role = payload
-    },
     updateMessage: (state, payload) => {
       state.message = payload
-    },
-    updateMyEffort: (state, payload) => {
-      state.myEffort.available = payload.available
-      state.myEffort.assigned = payload.assigned
-    },
-    resetMyEffort: (state) => {
-      state.myEffort.available = state.myStartEffort
-      state.myEffort.assigned = 0
-    },
-    updateMyAssignedEffort: (state, payload) => {
-      state.myEffort.available = state.myEffort.available - payload.effort
-      state.myEffort.assigned = state.myEffort.assigned + payload.effort
-    },
-    updatePairing: (state, payload) => {
-      state.pairing = payload.pairing
-    },
-    updateEffortPerDay: (state, payload) => {
-      state.effortPerDay = payload
-    },
-    updateRoles: (state, payload) => {
-      state.roles = payload.roles
     },
     percentageBlocked: (state, payload) => {
       state.percentageBlocked = payload.percentageBlocked
@@ -348,55 +363,8 @@ export const store = new Vuex.Store({
     updateMvpCards: (state, payload) => {
       state.mvpCards = payload.mvpCards
     },
-    updateTeams: (state, payload) => {
-      state.teams = payload.teams
-    },
     updateTeamName: (state, payload) => {
       state.teamName = payload
-    },
-    updateCurrentEventCard: (state, payload) => {
-      state.currentEventCard = payload.currentEventCard
-    },
-    updateCurrentDay: (state, payload) => {
-      let capacity = 4
-      if (payload.testCapacity && state.myEffort.role == 'Tester') {
-        capacity = 2
-      }
-      if (payload.capacity) {
-        capacity = payload.capacity
-      }
-      if (payload.capacity  == 0) {
-        capacity = 0
-      }
-      state.currentDay = payload.currentDay
-      state.myEffort.available = capacity
-      state.myEffort.assigned = 0
-    },
-    updateColumns: (state, payload) => {
-      state.columns = payload.columns
-    },
-    updateCurrentWorkCard: (state, payload) => {
-      state.currentWorkCard = payload.currentWorkCard
-    },
-    updateWorkCards: (state, payload) => {
-      state.workCards = payload.workCards
-    },
-    updateProjectEstimate: (state, payload) => {
-      state.projectEstimate = payload.projectEstimate
-    },
-    updateMVPEstimate: (state, payload) => {
-      state.mvpEstimate = payload.mvpEstimate
-    },
-    updateReEstimate: (state, payload) => {
-      state.reEstimate = payload.reEstimate
-    },
-    updateActuals: (state, payload) => {
-      if (payload.actuals.mvp) {
-        state.mvpActual = payload.actuals.mvp
-      }
-      if (payload.actuals.project) {
-        state.project = payload.actuals.project
-      }
     },
     updateGameState: (state, payload) => {
       state.gameState = payload.gameState
@@ -421,8 +389,14 @@ export const store = new Vuex.Store({
     updateStealth: ({ commit }, payload) => {
       commit('updateStealth', payload)
     },
+    loadAvailableGame: ({ commit }, payload) => {
+      commit('loadAvailableGame', payload)
+    },
     loadGame: ({ commit }, payload) => {
       commit('loadGame', payload)
+    },
+    loadTeam: ({ commit }, payload) => {
+      commit('loadTeam', payload)
     },
     updateGameName: ({ commit }, payload) => {
       commit('updateGameName', payload)
@@ -430,35 +404,8 @@ export const store = new Vuex.Store({
     updateMyName: ({ commit }, payload) => {
       commit('updateMyName', payload)
     },
-    changeName: ({ commit }, payload) => {
-      commit('changeName', payload)
-    },
-    updateMyRole: ({ commit }, payload) => {
-      commit('updateMyRole', payload)
-    },
     updateMessage: ({ commit }, payload) => {
       commit('updateMessage', payload)
-    },
-    updateMyEffort: ({ commit }, payload) => {
-      commit('updateMyEffort', payload)
-    },
-    resetMyEffort: ({ commit }, payload) => {
-      commit('resetMyEffort', payload)
-    },
-    updateMyAssignedEffort: ({ commit }, payload) => {
-      commit('updateMyAssignedEffort', payload)
-    },
-    updatePairing: ({ commit }, payload) => {
-      commit('updatePairing', payload)
-    },
-    updateEffortPerDay: ({ commit }, payload) => {
-      commit('updateEffortPerDay', payload)
-    },
-    updateTeams: ({ commit }, payload) => {
-      commit('updateTeams', payload)
-    },
-    updateRoles: ({ commit }, payload) => {
-      commit('updateRoles', payload)
     },
     percentageBlocked: ({ commit }, payload) => {
       commit('percentageBlocked', payload)
@@ -471,33 +418,6 @@ export const store = new Vuex.Store({
     },
     updateTeamName: ({ commit }, payload) => {
       commit('updateTeamName', payload)
-    },
-    updateCurrentEventCard: ({ commit }, payload) => {
-      commit('updateCurrentEventCard', payload)
-    },
-    updateCurrentWorkCard: ({ commit }, payload) => {
-      commit('updateCurrentWorkCard', payload)
-    },
-    updateWorkCards: ({ commit }, payload) => {
-      commit('updateWorkCards', payload)
-    },
-    updateCurrentDay: ({ commit }, payload) => {
-      commit('updateCurrentDay', payload)
-    },
-    updateColumns : ({ commit }, payload) => {
-      commit('updateColumns', payload)
-    },
-    updateProjectEstimate: ({ commit }, payload) => {
-      commit('updateProjectEstimate', payload)
-    },
-    updateMVPEstimate: ({ commit }, payload) => {
-      commit('updateMVPEstimate', payload)
-    },
-    updateReEstimate: ({ commit }, payload) => {
-      commit('updateReEstimate', payload)
-    },
-    updateActuals: ({ commit }, payload) => {
-      commit('updateActuals', payload)
     },
     updateGameState: ({ commit }, payload) => {
       commit('updateGameState', payload)

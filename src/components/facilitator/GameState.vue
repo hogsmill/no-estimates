@@ -2,9 +2,12 @@
   <table class="game-state">
     <tr>
       <td class="left" colspan="16">
-        <h4>Game State: (Game: {{ gameName }}) <span v-if="gameName" title="Restart Game" class="restart" @click="restartGame">&#8635;</span></h4>
-        <span v-if="showGameState" @click="setShowGameState(false)" title="collapse" class="toggle">&#9650;</span>
-        <span v-if="!showGameState" @click="setShowGameState(true)" title="expand" class="toggle">&#9660;</span>
+        <h4>
+          Game State: (Game: {{ gameName }})
+          <i v-if="gameName" title="Restart Game" @click="restartGame" class="fas fa-undo-alt restart" />
+        </h4>
+        <i v-if="showGameState" @click="setShowGameState(false)" title="collapse" class="fas fa-caret-up toggle" />
+        <i v-if="!showGameState" @click="setShowGameState(true)" title="expand" class="fas fa-caret-down toggle" />
       </td>
     </tr>
     <tr v-if="showGameState" class="header">
@@ -102,6 +105,9 @@ export default {
     },
     gameState() {
       return this.$store.getters.getGameState
+    },
+    teams() {
+      return this.$store.getters.getTeams
     }
   },
   methods: {
@@ -109,7 +115,10 @@ export default {
       this.showGameState = val
     },
     showTeamState(team) {
-      return this.showGameState && team.include
+      const include = this.teams.find(function(t) {
+        return t.name == team.name
+      }).include
+      return this.showGameState && include
     },
     estimates(team) {
       const proj = team.projectEstimate ? team.projectEstimate : '-'
@@ -147,6 +156,13 @@ export default {
     .restart {
       position: relative;
       left: 6px;
+      top: 4px;
+      color: #888;
+
+      &:hover {
+        color: #111;
+        cursor: pointer;
+      }
     }
 
     td {

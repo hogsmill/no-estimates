@@ -49,47 +49,30 @@ export default {
     teamName() {
       return this.$store.getters.getTeamName
     },
-    myTeam() {
-      return this.$store.getters.getMyTeam
+    capabilities() {
+      return this.$store.getters.getCapabilities
     },
     columns() {
       return this.$store.getters.getColumns
     }
-  },
-  mounted() {
-    this.socket.on('updateColumns', (data) => {
-      if (this.gameName == data.gameName && this.teamName == data.teamName) {
-        this.$store.dispatch('updateColumns', data)
-      }
-    })
-
-    this.socket.on('updateDependentTeam', (data) => {
-      if (this.gameName == data.gameName) {
-        this.$store.dispatch('updateDependentTeam', data)
-      }
-    })
-
-    this.socket.on('startAutoDeploy', (data) => {
-      if (this.gameName == data.gameName && this.teamName == data.teamName) {
-        this.$store.dispatch('startAutoDeploy', data)
-      }
-    })
   },
   methods: {
     columnDisplayName(s) {
       return stringFuns.properCase(s)
     },
     concurrentDevAndTestDev(column) {
-      return this.teamName && this.myTeam.concurrentDevAndTest && column.name == 'develop'
+      return this.teamName && this.capabilities.concurrentDevAndTest && column.name == 'develop'
     },
     concurrentDevAndTestTest(column) {
-      return this.teamName && this.myTeam.concurrentDevAndTest && column.name == 'test'
+      return this.teamName && this.capabilities.concurrentDevAndTest && column.name == 'test'
     },
     showAutoDeploy(column) {
-      return this.teamName && this.myTeam.autoDeploy.done && column.name == 'deploy'
+      return this.teamName && this.capabilities.autoDeploy.done && column.name == 'deploy'
     },
     canStartAutoDeploy(column) {
-      return this.teamName && !this.myTeam.autoDeploy.doing && !this.myTeam.autoDeploy.done && this.myTeam.canStartAutoDeploy && column.name == 'deploy'
+      return this.teamName && !this.capabilities.autoDeploy.doing &&
+        !this.capabilities.autoDeploy.done && this.capabilities.canStartAutoDeploy &&
+        column.name == 'deploy'
     },
     startAutoDeploy() {
       this.socket.emit('startAutoDeploy', {gameName: this.gameName, teamName: this.teamName})

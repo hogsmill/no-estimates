@@ -59,10 +59,9 @@ export default {
   },
   mounted() {
     const self = this
-    this.socket.on('updateCurrentEventCard', (data) => {
+    this.socket.on('loadTeam', (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         self.hide()
-        this.$store.dispatch('updateCurrentEventCard', data)
       }
     })
 
@@ -73,9 +72,6 @@ export default {
     })
   },
   methods: {
-    show() {
-      this.socket.emit('showEventCard', {gameName: this.gameName, teamName: this.teamName})
-    },
     hide() {
       this.$modal.hide('event-card-popup')
     },
@@ -91,7 +87,6 @@ export default {
         if (this.currentEventCard.autoDeployCard) {
           updateData.canStartAutoDeploy = true
         }
-        this.socket.emit('updateCurrentEventCard', {gameName: this.gameName, teamName: this.teamName, currentEventCard: this.currentEventCard.number})
       }
       this.socket.emit('updateCurrentDay', updateData)
     },
@@ -118,9 +113,6 @@ export default {
           break
         case 'Recharting':
           data = {recharting: true}
-          break
-        case 'Deploy Dice':
-          // TBD
           break
         default:
           console.log('Doing \'' + this.currentEventCard.function + '\' (not implemented)')

@@ -36,7 +36,7 @@ const dbStore = require('./store/dbStore.js')
 const MongoClient = require('mongodb').MongoClient
 
 const url = prod ?  'mongodb://127.0.0.1:27017/' : 'mongodb://localhost:27017/'
-
+const maxIdleTime = 7200000
 const connectDebugOff = prod
 const debugOn = !prod
 
@@ -53,11 +53,14 @@ function emit(event, data) {
 function doDb(fun, data) {
   currentAction = fun
   currentData = data
-  MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
+  MongoClient.connect(url, { useUnifiedTopology: true, maxIdleTimeMS: maxIdleTime }, function (err, client) {
     if (err) throw err
     const db = client.db('db')
 
     switch(fun) {
+      case 'getAvailableGames':
+        dbStore.getAvailableGames(err, client, db, io, data, debugOn)
+        break
       case 'loadGame':
         dbStore.loadGame(err, client, db, io, data, debugOn)
         break
@@ -73,26 +76,11 @@ function doDb(fun, data) {
       case 'updateCurrentDay':
         dbStore.updateCurrentDay(err, client, db, io, data, debugOn)
         break
-      case 'updateCurrentEventCard':
-        dbStore.updateCurrentEventCard(err, client, db, io, data, debugOn)
-        break
-      case 'updateCurrentWorkCard':
-        dbStore.updateCurrentWorkCard(err, client, db, io, data, debugOn)
-        break
-      case 'updateCommit':
-        dbStore.updateCommit(err, client, db, io, data, debugOn)
-        break
-      case 'updateColumns':
-        dbStore.updateColumns(err, client, db, io, data, debugOn)
-        break
-      case 'updateDependentTeam':
-        dbStore.updateDependentTeam(err, client, db, io, data, debugOn)
+      case 'pullInCard':
+        dbStore.pullInCard(err, client, db, io, data, debugOn)
         break
       case 'updateEffort':
         dbStore.updateEffort(err, client, db, io, data, debugOn)
-        break
-      case 'updateAssignedEffort':
-        dbStore.updateAssignedEffort(err, client, db, io, data, debugOn)
         break
       case 'addEffortToOthersCard':
         dbStore.addEffortToOthersCard(err, client, db, io, data, debugOn)
@@ -170,12 +158,14 @@ io.on('connection', (socket) => {
     emit('updateConnections', {connections: connections, maxConnections: maxConnections})
   })
 
+  socket.on('getAvailableGames', (data) => { doDb('getAvailableGames', data) })
+
   socket.on('loadGame', (data) => { doDb('loadGame', data) })
 
   socket.on('restartGame', (data) => { doDb('restartGame', data) })
 
   socket.on('deleteGame', (data) => {
-    doDb('deleteGameMeta', data) 
+    doDb('deleteGameMeta', data)
     doDb('deleteGame', data)
   })
 
@@ -183,17 +173,9 @@ io.on('connection', (socket) => {
 
   socket.on('showEventCard', (data) => { emit('showEventCard', data) })
 
-  socket.on('updateCurrentEventCard', (data) => { doDb('updateCurrentEventCard', data) })
-
   socket.on('updateCurrentDay', (data) => { doDb('updateCurrentDay', data) })
 
-  socket.on('updateCommit', (data) => { doDb('updateCommit', data) })
-
-  socket.on('updateCurrentWorkCard', (data) => { doDb('updateCurrentWorkCard', data) })
-
-  socket.on('updateColumns', (data) => { doDb('updateColumns', data) })
-
-  socket.on('updateAssignedEffort', (data) => { doDb('updateAssignedEffort', data) })
+  socket.on('pullInCard', (data) => { doDb('pullInCard', data) })
 
   socket.on('updatePersonEffort', (data) => { emit('updatePersonEffort', data) })
 
@@ -204,8 +186,6 @@ io.on('connection', (socket) => {
   socket.on('pairingDay', (data) => { doDb('pairingDay', data) })
 
   socket.on('resetEffort', (data) => { emit('resetEffort', data) })
-
-  socket.on('updateDependentTeam', (data) => { doDb('updateDependentTeam', data) })
 
   socket.on('addEffortToOthersCard', (data) => { doDb('addEffortToOthersCard', data) })
 

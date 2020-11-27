@@ -30,22 +30,12 @@ export default {
     teamName() {
       return this.$store.getters.getTeamName
     },
-    myTeam() {
-      return this.$store.getters.getMyTeam
-    },
     currentDay() {
       return this.$store.getters.getCurrentDay
     },
     columns() {
       return this.$store.getters.getColumns
     }
-  },
-  mounted() {
-    this.socket.on('updateCurrentDay', (data) => {
-      if (this.gameName == data.gameName && this.teamName == data.teamName) {
-        this.$store.dispatch('updateCurrentDay', data)
-      }
-    })
   },
   methods: {
     getClass(day) {

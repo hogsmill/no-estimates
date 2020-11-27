@@ -15,9 +15,6 @@ export default {
     'socket'
   ],
   computed: {
-    showFacilitator() {
-      return this.$store.getters.getShowFacilitator
-    },
     gameName() {
       return this.$store.getters.getGameName
     },
@@ -27,53 +24,15 @@ export default {
     currentWorkCard() {
       return this.$store.getters.getCurrentWorkCard
     },
-    currentDay() {
-      return this.$store.getters.getCurrentDay
-    },
     teams() {
       return this.$store.getters.getTeams
-    },
-    columns() {
-      return this.$store.getters.getColumns
-    },
-    workCards() {
-      return this.$store.getters.getWorkCards
     }
-  },
-  mounted() {
-    this.socket.on('updateCurrentWorkCard', (data) => {
-      if (this.gameName == data.gameName && this.teamName == data.teamName) {
-        this.$store.dispatch('updateCurrentWorkCard', data)
-      }
-    })
   },
   methods: {
     pullInCard() {
       if (this.currentWorkCard !== false) {
-        const currentWorkCard = this.currentWorkCard
-        const workCards = this.workCards
-        const columns = this.columns
-        workCards[currentWorkCard].commit = this.currentDay
-        columns[1].cards.push(workCards[currentWorkCard])
-        this.socket.emit('updateCommit', {gameName: this.gameName, teamName: this.teamName, workCard: currentWorkCard, commit: this.currentDay})
-        this.socket.emit('updateColumns', {gameName: this.gameName, teamName: this.teamName, columns: columns})
-        this.socket.emit('updateCurrentWorkCard', {gameName: this.gameName, teamName: this.teamName, currentWorkCard: currentWorkCard + 1})
-        if (workCards[currentWorkCard].teamDependency > 0) {
-          const dependentOn = this.selectDependentTeam()
-          this.socket.emit('updateDependentTeam', {gameName: this.gameName, teamName: this.teamName, workCard: workCards[currentWorkCard], dependentOn: dependentOn})
-        }
+        this.socket.emit('pullInCard', {gameName: this.gameName, teamName: this.teamName, teams: this.teams})
       }
-    },
-    selectDependentTeam() {
-      // Make sure we don't pick our own team...
-      const teams = []
-      for (let i = 0; i < this.teams.length; i++) {
-        if (this.teams[i].include && this.teams[i].name != this.teamName) {
-          teams.push(i)
-        }
-      }
-      const index = teams[Math.floor(Math.random() * teams.length)]
-      return this.teams[index]
     }
   }
 }

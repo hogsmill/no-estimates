@@ -40,11 +40,7 @@ export default {
   props: [
     'socket'
   ],
-
   computed: {
-    gameState() {
-      return this.$store.getters.getGameState
-    },
     gameName() {
       return this.$store.getters.getGameName
     },

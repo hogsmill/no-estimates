@@ -70,6 +70,7 @@ export default {
         width: 40%;
         position: absolute;
         right: 0;
+        font-size: small;
       }
     }
 

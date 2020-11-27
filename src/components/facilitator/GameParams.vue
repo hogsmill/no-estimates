@@ -3,8 +3,8 @@
     <tr>
       <td colspan="4">
         <h4>Game Params</h4>
-        <span v-if="showGameParams" @click="setShowGameParams(false)" title="collapse" class="toggle">&#9650;</span>
-        <span v-if="!showGameParams" @click="setShowGameParams(true)" title="expand" class="toggle">&#9660;</span>
+        <i v-if="showGameParams" @click="setShowGameParams(false)" title="collapse" class="fas fa-caret-up toggle" />
+        <i v-if="!showGameParams" @click="setShowGameParams(true)" title="expand" class="fas fa-caret-down toggle" />
       </td>
     </tr>
     <tr v-if="showGameParams">
@@ -57,8 +57,8 @@
         Teams
       </td>
       <td colspan="3">
-        <div v-for="(team, index) in gameState" :key="index">
-          <input type="checkbox" :checked="team.include" @click="toggleTeamActive(team)" :disabled="team.otherCards.length > 0"> {{ team.name }}
+        <div v-for="(team, index) in teams" :key="index">
+          <input type="checkbox" :checked="team.include" @click="toggleTeamActive(team.name)" :disabled="otherCards(team)"> {{ team.name }}
         </div>
       </td>
     </tr>
@@ -111,8 +111,8 @@ export default {
       this.socket.emit('updateStealth', {gameName: this.gameName, stealth: isStealth})
     },
     toggleTeamActive(team) {
-      team.include = !team.include
-      this.socket.emit('updateTeamActive', {gameName: this.gameName, team: team})
+      const include = !team.include
+      this.socket.emit('updateTeamActive', {gameName: this.gameName, teamName: team, include: include})
     },
     savePercentageBlocked: function() {
       const percentageBlocked = document.getElementById('percentageBlocked').value
@@ -125,6 +125,11 @@ export default {
     savePercentageDeployFail: function() {
       const percentageDeployFail = document.getElementById('percentageDeployFail').value
       this.socket.emit('percentageDeployFail', {gameName: this.gameName, percentageDeployFail: percentageDeployFail})
+    },
+    otherCards(team) {
+      return this.gameState.find(function(t) {
+        return t.name == team.name
+      }).otherCards.length > 0
     }
   }
 }

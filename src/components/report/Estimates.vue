@@ -3,14 +3,14 @@
     <tr>
       <td>Days to complete the entire project: </td>
       <td>
-        <input v-if="!projectEstimate" type="text" id="project-estimate" class="form-control" :value="projectEstimate">
-        <span v-if="projectEstimate"><b>{{ projectEstimate }}</b></span>
+        <input v-if="!projectEstimate || editingEstimate" type="text" id="project-estimate" class="form-control" :value="projectEstimate">
+        <span v-if="projectEstimate && !editingEstimate"><b>{{ projectEstimate }}</b></span>
       </td>
       <td>
-        <button v-if="!projectEstimate" class="btn btn-sm btn-site-primary" :disabled="!gameName || !teamName" @click="saveTotalProject">
+        <button v-if="!projectEstimate || editingEstimate" class="btn btn-sm btn-site-primary" :disabled="!gameName || !teamName" @click="saveEstimate">
           Save
         </button>
-        <button v-if="projectEstimate && currentDay < 2" class="btn btn-sm btn-site-primary" :disabled="!gameName || !teamName" @click="saveTotalProject">
+        <button v-if="projectEstimate && !editingEstimate && currentDay < 2" class="btn btn-sm btn-site-primary" :disabled="!gameName || !teamName" @click="editEstimate">
           Change
         </button>
       </td>
@@ -22,14 +22,14 @@
     <tr>
       <td>Days to complete the MVP (Cards 1-{{ mvpCards }}): </td>
       <td>
-        <input v-if="!mvpEstimate" type="text" id="mvp-estimate" class="form-control" :value="mvpEstimate">
-        <span v-if="mvpEstimate"><b>{{ mvpEstimate }}</b></span>
+        <input v-if="!mvpEstimate || editingMVP" type="text" id="mvp-estimate" class="form-control" :value="mvpEstimate">
+        <span v-if="mvpEstimate && !editingMVP"><b>{{ mvpEstimate }}</b></span>
       </td>
       <td>
-        <button v-if="!mvpEstimate" class="btn btn-sm btn-site-primary" @click="saveMVP">
+        <button v-if="!mvpEstimate || editingMVP" class="btn btn-sm btn-site-primary" @click="saveMVP()">
           Save
         </button>
-        <button v-if="mvpEstimate && currentWorkCard < mvpCards" class="btn btn-sm btn-site-primary" @click="saveMVP">
+        <button v-if="mvpEstimate && !editingMVP && currentWorkCard < mvpCards" class="btn btn-sm btn-site-primary" @click="editMVP()">
           Change
         </button>
       </td>
@@ -41,14 +41,14 @@
     <tr>
       <td>Re-estimate of days to <br> complete the entire project: </td>
       <td>
-        <input v-if="!reEstimate" type="text" id="re-estimate" class="form-control" :value="reEstimate">
-        <span v-if="reEstimate"><b>{{ reEstimate }}</b></span>
+        <input v-if="!reEstimate || editingReEstimate" type="text" id="re-estimate" class="form-control" :value="reEstimate">
+        <span v-if="reEstimate && !editingReEstimate"><b>{{ reEstimate }}</b></span>
       </td>
       <td>
-        <button v-if="!reEstimate" class="btn btn-sm btn-site-primary" @click="saveReEstimate">
+        <button v-if="!reEstimate || editingReEstimate" class="btn btn-sm btn-site-primary" @click="saveReEstimate">
           Save
         </button>
-        <button v-if="reEstimate" class="btn btn-sm btn-site-primary" @click="saveReEstimate">
+        <button v-if="reEstimate && !editingReEstimate" class="btn btn-sm btn-site-primary" @click="editReEstimate">
           Change
         </button>
       </td>
@@ -65,6 +65,13 @@ export default {
   props: [
     'socket'
   ],
+  data() {
+    return {
+      editingEstimate: false,
+      editingMVP: false,
+      editingReEstimate: false,
+    }
+  },
   computed: {
     gameName() {
       return this.$store.getters.getGameName
@@ -97,35 +104,30 @@ export default {
       return this.$store.getters.getCurrentWorkCard
     },
   },
-  mounted() {
-    this.socket.on('updateProjectEstimate', (data) => {
-      if (this.gameName == data.gameName && this.teamName == data.teamName) {
-        this.$store.dispatch('updateProjectEstimate', data)
-      }
-    })
-    this.socket.on('updateMVPEstimate', (data) => {
-      if (this.gameName == data.gameName && this.teamName == data.teamName) {
-        this.$store.dispatch('updateMVPEstimate', data)
-      }
-    })
-    this.socket.on('updateReEstimate', (data) => {
-      if (this.gameName == data.gameName && this.teamName == data.teamName) {
-        this.$store.dispatch('updateReEstimate', data)
-      }
-    })
-  },
   methods: {
-    saveTotalProject() {
+    editEstimate() {
+      this.editingEstimate = true
+    },
+    saveEstimate() {
       const estimate = document.getElementById('project-estimate').value
       this.socket.emit('updateProjectEstimate', {gameName: this.gameName, teamName: this.teamName, projectEstimate: estimate})
+      this.editingEstimate = false
+    },
+    editMVP() {
+      this.editingMVP = true
     },
     saveMVP() {
       const estimate = document.getElementById('mvp-estimate').value
       this.socket.emit('updateMVPEstimate', {gameName: this.gameName, teamName: this.teamName, mvpEstimate: estimate})
+      this.editingMVP = false
+    },
+    editReEstimate() {
+      this.editingReEstimate = true
     },
     saveReEstimate() {
       const estimate = document.getElementById('re-estimate').value
       this.socket.emit('updateReEstimate', {gameName: this.gameName, teamName: this.teamName, reEstimate: estimate})
+      this.editingReEstimate = false
     }
   }
 }

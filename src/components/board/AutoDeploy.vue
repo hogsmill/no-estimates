@@ -7,7 +7,7 @@
       <div class="deploy-card-column column rounded-circle">
         A
       </div>
-      <div v-for="n in 8" :key="n" class="deploy-card-column rounded-circle" :class="{'assigned' : n <= myTeam.autoDeploy.effort}" />
+      <div v-for="n in 8" :key="n" class="deploy-card-column rounded-circle" :class="{'assigned' : n <= capabilities.autoDeploy.effort}" />
     </div>
   </div>
 </template>
@@ -31,8 +31,8 @@ export default {
     teamName() {
       return this.$store.getters.getTeamName
     },
-    myTeam() {
-      return this.$store.getters.getMyTeam
+    capabilities() {
+      return this.$store.getters.getCapabilities
     },
     myName() {
       return this.$store.getters.getMyName
@@ -45,22 +45,22 @@ export default {
     },
     myEffort() {
       return this.$store.getters.getMyEffort
+    },
+    currentDay() {
+      return this.$store.getters.getCurrentDay
     }
-  },
-  mounted() {
-    this.socket.on('incrementAutoDeploy', (data) => {
-      if (this.gameName == data.gameName && this.teamName == data.teamName) {
-        this.$store.dispatch('incrementAutoDeploy', data)
-      }
-    })
   },
   methods: {
     addEffort() {
-      const effort = roles.iHaveRole('deploy', this.myRole, this.myOtherRoles) ? 1 : 2
+      const column = 'deploy'
+      const iHaveRole = roles.iHaveRole(column, this.myRole, this.myOtherRoles)
+      const effort = iHaveRole ? 1 : 2
       if (this.myEffort.available >= effort) {
-        this.$store.dispatch('updateMyAssignedEffort', {effort: effort})
-        this.socket.emit('incrementAutoDeploy', {gameName: this.gameName, teamName: this.teamName})
+        this.socket.emit('incrementAutoDeploy', {gameName: this.gameName, teamName: this.teamName, name: this.myName, effort: effort})
         this.socket.emit('updatePersonAutoDeployEffort', {gameName: this.gameName, teamName: this.teamName, name: this.myName})
+        if (!iHaveRole) {
+          this.socket.emit('pairingDay', {gameName: this.gameName, teamName: this.teamName, name: this.myName, column: column, day: this.currentDay})
+        }
       } else {
         this.$store.dispatch('updateMessage', 'No effort available (Autodeploy)')
         const self = this
@@ -79,7 +79,7 @@ export default {
     color: #444;
     margin: 6px;
     box-shadow: 2px 2px 3px #444;
-    
+
     .deploy-card-header {
       font-weight: bold;
     }

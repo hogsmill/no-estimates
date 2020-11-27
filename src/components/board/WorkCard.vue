@@ -106,8 +106,8 @@ export default {
     myEffort() {
       return this.$store.getters.getMyEffort
     },
-    teams() {
-      return this.$store.getters.getTeams
+    capabilities() {
+      return this.$store.getters.getCapabilities
     },
     currentDay() {
       return this.$store.getters.getCurrentDay
@@ -130,20 +130,11 @@ export default {
       return this.currentDay - this.workCard.commit
     },
     canAssign(column) {
-      let concurrent = false
-      for (let i= 0; i < this.teams.length; i++) {
-        if (this.teamName == this.teams[i].name && this.teams[i].concurrentDevAndTest) {
-          concurrent = true
-        }
-      }
-      concurrent = concurrent && (column == 'develop' || column == 'test')
+      const concurrent = this.capabilities.concurrentDevAndTest && (column == 'develop' || column == 'test')
       return this.column == column || concurrent
     },
-    storeEffort() {
-      localStorage.setItem('myEffort', JSON.stringify(this.myEffort))
-    },
     addEffort(column) {
-      let message = ''
+      let message = '', effort = 0
       if (this.workCard.blocked) {
         message = 'card is blocked'
       } else if (this.canAssign(column)) {
@@ -154,17 +145,13 @@ export default {
         } else {
           if (roles.iHaveRole(column, this.myRole, this.myOtherRoles)) {
             this.workCard.effort[column] = this.workCard.effort[column] + 1
-            this.$store.dispatch('updateMyAssignedEffort', {effort: 1})
-            this.storeEffort()
-            this.socket.emit('updateAssignedEffort', {gameName: this.gameName, teamName: this.teamName, name: this.myName, effort: this.myEffort})
+            effort = 1
           } else {
             if (this.myEffort.available < 2) {
               message = 'you only have one effort point left'
             } else {
               this.workCard.effort[column] = this.workCard.effort[column] + 1
-              this.$store.dispatch('updateMyAssignedEffort', {effort: 2})
-              this.storeEffort()
-              this.socket.emit('updateAssignedEffort', {gameName: this.gameName, teamName: this.teamName, name: this.myName, effort: this.myEffort})
+              effort = 2
               this.socket.emit('pairingDay', {gameName: this.gameName, teamName: this.teamName, name: this.myName, column: column, day: this.currentDay})
             }
           }
@@ -184,7 +171,7 @@ export default {
         }, 2000)
       } else {
         this.socket.emit('updatePersonEffort', {gameName: this.gameName, teamName: this.teamName, workCard: this.workCard, name: this.myName, column: column})
-        this.socket.emit('updateEffort', {gameName: this.gameName, teamName: this.teamName, name: this.myName, workCard: this.workCard})
+        this.socket.emit('updateEffort', {gameName: this.gameName, teamName: this.teamName, name: this.myName, workCard: this.workCard, effort: effort})
       }
     }
   }

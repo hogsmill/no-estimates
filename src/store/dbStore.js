@@ -1,30 +1,22 @@
 
-const roleFuns = require('./lib/roles.js')
 const teamFuns = require('./lib/teams.js')
 const cardFuns = require('./lib/cards.js')
 const pairingFuns = require('./lib/pairing.js')
 const dependent = require('./lib/dependent.js')
 const gameState = require('./lib/gameState.js')
 
-const initialRoles = [
-  {role: 'Designer', order: 1, names: [], otherNames: []},
-  {role: 'Developer', order: 2, names: [], otherNames: []},
-  {role: 'Tester', order: 3, names: [], otherNames: []},
-  {role: 'Deployer', order: 4, names: [], otherNames: []}
-]
-
 const initialTeams = [
-  { name: 'Blue', include: true, members: [], recharting: false, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
-  { name: 'Green', include: true, members: [], recharting: false, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
-  { name: 'Purple', include: true, members: [], recharting: false, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
-  { name: 'Red', include: true, members: [], recharting: false, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
-  { name: 'Orange', include: false, members: [], recharting: false, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
-  { name: 'Black', include: false, members: [], recharting: false, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
-  { name: 'Grey', include: false, members: [], recharting: false, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
-  { name: 'Brown', include: false, members: [], recharting: false, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
-  { name: 'Magenta', include: false, members: [], recharting: false, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
-  { name: 'Salmon', include: false, members: [], recharting: false, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } },
-  { name: 'Teal', include: false, members: [], recharting: false, otherCards: [], concurrentDevAndTest: false, canStartAutoDeploy: false, autoDeploy: { doing: false, effort: 0, done: false } }
+  { name: 'Blue', include: true },
+  { name: 'Green', include: true },
+  { name: 'Purple', include: true },
+  { name: 'Red', include: true },
+  { name: 'Orange', include: false },
+  { name: 'Black', include: false },
+  { name: 'Grey', include: false },
+  { name: 'Brown', include: false },
+  { name: 'Magenta', include: false },
+  { name: 'Salmon', include: false },
+  { name: 'Teal', include: false }
 ]
 
 const initialColumns = [
@@ -64,59 +56,81 @@ const initialCards = [
   {number: 25, design: 3, develop: 2, test: 2, deploy: 4, urgent: false, teamDependency: 0, dependentOn: '', commit: 0, blocked: false, effort: {design: 0, develop: 0, test: 0, deploy: 0}}
 ]
 
-function createNewGame(data) {
-
-  const game = JSON.parse(JSON.stringify(data))
-  game.stealth = false
-  game.pairing = []
-  game.teams = JSON.parse(JSON.stringify(initialTeams))
-  game.roles = JSON.parse(JSON.stringify(initialRoles))
-  game.columns = JSON.parse(JSON.stringify(initialColumns))
-  game.workCards = JSON.parse(JSON.stringify(initialCards))
-  game.mvpCards = 11
-  game.gameName = data.gameName
-  game.daysEffort = []
-  game.currentDay = 1
-  game.currentEventCard = 0
-  game.currentWorkCard = 0
-  game.percentageBlocked = 0.05
-  game.percentageDeployFail = 0.5
-  game.mvpEstimate = null
-  game.mvpActual = null
-  game.projectEstimate = null
-  game.projectActual = null
-  game.reEstimate = null
-  game.created = new Date().toISOString()
-  game.restarted = []
-  game.new = true
-
-  return game
-}
-
 function resetGame(game) {
   game.columns = JSON.parse(JSON.stringify(initialColumns))
   game.workCards = JSON.parse(JSON.stringify(initialCards))
+  game.otherCards = []
   game.pairing = []
   game.daysEffort = []
+  game.autoDeploy = {
+    doing: false,
+    effort: 0,
+    done: false
+  }
+  game.canStartAutoDeploy = false
+  game.concurrentDevAndTest = false
   game.currentDay = 1
-  game.currentEventCard = 0
   game.currentWorkCard = 0
   game.mvpEstimate = null
   game.mvpActual = null
   game.projectEstimate = null
   game.projectActual = null
   game.reEstimate = null
-  game.restarted.push(new Date().toISOString())
+  const members = []
+  for (let i = 0; i < game.members.length; i++) {
+    const member = game.members[i]
+    member.effort = teamFuns.initialEffort()
+    member.otherRoles = []
+    members.push(member)
+  }
+  game.members = members
 
   return game
 }
 
-function addMyNameAndRole(game, data) {
-  game = teamFuns.addMyNameToTeam(game, data)
-  if (data.myRole) {
-    game = roleFuns.addMyRole(game, data)
+function newGame(data) {
+  const game = {
+    gameName: data.gameName,
+    teams: JSON.parse(JSON.stringify(initialTeams)),
+    stealth: false,
+    percentageBlocked: 0.05,
+    percentageDeployFail: 0.5,
+    created: new Date().toISOString(),
+    restarted: [],
+    lastaccess: new Date().toISOString()
   }
+
   return game
+}
+
+function newTeam(gameName, teamName) {
+  const team = {
+    gameName: gameName,
+    teamName: teamName,
+    members: [],
+    columns: JSON.parse(JSON.stringify(initialColumns)),
+    workCards: JSON.parse(JSON.stringify(initialCards)),
+    pairing: [],
+    recharting: false,
+    otherCards: [],
+    mvpCards: 11,
+    concurrentDevAndTest: false,
+    canStartAutoDeploy: false,
+    daysEffort: [],
+    currentDay: 1,
+    currentWorkCard: 0,
+    mvpEstimate: null,
+    mvpActual: null,
+    projectEstimate: null,
+    projectActual: null,
+    reEstimate: null,
+    autoDeploy: {
+      doing: false,
+      effort: 0,
+      done: false
+    }
+  }
+  return team
 }
 
 function _getGames(err, client, db, io, data, debugOn) {
@@ -132,59 +146,75 @@ function _getGames(err, client, db, io, data, debugOn) {
   })
 }
 
+function updateTeam(db, io, res) {
+  const id = res._id
+  delete res._id
+  db.collection('noEstimates').updateOne({'_id': id}, {$set: res}, function(err) {
+    if (err) throw err
+    io.emit('loadTeam', res)
+    gameState.update(db, io, res)
+  })
+}
 module.exports = {
 
   gameState: function(err, client, db, io, data, debugOn) {
-    gameState.update(err, client, db, io, data, debugOn)
+    gameState.update(db, io, data)
   },
 
   getGames: function(err, client, db, io, data, debugOn) {
     _getGames(err, client, db, io, data, debugOn)
   },
 
+  getAvailableGames: function(err, client, db, io, data, debugOn) {
+
+    if (debugOn) { console.log('getAvailableGames', data) }
+
+  },
+
   loadGame: function(err, client, db, io, data, debugOn) {
 
     if (debugOn) { console.log('loadGame', data) }
 
-    db.collection('noEstimates').find({gameName: data.gameName}).toArray(function(err, res) {
+    db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, res) {
       if (err) throw err
-      if (res.length) {
+      if (res) {
         console.log('Loading game \'' + data.gameName + '\'')
-        for (let r = 0; r < res.length; r++) {
-          res[r] = addMyNameAndRole(res[r], data)
-          res[r] = roleFuns.generateRoles(res[r])
-          res[r].new = false
-          db.collection('noEstimates').updateOne({'_id': res[r]._id}, {$set: {teams: res[r].teams, roles: res[r].roles}}, function(err) {
+        io.emit('loadGame', res)
+        if (data.oldTeam) {
+          db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.oldTeam}, function(err, resOld) {
             if (err) throw err
-            io.emit('loadGame', res[r])
-          })
-          db.collection('noEstimatesGames').findOne({ name: data.gameName }, function(err, res) {
-            if (err) throw err
-            db.collection('noEstimatesGames').updateOne({'_id': res._id}, {$set: {lastaccess: new Date().toISOString()}}, function(err, res) {
-            })
+            resOld.members = teamFuns.removeMember(resOld.members, data.myName)
+            updateTeam(db, io, resOld)
           })
         }
-      } else {
-        console.log('Created new game \'' + data.gameName + '\'')
-        const games = []
-        for (let i = 0; i < initialTeams.length; i++) {
-          let game = createNewGame(data)
-          game.teamName = initialTeams[i].name
-          game = addMyNameAndRole(game, data)
-          game = roleFuns.generateRoles(game)
-          games.push(JSON.parse(JSON.stringify(game)))
-        }
-        db.collection('noEstimatesGames').insertOne({ name: data.gameName, include: true, lastaccess: new Date().toISOString() }, function(err) {
+        db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
           if (err) throw err
-        })
-        db.collection('noEstimates').insertMany(games, function(err) {
-          if (err) throw err
-          for (let i = 0; i < games.length; i++) {
-            io.emit('loadGame', games[i])
+          if (res) {
+            res.members = teamFuns.addMember(res.members, data.myName, data.myRole)
+            updateTeam(db, io, res)
           }
         })
+      } else {
+        console.log('Created new game \'' + data.gameName + '\'')
+        const game = newGame(data)
+        db.collection('noEstimatesGames').insertOne(game, function(err) {
+          if (err) throw err
+          io.emit('loadGame', game)
+          gameState.update(db, io, data)
+        })
+        for (let i = 0; i < initialTeams.length; i++) {
+          const teamName = initialTeams[i].name
+          const team = newTeam(data.gameName, teamName)
+          if (teamName == data.teamName) {
+            team.members = teamFuns.addMember(team.members, data.myName, data.myRole)
+          }
+          db.collection('noEstimates').insertOne(team, function(err) {
+            if (err) throw err
+            io.emit('loadTeam', team)
+            gameState.update(db, io, data)
+          })
+        }
       }
-      gameState.update(err, client, db, io, data, debugOn)
     })
   },
 
@@ -192,17 +222,30 @@ module.exports = {
 
     if (debugOn) { console.log('restartGame', data) }
 
+    db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, res) {
+      if (err) throw err
+      if (res) {
+        const restarted = res.restarted
+        restarted.push(new Date().toISOString())
+        res.restarted = restarted
+        db.collection('noEstimatesGames').updateOne({'_id': res._id}, {$set: {restarted: restarted} }, function(err) {
+          if (err) throw err
+          io.emit('loadGame', res)
+        })
+      }
+    })
+
     db.collection('noEstimates').find({gameName: data.gameName}).toArray(function(err, res) {
       if (err) throw err
       if (res.length) {
         for (let r = 0; r < res.length; r++) {
-          const reset = resetGame(res[r])
-          db.collection('noEstimates').updateOne({'_id': res[r]._id}, {$set:reset}, function(err) {
+          const game = resetGame(res[r])
+          const id = game._id
+          delete game._id
+          db.collection('noEstimates').updateOne({'_id': id}, {$set: game}, function(err) {
             if (err) throw err
-            for (const key in Object.keys(reset)) {
-              res[r][key] == reset[key]
-            }
-            io.emit('loadGame', res[r])
+            io.emit('loadTeam', game)
+            gameState.update(db, io, game)
           })
         }
       }
@@ -247,175 +290,76 @@ module.exports = {
     db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
       if (err) throw err
       if (res) {
-        const teams = res.teams, workCards = res.workCards, roles = res.roles, currentDay = res.currentDay + 1
-        let columns = res.columns
-        for (let i = 0; i < teams.length; i++) {
-          if (teams[i].name == data.teamName) {
-            if (data.autoDeploy) {
-              teams[i].autoDeploy.doing = true
-            }
-            if (data.canStartAutoDeploy) {
-              teams[i].canStartAutoDeploy = true
-            }
-            if (data.concurrentDevAndTest) {
-              teams[i].concurrentDevAndTest = true
-            }
-            if (data.extraEffortForPairing) {
-              columns = pairingFuns.addExtraPointForPairing(res.currentDay, columns, res.daysEffort)
-            }
-            if (data.recharting) {
-              teams[i].recharting = true
-            } else {
-              teams[i].recharting = false
-            }
-          }
-        }
-        for (let i = 1; i < columns.length; i++) {
-          for (let j = 0; j < columns[i].cards.length; j++) {
-            const card = columns[i].cards[j]
-            const colName = columns[i].name
-            if (card.blocked || card.failed) {
-              card.blocked = false
-              card.failed = false
-              if (cardFuns.cardCompleteInColumn(card, colName, res.teamName, res.teams, res.percentageBlocked, res.percentageDeployFail)) {
-                cardFuns.moveCard(columns, workCards, card, i, res.currentDay)
+        let updating = false
+        if (res.currentDay != data.currentDay) {
+          updating = true
+          currentDay = res.currentDay + 1
+          res = teamFuns.updateTeamCapabilities(res, data, res.daysEffort)
+          const columns = res.columns, workCards = res.workCards
+          for (let i = 1; i < columns.length; i++) {
+            for (let j = 0; j < columns[i].cards.length; j++) {
+              const card = columns[i].cards[j]
+              const colName = columns[i].name
+              if (card.blocked || card.failed) {
+                card.blocked = false
+                card.failed = false
+                if (cardFuns.cardCompleteInColumn(card, colName, res.teamName, res.autoDeploy, res.percentageBlocked, res.percentageDeployFail)) {
+                  cardFuns.moveCard(columns, workCards, card, i, res.currentDay)
+                }
               }
             }
           }
+          actuals = cardFuns.calculateActuals(columns, res.workCards, res.mvpCards, data.currentDay, res.mvpActual, res.projectActual)
+          mvpActual = actuals.mvpActual
+          projectActual = actuals.projectActual
+          members = teamFuns.setTeamMembersEffort(res.members, data)
+          res.currentDay = currentDay
+          res.members = members
+          res.columns = columns
+          res.workCards = workCards
+          res.mvpActual = mvpActual
+          res.projectActual = projectActual
         }
-        const actuals = cardFuns.calculateActuals(columns, res.workCards, res.mvpCards, currentDay, res.mvpActual, res.projectActual)
-        const update  = {
-          currentDay: currentDay,
-          teams: teams,
-          columns: columns,
-          workCards: workCards,
-          roles: roles,
-          mvpActual: actuals.mvp,
-          projectActual: actuals.project
-        }
-        data.actuals = actuals
-        data.roles = roleFuns.setRolesEffort(roles, data)
-        data.teams = teams
-        data.columns = columns
-        data.workCards = workCards
-        db.collection('noEstimates').updateOne({'_id': res._id}, {$set: update}, function() {
-          io.emit('updateCurrentDay', data)
-          io.emit('updateRoles', data)
-          io.emit('updateTeams', data)
-          io.emit('updateColumns', data)
-          io.emit('updateWorkCards', data)
-          io.emit('updateActuals', data)
-        })
-      }
-      gameState.update(err, client, db, io, data, debugOn)
-    })
-  },
-
-  updateCurrentWorkCard: function(err, client, db, io, data, debugOn) {
-
-    if (debugOn) { console.log('updateCurrentWorkCard', data) }
-
-    db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
-      if (err) throw err
-      if (res) {
-        db.collection('noEstimates').updateOne({'_id': res._id}, {$set: {currentWorkCard: data.currentWorkCard}}, function(err) {
-          if (err) throw err
-          io.emit('updateCurrentWorkCard', data)
-        })
-      }
-      gameState.update(err, client, db, io, data, debugOn)
-    })
-  },
-
-  updateCurrentEventCard: function(err, client, db, io, data, debugOn) {
-
-    if (debugOn) { console.log('updateCurrentEventCard', data) }
-
-    db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
-      if (err) throw err
-      if (res) {
-        db.collection('noEstimates').updateOne({'_id': res._id}, {$set: {currentEventCard: data.currentEventCard}}, function(err) {
-          if (err) throw err
-          io.emit('updateCurrentEventCard', data)
-        })
-      }
-      gameState.update(err, client, db, io, data, debugOn)
-    })
-  },
-
-  updateCommit: function(err, client, db, io, data, debugOn) {
-
-    if (debugOn) { console.log('updateCommit', data) }
-
-    db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
-      if (err) throw err
-      if (res) {
-        const workCards = res.workCards
-        workCards[data.workCard].commit = data.commit
-        db.collection('noEstimates').updateOne({'_id': res._id}, {$set: {workCards: workCards}}, function(err) {
-          if (err) throw err
-          data.workCards = workCards
-          io.emit('updateCommit', data)
-        })
-      }
-      gameState.update(err, client, db, io, data, debugOn)
-    })
-  },
-
-  updateColumns: function(err, client, db, io, data, debugOn) {
-
-    if (debugOn) { console.log('updateColumns', data) }
-
-    db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
-      if (err) throw err
-      if (res) {
-        const columns = data.columns, workCards = res.workCards
-        for (let i = 1; i < columns.length; i++) {
-          for (let j = 0; j < columns[i].cards.length; j++) {
-            const card = columns[i].cards[j]
-            const colName = columns[i].name
-            if (cardFuns.cardCompleteInColumn(card, colName, res.teamName, res.teams, res.percentageBlocked, res.percentageDeployFail)) {
-              cardFuns.moveCard(columns, workCards, card, i, res.currentDay)
-            }
-          }
-        }
-        data.columns = columns
-        data.workCards = workCards
-        db.collection('noEstimates').updateOne({'_id': res._id}, {$set: {columns: columns, workCards: workCards}}, function(err) {
-          if (err) throw err
-          io.emit('updateColumns', data)
-          io.emit('updateWorkCards', data)
-          gameState.update(err, client, db, io, data, debugOn)
-        })
-      }
-    })
-  },
-
-  updateDependentTeam: function(err, client, db, io, data, debugOn) {
-
-    if (debugOn) { console.log('updateDependentTeam', data) }
-
-    db.collection('noEstimates').find({gameName: data.gameName}).toArray(function(err, res) {
-      if (err) throw err
-      if (res.length) {
-        const teamName = data.teamName
-        for (let r = 0; r < res.length; r++) {
-          let columns = res[r].columns, teams = res[r].teams
-          if (res[r].teamName == teamName) {
-            columns = dependent.addDependencyToCard(columns, data.workCard, data.dependentOn)
-          }
-          teams = dependent.addCardToOtherCards(teams, data.workCard, data.dependentOn.name, teamName)
-          db.collection('noEstimates').updateOne({'_id': res[r]._id}, {$set: {teams: teams, columns: columns}}, function(err) {
-           if (err) throw err
-           data.teamName = res[r].teamName
-           data.teams = teams
-           data.columns = columns
-           io.emit('updateTeams', data)
-           io.emit('updateColumns', data)
+        const id = res._id
+        delete res._id
+        io.emit('loadTeam', res)
+        gameState.update(db, io, res)
+        if (updating) {
+          db.collection('noEstimates').updateOne({'_id': id}, {$set: res}, function() {
+            if (err) throw err
           })
         }
       }
-      gameState.update(err, client, db, io, data, debugOn)
+    })
+  },
+
+  pullInCard: function(err, client, db, io, data, debugOn) {
+
+    if (debugOn) { console.log('pullInCard', data) }
+
+    db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
+      if (err) throw err
+      if (res) {
+        res.currentWorkCard = res.currentWorkCard + 1
+        res.columns = cardFuns.pullInCard(res.columns, res.workCards, res.currentWorkCard, res.currentDay, data.teams, data.teamName)
+        updateTeam(db, io, res)
+        const card = res.workCards.find(function(c) {
+          return c.number == res.currentWorkCard
+        })
+        if (card.dependentOn) {
+          db.collection('noEstimates').findOne({gameName: data.gameName, teamName: card.dependentOn.name}, function(err, depRes) {
+            if (err) throw err
+            if (depRes) {
+              const depCard = depRes.workCards.find(function(c) {
+                return c.number == res.currentWorkCard
+              })
+              depCard.team = data.teamName
+              depRes.otherCards.push(depCard)
+              updateTeam(db, io, depRes)
+            }
+          })
+        }
+      }
     })
   },
 
@@ -426,6 +370,7 @@ module.exports = {
     db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
       if (err) throw err
       if (res) {
+        res.members = teamFuns.decrementMyEffort(res.members, data.name, data.effort)
         const columns = res.columns, workCards = res.workCards
         let todaysEffort = []
         for (let i = 1; i < columns.length; i++) {
@@ -435,50 +380,16 @@ module.exports = {
               const card = columns[i].cards[j]
               const colName = columns[i].name
               card.effort = data.workCard.effort
-              if (cardFuns.cardCompleteInColumn(card, colName, res.teamName, res.teams, res.percentageBlocked, res.percentageDeployFail)) {
+              if (cardFuns.cardCompleteInColumn(card, colName, res.teamName, res.autoDeploy, res.percentageBlocked, res.percentageDeployFail)) {
                 cardFuns.moveCard(columns, workCards, card, i, res.currentDay)
               }
             }
           }
         }
-        data.columns = columns
-        data.workCards = workCards
-        db.collection('noEstimates').updateOne({'_id': res._id}, {$set: {columns: columns, workCards: workCards, daysEffort: todaysEffort}}, function() {
-          io.emit('updateColumns', data)
-          io.emit('updateWorkCards', data)
-          gameState.update(err, client, db, io, data, debugOn)
-        })
-      }
-    })
-  },
-
-  updateAssignedEffort: function(err, client, db, io, data, debugOn) {
-
-    if (debugOn) { console.log('updateAssignedEffort', data) }
-
-    db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
-      if (err) throw err
-      if (res) {
-        const roles = []
-        for (let i = 0; i < res.roles.length; i++) {
-          const role = res.roles[i]
-          const names = []
-          for (let j = 0; j < res.roles[i].names.length; j++) {
-            const name = res.roles[i].names[j]
-            if (res.roles[i].names[j].id == data.name.id) {
-              name.effort = data.effort
-            }
-            names.push(name)
-          }
-          role.names = names
-          roles.push(role)
-        }
-        data.roles = roles
-        db.collection('noEstimates').updateOne({'_id': res._id}, {$set: {roles: roles}}, function(err) {
-          if (err) throw err
-          io.emit('updateRoles', data)
-          gameState.update(err, client, db, io, data, debugOn)
-        })
+        res.daysEffort = todaysEffort
+        res.columns = columns
+        res.workCards = workCards
+        updateTeam(db, io, res)
       }
     })
   },
@@ -490,8 +401,8 @@ module.exports = {
     db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
       if (err) throw err
       if (res) {
-        let i, player, roles = res.roles
-        const pairing = []
+        let i, player
+        const pairing = [], members = res.members
         for (i = 0; i < res.pairing.length; i++) {
           if (res.pairing[i].name.id == data.name.id) {
             player = res.pairing[i]
@@ -521,7 +432,7 @@ module.exports = {
               column.days.push(data.day)
             }
             if (column.days.length >= 5) {
-              roles = pairingFuns.addSecondarySkill(roles, column.column, data.name)
+              res.members = pairingFuns.addSecondarySkill(res.members, column.column, data.name)
             }
             const columns = []
             for (i = 0; i < player.columns.length; i++) {
@@ -535,13 +446,8 @@ module.exports = {
           }
         }
         pairing.push(player)
-        data.pairing = pairing
-        data.roles = roles
-        io.emit('updatePairing', data)
-        io.emit('updateRoles', data)
-        db.collection('noEstimates').updateOne({'_id': res._id}, {$set: {pairing: pairing, roles: roles}}, function(err) {
-          if (err) throw err
-        })
+        res.pairing = pairing
+        updateTeam(db, io, res)
       }
     })
   },
@@ -550,27 +456,20 @@ module.exports = {
 
     if (debugOn) { console.log('addEffortToOthersCard', data) }
 
-    db.collection('noEstimates').find({gameName: data.gameName}).toArray(function(err, res) {
+    db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.card.team}, function(err, otherRes) {
       if (err) throw err
-      if (res.length) {
-        const addingTeam = data.teamName, receivingTeam = data.card.team
-        for (let r = 0; r < res.length; r++) {
-          let columns = res[r].columns, teams = res[r].teams
-          const workCards = res[r].workCards
-          columns = dependent.addEffortToOthersCard(columns, receivingTeam, data.card)
-          teams = dependent.addEffortToMyCard(teams, addingTeam, data.card)
-          db.collection('noEstimates').updateOne({'_id': res[r]._id}, {$set: {columns: columns, teams: teams, workCards: workCards}}, function(err) {
-            if (err) throw err
-            data.teamName = res[r].teamName
-            data.teams = teams
-            data.columns = columns
-            data.workCards = workCards
-            io.emit('updateColumns', data)
-            io.emit('updateTeams', data)
-            io.emit('updateWorkCards', data)
-            gameState.update(err, client, db, io, data, debugOn)
-          })
-        }
+      if (otherRes) {
+        otherRes.columns = dependent.addDependentEffort(otherRes.columns, data.card, data.effort)
+        updateTeam(db, io, otherRes)
+      }
+    })
+
+    db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
+      if (err) throw err
+      if (res) {
+        res.otherCards = dependent.addOtherCardEffort(res.otherCards, data.card, data.effort)
+        res.members = teamFuns.decrementMyEffort(res.members, data.myName, data.effort)
+        updateTeam(db, io, res)
       }
     })
   },
@@ -582,19 +481,9 @@ module.exports = {
     db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
       if (err) throw err
       if (res) {
-        const teams = res.teams
-        for (let i = 0; i < teams.length; i++) {
-          if (teams[i].name == data.teamName) {
-            teams[i].autoDeploy.doing = true
-          }
-        }
-        data.teams = teams
-        db.collection('noEstimates').updateOne({'_id': res._id}, {$set: {teams: teams}}, function(err) {
-          if (err) throw err
-          io.emit('updateTeams', data)
-        })
+        res.autoDeploy.doing = true
+        updateTeam(db, io, res)
       }
-      gameState.update(err, client, db, io, data, debugOn)
     })
   },
 
@@ -605,23 +494,16 @@ module.exports = {
     db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
       if (err) throw err
       if (res) {
-        const teams = res.teams
-        for (let i = 0; i < teams.length; i++) {
-          if (teams[i].name == data.teamName) {
-            teams[i].autoDeploy.effort = teams[i].autoDeploy.effort + 1
-            if (teams[i].autoDeploy.effort >= 8) {
-              teams[i].autoDeploy.doing = false
-              teams[i].autoDeploy.done = true
-            }
-          }
+        const autoDeploy = res.autoDeploy
+        autoDeploy.effort = autoDeploy.effort + 1
+        if (autoDeploy.effort >= 8) {
+          autoDeploy.doing = false
+          autoDeploy.done = true
         }
-        data.teams = teams
-        db.collection('noEstimates').updateOne({'_id': res._id}, {$set: {teams: teams}}, function(err) {
-          if (err) throw err
-          io.emit('updateTeams', data)
-        })
+        res.autoDeploy = autoDeploy
+        res.members = teamFuns.decrementMyEffort(res.members, data.name, data.effort)
+        updateTeam(db, io, res)
       }
-      gameState.update(err, client, db, io, data, debugOn)
     })
   },
 
@@ -632,12 +514,9 @@ module.exports = {
     db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
       if (err) throw err
       if (res) {
-        db.collection('noEstimates').updateOne({'_id': res._id}, {$set: {projectEstimate: data.projectEstimate}}, function(err) {
-          if (err) throw err
-          io.emit('updateProjectEstimate', data)
-        })
+        res.projectEstimate = data.projectEstimate
+        updateTeam(db, io, res)
       }
-      gameState.update(err, client, db, io, data, debugOn)
     })
   },
 
@@ -648,12 +527,9 @@ module.exports = {
     db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
       if (err) throw err
       if (res) {
-        db.collection('noEstimates').updateOne({'_id': res._id}, {$set: {mvpEstimate: data.mvpEstimate}}, function(err) {
-          if (err) throw err
-          io.emit('updateMVPEstimate', data)
-        })
+        res.mvpEstimate = data.mvpEstimate
+        updateTeam(db, io, res)
       }
-      gameState.update(err, client, db, io, data, debugOn)
     })
   },
 
@@ -664,12 +540,9 @@ module.exports = {
     db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
       if (err) throw err
       if (res) {
-        db.collection('noEstimates').updateOne({'_id': res._id}, {$set: {reEstimate: data.reEstimate}}, function(err) {
-          if (err) throw err
-          io.emit('updateReEstimate', data)
-        })
+        res.reEstimate = data.reEstimate
+        updateTeam(db, io, res)
       }
-      gameState.update(err, client, db, io, data, debugOn)
     })
   },
 
@@ -677,24 +550,25 @@ module.exports = {
 
     if (debugOn) { console.log('updateTeamActive', data) }
 
-    db.collection('noEstimates').find({gameName: data.gameName}).toArray(function(err, res) {
+    db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, res) {
       if (err) throw err
-      if (res.length) {
-        for (let r = 0; r < res.length; r++) {
-          const teams = res[r].teams
-          for (let i = 0; i < teams.length; i++) {
-            if (teams[i].name == data.team.name) {
-              teams[i].include = data.team.include
-            }
+      if (res) {
+        const teams = []
+        for (let i = 0; i < res.teams.length; i++) {
+          const team = res.teams[i]
+          if (team.name == data.teamName) {
+            team.include = data.include
           }
-          data.teamName = res[r].teamName
-          data.teams = teams
-          io.emit('updateTeams', data)
-          db.collection('noEstimates').updateOne({'_id': res[r]._id}, {$set: {teams: teams}}, function(err) {
-            if (err) throw err
-          })
+          teams.push(team)
         }
-        gameState.update(err, client, db, io, data, debugOn)
+        res.teams = teams
+        const id = res._id
+        delete res._id
+        db.collection('noEstimatesGames').updateOne({'_id': id}, {$set: res}, function(err) {
+          if (err) throw err
+          io.emit('loadTeams', res)
+          gameState.update(db, io, res)
+        })
       }
     })
   },

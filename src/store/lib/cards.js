@@ -16,8 +16,7 @@ function cardValue(workCards, card) {
   workCard.value = card.value
 }
 
-function blockOrFailCard(card, colName, teamName, teams, percentageBlocked, percentageDeployFail) {
-  const team = teams.find(function(t) { return t.name == teamName })
+function blockOrFailCard(card, colName, teamName, autoDeploy, percentageBlocked, percentageDeployFail) {
   const rand = Math.random()
   card.blocked = false
   card.failed = false
@@ -25,16 +24,60 @@ function blockOrFailCard(card, colName, teamName, teams, percentageBlocked, perc
     card.blocked = true
   }
   // TODO: shouldn't need >= - check adding effort
-  if (colName == 'deploy' && !team.autoDeploy.done && card.effort['deploy'] >= card.deploy  && rand < percentageDeployFail) {
+  if (colName == 'deploy' && !autoDeploy.done && card.effort['deploy'] >= card.deploy  && rand < percentageDeployFail) {
     card.failed = true
     card.effort.deploy = 0
   }
 }
 
+function selectDependentTeam(teams, teamName) {
+  // Make sure we don't pick our own team...
+  const otherTeams = []
+  for (let i = 0; i < teams.length; i++) {
+    if (teams[i].include && teams[i].name != teamName) {
+      otherTeams.push(i)
+    }
+  }
+  const index = otherTeams[Math.floor(Math.random() * otherTeams.length)]
+  return teams[index]
+}
+
+function getCardFirstColumn(card, columns) {
+  let column
+  for (let i = 1; i < columns.length; i++) {
+    if (!column && card[columns[i].name] > 0) {
+      column = columns[i].name
+    }
+  }
+  return column
+}
+
 module.exports = {
 
-  cardCompleteInColumn: function(card, colName, team, teams, percentageBlocked, percentageDeployFail) {
-    blockOrFailCard(card, colName, team, teams, percentageBlocked, percentageDeployFail)
+  pullInCard: function(columns, workCards, currentWorkCard, currentDay, teams, teamName) {
+    const newColumns = []
+    const card = workCards.find(function(c) {
+      return c.number == currentWorkCard
+    })
+    const cardColumn = getCardFirstColumn(card, columns)
+    for (let i = 0; i < columns.length; i++) {
+      const column = columns[i]
+      if (column.name == cardColumn) {
+        const cards = column.cards
+        card.commit = currentDay
+        if (card.teamDependency) {
+          card.dependentOn = selectDependentTeam(teams, teamName)
+        }
+        cards.push(card)
+        column.cards = cards
+      }
+      newColumns.push(column)
+    }
+    return newColumns
+  },
+
+  cardCompleteInColumn: function(card, colName, team, autoDeploy, percentageBlocked, percentageDeployFail) {
+    blockOrFailCard(card, colName, team, autoDeploy, percentageBlocked, percentageDeployFail)
     let dependentDone = true
     if (colName == 'deploy') {
       dependentDone = card.teamDependency == 0 || card.teamDependency == card.dependencyDone

@@ -13,8 +13,6 @@ export default {
     message() {
       return this.$store.getters.getMessage
     }
-  },
-  methods: {
   }
 }
 </script>

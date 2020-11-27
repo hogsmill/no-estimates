@@ -68,9 +68,7 @@ export default {
     return {
       step: 1,
       default: { width: 650, height: 260 },
-      positions: {
-        2: { height: 290 }
-      }
+      positions: {}
     }
   },
   computed: {
@@ -93,7 +91,7 @@ export default {
   },
   methods: {
     noOfScreens() {
-      return 1 // Object.keys(this.positions).length + 1
+      return Object.keys(this.positions).length + 1
     },
     setDefault() {
       const elem = document.getElementsByClassName('vm--modal')[0].getBoundingClientRect()

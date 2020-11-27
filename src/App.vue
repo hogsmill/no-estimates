@@ -141,6 +141,7 @@ export default {
     if (myName) {
       myName = JSON.parse(myName)
       this.$store.dispatch('updateMyName', myName)
+      this.socket.emit('getAvailableGames', {host: myName})
     }
 
     const teamName = localStorage.getItem('teamName')
@@ -149,31 +150,22 @@ export default {
     }
 
     const myRole = localStorage.getItem('myRole')
-    if (myRole) {
-      this.$store.dispatch('updateMyRole', myRole)
-    }
 
     const self = this
     window.onload = function() {
-      let myEffort = localStorage.getItem('myEffort')
-      if (myEffort) {
-        myEffort = JSON.parse(myEffort)
-        self.$store.dispatch('updateMyEffort', myEffort)
-      }
       if (gameName && myName && teamName) {
-        self.socket.emit('loadGame', {gameName: gameName, teamName: teamName, myName: myName, myRole: myRole, myEffort: myEffort})
+        self.socket.emit('loadGame', {gameName: gameName, teamName: teamName, myName: myName, myRole: myRole}) //, myEffort: myEffort})
       }
     }
 
-    this.socket.on('restartGame', (data) => {
-      localStorage.removeItem('myEffort')
-      if (this.gameName == data.gameName) {
-        location.reload()
+    this.socket.on('loadTeam', (data) => {
+      if (this.gameName == data.gameName && this.teamName == data.teamName) {
+        this.$store.dispatch('loadTeam', data)
       }
     })
 
     this.socket.on('loadGame', (data) => {
-      if (this.gameName == data.gameName && this.teamName == data.teamName) {
+      if (this.gameName == data.gameName) {
         this.$store.dispatch('loadGame', data)
       }
     })
@@ -187,42 +179,6 @@ export default {
     this.socket.on('percentageDeployFail', (data) => {
       if (this.gameName == data.gameName) {
         this.$store.dispatch('percentageDeployFail', data)
-      }
-    })
-
-    this.socket.on('updateRoles', (data) => {
-      if (this.gameName == data.gameName && this.teamName == data.teamName) {
-        this.$store.dispatch('updateRoles', data)
-      }
-    })
-
-    this.socket.on('updateColumns', (data) => {
-      if (this.gameName == data.gameName && this.teamName == data.teamName) {
-        this.$store.dispatch('updateColumns', data)
-      }
-    })
-
-    this.socket.on('updateTeams', (data) => {
-      if (this.gameName == data.gameName) {
-        this.$store.dispatch('updateTeams', data)
-      }
-    })
-
-    this.socket.on('updateWorkCards', (data) => {
-      if (this.gameName == data.gameName && this.teamName == data.teamName) {
-        this.$store.dispatch('updateWorkCards', data)
-      }
-    })
-
-    this.socket.on('updateActuals', (data) => {
-      if (this.gameName == data.gameName && this.teamName == data.teamName) {
-        this.$store.dispatch('updateActuals', data)
-      }
-    })
-
-    this.socket.on('updatePairing', (data) => {
-      if (this.gameName == data.gameName && this.teamName == data.teamName) {
-        this.$store.dispatch('updatePairing', data)
       }
     })
 

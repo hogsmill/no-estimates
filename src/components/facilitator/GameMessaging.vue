@@ -3,8 +3,8 @@
     <tr>
       <td>
         <h4>Messaging</h4>
-        <span v-if="showGameMessaging" @click="setShowGameMessaging(false)" title="collapse" class="toggle">&#9650;</span>
-        <span v-if="!showGameMessaging" @click="setShowGameMessaging(true)" title="expand" class="toggle">&#9660;</span>
+        <i v-if="showGameMessaging" @click="setShowGameMessaging(false)" title="collapse" class="fas fa-caret-up toggle" />
+        <i v-if="!showGameMessaging" @click="setShowGameMessaging(true)" title="expand" class="fas fa-caret-down toggle" />
       </td>
     </tr>
     <tr v-if="showGameMessaging" class="message-params">

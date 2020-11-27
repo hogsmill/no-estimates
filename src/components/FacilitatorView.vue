@@ -54,6 +54,11 @@ export default {
 
     .toggle {
       color: #aaa;
+      font-size: xx-large;
+
+      &:hover {
+        cursor: pointer;
+      }
     }
 
     .left {
@@ -66,7 +71,7 @@ export default {
       text-align: left;
     }
 
-    span {
+    span, i {
       position: absolute;
       right: 6px;
     }

@@ -186,15 +186,6 @@ export const store = new Vuex.Store({
         recharting: state.recharting
       }
     },
-    getHosts: (state) => {
-      const hosts = []
-      for (let i = 0; i < state.members.length; i++) {
-        if (state.members[i].host) {
-          hosts.push(state.members[i].name)
-        }
-      }
-      return hosts.join(', ')
-    },
     getMyTeamMembers: (state) => {
       return state.members ? state.members.length : 0
     },
@@ -291,6 +282,15 @@ export const store = new Vuex.Store({
     getGames: (state) => {
       return state.games
     },
+    getAvailableGames: (state) => {
+      const games = []
+      for (let i = 0; i < state.games.length; i++) {
+        if (state.games[i].include) {
+          games.push(state.games[i].gameName)
+        }
+      }
+      return games
+    },
     getConnections: (state) => {
       return state.connections
     }
@@ -369,7 +369,14 @@ export const store = new Vuex.Store({
       state.gameState = payload.gameState
     },
     updateGames: (state, payload) => {
-      state.games = payload.games
+      state.games = payload
+    },
+    updateGameDetails: (state, payload) => {
+      for (let i = 0; i < state.games.length; i++) {
+        if (state.games[i].gameName == payload.gameName) {
+          state.games[i].hosts = payload.details.hosts
+        }
+      }
     },
     updateConnections: (state, payload) => {
       state.connections = payload
@@ -423,6 +430,9 @@ export const store = new Vuex.Store({
     },
     updateGames: ({ commit }, payload) => {
       commit('updateGames', payload)
+    },
+    updateGameDetails: ({ commit }, payload) => {
+      commit('updateGameDetails', payload)
     },
     updateConnections: ({ commit }, payload) => {
       commit('updateConnections', payload)

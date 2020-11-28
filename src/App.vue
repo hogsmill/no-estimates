@@ -108,7 +108,7 @@ export default {
     const connStr = 'http://' + host + ':3007'
     console.log('Connecting to: ' + connStr)
     this.socket = io(connStr)
-
+    
     if (params.isParam('host')) {
       this.$store.dispatch('updateHost', true)
     }
@@ -190,6 +190,13 @@ export default {
 
     this.socket.on('updateGames', (data) => {
       this.$store.dispatch('updateGames', data)
+      for (let i = 0; i < data.length; i++) {
+        this.socket.emit('getGameDetails', {gameName: data[i].gameName})
+      }
+    })
+
+    this.socket.on('updateGameDetails', (data) => {
+      this.$store.dispatch('updateGameDetails', data)
     })
 
     this.socket.on('updateConnections', (data) => {

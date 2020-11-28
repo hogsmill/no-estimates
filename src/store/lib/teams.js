@@ -19,6 +19,7 @@ module.exports = {
       const member = members[i]
       if (member.id == name.id) {
         member.role = role
+        member.host = name.host
         found = true
       }
       newMembers.push(member)

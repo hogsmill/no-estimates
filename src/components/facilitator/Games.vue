@@ -21,16 +21,16 @@
           <tbody>
             <tr v-for="(game, index) in games" :key="index">
               <td>
-                <input type="checkbox" :checked="game.include" @click="toggleGameActive(game)" :disabled="game.name == gameName">
+                <input :id="'game-active-' + idSafe(game)" type="checkbox" :checked="game.include" @click="toggleGameInclude(game)" :disabled="game.gameName == gameName">
               </td>
               <td>
-                {{ game.name }}
+                {{ game.gameName }}
               </td>
               <td>
-                {{ hosts }}
+                {{ game.hosts ? game.hosts.join(', ') : '' }}
               </td>
               <td>
-                <button class="btn btn-sm btn-site-primary" @click="deleteGame(game.name)" :disabled="game.name == gameName">
+                <button class="btn btn-sm btn-site-primary" @click="deleteGame(game)" :disabled="game.gameName == gameName">
                   Delete
                 </button>
               </td>
@@ -46,6 +46,7 @@
 </template>
 
 <script>
+import stringFuns from '../../lib/stringFuns.js'
 import TimeAgo from 'javascript-time-ago'
 import en from 'javascript-time-ago/locale/en'
 TimeAgo.addDefaultLocale(en)
@@ -66,9 +67,6 @@ export default {
     },
     games() {
       return this.$store.getters.getGames
-    },
-    hosts() {
-      return this.$store.getters.getHosts
     }
   },
   created() {
@@ -78,15 +76,18 @@ export default {
     setShowGames(val) {
       this.showGames = val
     },
+    idSafe(game) {
+      return stringFuns.idSafe(game.gameName)
+    },
     lastAccessed(game) {
       return game.lastaccess ? timeAgo.format(new Date(game.lastaccess)) : ''
     },
-    toggleGameActive(game) {
-      game.include = !game.include
-      this.socket.emit('updateGameActive', {game: game})
+    toggleGameInclude(game) {
+      const include = document.getElementById('game-active-' + this.idSafe(game)).checked
+      this.socket.emit('updateGameInclude', {gameName: game.gameName, include: include})
     },
-    deleteGame(gameName) {
-      this.socket.emit('deleteGame', {gameName: gameName})
+    deleteGame(game) {
+      this.socket.emit('deleteGame', {gameName: game.gameName})
     }
   }
 }

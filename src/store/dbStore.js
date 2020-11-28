@@ -91,6 +91,7 @@ function resetGame(game) {
 function newGame(data) {
   const game = {
     gameName: data.gameName,
+    include: false,
     teams: JSON.parse(JSON.stringify(initialTeams)),
     stealth: false,
     percentageBlocked: 0.05,
@@ -140,8 +141,8 @@ function _getGames(err, client, db, io, data, debugOn) {
   db.collection('noEstimatesGames').find().toArray(function(err, res) {
     if (err) throw err
     if (res.length) {
-      io.emit('updateGames', { games: res })
-      client.close()
+      delete res._id
+      io.emit('updateGames', res)
     }
   })
 }
@@ -162,6 +163,29 @@ module.exports = {
     gameState.update(db, io, data)
   },
 
+  getGameDetails: function(err, client, db, io, data, debugOn) {
+
+    if (debugOn) { console.log('getGameDetails', data) }
+
+    db.collection('noEstimates').find({gameName: data.gameName}).toArray(function(err, res) {
+      if (err) throw err
+      if (res.length) {
+        const hosts = []
+        for (let r = 0; r < res.length; r++) {
+          for (let i = 0; i < res[r].members.length; i++) {
+            if (res[r].members[i].host) {
+              hosts.push(res[r].members[i].name)
+            }
+          }
+        }
+        details = {
+          hosts: hosts
+        }
+        io.emit('updateGameDetails', { gameName: data.gameName, details : details})
+      }
+    })
+  },
+
   getGames: function(err, client, db, io, data, debugOn) {
     _getGames(err, client, db, io, data, debugOn)
   },
@@ -179,6 +203,9 @@ module.exports = {
     db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, res) {
       if (err) throw err
       if (res) {
+        db.collection('noEstimatesGames').updateOne({'_id': res._id}, {$set: {lastaccess: new Date().toISOString()} }, function(err) {
+          if (err) throw err
+        })
         console.log('Loading game \'' + data.gameName + '\'')
         io.emit('loadGame', res)
         if (data.oldTeam) {
@@ -574,16 +601,19 @@ module.exports = {
     })
   },
 
-  updateGameActive: function(err, client, db, io, data, debugOn) {
+  updateGameInclude: function(err, client, db, io, data, debugOn) {
 
-    if (debugOn) { console.log('updateGameActive', data) }
+    if (debugOn) { console.log('updateGameInclude', data) }
 
     db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, res) {
       if (err) throw err
       if (res) {
-        db.collection('noEstimatesGames').updateOne({'_id': res._id}, {$set: {include: data.include}}, function(err) {
+        res.include = data.include
+        const id = res._id
+        delete res._id
+        db.collection('noEstimatesGames').updateOne({'_id': id}, {$set: res}, function(err) {
           if (err) throw err
-          client.close()
+          _getGames(err, client, db, io, data, debugOn)
         })
       }
     })

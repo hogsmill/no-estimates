@@ -22,6 +22,12 @@
             <td>
               <div v-if="gameName && !gameNameEditing">{{ gameName }}</div>
               <input v-if="!gameName || gameNameEditing" type="text" id="game-name" class="form-control" :value="gameName">
+              <div v-if="gameNameEditing && availableGames.length">
+                <select id="available-games" @change="setGameNameFromAvailable()">
+                  <option> -- Select -- </option>
+                  <option v-for="(game, index) in availableGames" :key="index">{{ game }}</option>
+                </select>
+              </div>
             </td>
             <td class="button">
               <i v-if="gameName && !gameNameEditing" class="fas fa-edit" @click="changeGameName" />
@@ -94,6 +100,7 @@
 <script>
 import { v4 as uuidv4 } from 'uuid'
 
+import params from '../lib/params.js'
 import stringFuns from '../lib/stringFuns.js'
 
 export default {
@@ -136,6 +143,9 @@ export default {
     },
     currentDay() {
       return this.$store.getters.getCurrentDay
+    },
+    availableGames() {
+      return this.$store.getters.getAvailableGames
     }
   },
   created() {
@@ -146,6 +156,7 @@ export default {
   },
   methods: {
     show () {
+      this.socket.emit('getGames')
       this.$modal.show('set-up')
     },
     hide () {
@@ -170,6 +181,10 @@ export default {
       this.myRoleEditing = true
       this.myRoleError = false
     },
+    setGameNameFromAvailable() {
+      const name = document.getElementById('available-games').value
+      document.getElementById('game-name').value = name
+    },
     getGameName: function() {
       let gameName = ''
       if (document.getElementById('game-name')) {
@@ -188,7 +203,7 @@ export default {
         const uuid = uuidv4()
         myNameData = {id: uuid, name: '', captain: false}
       }
-      myNameData.host = this.isHost
+      myNameData.host = params.isParam('host')
       if (document.getElementById('my-name')) {
         const myName = document.getElementById('my-name').value
         const captain = document.getElementById('captain').checked

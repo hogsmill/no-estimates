@@ -118,8 +118,8 @@ function doDb(fun, data) {
       case 'updateTeamActive':
         dbStore.updateTeamActive(err, client, db, io, data, debugOn)
         break
-      case 'updateGameActive':
-        dbStore.updateGameActive(err, client, db, io, data, debugOn)
+      case 'updateGameInclude':
+        dbStore.updateGameInclude(err, client, db, io, data, debugOn)
         break
       case 'updateStealth':
         dbStore.updateStealth(err, client, db, io, data, debugOn)
@@ -132,6 +132,9 @@ function doDb(fun, data) {
        break
     case 'getGames':
       dbStore.getGames(err, client, db, io, data, debugOn)
+      break
+    case 'getGameDetails':
+      dbStore.getGameDetails(err, client, db, io, data, debugOn)
       break
 
       default:
@@ -168,8 +171,6 @@ io.on('connection', (socket) => {
     doDb('deleteGameMeta', data)
     doDb('deleteGame', data)
   })
-
-  socket.on('updateGameActive', (data) => { doDb('updateGameActive', data) })
 
   socket.on('showEventCard', (data) => { emit('showEventCard', data) })
 
@@ -213,9 +214,11 @@ io.on('connection', (socket) => {
 
   socket.on('updateStealth', (data) => { doDb('updateStealth', data) })
 
-  socket.on('updateTeamActive', (data) => { doDb('updateTeamActive', data) })
+  socket.on('updateGameInclude', (data) => { doDb('updateGameInclude', data) })
 
   socket.on('getGames', (data) => { doDb('getGames', data) })
+
+  socket.on('getGameDetails', (data) => { doDb('getGameDetails', data) })
 
   // Game State
 

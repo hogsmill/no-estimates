@@ -5,12 +5,8 @@
       <div class="count">
         {{ column.length }}
       </div>
-      <div v-if="showCards" @click="setShowCards(false)" title="collapse" class="toggle">
-        &#9650;
-      </div>
-      <div v-if="!showCards" @click="setShowCards(true)" title="expand" class="toggle">
-        &#9660;
-      </div>
+      <i v-if="!showCards" @click="setShowCards(true)" title="expand" class="fas fa-caret-down toggle" />
+      <i v-if="showCards" @click="setShowCards(false)" title="collapse" class="fas fa-caret-up toggle" />
     </div>
     <div v-if="showCards">
       <div class="column-card" :class="{'blocked': card.blocked}" v-for="(card, index) in column" :key="index">
@@ -70,7 +66,7 @@ export default {
         width: 40%;
         position: absolute;
         right: 0;
-        font-size: small;
+        font-size: large;
       }
     }
 

@@ -6,10 +6,6 @@ function cardEffort(card) {
   }
 }
 
-function teamDetails(team, teams) {
-  return teams.find(function(t) { return team == t.name})
-}
-
 function columnDetails(res) {
   const cols = {}
   for (let i = 1; i < res.columns.length; i++) {

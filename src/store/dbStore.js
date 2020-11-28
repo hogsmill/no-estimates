@@ -155,6 +155,7 @@ function updateTeam(db, io, res) {
     gameState.update(db, io, res)
   })
 }
+
 module.exports = {
 
   gameState: function(err, client, db, io, data, debugOn) {

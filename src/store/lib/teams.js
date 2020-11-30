@@ -18,7 +18,7 @@ module.exports = {
     for (let i = 0; i < members.length; i++) {
       const member = members[i]
       if (member.id == name.id) {
-        member.name = name
+        member.name = name.name
         member.role = role
         member.host = name.host
         found = true
@@ -79,12 +79,13 @@ module.exports = {
   },
 
   setTeamMembersEffort: function(members, data) {
-    let capacity = data && data.capacity ? data.capacity : 4
     const newMembers = []
     for (let j = 0; j < members.length; j++) {
+      let capacity = data && data.capacity ? data.capacity : 4
       const member = members[j]
       if (member.role == 'Tester' && data.testCapacity) {
         capacity = data.testCapacity
+        delete data.testCapacity
       }
       member.effort.available = capacity
       member.effort.assigned = 0

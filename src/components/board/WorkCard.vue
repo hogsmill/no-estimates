@@ -173,7 +173,14 @@ export default {
         }, 2000)
       } else {
         this.socket.emit('updatePersonEffort', {gameName: this.gameName, teamName: this.teamName, workCard: this.workCard, name: this.myName, column: column})
-        this.socket.emit('updateEffort', {gameName: this.gameName, teamName: this.teamName, name: this.myName, workCard: this.workCard, effort: effort})
+        this.socket.emit('updateEffort', {
+          gameName: this.gameName,
+          teamName: this.teamName,
+          name: this.myName,
+          role: this.myRole, 
+          workCard: this.workCard,
+          column: column,
+          effort: effort})
       }
     }
   }

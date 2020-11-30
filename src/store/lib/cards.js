@@ -16,12 +16,27 @@ function cardValue(workCards, card) {
   workCard.value = card.value
 }
 
+function deployFailPercentage(card, deployFail) {
+  if (card.workedIn.deploy) {
+    const pairedInDeploy = card.workedIn.deploy.find(function(n) {
+      return n.role != "Deployer"
+    })
+    if (pairedInDeploy) {
+      deployFail = deployFail / 2
+    }
+  }
+  return deployFail
+}
+
 function blockOrFailCard(card, colName, teamName, autoDeploy, percentageBlocked, percentageDeployFail) {
   const rand = Math.random()
   card.blocked = false
   card.failed = false
   if (colName != 'deploy' && colName != 'done' && rand < percentageBlocked) {
     card.blocked = true
+  }
+  if (colName == 'deploy') {
+    percentageDeployFail = deployFailPercentage(card, percentageDeployFail)
   }
   // TODO: shouldn't need >= - check adding effort
   if (colName == 'deploy' && !autoDeploy.done && card.effort['deploy'] >= card.deploy  && rand < percentageDeployFail) {
@@ -74,6 +89,20 @@ module.exports = {
       newColumns.push(column)
     }
     return newColumns
+  },
+
+  addWorkedOn: function(card, column, name, role) {
+    if (!card.workedOn[column]) {
+      card.workedOn[column] = []
+    }
+    const workedInColumn = card.workedOn[column].find(function(n) {
+      return n.id == name.id
+    })
+    if (!workedInColumn) {
+      name.role = role
+      card.workedOn[column].push(name)
+    }
+    return card
   },
 
   cardCompleteInColumn: function(card, colName, team, autoDeploy, percentageBlocked, percentageDeployFail) {

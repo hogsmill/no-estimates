@@ -65,7 +65,7 @@ export const store = new Vuex.Store({
       {number: 13, function: 'Have Paired', text: 'Did you pair (more than one person worked on a single card in one work stage) today? If so, you get an extra point of work in each stage where the pairing occured (for today only)'},
       {number: 14, function: 'Lose Tester', text: 'Your organisation has lost a tester so if you have testers, one of them now has to support multiple teams. One tester loses two points of effort tomorrow.'},
       {number: 15, function: 'Deploy Dice', text: 'You have found that quality improves when you have someone pair with a Deployer. Roll an eight-sided die whenever you finish a work card, whenever someone in addition to Deployer works in deploy. (Disregard if you\'re doing automated deployments)'},
-      {number: 16, function: 'Recharting', text: 'Team rechartering! Would you like to restructure your team? Feel free to change role specialties (<i>click on \'My Role is: ...\'</i>)  or negotiate with other teams to bring on new members.'},
+      {number: 16, function: 'Recharting', text: 'Team rechartering! Would you like to restructure your team? Feel free to change role specialties (<i>click on \'Set Up\'</i>)  or negotiate with other teams to bring on new members.'},
       {number: 17, text: 'If you restructured your team yesterday, how do you expect the change to impact your forecast.'},
       {number: 18, text: 'Jim from accounting sales sends an email directing employees to make sure they\'re fully utilised (i.e. follow a policy that you do not leave capacity on the table). Do you obey or silently ignore him?'},
       {number: 19, text: 'How much work in progress do you have? Has that changed from earlier?'},

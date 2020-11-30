@@ -6,6 +6,18 @@ const initialEffort = {
   assigned: 0
 }
 
+function getCapacity(data) {
+  let capacity = 4
+  if (data) {
+    if (data.capacity == 'none') {
+      capacity = 0
+    } else if (data.capacity) {
+      capacity = data.capacity
+    }
+  }
+  return capacity
+}
+
 module.exports = {
 
   initialEffort: function() {
@@ -81,7 +93,7 @@ module.exports = {
   setTeamMembersEffort: function(members, data) {
     const newMembers = []
     for (let j = 0; j < members.length; j++) {
-      let capacity = data && data.capacity ? data.capacity : 4
+      let capacity = getCapacity(data)
       const member = members[j]
       if (member.role == 'Tester' && data.testCapacity) {
         capacity = data.testCapacity

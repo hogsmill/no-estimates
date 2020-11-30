@@ -106,7 +106,7 @@ export default {
           data = {testCapacity: 2}
           break
         case 'Spend a Day Estimating':
-          data = {capacity: 0}
+          data = {capacity: 'none'}
           break
         case 'Have Paired':
           data = {extraEffortForPairing: true}

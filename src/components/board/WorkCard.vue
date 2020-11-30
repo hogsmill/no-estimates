@@ -152,7 +152,9 @@ export default {
             } else {
               this.workCard.effort[column] = this.workCard.effort[column] + 1
               effort = 2
-              this.socket.emit('pairingDay', {gameName: this.gameName, teamName: this.teamName, name: this.myName, column: column, day: this.currentDay})
+              if (column == this.column) {
+                this.socket.emit('pairingDay', {gameName: this.gameName, teamName: this.teamName, name: this.myName, column: column, day: this.currentDay})
+              }
             }
           }
         }

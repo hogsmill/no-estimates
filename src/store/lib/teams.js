@@ -18,6 +18,7 @@ module.exports = {
     for (let i = 0; i < members.length; i++) {
       const member = members[i]
       if (member.id == name.id) {
+        member.name = name
         member.role = role
         member.host = name.host
         found = true

@@ -1,13 +1,13 @@
 <template>
   <span>
 
-    <button class="btn btn-sm btn-secondary smaller-font" @click="show">
+    <button class="btn btn-sm btn-secondary smaller-font" @click="show()">
       Set Up
     </button>
 
-    <modal name="set-up" :height="360" class="rounded">
+    <modal name="set-up" :height="385" class="rounded">
       <div class="float-right mr-2 mt-1">
-        <button type="button" class="close" @click="hide" aria-label="Close">
+        <button type="button" class="close" @click="hide()" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -30,7 +30,7 @@
               </div>
             </td>
             <td class="button">
-              <i v-if="gameName && !gameNameEditing" class="fas fa-edit" @click="changeGameName" />
+              <i v-if="gameName && !gameNameEditing" class="fas fa-edit" @click="changeGameName()" />
             </td>
           </tr>
 
@@ -48,7 +48,7 @@
               </div>
             </td>
             <td class="button">
-              <i v-if="myName.id && !myNameEditing" class="fas fa-edit" @click="changeMyName" />
+              <i v-if="myName.id && !myNameEditing" class="fas fa-edit" @click="changeMyName()" />
             </td>
           </tr>
 
@@ -66,7 +66,7 @@
               </select>
             </td>
             <td class="button">
-              <i v-if="teamName && !teamNameEditing && canRestructure()" class="fas fa-edit" @click="changeTeamName" />
+              <i v-if="teamName && !teamNameEditing && canRestructure()" class="fas fa-edit" @click="changeTeamName()" />
             </td>
           </tr>
 
@@ -84,11 +84,11 @@
               </select>
             </td>
             <td class="button">
-              <i v-if="myRole && !myRoleEditing && canRestructure()" class="fas fa-edit" @click="changeMyRole" />
+              <i v-if="myRole && !myRoleEditing && canRestructure()" class="fas fa-edit" @click="changeMyRole()" />
             </td>
           </tr>
         </table>
-        <button class="btn btn-sm btn-primary smaller-font" @click="save">
+        <button class="btn btn-sm btn-primary smaller-font" @click="save()">
           Done
         </button>
       </div>
@@ -116,7 +116,7 @@ export default {
       teamNameEditing: false,
       teamNameError: false,
       myRoleEditing: false,
-      myRoleError: false,
+      myRoleError: false
     }
   },
   computed: {
@@ -155,29 +155,39 @@ export default {
     this.myRoleEditing = !this.myRole
   },
   methods: {
-    show () {
+    show() {
       this.socket.emit('getGames')
       this.$modal.show('set-up')
     },
-    hide () {
+    hide() {
       this.$modal.hide('set-up')
     },
-    canRestructure: function() {
+    reset() {
+      this.gameNameEditing = false,
+      this.gameNameError = false,
+      this.myNameEditing = false,
+      this.myNameError = false,
+      this.teamNameEditing = false,
+      this.teamNameError = false,
+      this.myRoleEditing = false,
+      this.myRoleError = false
+    },
+    canRestructure() {
       return this.currentDay == 1 || this.capabilities.recharting
     },
-    changeGameName: function() {
+    changeGameName() {
       this.gameNameEditing = true
       this.gameNameError = false
     },
-    changeMyName: function() {
+    changeMyName() {
       this.myNameEditing = true
       this.myNameError = false
     },
-    changeTeamName: function() {
+    changeTeamName() {
       this.teamNameEditing = true
       this.teamNameError = false
     },
-    changeMyRole: function() {
+    changeMyRole() {
       this.myRoleEditing = true
       this.myRoleError = false
     },
@@ -185,7 +195,7 @@ export default {
       const name = document.getElementById('available-games').value
       document.getElementById('game-name').value = name
     },
-    getGameName: function() {
+    getGameName() {
       let gameName = ''
       if (document.getElementById('game-name')) {
         gameName = document.getElementById('game-name').value
@@ -195,7 +205,7 @@ export default {
       }
       return gameName
     },
-    getMyName: function() {
+    getMyName() {
       let myNameData
       if (this.myName && this.myName.id) {
         myNameData = this.myName
@@ -212,7 +222,7 @@ export default {
       }
       return myNameData
     },
-    getTeamName: function() {
+    getTeamName() {
       let teamName = ''
       if (document.getElementById('team-name-select')) {
         teamName = document.getElementById('team-name-select').value
@@ -221,7 +231,7 @@ export default {
       }
       return teamName
     },
-    getMyRole: function() {
+    getMyRole() {
       let myRole = ''
       if (document.getElementById('role-select')) {
         myRole = document.getElementById('role-select').value
@@ -230,19 +240,19 @@ export default {
       }
       return myRole
     },
-    showErrors: function(gameName, myName, teamName) {
+    showErrors(gameName, myName, teamName) {
       if (! gameName || gameName == '') { this.gameNameError = true }
       if (!myName.name || myName.name == '') { this.myNameError = true }
       if (! teamName) { this.teamNameError = true }
     },
-    setLocalStorage: function(gameName, myName, teamName, myRole) {
+    setLocalStorage(gameName, myName, teamName, myRole) {
       console.log('Setting localStorage', gameName, myName, teamName, myRole)
       localStorage.setItem('gameName', gameName)
       localStorage.setItem('myName', JSON.stringify(myName))
       localStorage.setItem('teamName', teamName)
       localStorage.setItem('myRole', myRole)
     },
-    save () {
+    save() {
       const oldTeam = this.teamName
       const gameName = this.getGameName()
       const myName = this.getMyName()
@@ -266,6 +276,7 @@ export default {
         this.$store.dispatch('updateMyName', myName)
         this.$store.dispatch('updateTeamName', teamName)
         this.socket.emit('loadGame', data)
+        this.reset()
         this.hide()
       }
     }

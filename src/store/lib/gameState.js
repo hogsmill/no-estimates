@@ -8,7 +8,7 @@ function cardEffort(card) {
 
 function columnDetails(res) {
   const cols = {}
-  for (let i = 1; i < res.columns.length; i++) {
+  for (let i = 0; i < res.columns.length; i++) {
     cols[res.columns[i].name] = []
     for (let j = 0; j < res.columns[i].cards.length; j++) {
       const card = res.columns[i].cards[j]

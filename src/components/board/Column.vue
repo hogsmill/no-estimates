@@ -1,31 +1,18 @@
 <template>
   <div>
-    <div v-if="column.name == 'options'">
-      <WorkCardStack :socket="socket" />
-      <OtherSkills />
-      <OtherTeams :socket="socket" />
-    </div>
-    <div v-if="column.name != 'options'">
-      <AutoDeploy v-if="showAutoDeploy(column)" :socket="socket" />
-      <div v-for="(card, index) in column.cards" :key="index">
-        <WorkCard :column="column.name" :work-card="card" :socket="socket" />
-      </div>
+    <AutoDeploy v-if="showAutoDeploy(column)" :socket="socket" />
+    <div v-for="(card, index) in column.cards" :key="index">
+      <WorkCard :column="column.name" :work-card="card" :socket="socket" />
     </div>
   </div>
 </template>
 
 <script>
-import OtherTeams from './OtherTeams.vue'
-import OtherSkills from './OtherSkills.vue'
-import WorkCardStack from './WorkCardStack.vue'
 import WorkCard from './WorkCard.vue'
 import AutoDeploy from './AutoDeploy.vue'
 
 export default {
   components: {
-    WorkCardStack,
-    OtherSkills,
-    OtherTeams,
     WorkCard,
     AutoDeploy
   },

@@ -20,12 +20,11 @@ const initialTeams = [
 ]
 
 const initialColumns = [
-  {name: 'options', order: 1},
-  {name: 'design', order: 2, cards: []},
-  {name: 'develop', order: 3, cards: []},
-  {name: 'test', order: 4, cards: []},
-  {name: 'deploy', order: 5, cards: []},
-  {name: 'done', order: 6, cards: []}
+  {name: 'design', order: 1, cards: []},
+  {name: 'develop', order: 2, cards: []},
+  {name: 'test', order: 3, cards: []},
+  {name: 'deploy', order: 4, cards: []},
+  {name: 'done', order: 5, cards: []}
 ]
 
 const initialCards = [
@@ -324,7 +323,7 @@ module.exports = {
           currentDay = res.currentDay + 1
           res = teamFuns.updateTeamCapabilities(res, data, res.daysEffort)
           const columns = res.columns, workCards = res.workCards
-          for (let i = 1; i < columns.length; i++) {
+          for (let i = 0; i < columns.length; i++) {
             for (let j = 0; j < columns[i].cards.length; j++) {
               const card = columns[i].cards[j]
               const colName = columns[i].name
@@ -401,7 +400,7 @@ module.exports = {
         res.members = teamFuns.decrementMyEffort(res.members, data.name, data.effort)
         const columns = res.columns, workCards = res.workCards
         let todaysEffort = []
-        for (let i = 1; i < columns.length; i++) {
+        for (let i = 0; i < columns.length; i++) {
           for (let j = 0; j < columns[i].cards.length; j++) {
             if (columns[i].cards[j].number == data.workCard.number) {
               todaysEffort = pairingFuns.updateTodaysEffort(res, columns[i], data.workCard, data.name)

@@ -5,6 +5,9 @@
       <table class="board-table rounded">
         <thead>
           <tr>
+            <th>
+              <div class="options">Options</div>
+            </th>
             <th v-for="(column, index) in columns" :key="index">
               <div :class="column.name">
                 <span class="concurrentDevAndTest" v-if="concurrentDevAndTestTest(column)" title="Concurrent Dev and Test Allowed">&#x021A4;</span>
@@ -18,6 +21,11 @@
         </thead>
         <tbody>
           <tr>
+            <td>
+              <WorkCardStack :socket="socket" />
+              <OtherSkills />
+              <OtherTeams :socket="socket" />
+            </td>
             <td v-for="(column, index) in columns" :key="index">
               <Column :column="column" :socket="socket" />
             </td>
@@ -31,11 +39,17 @@
 <script>
 import stringFuns from '../lib/stringFuns.js'
 
+import OtherTeams from './board/OtherTeams.vue'
+import OtherSkills from './board/OtherSkills.vue'
+import WorkCardStack from './board/WorkCardStack.vue'
 import EventCard from './board/EventCard.vue'
 import Column from './board/Column.vue'
 
 export default {
   components: {
+    OtherTeams,
+    OtherSkills,
+    WorkCardStack,
     Column,
     EventCard
   },

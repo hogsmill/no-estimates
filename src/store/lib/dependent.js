@@ -4,7 +4,7 @@ module.exports = {
   addDependencyToCard: function(columns, workCard, dependentOn) {
     const newColumns = []
     newColumns.push(columns[0])
-    for (let i = 1; i < columns.length; i++) {
+    for (let i = 0; i < columns.length; i++) {
       const column = columns[i]
       const cards = column.cards
       column.cards = []
@@ -23,7 +23,7 @@ module.exports = {
   addDependentEffort: function(columns, workCard, effort) {
     const newColumns = []
     newColumns.push(columns[0])
-    for (let i = 1; i < columns.length; i++) {
+    for (let i = 0; i < columns.length; i++) {
       const column = columns[i]
       const cards = column.cards
       column.cards = []

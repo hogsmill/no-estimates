@@ -1,7 +1,7 @@
 <template>
   <div class="other-skills">
     <div class="other-skills-header">
-      Other Skiils
+      Other Skills
     </div>
     <p><i>5 days not your speciality = 1:1 effort</i></p>
     <div v-for="(pairday, index) in pairing" :key="index">

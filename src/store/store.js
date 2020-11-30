@@ -39,12 +39,11 @@ export const store = new Vuex.Store({
       'Deployer'
     ],
     columns: [
-      {name: 'options', order: 1},
-      {name: 'design', order: 2, cards: []},
-      {name: 'develop', order: 3, cards: []},
-      {name: 'test', order: 4, cards: []},
-      {name: 'deploy', order: 5, cards: []},
-      {name: 'done', order: 6, cards: []}
+      {name: 'design', order: 1, cards: []},
+      {name: 'develop', order: 2, cards: []},
+      {name: 'test', order: 3, cards: []},
+      {name: 'deploy', order: 4, cards: []},
+      {name: 'done', order: 5, cards: []}
     ],
     currentDay: 1,
     percentageBlocked: 0,

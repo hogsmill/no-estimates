@@ -44,7 +44,7 @@ function selectDependentTeam(teams, teamName) {
 
 function getCardFirstColumn(card, columns) {
   let column
-  for (let i = 1; i < columns.length; i++) {
+  for (let i = 0; i < columns.length; i++) {
     if (!column && card[columns[i].name] > 0) {
       column = columns[i].name
     }

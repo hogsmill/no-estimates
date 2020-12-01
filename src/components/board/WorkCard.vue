@@ -9,7 +9,7 @@
     <div v-if="workCard.urgent" class="urgent">
       URGENT
     </div>
-    <div v-if="dependency(workCard) && workCard.dependencyDone < workCard.teamDependency" class="outstanding-dependency">
+    <div v-if="workCard.teamDependency && workCard.dependencyDone < workCard.teamDependency" class="outstanding-dependency">
       DEPENDENCY
     </div>
     <div class="work-card-header">
@@ -59,7 +59,7 @@
           {{ time() }}
         </td>
       </tr>
-      <tr v-if="dependency(workCard)">
+      <tr v-if="workCard.teamDependency">
         <td class="dependency" colspan="3">
           <span>TEAM: </span>
           <div class="dependency-team" :style="{'background-color': teamClass()}">
@@ -92,9 +92,6 @@ export default {
     teamName() {
       return this.$store.getters.getTeamName
     },
-    teams() {
-      return this.$store.getters.getActiveTeams
-    },
     myName() {
       return this.$store.getters.getMyName
     },
@@ -117,9 +114,6 @@ export default {
   methods: {
     teamClass() {
       return this.workCard.dependentOn ? this.workCard.dependentOn.name.toLowerCase() : ''
-    },
-    dependency(card) {
-      return card.teamDependency && this.teams.length > 1
     },
     effort(column) {
       return this.workCard[column]

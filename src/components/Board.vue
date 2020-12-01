@@ -24,7 +24,7 @@
             <td>
               <WorkCardStack :socket="socket" />
               <OtherSkills />
-              <OtherTeams :socket="socket" />
+              <OtherTeams v-if="teams.length > 1" :socket="socket" />
             </td>
             <td v-for="(column, index) in columns" :key="index">
               <Column :column="column" :socket="socket" />
@@ -62,6 +62,9 @@ export default {
     },
     teamName() {
       return this.$store.getters.getTeamName
+    },
+    teams() {
+      return this.$store.getters.getActiveTeams
     },
     capabilities() {
       return this.$store.getters.getCapabilities

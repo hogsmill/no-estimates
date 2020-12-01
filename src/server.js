@@ -213,6 +213,8 @@ io.on('connection', (socket) => {
   socket.on('updateMvpCards', (data) => { doDb('updateMvpCards', data) })
 
   socket.on('updateStealth', (data) => { doDb('updateStealth', data) })
+  
+  socket.on('updateTeamActive', (data) => { doDb('updateTeamActive', data) })
 
   socket.on('updateGameInclude', (data) => { doDb('updateGameInclude', data) })
 

@@ -74,6 +74,9 @@ module.exports = {
     const card = workCards.find(function(c) {
       return c.number == currentWorkCard
     })
+    if (teams.length < 2) {
+      card.teamDependency = 0
+    }
     const cardColumn = getCardFirstColumn(card, columns)
     for (let i = 0; i < columns.length; i++) {
       const column = columns[i]

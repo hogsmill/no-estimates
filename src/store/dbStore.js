@@ -679,10 +679,12 @@ module.exports = {
     db.collection('noEstimates').find({gameName: data.gameName}).toArray(function(err, res) {
       if (err) throw err
       if (res.length) {
-        io.emit('updateStealth', data)
         for (let r = 0; r < res.length; r++) {
-          db.collection('noEstimates').updateOne({'_id': res[r]._id}, {$set: {stealth: data.stealth}}, function(err) {
+          const id = res[r]._id
+          delete res[r]._id
+          db.collection('noEstimates').updateOne({'_id': id}, {$set: res[r]}, function(err) {
             if (err) throw err
+            io.emit('loadGame', res[r])
           })
         }
       }

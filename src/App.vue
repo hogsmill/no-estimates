@@ -108,7 +108,7 @@ export default {
     const connStr = 'http://' + host + ':3007'
     console.log('Connecting to: ' + connStr)
     this.socket = io(connStr)
-    
+
     if (params.isParam('host')) {
       this.$store.dispatch('updateHost', true)
     }
@@ -258,11 +258,14 @@ export default {
     // Gradient
     //
     /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#7db9e8+0,207cca+44,0000ff+100 */
+    $start: #7db9e8;
+    $mid: #207cca;
+    $end: #0000ff;
     background: #7db9e8; /* Old browsers */
-    background: -moz-radial-gradient(center, ellipse cover,  #7db9e8 0%, #207cca 44%, #0000ff 100%); /* FF3.6-15 */
-    background: -webkit-radial-gradient(center, ellipse cover,  #7db9e8 0%,#207cca 44%,#0000ff 100%); /* Chrome10-25,Safari5.1-6 */
-    background: radial-gradient(ellipse at center,  #7db9e8 0%,#207cca 44%,#0000ff 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#7db9e8', endColorstr='#0000ff',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+    background: -moz-radial-gradient(center, ellipse cover,  $start 0%, $mid 44%, $end 100%); /* FF3.6-15 */
+    background: -webkit-radial-gradient(center, ellipse cover,  $start 0%,$mid 44%,$end 100%); /* Chrome10-25,Safari5.1-6 */
+    background: radial-gradient(ellipse at center,  $start 0%,$mid 44%,$end 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='$start', endColorstr='$end',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
     //
     // End Gradient
     //

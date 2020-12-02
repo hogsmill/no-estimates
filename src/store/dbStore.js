@@ -676,17 +676,16 @@ module.exports = {
 
     if (debugOn) { console.log('updateStealth', data) }
 
-    db.collection('noEstimates').find({gameName: data.gameName}).toArray(function(err, res) {
+    db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, res) {
       if (err) throw err
-      if (res.length) {
-        for (let r = 0; r < res.length; r++) {
-          const id = res[r]._id
-          delete res[r]._id
-          db.collection('noEstimates').updateOne({'_id': id}, {$set: res[r]}, function(err) {
-            if (err) throw err
-            io.emit('loadGame', res[r])
-          })
-        }
+      if (res) {
+        const id = res._id
+        delete res._id
+        res.stealth = data.stealth
+        db.collection('noEstimatesGames').updateOne({'_id': id}, {$set: res}, function(err) {
+          if (err) throw err
+          io.emit('loadGame', res)
+        })
       }
     })
   }

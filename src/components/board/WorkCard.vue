@@ -133,7 +133,10 @@ export default {
     },
     addEffort(column) {
       let message = '', effort = 0
-      if (this.workCard.blocked) {
+      console.log('MY ROLE', this.myRole)
+      if (!this.myRole) {
+        message = 'you don\'t have a role'
+      } else if (this.workCard.blocked) {
         message = 'card is blocked'
       } else if (this.canAssign(column)) {
         if (this.myEffort.available == 0) {

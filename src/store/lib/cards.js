@@ -17,8 +17,8 @@ function cardValue(workCards, card) {
 }
 
 function deployFailPercentage(card, deployFail) {
-  if (card.workedIn.deploy) {
-    const pairedInDeploy = card.workedIn.deploy.find(function(n) {
+  if (card.workedOn.deploy) {
+    const pairedInDeploy = card.workedOn.deploy.find(function(n) {
       return n.role != "Deployer"
     })
     if (pairedInDeploy) {

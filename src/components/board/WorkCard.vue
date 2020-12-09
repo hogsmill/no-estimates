@@ -133,7 +133,6 @@ export default {
     },
     addEffort(column) {
       let message = '', effort = 0
-      console.log('MY ROLE', this.myRole)
       if (!this.myRole) {
         message = 'you don\'t have a role'
       } else if (this.workCard.blocked) {

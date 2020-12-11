@@ -189,6 +189,15 @@ export default {
 
 <style lang="scss">
 
+  @keyframes fadein {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
   .work-card-popup {
     * {
       text-align: center;
@@ -204,6 +213,7 @@ export default {
     margin: 6px;
     position: relative;
     box-shadow: 2px 2px 3px #444;
+    animation: fadein 1s;
 
     &.blocked {
       background-color: red;

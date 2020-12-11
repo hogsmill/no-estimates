@@ -14,7 +14,7 @@
       <div class="mt-4">
         <h4>Set Estimates</h4>
         <p>There are <b>25</b> cards, with an average effort of <b>21</b> points per card</p>
-        <p>There are <b>{{ myTeamMembers }}</b> team {{ membersString() }}, and each has up to <b>4</b> effort points per day</p>
+        <p>There {{ areString() }} <b>{{ myTeamMembers }}</b> team {{ membersString() }}, and {{ eachString() }} up to <b>4</b> effort points per day</p>
         <p>You are currently on day <b>{{ currentDay }}</b>, and have completed <b>{{ completed() }}</b>
           card<span v-if="completed() != 1">s</span>.</p>
         <p>Estimates are <b>the number of days to complete the work</b>.</p>
@@ -63,6 +63,12 @@ export default {
     },
     hide () {
       this.$modal.hide('set-up-estimates')
+    },
+    areString() {
+      return this.myTeamMembers == 1 ? 'is' : 'are'
+    },
+    eachString() {
+      return this.myTeamMembers == 1 ? 'they have' : 'each has'
     },
     membersString() {
       return stringFuns.pluralString(this.myTeamMembers, 'member')

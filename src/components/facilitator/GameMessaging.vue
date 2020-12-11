@@ -16,6 +16,19 @@
         </button>
       </td>
     </tr>
+    <tr v-if="showGameMessaging" class="message-params">
+      <td>
+        Send To:
+        <select id="sendTo">
+          <option>
+            Everybody
+          </option>
+          <option v-for="(team, index) in activeTeams" :key="index">
+            {{ team.name }}
+          </option>
+        </select>
+      </td>
+    </tr>
   </table>
 </template>
 
@@ -32,6 +45,9 @@ export default {
   computed: {
     gameName() {
       return this.$store.getters.getGameName
+    },
+    activeTeams() {
+      return this.$store.getters.getActiveTeams
     }
   },
   methods: {
@@ -40,8 +56,9 @@ export default {
     },
     sendMessage() {
       const message = document.getElementById('gameMessageText').value
+      const sendTo =  document.getElementById('sendTo').value
       if (message) {
-        this.socket.emit('broadcastMessage', {gameName: this.gameName, message: message})
+        this.socket.emit('broadcastMessage', {gameName: this.gameName, message: message, sendTo: sendTo})
       }
     }
   }

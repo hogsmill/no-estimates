@@ -45,7 +45,9 @@ export default {
     })
     this.socket.on('broadcastMessage', (data) => {
       if (this.gameName == data.gameName) {
-        self.setStatus(data.message, true)
+        if (data.sendTo == 'Everybody' || data.sendTo == this.teamName) {
+          self.setStatus(data.message, true)
+        }
       }
     })
   },

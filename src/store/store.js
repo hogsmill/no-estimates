@@ -186,7 +186,17 @@ export const store = new Vuex.Store({
       }
     },
     getMyTeamMembers: (state) => {
-      return state.members ? state.members.length : 0
+      let n = 0
+      if (state.stealth) {
+        for (let i = 0; i < state.members.length; i++) {
+          if (!state.members[i].host) {
+            n = n + 1
+          }
+        }
+      } else {
+        n = state.members.length
+      }
+      return n
     },
     getTeams: (state) => {
       return state.teams

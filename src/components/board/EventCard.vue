@@ -62,6 +62,12 @@ export default {
     mvpCards() {
       return this.$store.getters.getMvpCards
     },
+    percentageBlocked() {
+      return this.$store.getters.getPercentageBlocked
+    },
+    percentageDeployFail() {
+      return this.$store.getters.getPercentageDeployFail
+    }
   },
   mounted() {
     const self = this
@@ -97,25 +103,28 @@ export default {
       this.socket.emit('updateCurrentDay', updateData)
     },
     doFunction() {
-      let data
+      const data = {
+        percentageBlocked: this.percentageBlocked,
+        percentageDeployFail: this.percentageDeployFail
+      }
       switch(this.currentEventCard.function) {
         case 'Add 1 Point To Everyones Capacity':
-          data = {capacity: 5}
+          data.capacity = 5
           break
         case 'Add 8 points to Deploy':
-          data = {autoDeploy: true}
+          data.autoDeploy = true
           break
         case 'Concurrent Dev and Test':
-          data = {concurrentDevAndTest: true}
+          data.concurrentDevAndTest = true
           break
         case 'Lose Tester':
-          data = {testCapacity: 2}
+          data.testCapacity = 2
           break
         case 'Spend a Day Estimating':
-          data = {capacity: 'none'}
+          data.capacity = 'none'
           break
         case 'Recharting':
-          data = {recharting: true}
+          data.recharting = true
           break
         default:
           console.log('Doing \'' + this.currentEventCard.function + '\' (not implemented)')

@@ -109,6 +109,12 @@ export default {
     },
     currentDay() {
       return this.$store.getters.getCurrentDay
+    },
+    percentageBlocked() {
+      return this.$store.getters.getPercentageBlocked
+    },
+    percentageDeployFail() {
+      return this.$store.getters.getPercentageDeployFail
     }
   },
   methods: {
@@ -180,7 +186,10 @@ export default {
           role: this.myRole,
           workCard: this.workCard,
           column: column,
-          effort: effort})
+          effort: effort,
+          percentageBlocked: this.percentageBlocked,
+          percentageDeployFail: this.percentageDeployFail
+        })
       }
     }
   }

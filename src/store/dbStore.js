@@ -330,7 +330,7 @@ module.exports = {
               if (card.blocked || card.failed) {
                 card.blocked = false
                 card.failed = false
-                if (cardFuns.cardCompleteInColumn(card, colName, res.teamName, res.autoDeploy, res.percentageBlocked, res.percentageDeployFail)) {
+                if (cardFuns.cardCompleteInColumn(card, colName, res.teamName, res.autoDeploy, data.percentageBlocked, data.percentageDeployFail)) {
                   cardFuns.moveCard(columns, workCards, card, i, res.currentDay)
                 }
               }
@@ -408,7 +408,7 @@ module.exports = {
               const colName = columns[i].name
               card.effort = data.workCard.effort
               card = cardFuns.addWorkedOn(card, data.column, data.name, data.role)
-              if (cardFuns.cardCompleteInColumn(card, colName, res.teamName, res.autoDeploy, res.percentageBlocked, res.percentageDeployFail)) {
+              if (cardFuns.cardCompleteInColumn(card, colName, res.teamName, res.autoDeploy, data.percentageBlocked, data.percentageDeployFail)) {
                 cardFuns.moveCard(columns, workCards, card, i, res.currentDay)
               }
             }

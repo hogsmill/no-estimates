@@ -3,7 +3,6 @@
     <button class="btn btn-sm btn-site-primary" @click="show()">
       Report
     </button>
-    <ProjectValue />
     <modal class="report-modal" name="report-modal" :height="500" :classes="['rounded']">
       <div class="mt-4">
         <h4>
@@ -71,12 +70,10 @@ import stats from '../../lib/stats.js'
 import stringFuns from '../../lib/stringFuns.js'
 
 import Estimates from './Estimates.vue'
-import ProjectValue from './ProjectValue.vue'
 
 export default {
   components: {
-    Estimates,
-    ProjectValue
+    Estimates
   },
   props: [
     'socket'

@@ -1,5 +1,7 @@
 <template>
-  <span class="current-value">Current Project Value: {{ currencyLabel() }}{{ total() }}</span>
+  <h5 class="current-value" :class="{ 'negative': total() < 1 }">
+    Current Value Delivered: {{ currencyLabel() }}{{ total() }}
+  </h5>
 </template>
 
 <script>
@@ -30,3 +32,17 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+  h5 {
+    margin: 12px auto;
+    padding: 8px;
+    font-weight: bold;
+    font-size: large;
+
+    &.negative {
+      background-color: red;
+      color: white;
+    }
+  }
+</style>

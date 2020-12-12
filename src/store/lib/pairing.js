@@ -63,24 +63,6 @@ module.exports = {
     return todaysEffort
   },
 
-  addExtraPointForPairing: function(day, columns, daysEffort) {
-    const todaysEffort = daysEffort.find(function(d) { return day == d.day })
-    if (todaysEffort) {
-      for (let i = 0; i < columns.length; i++) {
-        for (let j = 0; j < todaysEffort.columns.length; j++) {
-          if (columns[i].name == todaysEffort.columns[j].column) {
-            for (let k = 0; k < todaysEffort.columns[j].cards.length; k++) {
-              if (todaysEffort.columns[j].cards[k].names.length > 1) {
-                columns[i] = addExtraPointToCardForPairing(columns[i], todaysEffort.columns[j].cards[k].number)
-              }
-            }
-          }
-        }
-      }
-    }
-    return columns
-  },
-
   addSecondarySkill: function(members, column, name) {
     const role = column.charAt(0).toUpperCase() + column.slice(1) + 'er'
     const newMembers = []

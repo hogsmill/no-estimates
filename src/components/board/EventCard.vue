@@ -1,5 +1,5 @@
 <template>
-  <modal name="event-card-popup" class="popup" :height="240" :classes="['rounded']">
+  <modal name="event-card-popup" class="popup" :height="300" :classes="['rounded']">
     <div class="text-right">
       <span @click="hide" class="glyphicon glyphicon-star">x</span>
     </div>
@@ -10,7 +10,8 @@
       </button>
     </div>
     <div v-if="currentEventCard">
-      <h4>Event Card {{ currentEventCard.number }}</h4>
+      <h4>Day {{ currentEventCard.number + 1 }}</h4>
+      <ProjectValue />
       <p v-html="currentEventCard.text.replace('[MVPCARDS]', mvpCards)" />
       <div>
         <button v-if="!currentEventCard || !currentEventCard.function" class="btn btn-sm btn-info" @click="done()">
@@ -31,7 +32,12 @@
 </template>
 
 <script>
+import ProjectValue from './ProjectValue.vue'
+
 export default {
+  components: {
+    ProjectValue
+  },
   props: [
     'socket'
   ],
@@ -107,9 +113,6 @@ export default {
           break
         case 'Spend a Day Estimating':
           data = {capacity: 'none'}
-          break
-        case 'Have Paired':
-          data = {extraEffortForPairing: true}
           break
         case 'Recharting':
           data = {recharting: true}

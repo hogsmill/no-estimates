@@ -66,9 +66,6 @@ module.exports = {
     if (data.concurrentDevAndTest) {
       team.concurrentDevAndTest = true
     }
-    if (data.extraEffortForPairing) {
-      team.columns = pairingFuns.addExtraPointForPairing(data.currentDay, team.columns, daysEffort)
-    }
     if (data.recharting) {
       team.recharting = true
     } else {

@@ -103,6 +103,12 @@ function doDb(fun, data) {
       case 'pairingDay':
         dbStore.pairingDay(err, client, db, io, data, debugOn)
         break
+      case 'sendMessage':
+        dbStore.sendMessage(err, client, db, io, data, debugOn)
+        break
+      case 'updateMessages':
+        dbStore.updateMessages(err, client, db, io, data, debugOn)
+        break
 
       // Facilitator
       //
@@ -192,6 +198,10 @@ io.on('connection', (socket) => {
 
   socket.on('updateOtherTeamEffort', (data) => { emit('updateOtherTeamEffort', data) })
 
+  socket.on('sendMessage', (data) => { doDb('sendMessage', data) })
+
+  socket.on('updateMessages', (data) => { doDb('updateMessages', data) })
+
   socket.on('updateProjectEstimate', (data) => { doDb('updateProjectEstimate', data) })
 
   socket.on('updateMVPEstimate', (data) => { doDb('updateMVPEstimate', data) })
@@ -213,7 +223,7 @@ io.on('connection', (socket) => {
   socket.on('updateMvpCards', (data) => { doDb('updateMvpCards', data) })
 
   socket.on('updateStealth', (data) => { doDb('updateStealth', data) })
-  
+
   socket.on('updateTeamActive', (data) => { doDb('updateTeamActive', data) })
 
   socket.on('updateGameInclude', (data) => { doDb('updateGameInclude', data) })

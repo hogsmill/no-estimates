@@ -98,6 +98,7 @@ export const store = new Vuex.Store({
     ],
     otherCards: [],
     currentWorkCard: 0,
+    messages: {},
     mvpCards: 11,
     recharting: false,
     concurrentDevAndTest: false,
@@ -208,6 +209,9 @@ export const store = new Vuex.Store({
         }
       }
       return teams
+    },
+    getMessages: (state) => {
+      return state.messages
     },
     getPairing: (state) => {
       return state.pairing
@@ -328,6 +332,7 @@ export const store = new Vuex.Store({
       state.daysEffort = payload.daysEffort
       state.currentDay = payload.currentDay
       state.currentWorkCard = payload.currentWorkCard
+      state.messages = payload.messages
       state.mvpCards = payload.mvpCards
       state.projectEstimate = payload.projectEstimate
       state.reEstimate = payload.reEstimate

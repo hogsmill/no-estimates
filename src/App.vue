@@ -25,6 +25,7 @@
         </h3>
         <div class="game-buttons">
           <Report :socket="socket" />
+          <Chat :socket="socket" />
         </div>
         <Roles />
         <Message :socket="socket" />
@@ -52,6 +53,7 @@ import WalkThroughView from './components/about/WalkThroughView.vue'
 
 import Roles from './components/Roles.vue'
 import Day from './components/Day.vue'
+import Chat from './components/Chat.vue'
 import Board from './components/Board.vue'
 
 export default {
@@ -67,6 +69,7 @@ export default {
     Report,
     Roles,
     Day,
+    Chat,
     Board
   },
   data() {

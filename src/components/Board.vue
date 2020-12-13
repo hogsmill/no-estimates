@@ -6,7 +6,9 @@
         <thead>
           <tr>
             <th>
-              <div class="options">Options</div>
+              <div class="options">
+                Options
+              </div>
             </th>
             <th v-for="(column, index) in columns" :key="index">
               <div :class="column.name">

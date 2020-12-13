@@ -3,6 +3,7 @@ const teamFuns = require('./lib/teams.js')
 const cardFuns = require('./lib/cards.js')
 const pairingFuns = require('./lib/pairing.js')
 const dependent = require('./lib/dependent.js')
+const chat = require('./lib/chat.js')
 const gameState = require('./lib/gameState.js')
 
 const initialTeams = [
@@ -70,6 +71,7 @@ function resetGame(game) {
   game.concurrentDevAndTest = false
   game.currentDay = 1
   game.currentWorkCard = 0
+  game.messages = {}
   game.mvpEstimate = null
   game.mvpActual = null
   game.projectEstimate = null
@@ -119,6 +121,7 @@ function newTeam(gameName, teamName) {
     daysEffort: [],
     currentDay: 1,
     currentWorkCard: 0,
+    messages: {},
     mvpEstimate: null,
     mvpActual: null,
     projectEstimate: null,
@@ -530,6 +533,39 @@ module.exports = {
         }
         res.autoDeploy = autoDeploy
         res.members = teamFuns.decrementMyEffort(res.members, data.name, data.effort)
+        updateTeam(db, io, res)
+      }
+    })
+  },
+
+  sendMessage: function(err, client, db, io, data, debugOn) {
+
+    if (debugOn) { console.log('sendMessage', data) }
+
+    db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
+      if (err) throw err
+      if (res) {
+        res.messages = chat.addMessage(res.messages, data.teamName, data.chattingTo, 'us', data.message)
+        updateTeam(db, io, res)
+      }
+    })
+    db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.chattingTo}, function(err, res) {
+      if (err) throw err
+      if (res) {
+        res.messages = chat.addMessage(res.messages, data.chattingTo, data.teamName, 'them', data.message)
+        updateTeam(db, io, res)
+      }
+    })
+  },
+
+  updateMessages: function(err, client, db, io, data, debugOn) {
+
+    if (debugOn) { console.log('updateMessages', data) }
+
+    db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
+      if (err) throw err
+      if (res) {
+        res.messages = data.messages
         updateTeam(db, io, res)
       }
     })

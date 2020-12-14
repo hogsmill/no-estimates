@@ -1,15 +1,15 @@
 
 function cardValue(workCards, card) {
   if (!card.urgent) {
-    if (card.delivery < 3) {
+    if (card.time < 3) {
       card.value = 700
-    } else if (card.delivery < 6) {
+    } else if (card.time < 6) {
       card.value = 400
     } else {
       card.value = 200
     }
   } else {
-    card.value = -100 * card.delivery
+    card.value = -100 * card.time
   }
   const workCard = workCards.find(function(workCard) { return workCard.number == card.number })
   workCard.delivery = card.delivery
@@ -19,7 +19,7 @@ function cardValue(workCards, card) {
 function deployFailPercentage(card, deployFail) {
   if (card.workedOn.deploy) {
     const pairedInDeploy = card.workedOn.deploy.find(function(n) {
-      return n.role != "Deployer"
+      return n.role != 'Deployer'
     })
     if (pairedInDeploy) {
       deployFail = deployFail / 2

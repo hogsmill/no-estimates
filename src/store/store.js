@@ -99,6 +99,7 @@ export const store = new Vuex.Store({
     otherCards: [],
     currentWorkCard: 0,
     messages: {},
+    facilitatorMessages: {},
     mvpCards: 11,
     recharting: false,
     concurrentDevAndTest: false,
@@ -212,6 +213,9 @@ export const store = new Vuex.Store({
     },
     getMessages: (state) => {
       return state.messages
+    },
+    getFacilitatorMessages: (state) => {
+      return state.facilitatorMessages
     },
     getPairing: (state) => {
       return state.pairing
@@ -347,6 +351,7 @@ export const store = new Vuex.Store({
     },
     loadGame: (state, payload) => {
       state.teams = payload.teams
+      state.facilitatorMessages = payload.facilitatorMessages
       state.stealth = payload.stealth
       state.percentageBlocked = payload.percentageBlocked
       state.percentageDeployFail = payload.percentageDeployFail

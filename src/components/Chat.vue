@@ -1,67 +1,90 @@
 <template>
-  <span>
+  <div class="chat-div">
     <i class="fas fa-comments" @click="show()" />
     <div v-if="totalMessages()" class="roundel">
       <span>{{ totalMessages() }}</span>
     </div>
 
-    <modal name="chat-popup" class="popup" :height="600" :classes="['rounded']">
+    <modal name="chat-popup" class="popup" :height="600" :width:="800" :classes="['rounded']">
       <div class="text-right">
         <span @click="hide" class="glyphicon glyphicon-star">x</span>
       </div>
       <div>
         <h4>Chat to Other Teams</h4>
         <table>
+          <tr>
+            <td colspan="2">
+              <h5 v-if="chattingTo">
+                Chatting To: '{{ chattingTo }}'
+              </h5>
+              <h5 v-if="!chattingTo">
+                Chat
+              </h5>
+            </td>
+          </tr>
           <tr class="teams-header">
-            <td>
-              <div v-for="(team, index) in activeOtherTeams(true)" :key="index"
+            <td class="teams-column">
+              <div v-for="(team, index) in activeOtherTeams()" :key="index"
                    class="messages-waiting" :style="{ 'background-color': team.name.toLowerCase() }"
                    @click="chatTo(team.name)"
               >
                 {{ team.name }}
-                <div class="no-of-messages-waiting">
+                <div v-if="noOfMessages(team)" class="no-of-messages-waiting">
                   {{ noOfMessages(team) }}
                 </div>
               </div>
+              <div class="messages-waiting facilitators" @click="chatTo('Facilitators')">
+                Facilitators
+                <div v-if="noOfFacilitatorMessages()" class="no-of-messages-waiting">
+                  {{ noOfFacilitatorMessages() }}
+                </div>
+              </div>
+              <div class="chat-to">
+                Chat to Team:
+                <select id="select-chat-team" class="select-chat-team">
+                  <option value="">
+                    -- Select --
+                  </option>
+                  <option v-for="(team, index) in activeOtherTeams(false)" :key="index" :selected="chattingTo == team.name" :value="team.name">
+                    {{ team.name }}
+                  </option>
+                  <option :selected="chattingTo == 'Facilitators'">
+                    Facilitators
+                  </option>
+                </select>
+                <i class="fas fa-share" @click="chatTo()" />
+              </div>
             </td>
-            <td class="right">
-              Chat to Team:
-              <select id="select-chat-team" class="select-chat-team">
-                <option value="">
-                  -- Select --
-                </option>
-                <option v-for="(team, index) in activeOtherTeams(false)" :key="index" :selected="chattingTo == team.name" :value="team.name">
-                  {{ team.name }}
-                </option>
-              </select>
-              <button class="btn btn-sm btn-site-primary" @click="chatTo()">Chat</button>
-            </td>
-          </tr>
-          <tr>
-            <td colspan="3">
-              <h5 v-if="chattingTo">Chatting To: '{{ chattingTo }}'</h5>
-              <h5 v-if="!chattingTo">Chat</h5>
+            <td>
               <span class="us"><i class="fas fa-arrow-left" /> us</span>
               <span class="them">them <i class="fas fa-arrow-right" /></span>
               <div class="chat">
-                <div v-if="chattingTo">
-                  <div v-for="(message, index) in messages[chattingTo]" :key="index" :class=" getMessageClass(message)">
+                <div v-if="chattingTo && chattingTo != 'Facilitators'">
+                  <div v-for="(message, index) in messages[chattingTo]" :key="index" :class="getMessageClass(message)">
                     <i v-if="message.source == 'them' && !message.seen" class="fas fa-eye-slash" @click="messageSeen(messages[chattingTo], index)" />
                     {{ message.message }}
+                  </div>
+                </div>
+                <div v-if="chattingTo == 'Facilitators'">
+                  <div v-for="(message, index) in facilitatorMessages" :key="index" :class="getMessageClass(message)">
+                    <i v-if="message.source == 'them' && !message.seen" class="fas fa-eye-slash" @click="facilitationMessageSeen(message, index)" />
+                    yyy {{ message.message }}
+                    <div v-if="message.reply" class="reply">
+                      {{ message.reply }}
+                    </div>
                   </div>
                 </div>
               </div>
               <div class="new-message">
                 <input type="text" id="new-message">
-                <i class="fas fa-share" @click="sendMessage()" />
+                <i v-if="chattingTo" class="fas fa-share" @click="sendMessage()" />
               </div>
             </td>
           </tr>
         </table>
       </div>
     </modal>
-
-  </span>
+  </div>
 </template>
 
 <script>
@@ -71,10 +94,13 @@ export default {
   ],
   data() {
     return {
-      chattingTo: ''
+      chattingTo: '',
     }
   },
   computed: {
+    isHost() {
+      return this.$store.getters.getHost
+    },
     gameName() {
       return this.$store.getters.getGameName
     },
@@ -87,6 +113,10 @@ export default {
     messages() {
       this.scroll()
       return this.$store.getters.getMessages
+    },
+    facilitatorMessages() {
+      this.scroll()
+      return this.$store.getters.getFacilitatorMessages
     }
   },
   methods: {
@@ -138,6 +168,16 @@ export default {
       }
       return n
     },
+    noOfFacilitatorMessages() {
+      let n = 0
+      for (let i = 0; i < this.facilitatorMessages.length; i++) {
+        const message = this.facilitatorMessages[i]
+        if (message.source == 'them' && !message.seen) {
+          n = n + 1
+        }
+      }
+      return n
+    },
     chatTo(team) {
       if (!team) {
         team = document.getElementById('select-chat-team').value
@@ -145,13 +185,21 @@ export default {
       this.chattingTo = team
       this.scroll()
     },
-    sendMessage() {
-      if (!this.chattingTo) {
+    sendMessage(facilitator) {
+      if (!this.chattingTo && !facilitator) {
         alert('Please select a team to contact')
       } else {
         const message = document.getElementById('new-message').value
-        this.socket.emit('sendMessage', {gameName: this.gameName, teamName: this.teamName, chattingTo: this.chattingTo, message: message})
+        if (this.chattingTo == 'Facilitators') {
+          this.socket.emit('sendMessageToFacilitators', {gameName: this.gameName, teamName: this.teamName, message: message})
+        } else {
+          this.socket.emit('sendMessage', {gameName: this.gameName, teamName: this.teamName, chattingTo: this.chattingTo, message: message})
+        }
       }
+    },
+    sendMessageToFacilitators() {
+      const message = document.getElementById('new-message').value
+      this.socket.emit('sendMessageToFacilitators', {gameName: this.gameName, teamName: this.teamName, message: message})
     },
     messageSeen(messages, index) {
       messages[index].seen = true
@@ -165,6 +213,7 @@ export default {
 <style lang="scss">
   .fa-comments {
     float: right;
+    margin-left: 12px;
     font-size: xx-large;
     color: #ddd;
 
@@ -203,16 +252,23 @@ export default {
     text-align: center;
     opacity: 0.75;
     position: relative;
+    width: 120px;
 
     &:hover {
       cursor: pointer;
       opacity: 1;
     }
 
+    &.facilitators {
+      color: #444;
+      border: 1px solid;
+    }
+
     .no-of-messages-waiting {
       position: absolute;
       right: -4px;
       top: 14px;
+      color: #fff;
       background-color: red;
       border: 2px solid #fff;
       width: 16px;
@@ -227,11 +283,20 @@ export default {
   table {
     width: 100%;
 
+    td {
+      vertical-align: top;
+    }
     .teams-header {
       vertical-align: bottom;
 
-    .right {
-      text-align: right;
+    .teams-column {
+      padding-top: 30px;
+    }
+
+    .chat-to {
+      margin-top: 24px;
+      margin-bottom: 4px;
+      text-align: center;
     }
     .select-chat-team {
         margin-right: 6px;
@@ -241,10 +306,14 @@ export default {
       float: right;
     }
     .chat {
-      width: 100%;
-      height: 340px;
+      width: 432px;
+      height: 380px;
       border: 1px solid;
       overflow-y: auto;
+
+      &.facilitators {
+        height: 450px;
+      }
 
       div div {
         border: 1px solid #888;
@@ -258,12 +327,17 @@ export default {
       .our-message {
         margin: 6px 100px 6px 6px;
       }
+
+      .reply {
+        background-color: #fff;
+        margin: 6px 0 0 12px
+      }
     }
     .new-message {
       margin: 8px 0;
 
       input {
-        width: 542px;
+        width: 400px;
       }
       .fa-share {
         opacity: 0.75;

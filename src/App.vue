@@ -26,6 +26,7 @@
         <div class="game-buttons">
           <Report :socket="socket" />
           <Chat :socket="socket" />
+          <ChatFacilitator v-if="isHost" :socket="socket" />
         </div>
         <Roles />
         <Message :socket="socket" />
@@ -54,6 +55,7 @@ import WalkThroughView from './components/about/WalkThroughView.vue'
 import Roles from './components/Roles.vue'
 import Day from './components/Day.vue'
 import Chat from './components/Chat.vue'
+import ChatFacilitator from './components/ChatFacilitator.vue'
 import Board from './components/Board.vue'
 
 export default {
@@ -70,6 +72,7 @@ export default {
     Roles,
     Day,
     Chat,
+    ChatFacilitator,
     Board
   },
   data() {
@@ -279,6 +282,14 @@ export default {
     .game-buttons {
       text-align: left;
     }
+
+  }
+
+  .chat-div {
+    width: 50px;
+    display: inline-block;
+    float: right;
+    height: 40px;    
   }
 
 </style>

@@ -106,8 +106,17 @@ function doDb(fun, data) {
       case 'sendMessage':
         dbStore.sendMessage(err, client, db, io, data, debugOn)
         break
+      case 'sendMessageToFacilitators':
+        dbStore.sendMessageToFacilitators(err, client, db, io, data, debugOn)
+        break
       case 'updateMessages':
         dbStore.updateMessages(err, client, db, io, data, debugOn)
+        break
+      case 'updateFacilitatorMessages':
+        dbStore.updateFacilitatorMessages(err, client, db, io, data, debugOn)
+        break
+      case 'answerFacilitatorQuestion':
+        dbStore.answerFacilitatorQuestion(err, client, db, io, data, debugOn)
         break
 
       // Facilitator
@@ -200,7 +209,13 @@ io.on('connection', (socket) => {
 
   socket.on('sendMessage', (data) => { doDb('sendMessage', data) })
 
+  socket.on('sendMessageToFacilitators', (data) => { doDb('sendMessageToFacilitators', data) })
+
   socket.on('updateMessages', (data) => { doDb('updateMessages', data) })
+
+  socket.on('updateFacilitatorMessages', (data) => { doDb('updateFacilitatorMessages', data) })
+
+  socket.on('answerFacilitatorQuestion', (data) => { doDb('answerFacilitatorQuestion', data) })
 
   socket.on('updateProjectEstimate', (data) => { doDb('updateProjectEstimate', data) })
 

@@ -94,6 +94,7 @@ function newGame(data) {
     gameName: data.gameName,
     include: false,
     teams: JSON.parse(JSON.stringify(initialTeams)),
+    facilitatorMessages: [],
     stealth: false,
     percentageBlocked: 0.05,
     percentageDeployFail: 0.5,
@@ -156,6 +157,15 @@ function updateTeam(db, io, res) {
     if (err) throw err
     io.emit('loadTeam', res)
     gameState.update(db, io, res)
+  })
+}
+
+function updateGame(db, io, res) {
+  const id = res._id
+  delete res._id
+  db.collection('noEstimatesGames').updateOne({'_id': id}, {$set: res}, function(err) {
+    if (err) throw err
+    io.emit('loadGame', res)
   })
 }
 
@@ -330,7 +340,7 @@ module.exports = {
             for (let j = 0; j < columns[i].cards.length; j++) {
               const card = columns[i].cards[j]
               const colName = columns[i].name
-              if (card.blocked || card.failed) {
+              if (card.blocked || card.failed || (card.dependentOn && colName == 'deploy')) {
                 card.blocked = false
                 card.failed = false
                 if (cardFuns.cardCompleteInColumn(card, colName, res.teamName, res.autoDeploy, data.percentageBlocked, data.percentageDeployFail)) {
@@ -545,14 +555,34 @@ module.exports = {
     db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
       if (err) throw err
       if (res) {
-        res.messages = chat.addMessage(res.messages, data.teamName, data.chattingTo, 'us', data.message)
+        res.messages = chat.addMessage(res.messages, data.chattingTo, 'us', data.message)
         updateTeam(db, io, res)
       }
     })
-    db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.chattingTo}, function(err, res) {
+    db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.chattingTo}, function(err, otherRes) {
+      if (err) throw err
+      if (otherRes) {
+        otherRes.messages = chat.addMessage(otherRes.messages, data.teamName, 'them', data.message)
+        updateTeam(db, io, otherRes)
+      }
+    })
+  },
+
+  sendMessageToFacilitators: function(err, client, db, io, data, debugOn) {
+
+    if (debugOn) { console.log('sendMessageToFacilitators', data) }
+
+    db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, res) {
       if (err) throw err
       if (res) {
-        res.messages = chat.addMessage(res.messages, data.chattingTo, data.teamName, 'them', data.message)
+        res.facilitatorMessages = chat.addFacilitatorMessage(res.facilitatorMessages, data.teamName, 'them', data.message)
+        updateGame(db, io, res)
+      }
+    })
+    db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
+      if (err) throw err
+      if (res) {
+        res.messages = chat.addMessage(res.messages, 'Facilitators', 'us', data.message)
         updateTeam(db, io, res)
       }
     })
@@ -567,6 +597,40 @@ module.exports = {
       if (res) {
         res.messages = data.messages
         updateTeam(db, io, res)
+      }
+    })
+  },
+
+  updateFacilitatorMessages: function(err, client, db, io, data, debugOn) {
+
+    if (debugOn) { console.log('updateFacilitatorMessages', data) }
+
+    db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, res) {
+      if (err) throw err
+      if (res) {
+        res.facilitatorMessages = data.messages
+        updateGame(db, io, res)
+      }
+    })
+  },
+
+  answerFacilitatorQuestion: function(err, client, db, io, data, debugOn) {
+
+    if (debugOn) { console.log('answerFacilitatorQuestion', data) }
+
+    db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, res) {
+      if (err) throw err
+      if (res) {
+        const facilitatorMessages = res.facilitatorMessages, messages = []
+        for (let i = 0; i < facilitatorMessages.length; i++) {
+          const message = facilitatorMessages[i]
+          if (message.message == data.message.message) {
+            message.reply = data.reply
+          }
+          messages.push(message)
+        }
+        res.facilitatorMessages = facilitatorMessages
+        updateGame(db, io, res)
       }
     })
   },

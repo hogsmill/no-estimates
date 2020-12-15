@@ -11,7 +11,7 @@
       </div>
       <div>
         <h4>Questions to Facilitators</h4>
-        <p>(Click on questions to answer)</p>
+        <p class="click-to-answer">(Click on questions to answer)</p>
         <table class="facilitator">
           <tr>
             <td>
@@ -142,7 +142,7 @@ export default {
   h5 {
     margin: 12px auto 0 auto;
   }
-  p {
+  p.click-to-answer {
     font-style: italic;
     text-align: center;
   }

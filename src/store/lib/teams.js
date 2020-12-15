@@ -103,6 +103,16 @@ module.exports = {
     return newMembers
   },
 
+  setTeamMembersEventCardSeen: function(members, data) {
+    const newMembers = []
+    for (let j = 0; j < members.length; j++) {
+      const member = members[j]
+      member.eventCardRead = false
+      newMembers.push(member)
+    }
+    return newMembers
+  },
+
   reset: function(teams) {
     const newTeams = []
     for (let i = 0; i < teams.length; i++) {

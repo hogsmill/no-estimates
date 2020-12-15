@@ -1,11 +1,13 @@
 <template>
-  <modal name="event-card-popup" class="popup" :height="300" :classes="['rounded']">
-    <div class="text-right">
-      <span @click="hide" class="glyphicon glyphicon-star">x</span>
+  <modal name="event-card-popup" class="popup" :height="400" :classes="['rounded']">
+    <div class="float-right mr-2 mt-1">
+      <button type="button" class="close" @click="hide()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
     </div>
     <div v-if="!currentEventCard">
       <h4>We are now on Day {{ currentDay + 1 }}</h4>
-      <button class="btn btn-sm btn-info" @click="done()">
+      <button class="btn btn-sm btn-info" @click="done">
         Done
       </button>
     </div>
@@ -14,6 +16,17 @@
       <ProjectValue />
       <p v-html="currentEventCard.text.replace('[MVPCARDS]', mvpCards)" />
       <div>
+        <button class="btn btn-sm btn-outline-info" @click="eventCardRead">
+          OK, I've read this...
+        </button>
+      </div>
+      <div>
+        <div v-for="(member, index) in members" :key="index" class="seen-div">
+          <i v-if="member.eventCardRead" class="fas fa-eye" :title="member.name + ' has read this'" />
+          <i v-if="!member.eventCardRead" class="fas fa-eye-slash" :title="member.name + ' has not read this'" />
+        </div>
+      </div>
+      <div class="event-card-buttons">
         <button v-if="!currentEventCard || !currentEventCard.function" class="btn btn-sm btn-info" @click="done()">
           Done
         </button>
@@ -53,6 +66,12 @@ export default {
     teamName() {
       return this.$store.getters.getTeamName
     },
+    members() {
+      return this.$store.getters.getMembers
+    },
+    myName() {
+      return this.$store.getters.getMyName
+    },
     currentEventCard() {
       return this.$store.getters.getCurrentEventCard
     },
@@ -71,12 +90,6 @@ export default {
   },
   mounted() {
     const self = this
-    this.socket.on('loadTeam', (data) => {
-      if (this.gameName == data.gameName && this.teamName == data.teamName) {
-        self.hide()
-      }
-    })
-
     this.socket.on('showEventCard', (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         self.$modal.show('event-card-popup')
@@ -87,20 +100,35 @@ export default {
     hide() {
       this.$modal.hide('event-card-popup')
     },
+    eventCardRead() {
+      this.socket.emit('eventCardRead', {gameName: this.gameName, teamName: this.teamName, myName: this.myName})
+    },
+    allSeen() {
+      let allSeen = true
+      for (let i = 0; i < this.members.length; i++) {
+        if (!this.members[i].eventCardRead) {
+          allSeen = false
+        }
+      }
+      return allSeen
+    },
     done(data) {
-      this.hide()
-      const updateData = {gameName: this.gameName, teamName: this.teamName, currentDay: this.currentDay + 1}
-      if (data) {
-        for (const key in data) {
-          updateData[key] = data[key]
+      const done = this.allSeen() || confirm('Not everyone has read this - continue anyway?')
+      if (done) {
+        this.hide()
+        const updateData = {gameName: this.gameName, teamName: this.teamName, currentDay: this.currentDay + 1}
+        if (data) {
+          for (const key in data) {
+            updateData[key] = data[key]
+          }
         }
-      }
-      if (this.currentEventCard) {
-        if (this.currentEventCard.autoDeployCard) {
-          updateData.canStartAutoDeploy = true
+        if (this.currentEventCard) {
+          if (this.currentEventCard.autoDeployCard) {
+            updateData.canStartAutoDeploy = true
+          }
         }
+        this.socket.emit('updateCurrentDay', updateData)
       }
-      this.socket.emit('updateCurrentDay', updateData)
     },
     doFunction() {
       const data = {
@@ -141,4 +169,12 @@ export default {
     color: #444;
   }
 
+  .seen-div {
+    display: inline-block;
+    width: 30px;
+  }
+
+  .event-card-buttons {
+    margin-top: 20px;
+  }
 </style>

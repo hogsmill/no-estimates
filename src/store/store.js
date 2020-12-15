@@ -199,6 +199,15 @@ export const store = new Vuex.Store({
       }
       return n
     },
+    getMembers: (state) => {
+      const members = []
+      for (let i = 0; i < state.members.length; i++) {
+        if (!state.stealth || !state.members[i].host) {
+          members.push(state.members[i])
+        }
+      }
+      return members
+    },
     getTeams: (state) => {
       return state.teams
     },
@@ -327,7 +336,9 @@ export const store = new Vuex.Store({
     loadAvailableGames: (state, payload) => {
       state.availableGames = payload.games
     },
-
+    loadMembers: (state, payload) => {
+      state.members = payload.members
+    },
     loadTeam: (state, payload) => {
       state.members = payload.members
       state.workCards = payload.workCards
@@ -418,6 +429,9 @@ export const store = new Vuex.Store({
     },
     loadGame: ({ commit }, payload) => {
       commit('loadGame', payload)
+    },
+    loadMembers: ({ commit }, payload) => {
+      commit('loadMembers', payload)
     },
     loadTeam: ({ commit }, payload) => {
       commit('loadTeam', payload)

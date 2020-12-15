@@ -323,6 +323,32 @@ module.exports = {
     })
   },
 
+  eventCardRead: function(err, client, db, io, data, debugOn) {
+
+    if (debugOn) { console.log('eventCardRead', data) }
+
+    db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
+      if (err) throw err
+      if (res) {
+        const members = []
+        for (let i = 0; i < res.members.length; i++) {
+          const member = res.members[i]
+          if (member.id == data.myName.id) {
+            member.eventCardRead = true
+          }
+          members.push(member)
+        }
+        res.members = members
+        const id = res._id
+        delete res._id
+        db.collection('noEstimates').updateOne({'_id': id}, {$set: res}, function() {
+          if (err) throw err
+          io.emit('loadMembers', res)
+        })
+      }
+    })
+  },
+
   updateCurrentDay: function(err, client, db, io, data, debugOn) {
 
     if (debugOn) { console.log('updateCurrentDay', data) }
@@ -353,6 +379,7 @@ module.exports = {
           mvpActual = actuals.mvpActual
           projectActual = actuals.projectActual
           members = teamFuns.setTeamMembersEffort(res.members, data)
+          members = teamFuns.setTeamMembersEventCardSeen(members, data)
           res.currentDay = currentDay
           res.members = members
           res.columns = columns

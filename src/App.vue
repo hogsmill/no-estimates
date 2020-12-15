@@ -164,6 +164,12 @@ export default {
       }
     }
 
+    this.socket.on('loadMembers', (data) => {
+      if (this.gameName == data.gameName && this.teamName == data.teamName) {
+        this.$store.dispatch('loadMembers', data)
+      }
+    })
+
     this.socket.on('loadTeam', (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         this.$store.dispatch('loadTeam', data)
@@ -289,7 +295,7 @@ export default {
     width: 50px;
     display: inline-block;
     float: right;
-    height: 40px;    
+    height: 40px;
   }
 
 </style>

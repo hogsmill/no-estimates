@@ -172,6 +172,10 @@ export default {
   .seen-div {
     display: inline-block;
     width: 30px;
+
+    .fas {
+      color: #17a2b8;
+    }
   }
 
   .event-card-buttons {

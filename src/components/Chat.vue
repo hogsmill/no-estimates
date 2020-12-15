@@ -1,6 +1,6 @@
 <template>
   <div class="chat-div">
-    <i class="fas fa-comments" @click="show()" />
+    <i class="fas fa-comments" @click="show()" title="Chat to other teams or facilitators" />
     <div v-if="totalMessages()" class="roundel">
       <span>{{ totalMessages() }}</span>
     </div>

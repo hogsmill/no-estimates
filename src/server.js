@@ -45,7 +45,7 @@ const maxConnections = 2000
 
 function emit(event, data) {
   if (debugOn) {
-    console.log(event, data)
+    console.log(event, data, '(emit)')
   }
   io.emit(event, data)
 }
@@ -72,6 +72,9 @@ function doDb(fun, data) {
         break
       case 'deleteGame':
         dbStore.deleteGame(err, client, db, io, data, debugOn)
+        break
+      case 'retroDone':
+        dbStore.retroDone(err, client, db, io, data, debugOn)
         break
       case 'updateCurrentDay':
         dbStore.updateCurrentDay(err, client, db, io, data, debugOn)
@@ -180,6 +183,8 @@ io.on('connection', (socket) => {
     doDb('deleteGameMeta', data)
     doDb('deleteGame', data)
   })
+
+  socket.on('retroDone', (data) => { doDb('retroDone', data) })
 
   socket.on('showEventCard', (data) => { emit('showEventCard', data) })
 

@@ -122,6 +122,7 @@ function newTeam(gameName, teamName, config) {
     recharting: false,
     otherCards: [],
     config: config,
+    retrosDone: {},
     concurrentDevAndTest: false,
     canStartAutoDeploy: false,
     daysEffort: [],
@@ -318,6 +319,19 @@ module.exports = {
             if (err) throw err
           })
         }
+      }
+    })
+  },
+
+  retroDone: function(err, client, db, io, data, debugOn) {
+
+    if (debugOn) { console.log('retroDone', data) }
+
+    db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
+      if (err) throw err
+      if (res) {
+        res.retrosDone[data.currentDay] = true
+        updateTeam(db, io, res)
       }
     })
   },

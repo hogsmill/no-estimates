@@ -105,6 +105,7 @@ export const store = new Vuex.Store({
       percentageBlocked: 0.05,
       percentageDeployFail: 0.5
     },
+    retrosDone: {},
     recharting: false,
     concurrentDevAndTest: false,
     autoDeploy: {
@@ -248,6 +249,9 @@ export const store = new Vuex.Store({
     getRetroDays: (state) => {
       return state.config.retroDays
     },
+    getRetrosDone: (state) => {
+      return state.retrosDone
+    },
     getCurrentDay: (state) => {
       return state.currentDay
     },
@@ -350,12 +354,12 @@ export const store = new Vuex.Store({
       state.members = payload.members
     },
     loadTeam: (state, payload) => {
-      console.log('loadTeam', payload.members)
       state.members = payload.members
       state.workCards = payload.workCards
       state.otherCards = payload.otherCards
       state.columns = payload.columns
       state.daysEffort = payload.daysEffort
+      state.retrosDone = payload.retrosDone
       state.currentDay = payload.currentDay
       state.currentWorkCard = payload.currentWorkCard
       state.messages = payload.messages

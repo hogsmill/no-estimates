@@ -4,17 +4,32 @@
     <div class="game-board">
       <table class="board-table rounded">
         <thead>
-          <tr>
+          <tr v-if="capabilities.concurrentDevAndTest">
             <th>
               <div class="options">
                 Options
               </div>
             </th>
-            <th v-for="(column, index) in columns" :key="index">
-              <div :class="column.name">
-                <span class="concurrentDevAndTest" v-if="concurrentDevAndTestTest(column)" title="Concurrent Dev and Test Allowed">&#x021A4;</span>
+            <th v-for="(column, index) in headerColumns()" :key="index" :class="columnClass(column)" :colspan="devColumn(column)">
+              <div v-if="column.name != 'develop'" :class="column.name">
                 {{ columnDisplayName(column.name) }}
-                <span class="concurrentDevAndTest" v-if="concurrentDevAndTestDev(column)" title="Concurrent Dev and Test Allowed">&#x021A6;</span>
+                <span class="autoDeploy" v-if="showAutoDeploy(column)" title="Deployment is now automated">&#10004;</span>
+                <span class="canStartAutoDeploy rounded-circle" v-if="canStartAutoDeploy(column)" @click="startAutoDeploy()">&#10033;</span>
+              </div>
+              <div v-if="column.name == 'develop'" class="develop-test">
+                Develop / Test
+              </div>
+            </th>
+          </tr>
+          <tr v-if="!capabilities.concurrentDevAndTest">
+            <th>
+              <div class="options">
+                Options
+              </div>
+            </th>
+            <th v-for="(column, index) in columns" :key="index" :class="columnClass(column)">
+              <div :class="column.name">
+                {{ columnDisplayName(column.name) }}
                 <span class="autoDeploy" v-if="showAutoDeploy(column)" title="Deployment is now automated">&#10004;</span>
                 <span class="canStartAutoDeploy rounded-circle" v-if="canStartAutoDeploy(column)" @click="startAutoDeploy()">&#10033;</span>
               </div>
@@ -28,7 +43,7 @@
               <OtherSkills />
               <OtherTeams v-if="teams.length > 1" :socket="socket" />
             </td>
-            <td v-for="(column, index) in columns" :key="index">
+            <td v-for="(column, index) in columns" :key="index" :class="columnClass(column)">
               <Column :column="column" :socket="socket" />
             </td>
           </tr>
@@ -76,8 +91,30 @@ export default {
     }
   },
   methods: {
+    columnClass(column) {
+      let colClass
+      if (this.capabilities.concurrentDevAndTest && column.name == 'develop') {
+        colClass = 'dotted-right'
+      }
+      if (this.capabilities.concurrentDevAndTest && column.name == 'test') {
+        colClass = 'dotted-left'
+      }
+      return colClass
+    },
     columnDisplayName(s) {
       return stringFuns.properCase(s)
+    },
+    headerColumns() {
+      const columns = []
+      for (let i = 0; i < this.columns.length; i++) {
+        if (this.columns[i].name != 'test') {
+          columns.push(this.columns[i])
+        }
+      }
+      return columns
+    },
+    devColumn(column) {
+      return column.name == 'develop' ? 2 : 1
     },
     concurrentDevAndTestDev(column) {
       return this.teamName && this.capabilities.concurrentDevAndTest && column.name == 'develop'
@@ -117,6 +154,19 @@ export default {
       border: 1px solid;
       vertical-align: top;
       width: 16%;
+    }
+
+    .dotted-left {
+      border-left-style: none;
+    }
+
+    .dotted-right {
+      border-right-style: none;
+    }
+
+    .develop-test {
+      background-image: linear-gradient(45deg, #76a001 25%, #0067b1 25%, #0067b1 50%, #76a001 50%, #76a001 75%, #0067b1 75%, #0067b1 100%);
+      background-size: 50px 50px;
     }
 
     .autoDeploy {

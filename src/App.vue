@@ -270,7 +270,6 @@ export default {
     .game-buttons {
       text-align: left;
     }
-
   }
 
   .chat-div {

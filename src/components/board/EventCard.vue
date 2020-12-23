@@ -15,17 +15,6 @@
       <h4>Day {{ currentEventCard.number + 1 }}</h4>
       <ProjectValue />
       <p v-html="currentEventCard.text.replace('[MVPCARDS]', mvpCards)" />
-      <div>
-        <button class="btn btn-sm btn-outline-info" @click="eventCardRead">
-          OK, I've read this...
-        </button>
-      </div>
-      <div>
-        <div v-for="(member, index) in members" :key="index" class="seen-div">
-          <i v-if="member.eventCardRead" class="fas fa-eye" :title="member.name + ' has read this'" />
-          <i v-if="!member.eventCardRead" class="fas fa-eye-slash" :title="member.name + ' has not read this'" />
-        </div>
-      </div>
       <div class="event-card-buttons">
         <button v-if="!currentEventCard || !currentEventCard.function" class="btn btn-sm btn-info" @click="done()">
           Done
@@ -100,22 +89,8 @@ export default {
     hide() {
       this.$modal.hide('event-card-popup')
     },
-    eventCardRead() {
-      this.socket.emit('eventCardRead', {gameName: this.gameName, teamName: this.teamName, myName: this.myName})
-    },
-    allSeen() {
-      let allSeen = true
-      for (let i = 0; i < this.members.length; i++) {
-        if (!this.members[i].eventCardRead) {
-          allSeen = false
-        }
-      }
-      return allSeen
-    },
     done(data) {
-      const done = this.allSeen() || confirm('Not everyone has read this - continue anyway?')
-      if (done) {
-        this.hide()
+      if (this.myName.captain) {
         const updateData = {gameName: this.gameName, teamName: this.teamName, currentDay: this.currentDay + 1}
         if (data) {
           for (const key in data) {
@@ -129,6 +104,7 @@ export default {
         }
         this.socket.emit('updateCurrentDay', updateData)
       }
+      this.hide()
     },
     doFunction() {
       const data = {

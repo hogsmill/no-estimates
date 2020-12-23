@@ -61,7 +61,7 @@ module.exports = {
         for (let r = 0; r < res.length; r++) {
           teams.push(teamState(res[r]))
         }
-        data = {
+        const data = {
           gameName: game.gameName,
           gameState: teams
         }

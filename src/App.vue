@@ -125,12 +125,6 @@ export default {
       localStorage.setItem('gameName', game)
     }
 
-    this.socket.on('updateMvpCards', (data) => {
-      if (this.gameName == data.gameName) {
-        this.$store.dispatch('updateMvpCards', data)
-      }
-    })
-
     this.socket.on('updateStealth', (data) => {
       if (this.gameName == data.gameName) {
         this.$store.dispatch('updateStealth', data)
@@ -179,18 +173,6 @@ export default {
     this.socket.on('loadGame', (data) => {
       if (this.gameName == data.gameName) {
         this.$store.dispatch('loadGame', data)
-      }
-    })
-
-    this.socket.on('percentageBlocked', (data) => {
-      if (this.gameName == data.gameName) {
-        this.$store.dispatch('percentageBlocked', data)
-      }
-    })
-
-    this.socket.on('percentageDeployFail', (data) => {
-      if (this.gameName == data.gameName) {
-        this.$store.dispatch('percentageDeployFail', data)
       }
     })
 

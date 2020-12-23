@@ -11,7 +11,9 @@
       </div>
       <div>
         <h4>Questions to Facilitators</h4>
-        <p class="click-to-answer">(Click on questions to answer)</p>
+        <p class="click-to-answer">
+          (Click on questions to answer)
+        </p>
         <table class="facilitator">
           <tr>
             <td>

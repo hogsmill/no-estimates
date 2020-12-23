@@ -46,8 +46,6 @@ export const store = new Vuex.Store({
       {name: 'done', order: 5, cards: []}
     ],
     currentDay: 1,
-    percentageBlocked: 0,
-    percentageDeployFail: 0,
     eventCards: [
       {number: 1, text: 'Good Luck!<br/><br/>. Have you submitted an initial estimate for the project?<br/><br/>If not, click \'Report\' or \'Set Estimates\' and create your estimate now.'},
       {number: 2, text: 'Remember that manual deployments will fail a certain percentage of the time. In this case, you will need to re-do the deployment effort.'},
@@ -100,7 +98,13 @@ export const store = new Vuex.Store({
     currentWorkCard: 0,
     messages: {},
     facilitatorMessages: {},
-    mvpCards: 11,
+    config: {
+      doRetros: false,
+      retroDays: 7,
+      mvpCards: 11,
+      percentageBlocked: 0.05,
+      percentageDeployFail: 0.5
+    },
     recharting: false,
     concurrentDevAndTest: false,
     autoDeploy: {
@@ -202,7 +206,7 @@ export const store = new Vuex.Store({
     getMembers: (state) => {
       const members = []
       for (let i = 0; i < state.members.length; i++) {
-        if (!state.stealth || !state.members[i].host) {
+        if (!(state.stealth && state.members[i].host)) {
           members.push(state.members[i])
         }
       }
@@ -230,13 +234,19 @@ export const store = new Vuex.Store({
       return state.pairing
     },
     getPercentageBlocked: (state) => {
-      return state.percentageBlocked
+      return state.config.percentageBlocked
     },
     getPercentageDeployFail: (state) => {
-      return state.percentageDeployFail
+      return state.config.percentageDeployFail
     },
     getMvpCards: (state) => {
-      return state.mvpCards
+      return state.config.mvpCards
+    },
+    getDoRetros: (state) => {
+      return state.config.doRetros
+    },
+    getRetroDays: (state) => {
+      return state.config.retroDays
     },
     getCurrentDay: (state) => {
       return state.currentDay
@@ -340,6 +350,7 @@ export const store = new Vuex.Store({
       state.members = payload.members
     },
     loadTeam: (state, payload) => {
+      console.log('loadTeam', payload.members)
       state.members = payload.members
       state.workCards = payload.workCards
       state.otherCards = payload.otherCards
@@ -348,7 +359,7 @@ export const store = new Vuex.Store({
       state.currentDay = payload.currentDay
       state.currentWorkCard = payload.currentWorkCard
       state.messages = payload.messages
-      state.mvpCards = payload.mvpCards
+      state.config = payload.config
       state.projectEstimate = payload.projectEstimate
       state.reEstimate = payload.reEstimate
       state.projectActual = payload.projectActual
@@ -381,15 +392,6 @@ export const store = new Vuex.Store({
     },
     updateMessage: (state, payload) => {
       state.message = payload
-    },
-    percentageBlocked: (state, payload) => {
-      state.percentageBlocked = payload.percentageBlocked
-    },
-    percentageDeployFail: (state, payload) => {
-      state.percentageDeployFail = payload.percentageDeployFail
-    },
-    updateMvpCards: (state, payload) => {
-      state.mvpCards = payload.mvpCards
     },
     updateTeamName: (state, payload) => {
       state.teamName = payload
@@ -444,15 +446,6 @@ export const store = new Vuex.Store({
     },
     updateMessage: ({ commit }, payload) => {
       commit('updateMessage', payload)
-    },
-    percentageBlocked: ({ commit }, payload) => {
-      commit('percentageBlocked', payload)
-    },
-    percentageDeployFail: ({ commit }, payload) => {
-      commit('percentageDeployFail', payload)
-    },
-    updateMvpCards: ({ commit }, payload) => {
-      commit('updateMvpCards', payload)
     },
     updateTeamName: ({ commit }, payload) => {
       commit('updateTeamName', payload)

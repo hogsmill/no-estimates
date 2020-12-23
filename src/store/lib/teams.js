@@ -1,6 +1,4 @@
 
-const pairingFuns = require('./pairing.js')
-
 const initialEffort = {
   available: 4,
   assigned: 0
@@ -31,6 +29,7 @@ module.exports = {
       const member = members[i]
       if (member.id == name.id) {
         member.name = name.name
+        member.captain = name.captain
         member.role = role
         member.host = name.host
         found = true
@@ -56,7 +55,7 @@ module.exports = {
     return newMembers
   },
 
-  updateTeamCapabilities: function(team, data, daysEffort) {
+  updateTeamCapabilities: function(team, data) {
     if (data.autoDeploy) {
       team.autoDeploy.doing = true
     }
@@ -98,16 +97,6 @@ module.exports = {
       }
       member.effort.available = capacity
       member.effort.assigned = 0
-      newMembers.push(member)
-    }
-    return newMembers
-  },
-
-  setTeamMembersEventCardSeen: function(members, data) {
-    const newMembers = []
-    for (let j = 0; j < members.length; j++) {
-      const member = members[j]
-      member.eventCardRead = false
       newMembers.push(member)
     }
     return newMembers

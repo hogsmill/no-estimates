@@ -32,14 +32,14 @@ function blockOrFailCard(card, colName, teamName, autoDeploy, percentageBlocked,
   const rand = Math.random()
   card.blocked = false
   card.failed = false
-  if (colName != 'deploy' && colName != 'done' && rand < percentageBlocked) {
+  if (colName != 'deploy' && colName != 'done' && rand < parseFloat(percentageBlocked)) {
     card.blocked = true
   }
   if (colName == 'deploy') {
-    percentageDeployFail = deployFailPercentage(card, percentageDeployFail)
+    percentageDeployFail = deployFailPercentage(card, parseFloat(percentageDeployFail))
   }
   // TODO: shouldn't need >= - check adding effort
-  if (colName == 'deploy' && !autoDeploy.done && card.effort['deploy'] >= card.deploy  && rand < percentageDeployFail) {
+  if (colName == 'deploy' && !autoDeploy.done && card.effort['deploy'] >= card.deploy  && rand < parseFloat(percentageDeployFail)) {
     card.failed = true
     card.effort.deploy = 0
   }

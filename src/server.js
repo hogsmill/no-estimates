@@ -73,9 +73,6 @@ function doDb(fun, data) {
       case 'deleteGame':
         dbStore.deleteGame(err, client, db, io, data, debugOn)
         break
-      case 'eventCardRead':
-        dbStore.eventCardRead(err, client, db, io, data, debugOn)
-        break
       case 'updateCurrentDay':
         dbStore.updateCurrentDay(err, client, db, io, data, debugOn)
         break
@@ -124,15 +121,6 @@ function doDb(fun, data) {
 
       // Facilitator
       //
-      case 'percentageBlocked':
-        dbStore.percentageBlocked(err, client, db, io, data, debugOn)
-        break
-      case 'percentageDeployFail':
-        dbStore.percentageDeployFail(err, client, db, io, data, debugOn)
-        break
-      case 'updateMvpCards':
-        dbStore.updateMvpCards(err, client, db, io, data, debugOn)
-        break
       case 'updateTeamActive':
         dbStore.updateTeamActive(err, client, db, io, data, debugOn)
         break
@@ -142,11 +130,14 @@ function doDb(fun, data) {
       case 'updateStealth':
         dbStore.updateStealth(err, client, db, io, data, debugOn)
         break
+      case 'updateConfig':
+        dbStore.updateConfig(err, client, db, io, data, debugOn)
+        break
 
      // Game State
      //
      case 'gameState':
-       dbStore.gameState(err, client, db, io, data, debugOn)
+       dbStore.gameState(db, io, data)
        break
     case 'getGames':
       dbStore.getGames(err, client, db, io, data, debugOn)
@@ -192,11 +183,11 @@ io.on('connection', (socket) => {
 
   socket.on('showEventCard', (data) => { emit('showEventCard', data) })
 
-  socket.on('eventCardRead', (data) => { doDb('eventCardRead', data) })
-
   socket.on('updateCurrentDay', (data) => { doDb('updateCurrentDay', data) })
 
   socket.on('pullInCard', (data) => { doDb('pullInCard', data) })
+
+  socket.on('hint', (data) => { emit('hint', data) })
 
   socket.on('updatePersonEffort', (data) => { emit('updatePersonEffort', data) })
 
@@ -234,13 +225,9 @@ io.on('connection', (socket) => {
 
   // Facilitator View
 
+  socket.on('updateConfig', (data) => { doDb('updateConfig', data) })
+
   socket.on('broadcastMessage', (data) => { emit('broadcastMessage', data) })
-
-  socket.on('percentageBlocked', (data) => { doDb('percentageBlocked', data) })
-
-  socket.on('percentageDeployFail', (data) => { doDb('percentageDeployFail', data) })
-
-  socket.on('updateMvpCards', (data) => { doDb('updateMvpCards', data) })
 
   socket.on('updateStealth', (data) => { doDb('updateStealth', data) })
 

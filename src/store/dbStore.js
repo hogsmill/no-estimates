@@ -95,9 +95,14 @@ function newGame(data) {
     include: false,
     teams: JSON.parse(JSON.stringify(initialTeams)),
     facilitatorMessages: [],
+    config: {
+      doRetros: false,
+      retroDays: 7,
+      mvpCards: 11,
+      percentageBlocked: 0.05,
+      percentageDeployFail: 0.5,
+    },
     stealth: false,
-    percentageBlocked: 0.05,
-    percentageDeployFail: 0.5,
     created: new Date().toISOString(),
     restarted: [],
     lastaccess: new Date().toISOString()
@@ -106,7 +111,7 @@ function newGame(data) {
   return game
 }
 
-function newTeam(gameName, teamName) {
+function newTeam(gameName, teamName, config) {
   const team = {
     gameName: gameName,
     teamName: teamName,
@@ -116,7 +121,7 @@ function newTeam(gameName, teamName) {
     pairing: [],
     recharting: false,
     otherCards: [],
-    mvpCards: 11,
+    config: config,
     concurrentDevAndTest: false,
     canStartAutoDeploy: false,
     daysEffort: [],
@@ -171,7 +176,7 @@ function updateGame(db, io, res) {
 
 module.exports = {
 
-  gameState: function(err, client, db, io, data, debugOn) {
+  gameState: function(db, io, data) {
     gameState.update(db, io, data)
   },
 
@@ -190,7 +195,7 @@ module.exports = {
             }
           }
         }
-        details = {
+        const details = {
           hosts: hosts
         }
         io.emit('updateGameDetails', { gameName: data.gameName, details : details})
@@ -244,7 +249,7 @@ module.exports = {
         })
         for (let i = 0; i < initialTeams.length; i++) {
           const teamName = initialTeams[i].name
-          const team = newTeam(data.gameName, teamName)
+          const team = newTeam(data.gameName, teamName, game.config)
           if (teamName == data.teamName) {
             team.members = teamFuns.addMember(team.members, data.myName, data.myRole)
           }
@@ -275,18 +280,12 @@ module.exports = {
       }
     })
 
-    db.collection('noEstimates').find({gameName: data.gameName}).toArray(function(err, res) {
+    db.collection('noEstimates').find({gameName: data.gameName}).toArray(function(err, gameRes) {
       if (err) throw err
-      if (res.length) {
-        for (let r = 0; r < res.length; r++) {
-          const game = resetGame(res[r])
-          const id = game._id
-          delete game._id
-          db.collection('noEstimates').updateOne({'_id': id}, {$set: game}, function(err) {
-            if (err) throw err
-            io.emit('loadTeam', game)
-            gameState.update(db, io, game)
-          })
+      if (gameRes.length) {
+        for (let r = 0; r < gameRes.length; r++) {
+          gameRes[r] = resetGame(gameRes[r])
+          updateTeam(db, io, gameRes[r])
         }
       }
     })
@@ -299,7 +298,7 @@ module.exports = {
     db.collection('noEstimatesGames').findOne({name: data.gameName}, function(err, res) {
       if (err) throw err
       if (res) {
-        db.collection('noEstimatesGames').deleteOne({'_id': res._id}, function(err, res) {
+        db.collection('noEstimatesGames').deleteOne({'_id': res._id}, function(err, ) {
           if (err) throw err
           _getGames(err, client, db, io, data, debugOn)
         })
@@ -315,36 +314,10 @@ module.exports = {
       if (err) throw err
       if (res.length) {
         for (let i = 0; i < res.length; i++) {
-          db.collection('noEstimates').deleteOne({'_id': res[i]._id}, function(err, res) {
+          db.collection('noEstimates').deleteOne({'_id': res[i]._id}, function(err, ) {
             if (err) throw err
           })
         }
-      }
-    })
-  },
-
-  eventCardRead: function(err, client, db, io, data, debugOn) {
-
-    if (debugOn) { console.log('eventCardRead', data) }
-
-    db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
-      if (err) throw err
-      if (res) {
-        const members = []
-        for (let i = 0; i < res.members.length; i++) {
-          const member = res.members[i]
-          if (member.id == data.myName.id) {
-            member.eventCardRead = true
-          }
-          members.push(member)
-        }
-        res.members = members
-        const id = res._id
-        delete res._id
-        db.collection('noEstimates').updateOne({'_id': id}, {$set: res}, function() {
-          if (err) throw err
-          io.emit('loadMembers', res)
-        })
       }
     })
   },
@@ -356,46 +329,30 @@ module.exports = {
     db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
       if (err) throw err
       if (res) {
-        let updating = false
-        if (res.currentDay != data.currentDay) {
-          updating = true
-          currentDay = res.currentDay + 1
-          res = teamFuns.updateTeamCapabilities(res, data, res.daysEffort)
-          const columns = res.columns, workCards = res.workCards
-          for (let i = 0; i < columns.length; i++) {
-            for (let j = 0; j < columns[i].cards.length; j++) {
-              const card = columns[i].cards[j]
-              const colName = columns[i].name
-              if (card.blocked || card.failed || (card.dependentOn && colName == 'deploy')) {
-                card.blocked = false
-                card.failed = false
-                if (cardFuns.cardCompleteInColumn(card, colName, res.teamName, res.autoDeploy, data.percentageBlocked, data.percentageDeployFail)) {
-                  cardFuns.moveCard(columns, workCards, card, i, res.currentDay)
-                }
+        const currentDay = res.currentDay + 1
+        res = teamFuns.updateTeamCapabilities(res, data, res.daysEffort)
+        const columns = res.columns, workCards = res.workCards
+        for (let i = 0; i < columns.length; i++) {
+          for (let j = 0; j < columns[i].cards.length; j++) {
+            const card = columns[i].cards[j]
+            const colName = columns[i].name
+            if (card.blocked || card.failed || (card.dependentOn && colName == 'deploy')) {
+              card.blocked = false
+              card.failed = false
+              if (cardFuns.cardCompleteInColumn(card, colName, res.teamName, res.autoDeploy, res.config.percentageBlocked, res.config.percentageDeployFail)) {
+                cardFuns.moveCard(columns, workCards, card, i, res.currentDay)
               }
             }
           }
-          actuals = cardFuns.calculateActuals(columns, res.workCards, res.mvpCards, data.currentDay, res.mvpActual, res.projectActual)
-          mvpActual = actuals.mvpActual
-          projectActual = actuals.projectActual
-          members = teamFuns.setTeamMembersEffort(res.members, data)
-          members = teamFuns.setTeamMembersEventCardSeen(members, data)
-          res.currentDay = currentDay
-          res.members = members
-          res.columns = columns
-          res.workCards = workCards
-          res.mvpActual = mvpActual
-          res.projectActual = projectActual
         }
-        const id = res._id
-        delete res._id
-        io.emit('loadTeam', res)
-        gameState.update(db, io, res)
-        if (updating) {
-          db.collection('noEstimates').updateOne({'_id': id}, {$set: res}, function() {
-            if (err) throw err
-          })
-        }
+        const actuals = cardFuns.calculateActuals(columns, res.workCards, res.config.mvpCards, data.currentDay, res.mvpActual, res.projectActual)
+        res.currentDay = currentDay
+        res.members = teamFuns.setTeamMembersEffort(res.members, data)
+        res.columns = columns
+        res.workCards = workCards
+        res.mvpActual = actuals.mvpActual
+        res.projectActual = actuals.projectActual
+        updateTeam(db, io, res)
       }
     })
   },
@@ -448,7 +405,7 @@ module.exports = {
               const colName = columns[i].name
               card.effort = data.workCard.effort
               card = cardFuns.addWorkedOn(card, data.column, data.name, data.role)
-              if (cardFuns.cardCompleteInColumn(card, colName, res.teamName, res.autoDeploy, data.percentageBlocked, data.percentageDeployFail)) {
+              if (cardFuns.cardCompleteInColumn(card, colName, res.teamName, res.autoDeploy, res.config.percentageBlocked, res.config.percentageDeployFail)) {
                 cardFuns.moveCard(columns, workCards, card, i, res.currentDay)
               }
             }
@@ -470,7 +427,7 @@ module.exports = {
       if (err) throw err
       if (res) {
         let i, player
-        const pairing = [], members = res.members
+        const pairing = []
         for (i = 0; i < res.pairing.length; i++) {
           if (res.pairing[i].name.id == data.name.id) {
             player = res.pairing[i]
@@ -746,59 +703,6 @@ module.exports = {
     })
   },
 
-  percentageBlocked: function(err, client, db, io, data, debugOn) {
-
-    if (debugOn) { console.log('percentageBlocked', data) }
-
-    db.collection('noEstimates').find({gameName: data.gameName}).toArray(function(err, res) {
-      if (err) throw err
-      if (res.length) {
-        for (let r = 0; r < res.length; r++) {
-          db.collection('noEstimates').updateOne({'_id': res[r]._id}, {$set: {percentageBlocked: data.percentageBlocked}}, function(err, rec) {
-            if (err) throw err
-            data.teamName = rec.teamName
-            io.emit('percentageBlocked', data)
-          })
-        }
-      }
-    })
-  },
-
-  percentageDeployFail: function(err, client, db, io, data, debugOn) {
-
-    if (debugOn) { console.log('percentageDeployFail', data) }
-
-    db.collection('noEstimates').find({gameName: data.gameName}).toArray(function(err, res) {
-      if (err) throw err
-      if (res.length) {
-        for (let r = 0; r < res.length; r++) {
-          db.collection('noEstimates').updateOne({'_id': res[r]._id}, {$set: {percentageDeployFail: data.percentageDeployFail}}, function(err, rec) {
-            if (err) throw err
-            data.teamName = rec.teamName
-            io.emit('percentageDeployFail', data)
-          })
-        }
-      }
-    })
-  },
-
-  updateMvpCards: function(err, client, db, io, data, debugOn) {
-
-    if (debugOn) { console.log('updateMvpCards', data) }
-
-    db.collection('noEstimates').find({gameName: data.gameName}).toArray(function(err, res) {
-      if (err) throw err
-      if (res.length) {
-        io.emit('updateMvpCards', data)
-        for (let r = 0; r < res.length; r++) {
-          db.collection('noEstimates').updateOne({'_id': res[r]._id}, {$set: {mvpCards: data.mvpCards}}, function(err) {
-            if (err) throw err
-          })
-        }
-      }
-    })
-  },
-
   updateStealth: function(err, client, db, io, data, debugOn) {
 
     if (debugOn) { console.log('updateStealth', data) }
@@ -815,6 +719,38 @@ module.exports = {
         })
       }
     })
-  }
+  },
+
+  updateConfig: function(err, client, db, io, data, debugOn) {
+
+    if (debugOn) { console.log('updateConfig', data) }
+
+    db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, res) {
+      if (err) throw err
+      if (res) {
+        const id = res._id
+        delete res._id
+        res.config[data.field] = data.value
+        db.collection('noEstimatesGames').updateOne({'_id': id}, {$set: res}, function(err) {
+          if (err) throw err
+          io.emit('loadGame', res)
+        })
+      }
+    })
+    db.collection('noEstimates').find({gameName: data.gameName}).toArray(function(err, teamRes) {
+      if (err) throw err
+      if (teamRes.length) {
+        for (let r = 0; r < teamRes.length; r++) {
+          const id = teamRes[r]._id
+          delete teamRes[r]._id
+          teamRes[r].config[data.field] = data.value
+          db.collection('noEstimates').updateOne({'_id': id}, {$set: teamRes[r]}, function(err) {
+            if (err) throw err
+            io.emit('loadTeam', teamRes[r])
+          })
+        }
+      }
+    })
+  },
 
 }

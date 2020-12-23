@@ -1,6 +1,9 @@
 <template>
   <div class="message" :class="{ 'error': message != ''}">
-    <span v-if="message">Can't assign effort: {{ message }}</span>
+    <span v-if="message">
+      <i class="fas fa-exclamation-triangle" title="urgent" />
+      Can't assign effort: {{ message }}
+    </span>
   </div>
 </template>
 
@@ -27,6 +30,10 @@ export default {
     &.error {
       background-color: red;
       color: #fff;
+
+      .fa-exclamation-triangle {
+        color: yellow;
+      }
     }
   }
 </style>

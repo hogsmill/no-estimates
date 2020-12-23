@@ -10,7 +10,9 @@
           {{ day }}
         </div>
         <span> . . . </span>
-        <button class="btn btn-sm btn-info next" @click="next()">
+        <button class="btn btn-sm btn-info next" :disabled="!myName.captain" @click="next()"
+                :title="myName.captain ? 'Click to move to next day' : 'Only team captains can advance the day'"
+        >
           Next
         </button>
       </div>
@@ -29,6 +31,9 @@ export default {
     },
     teamName() {
       return this.$store.getters.getTeamName
+    },
+    myName() {
+      return this.$store.getters.getMyName
     },
     currentDay() {
       return this.$store.getters.getCurrentDay

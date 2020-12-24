@@ -32,6 +32,7 @@ const http = require('http').createServer(app)
 const io = require('socket.io')(http)
 
 const dbStore = require('./store/dbStore.js')
+const results = require('./store/results.js')
 
 const MongoClient = require('mongodb').MongoClient
 
@@ -149,6 +150,15 @@ function doDb(fun, data) {
       dbStore.getGameDetails(err, client, db, io, data, debugOn)
       break
 
+    // Results
+
+    case 'showResult':
+      results.showResult(err, client, db, io, data, debugOn)
+      break
+    case 'hideResult':
+      results.hideResult(err, client, db, io, data, debugOn)
+      break
+
       default:
         console.log('Unknown function: \'' + fun + '\'')
     }
@@ -247,6 +257,14 @@ io.on('connection', (socket) => {
   // Game State
 
   socket.on('gameState', (data) => { doDb('gameState', data) })
+
+  // Results
+
+  socket.on('showResult', (data) => { doDb('showResult', data) })
+  
+  socket.on('hideResult', (data) => { doDb('hideResult', data) })
+
+
 })
 
 const port = process.argv[2] || 3007

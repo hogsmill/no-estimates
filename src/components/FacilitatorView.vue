@@ -3,6 +3,7 @@
     <h1>No Estimates - <span v-if="stealth">(Stealth)</span> Facilitator View</h1>
     <Connections :socket="socket" />
     <GameMessaging :socket="socket" />
+    <GameDisplay :socket="socket" />
     <GameParams :socket="socket" />
     <GameState :socket="socket" />
     <Games :socket="socket" />
@@ -15,6 +16,7 @@
 <script>
 import Connections from './facilitator/Connections.vue'
 import GameMessaging from './facilitator/GameMessaging.vue'
+import GameDisplay from './facilitator/GameDisplay.vue'
 import GameParams from './facilitator/GameParams.vue'
 import GameState from './facilitator/GameState.vue'
 import Games from './facilitator/Games.vue'
@@ -24,6 +26,7 @@ export default {
   components: {
     Connections,
     GameMessaging,
+    GameDisplay,
     GameParams,
     GameState,
     Games,

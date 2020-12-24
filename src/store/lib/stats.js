@@ -1,5 +1,5 @@
 
-const Stats = {
+module.exports = {
 
   pCorrelation: function(x, y) {
     let sumX = 0, sumY = 0, sumXY = 0, sumX2 = 0, sumY2 = 0
@@ -16,5 +16,3 @@ const Stats = {
     return (minLength * sumXY - sumX * sumY) / Math.sqrt((minLength * sumX2 - sumX * sumX) * (minLength * sumY2 - sumY * sumY))
   }
 }
-
-export default Stats

@@ -50,23 +50,12 @@
             </tbody>
           </table>
         </div>
-
-        <div v-if="tab == 'Analysis'">
-          <table class="summary">
-            <tr>
-              <td>Correlation between Effort and Delivery Time: </td><td>{{ correlation() }}</td>
-            </tr>
-          </table>
-        </div>
-
-        <div v-if="tab == 'Graphs'" />
       </div>
     </modal>
   </div>
 </template>
 
 <script>
-import stats from '../../lib/stats.js'
 import stringFuns from '../../lib/stringFuns.js'
 
 import Estimates from './Estimates.vue'
@@ -147,17 +136,6 @@ export default {
         }
       }
       return total
-    },
-    correlation() {
-      const effort = [], deliveryTime = []
-      for (let i = 0; i < this.workCards.length; i++) {
-        if (this.workCards[i].delivery) {
-          const card = this.workCards[i]
-          effort.push(this.totalEffort(card))
-          deliveryTime.push(card.delivery - card.commit)
-        }
-      }
-      return effort.length == 0 ? 0 : stats.pCorrelation(effort, deliveryTime).toFixed(2)
     }
   }
 }

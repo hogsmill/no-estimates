@@ -2,6 +2,7 @@
   <div id="app" class="mb-4">
     <appHeader />
     <WalkThroughView />
+    <Results :socket="socket" />
     <div v-if="showFacilitator">
       <FacilitatorView :socket="socket" />
     </div>
@@ -45,6 +46,7 @@ import stringFuns from './lib/stringFuns.js'
 
 import Header from './components/Header.vue'
 import Report from './components/report/Report.vue'
+import Results from './components/facilitator/Results.vue'
 import SetGame from './components/SetGame.vue'
 import SetEstimates from './components/SetEstimates.vue'
 import Status from './components/Status.vue'
@@ -69,6 +71,7 @@ export default {
     Status,
     Message,
     Report,
+    Results,
     Roles,
     Day,
     Chat,

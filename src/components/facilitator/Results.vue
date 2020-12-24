@@ -45,7 +45,7 @@
 
     <!-- Scatter Plot -->
 
-    <modal name="scatter-plot" class="popup" :height="190" :classes="['rounded']">
+    <modal name="scatter-plot" class="popup" :height="520" :width="750" :classes="['rounded']">
       <div class="float-right mr-2 mt-1">
         <button type="button" class="close" @click="hide('scatter-plot')" aria-label="Close">
           <span aria-hidden="true">&times;</span>
@@ -55,9 +55,9 @@
         <h4>
           Scatter Plot
         </h4>
-        <p>
-          scatter plot here
-        </p>
+        <div>
+          <ScatterPlot :chartdata="scatterPlotData" :options="options" />
+        </div>
       </div>
     </modal>
 
@@ -82,7 +82,12 @@
 </template>
 
 <script>
+import ScatterPlot from './results/ScatterPlot.vue'
+
 export default {
+  components: {
+    ScatterPlot
+  },
   props: [
     'socket'
   ],
@@ -94,7 +99,41 @@ export default {
         'monteCarlo'
       ],
       correlation: 0,
-      scatterPlot: [],
+      scatterPlotData: {
+        labels: ['#1', '#2', '#3', '#4', '#5', '#6', '#7', '#8', '#9', '#10', ],
+        datasets: [
+          {
+            label: 'Days',
+            backgroundColor: '#f87979',
+            pointBackgroundColor: 'white',
+            borderWidth: 1,
+            pointBorderColor: '#249EBF',
+            data: [3, 5, 7, 2, 9, 10, 13, 4, 9, 6]
+          }
+        ]
+      },
+      options: {
+        scales: {
+          yAxes: [{
+            ticks: {
+              beginAtZero: true
+            },
+            gridLines: {
+              display: true
+            }
+          }],
+          xAxes: [ {
+            gridLines: {
+              display: false
+            }
+          }]
+        },
+        legend: {
+          display: true
+        },
+        responsive: true,
+        maintainAspectRatio: false
+      },
       monteCarlo: 'zzz'
     }
   },
@@ -147,7 +186,9 @@ export default {
       this.$modal.show('correlation')
     },
     showScatterPlot(data) {
-      this.scatterPlot = data.results
+      console.log(data.results, this.scatterPlotData)
+      this.scatterPlotData.labels = data.results.ids
+      this.scatterPlotData.datasets[0].data = data.results.days
       this.$modal.show('scatter-plot')
     },
     showMonteCarlo(data) {

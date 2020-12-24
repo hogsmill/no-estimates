@@ -44,7 +44,7 @@
             </ul>
             <p>
               You may also want to reconsider your project estimate. Click <b>Set
-              Estimates</b> if you want to update it.
+                Estimates</b> if you want to update it.
             </p>
           </div>
         </div>

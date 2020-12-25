@@ -37,6 +37,17 @@
           </tr>
           <tr>
             <td>
+              <button class="btn btn-sm btn-site-primary" @click="showResult('distribution')">
+                Show
+              </button>
+              <button class="btn btn-sm btn-site-primary" @click="hideResult('distribution')">
+                Hide
+              </button>
+              Distribution
+            </td>
+          </tr>
+          <tr>
+            <td>
               <button class="btn btn-sm btn-site-primary" @click="showResult('monte-carlo')">
                 Show
               </button>

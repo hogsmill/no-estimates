@@ -1,6 +1,50 @@
 
 const stats = require('./lib/stats.js')
 
+function maxDeliveryTime(workCards) {
+  let max = 0
+  for (let i = 0; i < workCards.length; i++) {
+    if (workCards.delivery) {
+      const delivery = workCards.delivery - workCards.commit
+      if (delivery > max) {
+        max = delivery
+      }
+    }
+  }
+  // TODO: Hardwired
+  return 10
+  //return max
+}
+
+function distribution(workCards) {
+  const results = {
+    days: [],
+    counts: []
+  }
+  const max = maxDeliveryTime(workCards)
+  for (let i = 0; i < max; i++) {
+    results.days.push(i + 1)
+  }
+  const counts = {}
+  for (let i = 0; i < workCards.length; i++) {
+    if (workCards.delivery) {
+      const delivery = workCards.delivery - workCards.commit
+      if (!counts[delivery]) {
+        counts[delivery] = 1
+      } else {
+        counts[delivery] = counts[delivery] + 1
+      }
+    }
+  }
+  for (let j = 0; j < results.days.length; j++) {
+    // TODO: Hardwired data
+    const count = parseInt(Math.random() * 10)
+    // const count = counts[results.days[j]] ? counts[results.days[j]] : 0
+    results.counts.push(count)
+  }
+  return results
+}
+
 function scatterPlot(workCards) {
   const results = {
     ids: [],
@@ -55,6 +99,9 @@ module.exports = {
               break
             case 'scatter-plot':
               data.results = scatterPlot(res[r].workCards)
+              break
+            case 'distribution':
+              data.results = distribution(res[r].workCards)
               break
           }
           io.emit('showResult', data)

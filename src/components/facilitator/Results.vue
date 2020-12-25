@@ -56,7 +56,25 @@
           Scatter Plot
         </h4>
         <div>
-          <ScatterPlot :chartdata="scatterPlotData" :options="options" />
+          <BarChart :chartdata="scatterPlotData" :options="options" />
+        </div>
+      </div>
+    </modal>
+
+    <!-- Disribution -->
+
+    <modal name="distribution" class="popup" :height="520" :width="750" :classes="['rounded']">
+      <div class="float-right mr-2 mt-1">
+        <button type="button" class="close" @click="hide('distribution')" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="mt-4 scatter-plot">
+        <h4>
+          Distribution
+        </h4>
+        <div>
+          <BarChart :chartdata="distributionData" :options="options" />
         </div>
       </div>
     </modal>
@@ -74,7 +92,7 @@
           Monte Carlo
         </h4>
         <p>
-          monte carlo here
+          monte carlo to go here
         </p>
       </div>
     </modal>
@@ -82,11 +100,11 @@
 </template>
 
 <script>
-import ScatterPlot from './results/ScatterPlot.vue'
+import BarChart from './results/BarChart.vue'
 
 export default {
   components: {
-    ScatterPlot
+    BarChart
   },
   props: [
     'socket'
@@ -100,15 +118,28 @@ export default {
       ],
       correlation: 0,
       scatterPlotData: {
-        labels: ['#1', '#2', '#3', '#4', '#5', '#6', '#7', '#8', '#9', '#10', ],
+        labels: [],
         datasets: [
           {
-            label: 'Days',
+            label: 'Days (Hard-wired at the mo\')',
             backgroundColor: '#f87979',
             pointBackgroundColor: 'white',
             borderWidth: 1,
             pointBorderColor: '#249EBF',
-            data: [3, 5, 7, 2, 9, 10, 13, 4, 9, 6]
+            data: []
+          }
+        ]
+      },
+      distributionData: {
+        labels: [],
+        datasets: [
+          {
+            label: 'No. of Cards (Hard-wired at the mo\')',
+            backgroundColor: '#f87979',
+            pointBackgroundColor: 'white',
+            borderWidth: 1,
+            pointBorderColor: '#249EBF',
+            data: []
           }
         ]
       },
@@ -159,6 +190,9 @@ export default {
           case 'scatter-plot':
             self.showScatterPlot(data)
             break
+          case 'distribution':
+            self.showDistribution(data)
+            break
           case 'monte-carlo':
             self.showMonteCarlo(data)
             break
@@ -186,10 +220,14 @@ export default {
       this.$modal.show('correlation')
     },
     showScatterPlot(data) {
-      console.log(data.results, this.scatterPlotData)
       this.scatterPlotData.labels = data.results.ids
       this.scatterPlotData.datasets[0].data = data.results.days
       this.$modal.show('scatter-plot')
+    },
+    showDistribution(data) {
+      this.distributionData.labels = data.results.days
+      this.distributionData.datasets[0].data = data.results.counts
+      this.$modal.show('distribution')
     },
     showMonteCarlo(data) {
       this.monteCarlo = data.results

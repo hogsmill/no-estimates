@@ -7,6 +7,7 @@
     <GameParams :socket="socket" />
     <GameState :socket="socket" />
     <Games :socket="socket" />
+    <DemoAndTest :socket="socket" />
     <div v-if="isDev()">
       <Utils />
     </div>
@@ -20,6 +21,7 @@ import GameDisplay from './facilitator/GameDisplay.vue'
 import GameParams from './facilitator/GameParams.vue'
 import GameState from './facilitator/GameState.vue'
 import Games from './facilitator/Games.vue'
+import DemoAndTest from './facilitator/DemoAndTest.vue'
 import Utils from './facilitator/Utils.vue'
 
 export default {
@@ -30,6 +32,7 @@ export default {
     GameParams,
     GameState,
     Games,
+    DemoAndTest,
     Utils
   },
   props: [
@@ -49,7 +52,7 @@ export default {
 </script>
 
 <style lang="scss">
-  .game-messaging, .game-params, .game-state, .games {
+  .game-messaging, .game-params, .game-state, .games, .demo-and-test {
 
     width: 100%;
     margin: 12px;

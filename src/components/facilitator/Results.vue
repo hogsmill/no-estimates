@@ -56,14 +56,14 @@
           Cycle Time
         </h4>
         <div>
-          <BarChart :chartdata="cycleTimeData" :options="options" />
+          <BarChart :chartdata="cycleTime.data" :options="cycleTime.options" />
         </div>
       </div>
     </modal>
 
     <!-- Distribution -->
 
-    <modal name="distribution" class="popup" :height="520" :width="750" :classes="['rounded']">
+    <modal name="distribution" class="popup" :height="540" :width="750" :classes="['rounded']">
       <div class="float-right mr-2 mt-1">
         <button type="button" class="close" @click="hide('distribution')" aria-label="Close">
           <span aria-hidden="true">&times;</span>
@@ -74,7 +74,7 @@
           Distribution
         </h4>
         <div>
-          <BarChart :chartdata="distributionData" :options="options" />
+          <BarChart :chartdata="distribution.data" :options="distribution.options" />
         </div>
       </div>
     </modal>
@@ -91,8 +91,14 @@
         <h4>
           Scatter Plot
         </h4>
+        <p>
+          75% of cards completed in {{ scatterPlot.limits[75] }} days,
+          90% in {{ scatterPlot.limits[90] }} days,
+          95% in {{ scatterPlot.limits[95] }} days and
+          99% in {{ scatterPlot.limits[99] }} days
+        </p>
         <div>
-          Scatter Plot here...
+          <ScatterPlot :chartdata="scatterPlot.data" :options="scatterPlot.options" />
         </div>
       </div>
     </modal>
@@ -119,10 +125,12 @@
 
 <script>
 import BarChart from './results/BarChart.vue'
+import ScatterPlot from './results/ScatterPlot.vue'
 
 export default {
   components: {
-    BarChart
+    BarChart,
+    ScatterPlot
   },
   props: [
     'socket'
@@ -137,53 +145,90 @@ export default {
         'monte-carlo'
       ],
       correlation: 0,
-      cycleTimeData: {
-        labels: [],
-        datasets: [
-          {
+      cycleTime: {
+        data: {
+          labels: [],
+          datasets: [{
             label: 'Days to Complete Card',
             backgroundColor: '#f87979',
             pointBackgroundColor: 'white',
             borderWidth: 1,
             pointBorderColor: '#249EBF',
             data: []
-          }
-        ]
+          }]
+        },
+        options: {
+          scales: {
+            yAxes: [{
+              ticks: {beginAtZero: true},
+              gridLines: {display: true}
+            }],
+            xAxes: [{
+              gridLines: {display: false}
+            }]
+          },
+          legend: {display: true},
+          responsive: true,
+          maintainAspectRatio: false
+        }
       },
-      distributionData: {
-        labels: [],
-        datasets: [
-          {
+      distribution: {
+        data: {
+          labels: [],
+          datasets: [{
             label: 'No. of Cards that took this many days',
             backgroundColor: '#f87979',
             pointBackgroundColor: 'white',
             borderWidth: 1,
             pointBorderColor: '#249EBF',
             data: []
-          }
-        ]
-      },
-      options: {
-        scales: {
-          yAxes: [{
-            ticks: {
-              beginAtZero: true
-            },
-            gridLines: {
-              display: true
-            }
-          }],
-          xAxes: [ {
-            gridLines: {
-              display: false
-            }
           }]
         },
-        legend: {
-          display: true
+        options: {
+          scales: {
+            yAxes: [{
+              ticks: {beginAtZero: true},
+              gridLines: {display: true}
+            }],
+            xAxes: [{
+              gridLines: {display: false}
+            }]
+          },
+          legend: {display: true},
+          responsive: true,
+          maintainAspectRatio: false
+        }
+      },
+      scatterPlot: {
+        data: {
+          datasets: [{
+            label: 'Scatter Dataset',
+            raduis: 6,
+            backgroundColor: '#f87979',
+            pointBackgroundColor: '#f87979',
+            borderWidth: 1,
+            pointBorderColor: '#249EBF',
+            data: [
+              {x: 1,y: 10},
+              {x: 2, y: 6},
+              {x: 3, y: 8}
+            ]
+          }]
         },
-        responsive: true,
-        maintainAspectRatio: false
+        limits: {
+          75: 999,
+          90: 999,
+          95: 999,
+          99: 999
+        },
+        options: {
+          scales: {
+            xAxes: [{type: 'linear', position: 'bottom'}]
+          },
+          legend: {display: true},
+          responsive: true,
+          maintainAspectRatio: false
+        }
       },
       monteCarlo: 'zzz'
     }
@@ -239,24 +284,22 @@ export default {
       return parseInt(290 * (value + 1)) - 290 + 'px'
     },
     showCorrelation(data) {
-      console.log(data)
       this.correlation = parseFloat(data.results)
       this.$modal.show('correlation')
     },
     showCycleTime(data) {
-      console.log(data)
-      this.cycleTimeData.labels = data.results.ids
-      this.cycleTimeData.datasets[0].data = data.results.days
+      this.cycleTime.data.labels = data.results.ids
+      this.cycleTime.data.datasets[0].data = data.results.days
       this.$modal.show('cycle-time')
     },
     showDistribution(data) {
-      console.log(data)
-      this.distributionData.labels = data.results.days
-      this.distributionData.datasets[0].data = data.results.counts
+      this.distribution.data.labels = data.results.days
+      this.distribution.data.datasets[0].data = data.results.counts
       this.$modal.show('distribution')
     },
     showScatterPlot(data) {
-      console.log(data)
+      this.scatterPlot.data.datasets[0].data = data.results
+      this.scatterPlot.limits = data.limits
       this.$modal.show('scatter-plot')
     },
     showMonteCarlo(data) {

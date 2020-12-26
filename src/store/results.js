@@ -4,16 +4,14 @@ const stats = require('./lib/stats.js')
 function maxDeliveryTime(workCards) {
   let max = 0
   for (let i = 0; i < workCards.length; i++) {
-    if (workCards.delivery) {
-      const delivery = workCards.delivery - workCards.commit
+    if (workCards[i].delivery) {
+      const delivery = workCards[i].delivery - workCards[i].commit
       if (delivery > max) {
         max = delivery
       }
     }
   }
-  // TODO: Hardwired
-  return 10
-  //return max
+  return max
 }
 
 function distribution(workCards) {
@@ -27,8 +25,8 @@ function distribution(workCards) {
   }
   const counts = {}
   for (let i = 0; i < workCards.length; i++) {
-    if (workCards.delivery) {
-      const delivery = workCards.delivery - workCards.commit
+    if (workCards[i].delivery) {
+      const delivery = workCards[i].delivery - workCards[i].commit
       if (!counts[delivery]) {
         counts[delivery] = 1
       } else {
@@ -37,28 +35,22 @@ function distribution(workCards) {
     }
   }
   for (let j = 0; j < results.days.length; j++) {
-    // TODO: Hardwired data
-    const count = parseInt(Math.random() * 10)
-    // const count = counts[results.days[j]] ? counts[results.days[j]] : 0
+    const count = counts[results.days[j]] ? counts[results.days[j]] : 0
     results.counts.push(count)
   }
   return results
 }
 
-function scatterPlot(workCards) {
+function cycleTime(workCards) {
   const results = {
     ids: [],
     days: []
   }
   for (let i = 0; i < workCards.length; i++) {
-    // TODO: Hardwired data
-    results.ids.push('#' + workCards[i].number)
-    results.days.push(parseInt(Math.random() * 20) + 1)
-
-    //if (workCards[i].delivery) {
-    //  results.ids.push(workCards[i].id)
-    //  results.days.push(workCards[i].delivery - workCards[i].commit)
-    //}
+    if (workCards[i].delivery) {
+      results.ids.push(workCards[i].number)
+      results.days.push(workCards[i].delivery - workCards[i].commit)
+    }
   }
   return results
 }
@@ -97,8 +89,8 @@ module.exports = {
             case 'correlation':
               data.results = correlation(res[r].workCards)
               break
-            case 'scatter-plot':
-              data.results = scatterPlot(res[r].workCards)
+            case 'cycle-time':
+              data.results = cycleTime(res[r].workCards)
               break
             case 'distribution':
               data.results = distribution(res[r].workCards)

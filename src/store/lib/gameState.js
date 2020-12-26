@@ -1,5 +1,6 @@
 
 function cardEffort(card) {
+  console.log(card)
   return {
     effort: card.design + card.develop + card.test + card.deploy,
     done: card.effort.design + card.effort.develop + card.effort.test + card.effort.deploy

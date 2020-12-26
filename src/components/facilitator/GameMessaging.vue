@@ -24,7 +24,7 @@
             Everybody
           </option>
           <option v-for="(team, index) in activeTeams" :key="index">
-            {{ team.name }}
+            {{ team.name }} Team
           </option>
         </select>
       </td>

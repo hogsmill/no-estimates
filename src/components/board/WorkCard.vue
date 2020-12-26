@@ -131,7 +131,9 @@ export default {
         this.workCard.deploy
     },
     time() {
-      return this.currentDay - this.workCard.commit
+      return this.workCard.delivery
+        ? this.workCard.delivery - this.workCard.commit
+        : this.currentDay - this.workCard.commit
     },
     canAssign(column) {
       const concurrent = this.capabilities.concurrentDevAndTest && (column == 'develop' || column == 'test')

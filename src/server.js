@@ -33,6 +33,7 @@ const io = require('socket.io')(http)
 
 const dbStore = require('./store/dbStore.js')
 const results = require('./store/results.js')
+const demo = require('./store/demo.js')
 
 const MongoClient = require('mongodb').MongoClient
 
@@ -159,6 +160,15 @@ function doDb(fun, data) {
       results.hideResult(err, client, db, io, data, debugOn)
       break
 
+      // Demo
+
+      case 'runDemoToMvp':
+        demo.runDemoToMvp(err, client, db, io, data, debugOn)
+        break
+      case 'runDemoToEnd':
+        demo.runDemoToEnd(err, client, db, io, data, debugOn)
+        break
+
       default:
         console.log('Unknown function: \'' + fun + '\'')
     }
@@ -261,10 +271,14 @@ io.on('connection', (socket) => {
   // Results
 
   socket.on('showResult', (data) => { doDb('showResult', data) })
-  
+
   socket.on('hideResult', (data) => { doDb('hideResult', data) })
 
+  // Demo
 
+  socket.on('runDemoToMvp', (data) => { doDb('runDemoToMvp', data) })
+
+  socket.on('runDemoToEnd', (data) => { doDb('runDemoToEnd', data) })
 })
 
 const port = process.argv[2] || 3007

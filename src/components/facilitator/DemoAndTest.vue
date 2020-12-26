@@ -12,6 +12,9 @@
         <button class="btn btn-sm btn-site-primary" @click="createDemo()">
           Create Demo Game
         </button>
+        <button class="btn btn-sm btn-site-primary" @click="restartDemo()">
+          Re-start Demo Game
+        </button>
         <button class="btn btn-sm btn-site-primary" @click="runDemoToMvp()">
           Run Demo to MVP
         </button>
@@ -24,13 +27,19 @@
 </template>
 
 <script>
+import { v4 as uuidv4 } from 'uuid'
+
 export default {
   props: [
     'socket'
   ],
   data() {
     return {
-      showDemoAndTest: false
+      showDemoAndTest: false,
+      gameName: 'Demo',
+      teamName: 'Blue',
+      myName: 'Dev',
+      myRole: 'Designer'
     }
   },
   computed: {
@@ -43,13 +52,21 @@ export default {
       this.showDemoAndTest = val
     },
     createDemo() {
-      console.log('createDemo')
+      const uuid = uuidv4()
+      const myNameData = {id: uuid, name: this.myName, captain: true}
+      this.socket.emit('loadGame', {gameName: this.gameName, teamName: this.teamName, myName: myNameData, myRole: this.myRole})
+    },
+    restartDemo() {
+      const restartGame = confirm('Are you sure you want to re-start the demo game?')
+      if (restartGame) {
+        this.socket.emit('restartGame', {gameName: this.gameName, teamName: this.teamName})
+      }
     },
     runDemoToMvp() {
-      console.log('runDemoToMvp')
+      this.socket.emit('runDemoToMvp', {gameName: this.gameName, teamName: this.teamName})
     },
     runDemoToEnd() {
-      console.log('runDemoToEnd')
+      this.socket.emit('runDemoToEnd', {gameName: this.gameName, teamName: this.teamName})
     }
   }
 }

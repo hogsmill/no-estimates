@@ -43,6 +43,42 @@
       </div>
     </modal>
 
+    <!-- Cycle Time -->
+
+    <modal name="cycle-time" class="popup" :height="520" :width="750" :classes="['rounded']">
+      <div class="float-right mr-2 mt-1">
+        <button type="button" class="close" @click="hide('cycle-time')" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="mt-4 cycle-time">
+        <h4>
+          Cycle Time
+        </h4>
+        <div>
+          <BarChart :chartdata="cycleTimeData" :options="options" />
+        </div>
+      </div>
+    </modal>
+
+    <!-- Distribution -->
+
+    <modal name="distribution" class="popup" :height="520" :width="750" :classes="['rounded']">
+      <div class="float-right mr-2 mt-1">
+        <button type="button" class="close" @click="hide('distribution')" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="mt-4 cycle-time">
+        <h4>
+          Distribution
+        </h4>
+        <div>
+          <BarChart :chartdata="distributionData" :options="options" />
+        </div>
+      </div>
+    </modal>
+
     <!-- Scatter Plot -->
 
     <modal name="scatter-plot" class="popup" :height="520" :width="750" :classes="['rounded']">
@@ -56,32 +92,14 @@
           Scatter Plot
         </h4>
         <div>
-          <BarChart :chartdata="scatterPlotData" :options="options" />
-        </div>
-      </div>
-    </modal>
-
-    <!-- Disribution -->
-
-    <modal name="distribution" class="popup" :height="520" :width="750" :classes="['rounded']">
-      <div class="float-right mr-2 mt-1">
-        <button type="button" class="close" @click="hide('distribution')" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="mt-4 scatter-plot">
-        <h4>
-          Distribution
-        </h4>
-        <div>
-          <BarChart :chartdata="distributionData" :options="options" />
+          Scatter Plot here...
         </div>
       </div>
     </modal>
 
     <!-- Monte Carlo -->
 
-    <modal name="monte-carlo" class="popup" :height="190" :classes="['rounded']">
+    <modal name="monte-carlo" class="popup" :height="520" :width="750" :classes="['rounded']">
       <div class="float-right mr-2 mt-1">
         <button type="button" class="close" @click="hide('monte-carlo')" aria-label="Close">
           <span aria-hidden="true">&times;</span>
@@ -92,7 +110,7 @@
           Monte Carlo
         </h4>
         <p>
-          monte carlo to go here
+          Monte Carlo to go here...
         </p>
       </div>
     </modal>
@@ -113,15 +131,17 @@ export default {
     return {
       modals: [
         'correlation',
-        'scatterPlot',
-        'monteCarlo'
+        'cycle-time',
+        'distribution',
+        'scatter-plot',
+        'monte-carlo'
       ],
       correlation: 0,
-      scatterPlotData: {
+      cycleTimeData: {
         labels: [],
         datasets: [
           {
-            label: 'Days (Hard-wired at the mo\')',
+            label: 'Days to Complete Card',
             backgroundColor: '#f87979',
             pointBackgroundColor: 'white',
             borderWidth: 1,
@@ -134,7 +154,7 @@ export default {
         labels: [],
         datasets: [
           {
-            label: 'No. of Cards (Hard-wired at the mo\')',
+            label: 'No. of Cards that took this many days',
             backgroundColor: '#f87979',
             pointBackgroundColor: 'white',
             borderWidth: 1,
@@ -187,11 +207,14 @@ export default {
           case 'correlation':
             self.showCorrelation(data)
             break
-          case 'scatter-plot':
-            self.showScatterPlot(data)
+          case 'cycle-time':
+            self.showCycleTime(data)
             break
           case 'distribution':
             self.showDistribution(data)
+            break
+          case 'scatter-plot':
+            self.showScatterPlot(data)
             break
           case 'monte-carlo':
             self.showMonteCarlo(data)
@@ -216,21 +239,28 @@ export default {
       return parseInt(290 * (value + 1)) - 290 + 'px'
     },
     showCorrelation(data) {
-      this.correlation = data.results
+      console.log(data)
+      this.correlation = parseFloat(data.results)
       this.$modal.show('correlation')
     },
-    showScatterPlot(data) {
-      this.scatterPlotData.labels = data.results.ids
-      this.scatterPlotData.datasets[0].data = data.results.days
-      this.$modal.show('scatter-plot')
+    showCycleTime(data) {
+      console.log(data)
+      this.cycleTimeData.labels = data.results.ids
+      this.cycleTimeData.datasets[0].data = data.results.days
+      this.$modal.show('cycle-time')
     },
     showDistribution(data) {
+      console.log(data)
       this.distributionData.labels = data.results.days
       this.distributionData.datasets[0].data = data.results.counts
       this.$modal.show('distribution')
     },
+    showScatterPlot(data) {
+      console.log(data)
+      this.$modal.show('scatter-plot')
+    },
     showMonteCarlo(data) {
-      this.monteCarlo = data.results
+      console.log(data)
       this.$modal.show('monte-carlo')
     }
   }

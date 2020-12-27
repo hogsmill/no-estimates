@@ -229,7 +229,7 @@ export default {
         },
         options: {
           scales: {
-            xAxes: [{type: 'linear', position: 'bottom'}],
+            xAxes: [{type: 'linear', position: 'bottom', ticks: {beginAtZero: true}}],
             yAxes: [{ticks: {beginAtZero: true}}]
           },
           tooltips: {

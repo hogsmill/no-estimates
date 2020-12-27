@@ -69,6 +69,13 @@ function getCardFirstColumn(card, columns) {
 
 module.exports = {
 
+  totalEffort: function(card) {
+    return card.design +
+      card.develop +
+      card.test +
+      card.deploy
+  },
+
   pullInCard: function(columns, workCards, currentWorkCard, currentDay, teams, teamName) {
     const newColumns = []
     const card = workCards.find(function(c) {

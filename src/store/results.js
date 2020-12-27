@@ -3,6 +3,7 @@ const correlation = require('./results/correlation.js')
 const cycleTime = require('./results/cycleTime.js')
 const distribution = require('./results/distribution.js')
 const scatterPlot = require('./results/scatterPlot.js')
+const monteCarlo = require('./results/monteCarlo.js')
 
 module.exports = {
 
@@ -26,11 +27,18 @@ module.exports = {
               data.results = distribution.distribution(res[r].workCards)
               break
             case 'scatter-plot':
-              data.results = scatterPlot.scatterPlot(res[r].workCards)
+              const scatter = scatterPlot.scatterPlot(res[r].workCards)
+              data.results = scatter.data
+              data.labels = scatter.labels
               if (data.results.length) {
                 data.limits = scatterPlot.limits(data.results)
               }
               break
+            case 'monte-carlo':
+              data.results = cycleTime.cycleTime(res[r].workCards)
+              console.log(data.results)
+              break
+
           }
           io.emit('showResult', data)
         }

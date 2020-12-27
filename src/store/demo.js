@@ -1,6 +1,6 @@
 
 function randomCommit() {
-  return parseInt(Math.random() * 20)
+  return parseInt(Math.random() * 20 + 1)
 }
 
 function randomDelivery(commit) {

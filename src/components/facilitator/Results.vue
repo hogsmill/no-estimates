@@ -53,8 +53,18 @@
       </div>
       <div class="mt-4 cycle-time">
         <h4>
-          Cycle Time
+          Cycle Time - Time to complete card in days
         </h4>
+        <table>
+          <tr>
+            <td>Small: </td>
+            <td class="small" />
+            <td>Medium: </td>
+            <td class="medium" />
+            <td>Large: </td>
+            <td class="large" />
+          </tr>
+        </table>
         <div>
           <BarChart :chartdata="cycleTime.data" :options="cycleTime.options" />
         </div>
@@ -149,8 +159,7 @@ export default {
         data: {
           labels: [],
           datasets: [{
-            label: 'Days to Complete Card',
-            backgroundColor: '#f87979',
+            backgroundColor: '',
             pointBackgroundColor: 'white',
             borderWidth: 1,
             pointBorderColor: '#249EBF',
@@ -167,7 +176,7 @@ export default {
               gridLines: {display: false}
             }]
           },
-          legend: {display: true},
+          legend: {display: false},
           responsive: true,
           maintainAspectRatio: false
         }
@@ -201,31 +210,36 @@ export default {
       },
       scatterPlot: {
         data: {
+          labels: [],
           datasets: [{
-            label: 'Scatter Dataset',
-            raduis: 6,
+            pointRadius: 8,
+            pointHoverRadius: 12,
             backgroundColor: '#f87979',
             pointBackgroundColor: '#f87979',
             borderWidth: 1,
             pointBorderColor: '#249EBF',
-            data: [
-              {x: 1,y: 10},
-              {x: 2, y: 6},
-              {x: 3, y: 8}
-            ]
+            data: []
           }]
         },
         limits: {
-          75: 999,
-          90: 999,
-          95: 999,
-          99: 999
+          75: 0,
+          90: 0,
+          95: 0,
+          99: 0
         },
         options: {
           scales: {
-            xAxes: [{type: 'linear', position: 'bottom'}]
+            xAxes: [{type: 'linear', position: 'bottom'}],
+            yAxes: [{ticks: {beginAtZero: true}}]
           },
-          legend: {display: true},
+          tooltips: {
+            callbacks: {
+              label: function(tooltipItem, data) {
+                return data.labels[tooltipItem.index]
+              }
+            }
+          },
+          legend: {display: false},
           responsive: true,
           maintainAspectRatio: false
         }
@@ -288,6 +302,16 @@ export default {
       this.$modal.show('correlation')
     },
     showCycleTime(data) {
+      this.cycleTime.data.datasets[0].backgroundColor = []
+      for (let i = 0; i < data.results.effort.length; i++) {
+        if (data.results.effort[i] < 15) {
+          this.cycleTime.data.datasets[0].backgroundColor.push('green')
+        } else if (data.results.effort[i] < 20) {
+          this.cycleTime.data.datasets[0].backgroundColor.push('orange')
+        } else {
+          this.cycleTime.data.datasets[0].backgroundColor.push('red')
+        }
+      }
       this.cycleTime.data.labels = data.results.ids
       this.cycleTime.data.datasets[0].data = data.results.days
       this.$modal.show('cycle-time')
@@ -298,6 +322,7 @@ export default {
       this.$modal.show('distribution')
     },
     showScatterPlot(data) {
+      this.scatterPlot.data.labels = data.labels
       this.scatterPlot.data.datasets[0].data = data.results
       this.scatterPlot.limits = data.limits
       this.$modal.show('scatter-plot')
@@ -360,6 +385,27 @@ export default {
           font-size: xx-large;
           font-weight: bold;
           color: #fff;
+        }
+      }
+    }
+  }
+
+  .cycle-time {
+    table {
+      width: 50%;
+      margin: 0 auto;
+      td {
+        width: 50px;
+        text-align: right;
+        padding: 2px 4px;
+        &.small {
+          background-color: green;
+        }
+        &.medium {
+          background-color: orange;
+        }
+        &.large {
+          background-color: red;
         }
       }
     }

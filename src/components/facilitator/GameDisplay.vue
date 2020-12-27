@@ -51,7 +51,7 @@
         <button class="btn btn-sm btn-site-primary" @click="hideResult('scatter-plot')">
           Hide
         </button>
-        Scatter Plot (TBD)
+        Scatter Plot
       </td>
     </tr>
     <tr v-if="showGameDisplay">

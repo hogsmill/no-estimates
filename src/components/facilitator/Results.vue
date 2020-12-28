@@ -305,11 +305,11 @@ export default {
       this.cycleTime.data.datasets[0].backgroundColor = []
       for (let i = 0; i < data.results.effort.length; i++) {
         if (data.results.effort[i] < 15) {
-          this.cycleTime.data.datasets[0].backgroundColor.push('green')
+          this.cycleTime.data.datasets[0].backgroundColor.push('cadetblue')
         } else if (data.results.effort[i] < 20) {
-          this.cycleTime.data.datasets[0].backgroundColor.push('orange')
+          this.cycleTime.data.datasets[0].backgroundColor.push('olive')
         } else {
-          this.cycleTime.data.datasets[0].backgroundColor.push('red')
+          this.cycleTime.data.datasets[0].backgroundColor.push('darkorange')
         }
       }
       this.cycleTime.data.labels = data.results.ids
@@ -398,13 +398,13 @@ export default {
         text-align: right;
         padding: 2px 4px;
         &.small {
-          background-color: green;
+          background-color: cadetblue;
         }
         &.medium {
-          background-color: orange;
+          background-color: olive;
         }
         &.large {
-          background-color: red;
+          background-color: darkorange;
         }
       }
     }

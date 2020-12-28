@@ -235,7 +235,7 @@ export default {
           tooltips: {
             callbacks: {
               label: function(tooltipItem, data) {
-                return data.labels[tooltipItem.index]
+                return data.datasets[0].data[tooltipItem.index].label
               }
             }
           },
@@ -322,7 +322,6 @@ export default {
       this.$modal.show('distribution')
     },
     showScatterPlot(data) {
-      this.scatterPlot.data.labels = data.labels
       this.scatterPlot.data.datasets[0].data = data.results
       this.scatterPlot.limits = data.limits
       this.$modal.show('scatter-plot')

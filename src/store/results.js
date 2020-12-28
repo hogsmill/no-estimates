@@ -27,9 +27,7 @@ module.exports = {
               data.results = distribution.distribution(res[r].workCards)
               break
             case 'scatter-plot':
-              const scatter = scatterPlot.scatterPlot(res[r].workCards)
-              data.results = scatter.data
-              data.labels = scatter.labels
+              data.results = scatterPlot.scatterPlot(res[r].workCards)
               if (data.results.length) {
                 data.limits = scatterPlot.limits(data.results)
               }

@@ -2,27 +2,22 @@
 module.exports = {
 
   scatterPlot: function(workCards) {
-    const scatter = {
-      data: [],
-      labels: []
-    }
+    const data = []
     for (let i = 0; i < workCards.length; i++) {
       if (workCards[i].delivery) {
         const card = workCards[i]
         const delivery = card.delivery
         const elapsed = card.delivery - card.commit
-        scatter.data.push({
+        data.push({
           x: delivery,
-          y: elapsed
-        })
-        scatter.labels.push(
-          '#' + card.number + ' - ' +
+          y: elapsed,
+          label: '#' + card.number + ' - ' +
           'Completed on day ' + delivery + ', ' +
           elapsed + ' days elapsed'
-        )
+        })
       }
     }
-    return scatter
+    return data
   },
 
   limits: function(data) {

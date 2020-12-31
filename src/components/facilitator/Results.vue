@@ -33,7 +33,7 @@
           </div>
           <div class="correlation-div rounded">
             <div id="correlation-value" :style="{ 'left': correlationPosition(correlation, 0) }">
-              <!-- {{ correlation }} --> 0.99
+              {{ correlation }}
             </div>
             <i class="fas fa-caret-up correlation-marker" :style="{ 'left': correlationPosition(correlation, 50) }" />
           </div>

@@ -16,24 +16,27 @@ module.exports = {
       if (res.length) {
         for (let r = 0; r < res.length; r++) {
           data.teamName = res[r].teamName
+          const cards = res[r].columns.find(function(c) {
+            return c.name == 'done'
+          }).cards
           switch(data.result) {
             case 'correlation':
-              data.results = correlation.correlation(res[r].workCards)
+              data.results = correlation.correlation(cards)
               break
             case 'cycle-time':
-              data.results = cycleTime.cycleTime(res[r].workCards)
+              data.results = cycleTime.cycleTime(cards)
               break
             case 'distribution':
-              data.results = distribution.distribution(res[r].workCards)
+              data.results = distribution.distribution(cards)
               break
             case 'scatter-plot':
-              data.results = scatterPlot.scatterPlot(res[r].workCards)
+              data.results = scatterPlot.scatterPlot(cards)
               if (data.results.length) {
                 data.limits = scatterPlot.limits(data.results)
               }
               break
             case 'monte-carlo':
-              data.results = cycleTime.cycleTime(res[r].workCards)
+              data.results = cycleTime.cycleTime(cards)
               console.log(data.results)
               break
 

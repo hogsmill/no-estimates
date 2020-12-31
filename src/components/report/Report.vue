@@ -10,19 +10,6 @@
             Close
           </button>
         </h4>
-        <!--
-        <div class="tabs">
-          <div class="tab rounded-top" :class="{'selected': tab == 'Report'}" @click="selectTab('Report')">
-            Report
-          </div>
-          <div class="tab rounded-top" :class="{'selected': tab == 'Analysis'}" @click="selectTab('Analysis')">
-            Summary
-          </div>
-          <div class="tab rounded-top" :class="{'selected': tab == 'Graphs'}" @click="selectTab('Graphs')">
-            Graphs
-          </div>
-        </div>
-        -->
         <Estimates :socket="socket" />
         <div v-if="tab == 'Report'" class="scroller">
           <table class="results">

@@ -67,11 +67,7 @@
         {{ team.currentWorkCard }}
       </td>
       <OtherCards v-if="showTeamState(team)" :cards="team.otherCards" />
-      <Column v-if="showTeamState(team)" :column="team.columns.design" :name="'Design'" />
-      <Column v-if="showTeamState(team)" :column="team.columns.develop" :name="'Develop'" />
-      <Column v-if="showTeamState(team)" :column="team.columns.test" :name="'Test'" />
-      <Column v-if="showTeamState(team)" :column="team.columns.deploy" :name="'Deploy'" />
-      <Column v-if="showTeamState(team)" :column="team.columns.done" :name="'Done'" />
+      <Column v-for="(column, colIndex) in columns" :key="colIndex" :show="showTeamState(team)" :column="team.columns[column.name]" :name="column.name" />
       <td v-if="showTeamState(team)">
         {{ estimates(team) }}
       </td>
@@ -108,6 +104,9 @@ export default {
     },
     teams() {
       return this.$store.getters.getTeams
+    },
+    columns() {
+      return this.$store.getters.getColumns
     }
   },
   methods: {

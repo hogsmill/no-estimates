@@ -34,7 +34,9 @@
 <script>
 export default {
   props: [
-    'column', 'name'
+    'column',
+    'name',
+    'show'
   ],
   data() {
     return {

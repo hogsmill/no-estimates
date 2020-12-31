@@ -32,10 +32,10 @@
             -1
           </div>
           <div class="correlation-div rounded">
-            <div :style="{ 'left': correlationPosition(correlation) }">
-              {{ correlation }}
-              <i class="fas fa-caret-up correlation-marker" :style="{ 'left': correlationPosition(correlation) }" />
+            <div id="correlation-value" :style="{ 'left': correlationPosition(correlation, 0) }">
+              <!-- {{ correlation }} --> 0.99
             </div>
+            <i class="fas fa-caret-up correlation-marker" :style="{ 'left': correlationPosition(correlation, 50) }" />
           </div>
           <div class="correlation-label">
             +1
@@ -295,8 +295,8 @@ export default {
     hide(modal) {
       this.$modal.hide(modal)
     },
-    correlationPosition(value) {
-      return parseInt(290 * (value + 1)) - 290 + 'px'
+    correlationPosition(value, n) {
+      return parseInt(290 * (value + 1)) - 290 - n + 'px'
     },
     showCorrelation(data) {
       this.correlation = parseFloat(data.results)
@@ -380,7 +380,7 @@ export default {
 
         div {
           position: relative;
-          width: 20px;
+          width: 100px;
           text-align: center;
           font-size: xx-large;
           font-weight: bold;

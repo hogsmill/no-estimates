@@ -32,10 +32,12 @@
             -1
           </div>
           <div class="correlation-div rounded">
-            <div id="correlation-value" :style="{ 'left': correlationPosition(correlation, 0) }">
+            <div :style="{ 'left': correlationPosition(correlation, 0) }">
               {{ correlation }}
             </div>
-            <i class="fas fa-caret-up correlation-marker" :style="{ 'left': correlationPosition(correlation, 50) }" />
+            <div class="correlation-marker" :style="{ 'left': correlationPosition(correlation, 100) }">
+              <i class="fas fa-caret-up"  />
+            </div>
           </div>
           <div class="correlation-label">
             +1
@@ -389,8 +391,12 @@ export default {
 
         .correlation-marker {
           position: relative;
-          top: 30px;
+          top: 32px;
           font-size: xx-large;
+
+          .fas {
+            color: #888;
+          }
         }
       }
     }

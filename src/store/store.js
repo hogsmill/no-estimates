@@ -105,6 +105,12 @@ export const store = new Vuex.Store({
       percentageBlocked: 0.05,
       percentageDeployFail: 0.5
     },
+    graphConfig: {
+      monteCarlo: {
+        runs: 1000,
+        cards: 50
+      }
+    },
     retrosDone: {},
     recharting: false,
     concurrentDevAndTest: false,
@@ -252,6 +258,9 @@ export const store = new Vuex.Store({
     getRetrosDone: (state) => {
       return state.retrosDone
     },
+    getGraphConfig: (state) => {
+      return state.graphConfig
+    },
     getCurrentDay: (state) => {
       return state.currentDay
     },
@@ -381,6 +390,7 @@ export const store = new Vuex.Store({
       state.stealth = payload.stealth
       state.percentageBlocked = payload.percentageBlocked
       state.percentageDeployFail = payload.percentageDeployFail
+      state.graphConfig = payload.graphConfig
     },
     updateGameName: (state, payload) => {
       state.gameName = payload

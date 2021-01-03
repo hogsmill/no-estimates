@@ -52,7 +52,7 @@ export default {
 </script>
 
 <style lang="scss">
-  .game-messaging, .game-params, .game-state, .games, .demo-and-test {
+  .game-messaging, .game-params, .game-display, .game-state, .games, .demo-and-test {
 
     width: 100%;
     margin: 12px;

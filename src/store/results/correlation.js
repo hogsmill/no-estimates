@@ -18,7 +18,7 @@ function pCorrelation(x, y) {
 
 module.exports = {
 
-  correlation: function(workCards) {
+  run: function(workCards) {
     const effort = [], deliveryTime = []
     for (let i = 0; i < workCards.length; i++) {
       if (workCards[i].delivery) {

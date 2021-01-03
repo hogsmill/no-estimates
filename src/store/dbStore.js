@@ -102,6 +102,12 @@ function newGame(data) {
       percentageBlocked: 0.05,
       percentageDeployFail: 0.5,
     },
+    graphConfig: {
+      monteCarlo: {
+        runs: 1000,
+        cards: 50
+      }
+    },
     stealth: false,
     created: new Date().toISOString(),
     restarted: [],

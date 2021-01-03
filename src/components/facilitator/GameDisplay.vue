@@ -1,5 +1,5 @@
 <template>
-  <table class="games">
+  <table class="game-display">
     <tr>
       <td class="left" colspan="16">
         <h4>Game Display</h4>
@@ -63,6 +63,28 @@
           Hide
         </button>
         Monte Carlo Simulation (TBD)
+        <div class="monte-carlo-params">
+          <div class="param-title">
+            No. Of Cards to complete
+          </div>
+          <div>
+            <input type="text" id="monte-carlo-cards" :value="graphConfig.monteCarlo.cards">
+            <button class="btn btn-sm btn-site-primary" @click="saveMonteCarloCards()">
+              Save
+            </button>
+          </div>
+        </div>
+        <div class="monte-carlo-params">
+          <div class="param-title">
+            No. Of Runs
+          </div>
+          <div>
+            <input type="text" id="monte-carlo-runs" :value="graphConfig.monteCarlo.runs">
+            <button class="btn btn-sm btn-site-primary" @click="saveMonteCarloRuns()">
+              Save
+            </button>
+          </div>
+        </div>
       </td>
     </tr>
   </table>
@@ -81,6 +103,9 @@ export default {
   computed: {
     gameName() {
       return this.$store.getters.getGameName
+    },
+    graphConfig() {
+      return this.$store.getters.getGraphConfig
     }
   },
   methods: {
@@ -93,10 +118,34 @@ export default {
     hideResult(result) {
       this.socket.emit('hideResult', {gameName: this.gameName, result: result})
     },
+    saveMonteCarloCards() {
+      const cards = document.getElementById('monte-carlo-cards').value
+      this.socket.emit('setMonteCarloCards', {gameName: this.gameName, cards: cards})
+    },
+    saveMonteCarloRuns() {
+      const runs = document.getElementById('monte-carlo-runs').value
+      this.socket.emit('setMonteCarloRuns', {gameName: this.gameName, runs: runs})
+    }
   }
 }
 </script>
 
 <style lang="scss">
+  .monte-carlo-params {
+    div {
+      display: inline-block;
+      width: 200px;
+      padding: 3px;
 
+      &.param-title {
+        width: 330px;
+        text-align: right;
+        padding-right: 6px;
+      }
+    }
+
+    button {
+      margin-left: 6px;
+    }
+  }
 </style>

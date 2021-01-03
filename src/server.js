@@ -159,6 +159,12 @@ function doDb(fun, data) {
     case 'hideResult':
       results.hideResult(err, client, db, io, data, debugOn)
       break
+    case 'setMonteCarloCards':
+      results.setMonteCarloCards(err, client, db, io, data, debugOn)
+      break
+    case 'setMonteCarloRuns':
+      results.setMonteCarloRuns(err, client, db, io, data, debugOn)
+      break
 
       // Demo
 
@@ -273,6 +279,10 @@ io.on('connection', (socket) => {
   socket.on('showResult', (data) => { doDb('showResult', data) })
 
   socket.on('hideResult', (data) => { doDb('hideResult', data) })
+
+  socket.on('setMonteCarloCards', (data) => { doDb('setMonteCarloCards', data) })
+
+  socket.on('setMonteCarloRuns', (data) => { doDb('setMonteCarloRuns', data) })
 
   // Demo
 

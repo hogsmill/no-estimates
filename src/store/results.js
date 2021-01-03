@@ -11,38 +11,41 @@ module.exports = {
 
     if (debugOn) { console.log('showResult', data) }
 
-    db.collection('noEstimates').find({gameName: data.gameName}).toArray(function(err, res) {
+    db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, gameRes) {
       if (err) throw err
-      if (res.length) {
-        for (let r = 0; r < res.length; r++) {
-          data.teamName = res[r].teamName
-          const cards = res[r].columns.find(function(c) {
-            return c.name == 'done'
-          }).cards
-          switch(data.result) {
-            case 'correlation':
-              data.results = correlation.correlation(cards)
-              break
-            case 'cycle-time':
-              data.results = cycleTime.cycleTime(cards)
-              break
-            case 'distribution':
-              data.results = distribution.distribution(cards)
-              break
-            case 'scatter-plot':
-              data.results = scatterPlot.scatterPlot(cards)
-              if (data.results.length) {
-                data.limits = scatterPlot.limits(data.results)
+      if (gameRes) {
+        db.collection('noEstimates').find({gameName: data.gameName}).toArray(function(err, res) {
+          if (err) throw err
+          if (res.length) {
+            for (let r = 0; r < res.length; r++) {
+              data.teamName = res[r].teamName
+              const cards = res[r].columns.find(function(c) {
+                return c.name == 'done'
+              }).cards
+              switch(data.result) {
+                case 'correlation':
+                  data.results = correlation.run(cards)
+                  break
+                case 'cycle-time':
+                  data.results = cycleTime.run(cards)
+                  break
+                case 'distribution':
+                  data.results = distribution.run(cards)
+                  break
+                case 'scatter-plot':
+                  data.results = scatterPlot.run(cards)
+                  if (data.results.length) {
+                    data.limits = scatterPlot.limits(data.results)
+                  }
+                  break
+                case 'monte-carlo':
+                  data.results = monteCarlo.run(cards, gameRes.graphConfig.monteCarlo)
+                  break
               }
-              break
-            case 'monte-carlo':
-              data.results = cycleTime.cycleTime(cards)
-              console.log(data.results)
-              break
-
+              io.emit('showResult', data)
+            }
           }
-          io.emit('showResult', data)
-        }
+        })
       }
     })
   },
@@ -58,6 +61,42 @@ module.exports = {
           data.teamName = res[r].teamName
           io.emit('hideResult', data)
         }
+      }
+    })
+  },
+
+  setMonteCarloCards: function(err, client, db, io, data, debugOn) {
+
+    if (debugOn) { console.log('setMonteCarloCards', data) }
+
+    db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, res) {
+      if (err) throw err
+      if (res) {
+        res.graphConfig.monteCarlo.cards = data.cards
+        const id = res._id
+        delete res._id
+        db.collection('noEstimatesGames').updateOne({'_id': id}, {$set: res}, function(err) {
+          if (err) throw err
+          io.emit('loadGame', res)
+        })
+      }
+    })
+  },
+
+  setMonteCarloRuns: function(err, client, db, io, data, debugOn) {
+
+    if (debugOn) { console.log('setMonteCarloRuns', data) }
+
+    db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, res) {
+      if (err) throw err
+      if (res) {
+        res.graphConfig.monteCarlo.runs = data.runs
+        const id = res._id
+        delete res._id
+        db.collection('noEstimatesGames').updateOne({'_id': id}, {$set: res}, function(err) {
+          if (err) throw err
+          io.emit('loadGame', res)
+        })
       }
     })
   }

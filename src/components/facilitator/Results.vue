@@ -126,11 +126,20 @@
       </div>
       <div class="mt-4 monte-carlo">
         <h4>
-          Monte Carlo
+          Monte Carlo: {{ graphConfig.monteCarlo.runs }} runs to complete {{ graphConfig.monteCarlo.cards }} cards
         </h4>
-        <p>
-          Monte Carlo to go here...
-        </p>
+        <div class="monte-carlo-percentiles rounded">
+          The probability of completing {{ graphConfig.monteCarlo.cards }} cards is
+          <ul>
+            <li><div class="green" /> 75% in {{ monteCarlo.percentiles[75] }} days </li>
+            <li><div class="orange" /> 90% in {{ monteCarlo.percentiles[90] }} days </li>
+            <li><div class="yellow" /> 95% in {{ monteCarlo.percentiles[95] }} days </li>
+            <li><div class="red" /> 99% in {{ monteCarlo.percentiles[99] }} days </li>
+          </ul>
+        </div>
+        <div>
+          <BarChart :chartdata="monteCarlo.data" :options="monteCarlo.options" />
+        </div>
       </div>
     </modal>
   </span>
@@ -247,7 +256,39 @@ export default {
           maintainAspectRatio: false
         }
       },
-      monteCarlo: 'zzz'
+      monteCarlo: {
+        data: {
+          labels: [],
+          datasets: [{
+            label: 'Number of times run completes in this many days',
+            backgroundColor: '#f87979',
+            pointBackgroundColor: 'white',
+            borderWidth: 1,
+            pointBorderColor: '#249EBF',
+            data: []
+          }]
+        },
+        percentiles: {
+          75: 0,
+          90: 0,
+          95: 0,
+          99: 0
+        },
+        options: {
+          scales: {
+            yAxes: [{
+              ticks: {beginAtZero: true},
+              gridLines: {display: true}
+            }],
+            xAxes: [{
+              gridLines: {display: false}
+            }]
+          },
+          legend: {display: false},
+          responsive: true,
+          maintainAspectRatio: false
+        }
+      }
     }
   },
   computed: {
@@ -256,6 +297,9 @@ export default {
     },
     teamName() {
       return this.$store.getters.getTeamName
+    },
+    graphConfig() {
+      return this.$store.getters.getGraphConfig
     }
   },
   created() {
@@ -330,7 +374,21 @@ export default {
       this.$modal.show('scatter-plot')
     },
     showMonteCarlo(data) {
-      console.log(data)
+      this.monteCarlo.data.labels = data.results.days
+      this.monteCarlo.data.datasets[0].data = data.results.counts
+      this.monteCarlo.percentiles = data.results.percentiles
+      this.monteCarlo.data.datasets[0].backgroundColor = []
+      for (let i = this.monteCarlo.data.labels[0]; i < this.monteCarlo.data.labels.length; i++) {
+        if (i <= data.results.percentiles[75]) {
+          this.monteCarlo.data.datasets[0].backgroundColor.push('green')
+        } else if (i <= data.results.percentiles[90]) {
+          this.monteCarlo.data.datasets[0].backgroundColor.push('orange')
+        } else if (i <= data.results.percentiles[95]) {
+          this.monteCarlo.data.datasets[0].backgroundColor.push('yellow')
+        } else {
+          this.monteCarlo.data.datasets[0].backgroundColor.push('red')
+        }
+      }
       this.$modal.show('monte-carlo')
     }
   }
@@ -418,6 +476,40 @@ export default {
         }
         &.large {
           background-color: darkorange;
+        }
+      }
+    }
+  }
+
+  .monte-carlo-percentiles {
+    border: 1px solid #ddd;
+    width: 300px;
+    position: absolute;
+    z-index: 10;
+    background-color: #fff;
+    left: 80px;
+    top: 104px;
+    box-shadow: 2px 2px 3px #aaa;
+
+    li {
+      text-align: left;
+
+      div {
+        height: 10px;
+        width: 10px;
+        display: inline-block;
+
+        &.green {
+          background-color: green;
+        }
+        &.orange {
+          background-color: orange;
+        }
+        &.yellow {
+          background-color: yellow;
+        }
+        &.red {
+          background-color: red;
         }
       }
     }

@@ -378,7 +378,8 @@ export default {
       this.monteCarlo.data.datasets[0].data = data.results.counts
       this.monteCarlo.percentiles = data.results.percentiles
       this.monteCarlo.data.datasets[0].backgroundColor = []
-      for (let i = this.monteCarlo.data.labels[0]; i < this.monteCarlo.data.labels.length; i++) {
+      const startDay = this.monteCarlo.data.labels[0]
+      for (let i = startDay; i < this.monteCarlo.data.datasets[0].data.length + startDay; i++) {
         if (i <= data.results.percentiles[75]) {
           this.monteCarlo.data.datasets[0].backgroundColor.push('green')
         } else if (i <= data.results.percentiles[90]) {

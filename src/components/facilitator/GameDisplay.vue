@@ -62,7 +62,7 @@
         <button class="btn btn-sm btn-site-primary" @click="hideResult('monte-carlo')">
           Hide
         </button>
-        Monte Carlo Simulation (TBD)
+        Monte Carlo Simulation
         <div class="monte-carlo-params">
           <div class="param-title">
             No. Of Cards to complete

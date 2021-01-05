@@ -4,6 +4,13 @@ function getNoOfCardsForDay(cardsPerDay) {
   return cardsPerDay[index]
 }
 
+function getCardsToRunTo(runTo) {
+  return {
+    from: 0,
+    to: parseInt(runTo)
+  }
+}
+
 function monteCarloRun(cardsPerDay, noOfCards, startFrom) {
   let cardsDone = 0, day = startFrom
   while (cardsDone < noOfCards) {
@@ -27,7 +34,7 @@ function monteCarlo(cardsPerDay, startFrom, runs, cards) {
   return results
 }
 
-function cardsPerDayDistribution(cards) {
+function cardsPerDayDistribution(cards, from) {
   const cardsPerDay = {}
   for (let i = 0; i < cards.length; i++) {
     if (!cardsPerDay[cards[i].delivery]) {
@@ -37,7 +44,7 @@ function cardsPerDayDistribution(cards) {
     }
   }
   const days = [],
-        min = Math.min(...Object.keys(cardsPerDay))
+        min = from ? from : Math.min(...Object.keys(cardsPerDay))
         max = Math.max(...Object.keys(cardsPerDay))
   for (let j = min; j <= max; j++) {
     const day = cardsPerDay[j] ? cardsPerDay[j] : 0
@@ -51,6 +58,7 @@ function cardsPerDayDistribution(cards) {
 
 function percentages(counts, days, config) {
   const percentiles = {},
+        _50 = config.runs * 0.5,
         _75 = config.runs * 0.75,
         _90 = config.runs * 0.90,
         _95 = config.runs * 0.95,
@@ -66,6 +74,8 @@ function percentages(counts, days, config) {
       percentiles[90] = days[i]
     } else if (count >= _75) {
       percentiles[75] = days[i]
+    } else if (count >= _50) {
+      percentiles[50] = days[i]
     }
   }
   return percentiles
@@ -79,8 +89,9 @@ module.exports = {
       counts: []
     }
     if (cards.length) {
-      const cardsPerDay = cardsPerDayDistribution(cards)
-      const results = monteCarlo(cardsPerDay.cards, cardsPerDay.startFrom, config.runs, config.cards)
+      const cardsToRunTo = getCardsToRunTo(config.runTo)
+      const cardsPerDay = cardsPerDayDistribution(cards, cardsToRunTo.from)
+      const results = monteCarlo(cardsPerDay.cards, cardsPerDay.startFrom, config.runs, cardsToRunTo.to)
       const max = Math.max(...Object.keys(results))
       for (let i = cardsPerDay.startFrom; i <= max; i++) {
         data.days.push(i)

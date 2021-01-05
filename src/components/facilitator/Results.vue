@@ -36,7 +36,7 @@
               {{ correlation }}
             </div>
             <div class="correlation-marker" :style="{ 'left': correlationPosition(correlation, 100) }">
-              <i class="fas fa-caret-up"  />
+              <i class="fas fa-caret-up" />
             </div>
           </div>
           <div class="correlation-label">
@@ -126,11 +126,12 @@
       </div>
       <div class="mt-4 monte-carlo">
         <h4>
-          Monte Carlo: {{ graphConfig.monteCarlo.runs }} runs to complete {{ graphConfig.monteCarlo.cards }} cards
+          Monte Carlo: {{ parseInt(graphConfig.monteCarlo.runs).toLocaleString() }} runs to complete {{ monteCarloCards() }} cards
         </h4>
         <div class="monte-carlo-percentiles rounded">
-          The probability of completing {{ graphConfig.monteCarlo.cards }} cards is
+          The probability of completing {{ monteCarloCards() }} cards is
           <ul>
+            <li><div class="grey" /> 50% in {{ monteCarlo.percentiles[50] }} days </li>
             <li><div class="green" /> 75% in {{ monteCarlo.percentiles[75] }} days </li>
             <li><div class="orange" /> 90% in {{ monteCarlo.percentiles[90] }} days </li>
             <li><div class="yellow" /> 95% in {{ monteCarlo.percentiles[95] }} days </li>
@@ -269,6 +270,7 @@ export default {
           }]
         },
         percentiles: {
+          50: 0,
           75: 0,
           90: 0,
           95: 0,
@@ -373,6 +375,15 @@ export default {
       this.scatterPlot.limits = data.limits
       this.$modal.show('scatter-plot')
     },
+    monteCarloCards() {
+      let runTo
+      if (this.graphConfig.monteCarlo.runTo == 'Remaining') {
+        runTo = 25
+      } else {
+        runTo = this.graphConfig.monteCarlo.runTo
+      }
+      return runTo
+    },
     showMonteCarlo(data) {
       this.monteCarlo.data.labels = data.results.days
       this.monteCarlo.data.datasets[0].data = data.results.counts
@@ -380,7 +391,9 @@ export default {
       this.monteCarlo.data.datasets[0].backgroundColor = []
       const startDay = this.monteCarlo.data.labels[0]
       for (let i = startDay; i < this.monteCarlo.data.datasets[0].data.length + startDay; i++) {
-        if (i <= data.results.percentiles[75]) {
+        if (i <= data.results.percentiles[50]) {
+          this.monteCarlo.data.datasets[0].backgroundColor.push('grey')
+        } else if (i <= data.results.percentiles[75]) {
           this.monteCarlo.data.datasets[0].backgroundColor.push('green')
         } else if (i <= data.results.percentiles[90]) {
           this.monteCarlo.data.datasets[0].backgroundColor.push('orange')
@@ -500,6 +513,9 @@ export default {
         width: 10px;
         display: inline-block;
 
+        &.grey {
+          background-color: #bbb;
+        }
         &.green {
           background-color: green;
         }

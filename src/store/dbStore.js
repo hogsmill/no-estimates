@@ -105,7 +105,7 @@ function newGame(data) {
     graphConfig: {
       monteCarlo: {
         runs: 1000,
-        cards: 50
+        runTo: '50',
       }
     },
     stealth: false,

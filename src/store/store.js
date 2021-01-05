@@ -108,7 +108,7 @@ export const store = new Vuex.Store({
     graphConfig: {
       monteCarlo: {
         runs: 1000,
-        cards: 50
+        runTo: '50'
       }
     },
     retrosDone: {},

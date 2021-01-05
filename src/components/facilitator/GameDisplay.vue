@@ -65,16 +65,19 @@
         Monte Carlo Simulation
         <div class="monte-carlo-params">
           <div class="param-title">
-            No. Of Cards to complete
+            Run to
           </div>
-          <div>
-            <input type="text" id="monte-carlo-cards" :value="graphConfig.monteCarlo.cards">
-            <button class="btn btn-sm btn-site-primary" @click="saveMonteCarloCards()">
-              Save
-            </button>
+          <div class="run-to">
+            <div>
+              <input type="radio" name="monte-carlo-run-to" id="run-to-remaining" :checked="graphConfig.monteCarlo.runTo == 'Remaining'" @click="saveMonteCarloRunTo('Remaining')"> Remaining cards
+            </div>
+            <div>
+              <input type="radio" name="monte-carlo-run-to" id="run-to-50" :checked="graphConfig.monteCarlo.runTo == '50'" @click="saveMonteCarloRunTo('50')"> 50 cards
+            </div>
+            <div>
+              <input type="radio" name="monte-carlo-run-to" id="run-to-100" :checked="graphConfig.monteCarlo.runTo == '100'" @click="saveMonteCarloRunTo('100')"> 100 cards
+            </div>
           </div>
-        </div>
-        <div class="monte-carlo-params">
           <div class="param-title">
             No. Of Runs
           </div>
@@ -118,13 +121,12 @@ export default {
     hideResult(result) {
       this.socket.emit('hideResult', {gameName: this.gameName, result: result})
     },
-    saveMonteCarloCards() {
-      const cards = document.getElementById('monte-carlo-cards').value
-      this.socket.emit('setMonteCarloCards', {gameName: this.gameName, cards: cards})
-    },
     saveMonteCarloRuns() {
       const runs = document.getElementById('monte-carlo-runs').value
       this.socket.emit('setMonteCarloRuns', {gameName: this.gameName, runs: runs})
+    },
+    saveMonteCarloRunTo(runTo) {
+      this.socket.emit('setMonteCarloRunTo', {gameName: this.gameName, runTo: runTo})
     }
   }
 }
@@ -141,6 +143,13 @@ export default {
         width: 330px;
         text-align: right;
         padding-right: 6px;
+        vertical-align: top;
+      }
+
+      &.run-to {
+        div {
+          padding: 0;
+        }
       }
     }
 

@@ -97,9 +97,3 @@ input {
 .smaller-font {
   font-size: smaller;
 }
-
-canvas {
-  margin: 24px;
-  width: 680px !important;
-  height: 400px !important;
-}

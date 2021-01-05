@@ -128,14 +128,17 @@
         <h4>
           Monte Carlo: {{ parseInt(graphConfig.monteCarlo.runs).toLocaleString() }} runs to complete {{ monteCarloCards() }} cards
         </h4>
+        <div class="estimates">
+          <div v-if="graphConfig.monteCarlo.runTo == 'Remaining'">Initial Estimate: <b>{{ projectEstimate }}</b> days, Re-estimate: <b>{{ reEstimate }}</b> days</div>
+        </div>
         <div class="monte-carlo-percentiles rounded">
-          The probability of completing the cards is
+          Probability of completing cards:
           <ul>
-            <li><div class="grey" /> 50% in {{ monteCarlo.percentiles[50] }} days </li>
-            <li><div class="green" /> 75% in {{ monteCarlo.percentiles[75] }} days </li>
-            <li><div class="orange" /> 90% in {{ monteCarlo.percentiles[90] }} days </li>
-            <li><div class="yellow" /> 95% in {{ monteCarlo.percentiles[95] }} days </li>
-            <li><div class="red" /> 99% in {{ monteCarlo.percentiles[99] }} days </li>
+            <li><div class="grey" /> 50% in <b>{{ monteCarlo.percentiles[50] }}</b> days </li>
+            <li><div class="green" /> 75% in <b>{{ monteCarlo.percentiles[75] }}</b> days </li>
+            <li><div class="orange" /> 90% in <b>{{ monteCarlo.percentiles[90] }}</b> days </li>
+            <li><div class="yellow" /> 95% in <b>{{ monteCarlo.percentiles[95] }}</b> days </li>
+            <li><div class="red" /> 99% in <b>{{ monteCarlo.percentiles[99] }}</b> days </li>
           </ul>
         </div>
         <div>
@@ -303,6 +306,12 @@ export default {
     graphConfig() {
       return this.$store.getters.getGraphConfig
     },
+    projectEstimate() {
+      return this.$store.getters.getProjectEstimate
+    },
+    reEstimate() {
+      return this.$store.getters.getReEstimate
+    },
     noOfDoneCards() {
       return this.$store.getters.getNoOfDoneCards
     }
@@ -414,6 +423,10 @@ export default {
 
 <style lang="scss">
 
+  canvas {
+    margin: 0 auto;
+  }
+
   .correlation {
     .correlation-labels {
       width: 640px;
@@ -498,14 +511,20 @@ export default {
     }
   }
 
+  .monte-carlo {
+    .estimates {
+      height: 24px;
+    }
+  }
+
   .monte-carlo-percentiles {
     border: 1px solid #ddd;
     width: 240px;
     position: absolute;
     z-index: 10;
     background-color: #fff;
-    left: 80px;
-    top: 104px;
+    left: 54px;
+    top: 130px;
     box-shadow: 2px 2px 3px #aaa;
 
     li {

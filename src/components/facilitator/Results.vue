@@ -3,7 +3,7 @@
 
     <!-- Correlation -->
 
-    <modal name="correlation" class="popup" :height="280" :width="750" :classes="['rounded']">
+    <modal name="correlation" class="popup" :height="280" :width="850" :classes="['rounded']">
       <div class="float-right mr-2 mt-1">
         <button type="button" class="close" @click="hide('correlation')" aria-label="Close">
           <span aria-hidden="true">&times;</span>
@@ -48,7 +48,7 @@
 
     <!-- Cycle Time -->
 
-    <modal name="cycle-time" class="popup" :height="520" :width="750" :classes="['rounded']">
+    <modal name="cycle-time" class="popup" :height="520" :width="850" :classes="['rounded']">
       <div class="float-right mr-2 mt-1">
         <button type="button" class="close" @click="hide('cycle-time')" aria-label="Close">
           <span aria-hidden="true">&times;</span>
@@ -76,7 +76,7 @@
 
     <!-- Distribution -->
 
-    <modal name="distribution" class="popup" :height="540" :width="750" :classes="['rounded']">
+    <modal name="distribution" class="popup" :height="540" :width="850" :classes="['rounded']">
       <div class="float-right mr-2 mt-1">
         <button type="button" class="close" @click="hide('distribution')" aria-label="Close">
           <span aria-hidden="true">&times;</span>
@@ -94,7 +94,7 @@
 
     <!-- Scatter Plot -->
 
-    <modal name="scatter-plot" class="popup" :height="520" :width="750" :classes="['rounded']">
+    <modal name="scatter-plot" class="popup" :height="520" :width="850" :classes="['rounded']">
       <div class="float-right mr-2 mt-1">
         <button type="button" class="close" @click="hide('scatter-plot')" aria-label="Close">
           <span aria-hidden="true">&times;</span>
@@ -118,7 +118,7 @@
 
     <!-- Monte Carlo -->
 
-    <modal name="monte-carlo" class="popup" :height="520" :width="750" :classes="['rounded']">
+    <modal name="monte-carlo" class="popup" :height="520" :width="850" :classes="['rounded']">
       <div class="float-right mr-2 mt-1">
         <button type="button" class="close" @click="hide('monte-carlo')" aria-label="Close">
           <span aria-hidden="true">&times;</span>
@@ -129,7 +129,7 @@
           Monte Carlo: {{ parseInt(graphConfig.monteCarlo.runs).toLocaleString() }} runs to complete {{ monteCarloCards() }} cards
         </h4>
         <div class="monte-carlo-percentiles rounded">
-          The probability of completing {{ monteCarloCards() }} cards is
+          The probability of completing the cards is
           <ul>
             <li><div class="grey" /> 50% in {{ monteCarlo.percentiles[50] }} days </li>
             <li><div class="green" /> 75% in {{ monteCarlo.percentiles[75] }} days </li>
@@ -302,6 +302,9 @@ export default {
     },
     graphConfig() {
       return this.$store.getters.getGraphConfig
+    },
+    noOfDoneCards() {
+      return this.$store.getters.getNoOfDoneCards
     }
   },
   created() {
@@ -378,7 +381,7 @@ export default {
     monteCarloCards() {
       let runTo
       if (this.graphConfig.monteCarlo.runTo == 'Remaining') {
-        runTo = 25
+        runTo = 'the remaining ' + this.noOfDoneCards
       } else {
         runTo = this.graphConfig.monteCarlo.runTo
       }
@@ -497,7 +500,7 @@ export default {
 
   .monte-carlo-percentiles {
     border: 1px solid #ddd;
-    width: 300px;
+    width: 240px;
     position: absolute;
     z-index: 10;
     background-color: #fff;

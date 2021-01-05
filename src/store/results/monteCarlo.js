@@ -4,11 +4,20 @@ function getNoOfCardsForDay(cardsPerDay) {
   return cardsPerDay[index]
 }
 
-function getCardsToRunTo(runTo) {
-  return {
-    from: 0,
-    to: parseInt(runTo)
+function getCardsToRunTo(config, cards) {
+  let runConfig = {}
+  if (config.runTo == 'Remaining') {
+    runConfig = {
+      from: cards.length,
+      to: 25 - cards.length
+    }
+  } else {
+    runConfig = {
+      from: 0,
+      to: parseInt(config.runTo)
+    }
   }
+  return runConfig
 }
 
 function monteCarloRun(cardsPerDay, noOfCards, startFrom) {
@@ -21,7 +30,7 @@ function monteCarloRun(cardsPerDay, noOfCards, startFrom) {
   return day
 }
 
-function monteCarlo(cardsPerDay, startFrom, runs, cards) {
+function monteCarlo(cards, cardsPerDay, startFrom, runs, cards) {
   const results = {}
   for (let i = 0; i < runs; i++) {
     const run = monteCarloRun(cardsPerDay, cards, startFrom)
@@ -86,12 +95,12 @@ module.exports = {
   run: function(cards, config) {
     const data = {
       days: [],
-      counts: []
+      counts: [],
     }
     if (cards.length) {
-      const cardsToRunTo = getCardsToRunTo(config.runTo)
+      const cardsToRunTo = getCardsToRunTo(config, cards)
       const cardsPerDay = cardsPerDayDistribution(cards, cardsToRunTo.from)
-      const results = monteCarlo(cardsPerDay.cards, cardsPerDay.startFrom, config.runs, cardsToRunTo.to)
+      const results = monteCarlo(cards, cardsPerDay.cards, cardsPerDay.startFrom, config.runs, cardsToRunTo.to)
       const max = Math.max(...Object.keys(results))
       for (let i = cardsPerDay.startFrom; i <= max; i++) {
         data.days.push(i)

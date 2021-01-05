@@ -309,6 +309,15 @@ export const store = new Vuex.Store({
     getWorkCards: (state) => {
       return state.workCards
     },
+    getNoOfDoneCards: (state) => {
+      let n
+      for (let i = 0; i < state.columns.length; i++) {
+        if (state.columns[i].name == 'done') {
+          n = state.columns[i].cards.length
+        }
+      }
+      return n
+    },
     getProjectEstimate: (state) => {
       return state.projectEstimate
     },

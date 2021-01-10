@@ -8,7 +8,7 @@
       </td>
     </tr>
     <tr v-if="showGameDisplay" class="header">
-      <td rowspan="5">
+      <td rowspan="5" class="show-results-td">
         Show results
       </td>
       <td>
@@ -30,7 +30,9 @@
           Hide
         </button>
         Cycle Time
-        <div>
+        <i v-if="showCycleTimeConfig" @click="setShowCycleTimeConfig(false)" title="collapse cycle time config" class="fas fa-caret-up toggle config" />
+        <i v-if="!showCycleTimeConfig" @click="setShowCycleTimeConfig(true)" title="expand cycle time config" class="fas fa-caret-down toggle config" />
+        <div v-if="showCycleTimeConfig">
           <table class="card-sizes">
             <tr>
               <td>
@@ -90,30 +92,45 @@
           Hide
         </button>
         Monte Carlo Simulation
-        <div class="monte-carlo-params">
-          <div class="param-title">
-            Run to
-          </div>
-          <div class="run-to">
-            <div>
-              <input type="radio" name="monte-carlo-run-to" id="run-to-remaining" :checked="graphConfig.monteCarlo.runTo == 'Remaining'" @click="saveMonteCarloRunTo('Remaining')"> Remaining cards
-            </div>
-            <div>
-              <input type="radio" name="monte-carlo-run-to" id="run-to-50" :checked="graphConfig.monteCarlo.runTo == '50'" @click="saveMonteCarloRunTo('50')"> 50 cards
-            </div>
-            <div>
-              <input type="radio" name="monte-carlo-run-to" id="run-to-100" :checked="graphConfig.monteCarlo.runTo == '100'" @click="saveMonteCarloRunTo('100')"> 100 cards
-            </div>
-          </div>
-          <div class="param-title">
-            No. Of Runs
-          </div>
-          <div>
-            <input type="text" id="monte-carlo-runs" :value="graphConfig.monteCarlo.runs">
-            <button class="btn btn-sm btn-site-primary" @click="saveMonteCarloRuns()">
-              Save
-            </button>
-          </div>
+        <i v-if="showMonteCarloConfig" @click="setShowMonteCarloConfig(false)" title="collapse Monte Carlo config" class="fas fa-caret-up toggle config" />
+        <i v-if="!showMonteCarloConfig" @click="setShowMonteCarloConfig(true)" title="expand Monte Carlo config" class="fas fa-caret-down toggle config" />
+        <div v-if="showMonteCarloConfig" class="monte-carlo-params">
+          <table>
+            <tr>
+              <td rowspan="4">
+                Run to
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <input type="radio" name="monte-carlo-run-to" id="run-to-remaining" :checked="graphConfig.monteCarlo.runTo == 'Remaining'" @click="saveMonteCarloRunTo('Remaining')">
+                <span>Remaining cards</span>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <input type="radio" name="monte-carlo-run-to" id="run-to-50" :checked="graphConfig.monteCarlo.runTo == '50'" @click="saveMonteCarloRunTo('50')">
+                <span>50 cards</span>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <input type="radio" name="monte-carlo-run-to" id="run-to-100" :checked="graphConfig.monteCarlo.runTo == '100'" @click="saveMonteCarloRunTo('100')">
+                <span>100 cards</span>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                No. Of Runs
+              </td>
+              <td>
+                <input type="text" id="monte-carlo-runs" :value="graphConfig.monteCarlo.runs">
+                <button class="btn btn-sm btn-site-primary" @click="saveMonteCarloRuns()">
+                  Save
+                </button>
+              </td>
+            </tr>
+          </table>
         </div>
       </td>
     </tr>
@@ -127,7 +144,9 @@ export default {
   ],
   data() {
     return {
-      showGameDisplay: false
+      showGameDisplay: false,
+      showCycleTimeConfig: false,
+      showMonteCarloConfig: false
     }
   },
   computed: {
@@ -141,6 +160,12 @@ export default {
   methods: {
     setShowGameDisplay(val) {
       this.showGameDisplay = val
+    },
+    setShowCycleTimeConfig(val) {
+      this.showCycleTimeConfig = val
+    },
+    setShowMonteCarloConfig(val) {
+      this.showMonteCarloConfig = val
     },
     showResult(result) {
       this.socket.emit('showResult', {gameName: this.gameName, result: result})
@@ -164,6 +189,16 @@ export default {
 </script>
 
 <style lang="scss">
+  .show-results-td {
+    width: 110px;
+  }
+
+  i.config {
+    position: relative !important;
+    left: 6px;
+    top: 6px;
+  }
+
   .card-sizes {
     margin-left: 80px;
     width: 50%;
@@ -183,21 +218,22 @@ export default {
   }
 
   .monte-carlo-params {
-    div {
-      display: inline-block;
-      width: 200px;
-      padding: 3px;
+    position: relative;
+    left: 200px;
 
-      &.param-title {
-        width: 330px;
-        text-align: right;
-        padding-right: 6px;
-        vertical-align: top;
-      }
+    table {
+      width: 300px;
 
-      &.run-to {
-        div {
-          padding: 0;
+      td {
+        border: none;
+
+        input[type=radio] {
+          width: 30px;
+        }
+
+        span {
+          position: absolute;
+          left: 40px;
         }
       }
     }

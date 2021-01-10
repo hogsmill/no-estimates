@@ -30,6 +30,33 @@
           Hide
         </button>
         Cycle Time
+        <div>
+          <table class="card-sizes">
+            <tr>
+              <td>
+                Small card size, less than
+                <input type="text" id="card-size-medium" :value="graphConfig.cycleTime.medium">
+                <button class="btn btn-sm btn-site-primary" @click="saveCardSize('medium')">
+                  Save
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Medium card size, {{ graphConfig.cycleTime.medium }} to
+                <input type="text" id="card-size-large" :value="graphConfig.cycleTime.large">
+                <button class="btn btn-sm btn-site-primary" @click="saveCardSize('large')">
+                  Save
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="2">
+                Large card size, greater than  {{ graphConfig.cycleTime.large }}
+              </td>
+            </tr>
+          </table>
+        </div>
       </td>
     </tr>
     <tr v-if="showGameDisplay">
@@ -121,6 +148,10 @@ export default {
     hideResult(result) {
       this.socket.emit('hideResult', {gameName: this.gameName, result: result})
     },
+    saveCardSize(size) {
+      const val = document.getElementById('card-size-' + size).value
+      this.socket.emit('setCardSize', {gameName: this.gameName, size: size, value: val})
+    },
     saveMonteCarloRuns() {
       const runs = document.getElementById('monte-carlo-runs').value
       this.socket.emit('setMonteCarloRuns', {gameName: this.gameName, runs: runs})
@@ -133,6 +164,24 @@ export default {
 </script>
 
 <style lang="scss">
+  .card-sizes {
+    margin-left: 80px;
+    width: 50%;
+
+    td {
+      text-align: right !important;
+      border: none !important;
+
+      input {
+        width: 30px;
+        text-align: center;
+      }
+      button {
+        margin: 0 0 0 6px;
+      }
+    }
+  }
+
   .monte-carlo-params {
     div {
       display: inline-block;

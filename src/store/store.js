@@ -106,6 +106,10 @@ export const store = new Vuex.Store({
       percentageDeployFail: 0.5
     },
     graphConfig: {
+      cycleTime: {
+        small: 15,
+        medium: 25
+      },
       monteCarlo: {
         runs: 1000,
         runTo: '50'

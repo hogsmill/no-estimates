@@ -5,6 +5,7 @@ const pairingFuns = require('./lib/pairing.js')
 const dependent = require('./lib/dependent.js')
 const chat = require('./lib/chat.js')
 const gameState = require('./lib/gameState.js')
+const dbUpdate = require('./db/dbUpdate.js')
 
 const initialTeams = [
   { name: 'Blue', include: true },
@@ -103,6 +104,10 @@ function newGame(data) {
       percentageDeployFail: 0.5,
     },
     graphConfig: {
+      cycleTime: {
+        medium: 15,
+        large: 20
+      },
       monteCarlo: {
         runs: 1000,
         runTo: '50',
@@ -227,7 +232,11 @@ module.exports = {
     db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, res) {
       if (err) throw err
       if (res) {
-        db.collection('noEstimatesGames').updateOne({'_id': res._id}, {$set: {lastaccess: new Date().toISOString()} }, function(err) {
+        res = dbUpdate.game(res)
+        res.lastaccess = new Date().toISOString()
+        const id = res._id
+        delete res._id
+        db.collection('noEstimatesGames').updateOne({'_id': id}, {$set: res}, function(err) {
           if (err) throw err
         })
         console.log('Loading game \'' + data.gameName + '\'')
@@ -239,11 +248,11 @@ module.exports = {
             updateTeam(db, io, resOld)
           })
         }
-        db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
+        db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, gameRes) {
           if (err) throw err
-          if (res) {
-            res.members = teamFuns.addMember(res.members, data.myName, data.myRole)
-            updateTeam(db, io, res)
+          if (gameRes) {
+            gameRes.members = teamFuns.addMember(gameRes.members, data.myName, data.myRole)
+            updateTeam(db, io, gameRes)
           }
         })
       } else {

@@ -65,6 +65,23 @@ module.exports = {
     })
   },
 
+  setCardSize: function(err, client, db, io, data, debugOn) {
+
+    if (debugOn) { console.log('setCardSize', data) }
+
+    db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, res) {
+      if (err) throw err
+      if (res) {
+        res.graphConfig.cycleTime[data.size] = data.value
+        const id = res._id
+        delete res._id
+        db.collection('noEstimatesGames').updateOne({'_id': id}, {$set: res}, function(err) {
+          if (err) throw err
+          io.emit('loadGame', res)
+        })
+      }
+    })
+  },
   setMonteCarloRunTo: function(err, client, db, io, data, debugOn) {
 
     if (debugOn) { console.log('setMonteCarloCards', data) }

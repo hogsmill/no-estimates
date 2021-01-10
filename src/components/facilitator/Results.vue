@@ -365,9 +365,9 @@ export default {
     showCycleTime(data) {
       this.cycleTime.data.datasets[0].backgroundColor = []
       for (let i = 0; i < data.results.effort.length; i++) {
-        if (data.results.effort[i] < 15) {
+        if (data.results.effort[i] < this.graphConfig.cycleTime.medium) {
           this.cycleTime.data.datasets[0].backgroundColor.push('cadetblue')
-        } else if (data.results.effort[i] < 20) {
+        } else if (data.results.effort[i] < this.graphConfig.cycleTime.large) {
           this.cycleTime.data.datasets[0].backgroundColor.push('olive')
         } else {
           this.cycleTime.data.datasets[0].backgroundColor.push('darkorange')

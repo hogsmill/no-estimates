@@ -7,7 +7,7 @@ const monteCarlo = require('./results/monteCarlo.js')
 
 module.exports = {
 
-  showResult: function(err, client, db, io, data, debugOn) {
+  showResult: function(err, db, io, data, debugOn) {
 
     if (debugOn) { console.log('showResult', data) }
 
@@ -50,7 +50,7 @@ module.exports = {
     })
   },
 
-  hideResult: function(err, client, db, io, data, debugOn) {
+  hideResult: function(err, db, io, data, debugOn) {
 
     if (debugOn) { console.log('showResult', data) }
 
@@ -65,7 +65,7 @@ module.exports = {
     })
   },
 
-  setCardSize: function(err, client, db, io, data, debugOn) {
+  setCardSize: function(err, db, io, data, debugOn) {
 
     if (debugOn) { console.log('setCardSize', data) }
 
@@ -82,7 +82,7 @@ module.exports = {
       }
     })
   },
-  setMonteCarloRunTo: function(err, client, db, io, data, debugOn) {
+  setMonteCarloRunTo: function(err, db, io, data, debugOn) {
 
     if (debugOn) { console.log('setMonteCarloCards', data) }
 
@@ -100,7 +100,7 @@ module.exports = {
     })
   },
 
-  setMonteCarloRuns: function(err, client, db, io, data, debugOn) {
+  setMonteCarloRuns: function(err, db, io, data, debugOn) {
 
     if (debugOn) { console.log('setMonteCarloRuns', data) }
 

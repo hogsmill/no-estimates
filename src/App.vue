@@ -7,11 +7,7 @@
       <FacilitatorView :socket="socket" />
     </div>
     <div class="main" v-else>
-      <div v-if="isHost" class="right">
-        <button class="btn btn-sm btn-outline-secondary smaller-font" @click="clearLocalStorage()">
-          Clear Local Storage
-        </button>
-      </div>
+      <HostFunctions v-if="isHost" :socket="socket" />
       <div v-if="!connections.connections" class="not-connected">
         WARNING: You are not connected to the server
       </div>
@@ -45,6 +41,7 @@ import params from './lib/params.js'
 import stringFuns from './lib/stringFuns.js'
 
 import Header from './components/Header.vue'
+import HostFunctions from './components/HostFunctions.vue'
 import Report from './components/report/Report.vue'
 import Results from './components/facilitator/Results.vue'
 import SetGame from './components/SetGame.vue'
@@ -64,6 +61,7 @@ export default {
   name: 'App',
   components: {
     appHeader: Header,
+    HostFunctions,
     FacilitatorView,
     WalkThroughView,
     SetGame,
@@ -203,16 +201,8 @@ export default {
   methods: {
     membersString() {
       return stringFuns.pluralString(this.myTeamMembers, 'member')
-    },
-    clearLocalStorage() {
-      if (confirm('Clear localStorage?')) {
-        localStorage.removeItem('myName')
-        localStorage.removeItem('teamName')
-        localStorage.removeItem('myRole')
-        localStorage.removeItem('gameName')
-      }
     }
-  },
+  }
 }
 </script>
 

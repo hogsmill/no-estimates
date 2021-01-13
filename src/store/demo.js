@@ -55,7 +55,7 @@ function updateTeam(db, io, res) {
 
 module.exports = {
 
-  runDemoToMvp: function(err, client, db, io, data, debugOn) {
+  runDemoToMvp: function(err, db, io, data, debugOn) {
 
     if (debugOn) { console.log('runDemoToMvp', data) }
 
@@ -68,7 +68,7 @@ module.exports = {
     })
   },
 
-  runDemoToEnd: function(err, client, db, io, data, debugOn) {
+  runDemoToEnd: function(err, db, io, data, debugOn) {
 
     if (debugOn) { console.log('runDemoToEnd', data) }
 

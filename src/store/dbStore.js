@@ -154,7 +154,7 @@ function newTeam(gameName, teamName, config) {
   return team
 }
 
-function _getGames(err, client, db, io, data, debugOn) {
+function _getGames(err, db, io, data, debugOn) {
 
   if (debugOn) { console.log('getGames') }
 
@@ -192,7 +192,7 @@ module.exports = {
     gameState.update(db, io, data)
   },
 
-  getGameDetails: function(err, client, db, io, data, debugOn) {
+  getGameDetails: function(err, db, io, data, debugOn) {
 
     if (debugOn) { console.log('getGameDetails', data) }
 
@@ -215,17 +215,17 @@ module.exports = {
     })
   },
 
-  getGames: function(err, client, db, io, data, debugOn) {
-    _getGames(err, client, db, io, data, debugOn)
+  getGames: function(err, db, io, data, debugOn) {
+    _getGames(err, db, io, data, debugOn)
   },
 
-  getAvailableGames: function(err, client, db, io, data, debugOn) {
+  getAvailableGames: function(err, db, io, data, debugOn) {
 
     if (debugOn) { console.log('getAvailableGames', data) }
 
   },
 
-  loadGame: function(err, client, db, io, data, debugOn) {
+  loadGame: function(err, db, io, data, debugOn) {
 
     if (debugOn) { console.log('loadGame', data) }
 
@@ -279,7 +279,7 @@ module.exports = {
     })
   },
 
-  restartGame: function(err, client, db, io, data, debugOn) {
+  restartGame: function(err, db, io, data, debugOn) {
 
     if (debugOn) { console.log('restartGame', data) }
 
@@ -307,7 +307,7 @@ module.exports = {
     })
   },
 
-  deleteGameMeta: function(err, client, db, io, data, debugOn) {
+  deleteGameMeta: function(err, db, io, data, debugOn) {
 
     if (debugOn) { console.log('deleteGameMeta', data) }
 
@@ -316,13 +316,13 @@ module.exports = {
       if (res) {
         db.collection('noEstimatesGames').deleteOne({'_id': res._id}, function(err, ) {
           if (err) throw err
-          _getGames(err, client, db, io, data, debugOn)
+          _getGames(err, db, io, data, debugOn)
         })
       }
     })
   },
 
-  deleteGame: function(err, client, db, io, data, debugOn) {
+  deleteGame: function(err, db, io, data, debugOn) {
 
     if (debugOn) { console.log('deleteGame', data) }
 
@@ -338,7 +338,7 @@ module.exports = {
     })
   },
 
-  retroDone: function(err, client, db, io, data, debugOn) {
+  retroDone: function(err, db, io, data, debugOn) {
 
     if (debugOn) { console.log('retroDone', data) }
 
@@ -351,7 +351,7 @@ module.exports = {
     })
   },
 
-  updateCurrentDay: function(err, client, db, io, data, debugOn) {
+  updateCurrentDay: function(err, db, io, data, debugOn) {
 
     if (debugOn) { console.log('updateCurrentDay', data) }
 
@@ -386,7 +386,7 @@ module.exports = {
     })
   },
 
-  pullInCard: function(err, client, db, io, data, debugOn) {
+  pullInCard: function(err, db, io, data, debugOn) {
 
     if (debugOn) { console.log('pullInCard', data) }
 
@@ -416,7 +416,7 @@ module.exports = {
     })
   },
 
-  updateEffort: function(err, client, db, io, data, debugOn) {
+  updateEffort: function(err, db, io, data, debugOn) {
 
     if (debugOn) { console.log('updateEffort', data) }
 
@@ -448,7 +448,7 @@ module.exports = {
     })
   },
 
-  pairingDay: function(err, client, db, io, data, debugOn) {
+  pairingDay: function(err, db, io, data, debugOn) {
 
     if (debugOn) { console.log('pairingDay', data) }
 
@@ -506,7 +506,7 @@ module.exports = {
     })
   },
 
-  addEffortToOthersCard: function(err, client, db, io, data, debugOn) {
+  addEffortToOthersCard: function(err, db, io, data, debugOn) {
 
     if (debugOn) { console.log('addEffortToOthersCard', data) }
 
@@ -528,7 +528,7 @@ module.exports = {
     })
   },
 
-  startAutoDeploy: function(err, client, db, io, data, debugOn) {
+  startAutoDeploy: function(err, db, io, data, debugOn) {
 
     if (debugOn) { console.log('startAutoDeploy', data) }
 
@@ -541,7 +541,7 @@ module.exports = {
     })
   },
 
-  incrementAutoDeploy: function(err, client, db, io, data, debugOn) {
+  incrementAutoDeploy: function(err, db, io, data, debugOn) {
 
     if (debugOn) { console.log('incrementAutoDeploy', data) }
 
@@ -561,7 +561,7 @@ module.exports = {
     })
   },
 
-  sendMessage: function(err, client, db, io, data, debugOn) {
+  sendMessage: function(err, db, io, data, debugOn) {
 
     if (debugOn) { console.log('sendMessage', data) }
 
@@ -581,7 +581,7 @@ module.exports = {
     })
   },
 
-  sendMessageToFacilitators: function(err, client, db, io, data, debugOn) {
+  sendMessageToFacilitators: function(err, db, io, data, debugOn) {
 
     if (debugOn) { console.log('sendMessageToFacilitators', data) }
 
@@ -601,7 +601,7 @@ module.exports = {
     })
   },
 
-  updateMessages: function(err, client, db, io, data, debugOn) {
+  updateMessages: function(err, db, io, data, debugOn) {
 
     if (debugOn) { console.log('updateMessages', data) }
 
@@ -614,7 +614,7 @@ module.exports = {
     })
   },
 
-  updateFacilitatorMessages: function(err, client, db, io, data, debugOn) {
+  updateFacilitatorMessages: function(err, db, io, data, debugOn) {
 
     if (debugOn) { console.log('updateFacilitatorMessages', data) }
 
@@ -627,7 +627,7 @@ module.exports = {
     })
   },
 
-  answerFacilitatorQuestion: function(err, client, db, io, data, debugOn) {
+  answerFacilitatorQuestion: function(err, db, io, data, debugOn) {
 
     if (debugOn) { console.log('answerFacilitatorQuestion', data) }
 
@@ -648,7 +648,7 @@ module.exports = {
     })
   },
 
-  updateProjectEstimate: function(err, client, db, io, data, debugOn) {
+  updateProjectEstimate: function(err, db, io, data, debugOn) {
 
     if (debugOn) { console.log('updateProjectEstimate', data) }
 
@@ -661,7 +661,7 @@ module.exports = {
     })
   },
 
-  updateMVPEstimate: function(err, client, db, io, data, debugOn) {
+  updateMVPEstimate: function(err, db, io, data, debugOn) {
 
     if (debugOn) { console.log('updateMVPEstimate', data) }
 
@@ -674,7 +674,7 @@ module.exports = {
     })
   },
 
-  updateReEstimate: function(err, client, db, io, data, debugOn) {
+  updateReEstimate: function(err, db, io, data, debugOn) {
 
     if (debugOn) { console.log('updateReEstimate', data) }
 
@@ -687,7 +687,7 @@ module.exports = {
     })
   },
 
-  updateTeamActive: function(err, client, db, io, data, debugOn) {
+  updateTeamActive: function(err, db, io, data, debugOn) {
 
     if (debugOn) { console.log('updateTeamActive', data) }
 
@@ -714,7 +714,7 @@ module.exports = {
     })
   },
 
-  updateGameInclude: function(err, client, db, io, data, debugOn) {
+  updateGameInclude: function(err, db, io, data, debugOn) {
 
     if (debugOn) { console.log('updateGameInclude', data) }
 
@@ -726,13 +726,13 @@ module.exports = {
         delete res._id
         db.collection('noEstimatesGames').updateOne({'_id': id}, {$set: res}, function(err) {
           if (err) throw err
-          _getGames(err, client, db, io, data, debugOn)
+          _getGames(err, db, io, data, debugOn)
         })
       }
     })
   },
 
-  updateStealth: function(err, client, db, io, data, debugOn) {
+  updateStealth: function(err, db, io, data, debugOn) {
 
     if (debugOn) { console.log('updateStealth', data) }
 
@@ -750,7 +750,7 @@ module.exports = {
     })
   },
 
-  updateConfig: function(err, client, db, io, data, debugOn) {
+  updateConfig: function(err, db, io, data, debugOn) {
 
     if (debugOn) { console.log('updateConfig', data) }
 

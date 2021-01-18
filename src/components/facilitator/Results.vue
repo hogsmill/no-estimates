@@ -1,6 +1,36 @@
 <template>
   <span>
 
+    <!-- Sources of Variation -->
+
+    <modal name="sources-of-variation" class="popup" :height="500" :width="400" :classes="['rounded']">
+      <div class="float-right mr-2 mt-1">
+        <button type="button" class="close" @click="hide('sources-of-variation')" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="mt-4 correlation">
+        <h4>
+          Sources of Variation
+        </h4>
+      </div>
+      <div class="sources">
+        <div v-for="(source, index) in sourcesOfVariation" :key="index">
+          <div class="source">
+            <div v-if="isHost" class="source-show">
+              <input type="checkbox" :checked="source.show" @click="showSourceOfVariation(source)">
+            </div>
+            <div v-if="!isHost" class="source-show">
+              <i class="fas fa-exclamation-circle"></i>
+            </div>
+            <div v-if="isHost || source.show" class="source-name">
+              {{ source.name }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </modal>
+
     <!-- Correlation -->
 
     <modal name="correlation" class="popup" :height="280" :width="850" :classes="['rounded']">
@@ -164,12 +194,14 @@ export default {
   data() {
     return {
       modals: [
+        'sources-of-variation',
         'correlation',
         'cycle-time',
         'distribution',
         'scatter-plot',
         'monte-carlo'
       ],
+      sourcesOfVariation: [],
       correlation: 0,
       cycleTime: {
         data: {
@@ -297,6 +329,9 @@ export default {
     }
   },
   computed: {
+    isHost() {
+      return this.$store.getters.getHost
+    },
     gameName() {
       return this.$store.getters.getGameName
     },
@@ -312,6 +347,9 @@ export default {
     reEstimate() {
       return this.$store.getters.getReEstimate
     },
+    workCards() {
+      return this.$store.getters.getWorkCards
+    },
     noOfDoneCards() {
       return this.$store.getters.getNoOfDoneCards
     }
@@ -324,6 +362,9 @@ export default {
           self.hide(this.modals[i])
         }
         switch(data.result) {
+          case 'sources-of-variation':
+            self.showSourcesOfVariation(data)
+            break
           case 'correlation':
             self.showCorrelation(data)
             break
@@ -358,6 +399,13 @@ export default {
     correlationPosition(value, n) {
       return parseInt(290 * (value + 1)) - 290 - n + 'px'
     },
+    showSourcesOfVariation(data) {
+      this.sourcesOfVariation = data.results
+      this.$modal.show('sources-of-variation')
+    },
+    showSourceOfVariation(source) {
+      this.socket.emit('showSourceOfVariation', {gameName: this.gameName, source: source})
+    },
     showCorrelation(data) {
       this.correlation = parseFloat(data.results)
       this.$modal.show('correlation')
@@ -390,7 +438,7 @@ export default {
     monteCarloCards() {
       let runTo
       if (this.graphConfig.monteCarlo.runTo == 'Remaining') {
-        runTo = 'the remaining ' + this.noOfDoneCards
+        runTo = 'the remaining ' + parseInt(this.workCards.length - this.noOfDoneCards)
       } else {
         runTo = this.graphConfig.monteCarlo.runTo
       }
@@ -425,6 +473,27 @@ export default {
 
   canvas {
     margin: 0 auto;
+  }
+
+  .sources {
+    margin-top: 32px;
+  }
+
+  .source {
+    text-align: left;
+    padding-left: 24px;
+
+    div {
+      display: inline-block;
+
+      &.source-show {
+        width: 40px;
+
+        .fas {
+          color: crimson;
+        }
+      }
+    }
   }
 
   .correlation {

@@ -62,82 +62,82 @@ function doDb(fun, data) {
 
     switch(fun) {
       case 'getAvailableGames':
-        dbStore.getAvailableGames(err, db, io, data, debugOn)
+        dbStore.getAvailableGames(db, io, data, debugOn)
         break
       case 'loadGame':
-        dbStore.loadGame(err, db, io, data, debugOn)
+        dbStore.loadGame(db, io, data, debugOn)
         break
       case 'restartGame':
-        dbStore.restartGame(err, db, io, data, debugOn)
+        dbStore.restartGame(db, io, data, debugOn)
         break
       case 'deleteGameMeta':
-        dbStore.deleteGameMeta(err, db, io, data, debugOn)
+        dbStore.deleteGameMeta(db, io, data, debugOn)
         break
       case 'deleteGame':
-        dbStore.deleteGame(err, db, io, data, debugOn)
+        dbStore.deleteGame(db, io, data, debugOn)
         break
       case 'retroDone':
-        dbStore.retroDone(err, db, io, data, debugOn)
+        dbStore.retroDone(db, io, data, debugOn)
         break
       case 'updateCurrentDay':
-        dbStore.updateCurrentDay(err, db, io, data, debugOn)
+        dbStore.updateCurrentDay(db, io, data, debugOn)
         break
       case 'pullInCard':
-        dbStore.pullInCard(err, db, io, data, debugOn)
+        dbStore.pullInCard(db, io, data, debugOn)
         break
       case 'updateEffort':
-        dbStore.updateEffort(err, db, io, data, debugOn)
+        dbStore.updateEffort(db, io, data, debugOn)
         break
       case 'addEffortToOthersCard':
-        dbStore.addEffortToOthersCard(err, db, io, data, debugOn)
+        dbStore.addEffortToOthersCard(db, io, data, debugOn)
         break
       case 'incrementAutoDeploy':
-        dbStore.incrementAutoDeploy(err, db, io, data, debugOn)
+        dbStore.incrementAutoDeploy(db, io, data, debugOn)
         break
       case 'startAutoDeploy':
-        dbStore.startAutoDeploy(err, db, io, data, debugOn)
+        dbStore.startAutoDeploy(db, io, data, debugOn)
         break
       case 'updateProjectEstimate':
-        dbStore.updateProjectEstimate(err, db, io, data, debugOn)
+        dbStore.updateProjectEstimate(db, io, data, debugOn)
         break
       case 'updateMVPEstimate':
-        dbStore.updateMVPEstimate(err, db, io, data, debugOn)
+        dbStore.updateMVPEstimate(db, io, data, debugOn)
         break
       case 'updateReEstimate':
-        dbStore.updateReEstimate(err, db, io, data, debugOn)
+        dbStore.updateReEstimate(db, io, data, debugOn)
         break
       case 'pairingDay':
-        dbStore.pairingDay(err, db, io, data, debugOn)
+        dbStore.pairingDay(db, io, data, debugOn)
         break
       case 'sendMessage':
-        dbStore.sendMessage(err, db, io, data, debugOn)
+        dbStore.sendMessage(db, io, data, debugOn)
         break
       case 'sendMessageToFacilitators':
-        dbStore.sendMessageToFacilitators(err, db, io, data, debugOn)
+        dbStore.sendMessageToFacilitators(db, io, data, debugOn)
         break
       case 'updateMessages':
-        dbStore.updateMessages(err, db, io, data, debugOn)
+        dbStore.updateMessages(db, io, data, debugOn)
         break
       case 'updateFacilitatorMessages':
-        dbStore.updateFacilitatorMessages(err, db, io, data, debugOn)
+        dbStore.updateFacilitatorMessages(db, io, data, debugOn)
         break
       case 'answerFacilitatorQuestion':
-        dbStore.answerFacilitatorQuestion(err, db, io, data, debugOn)
+        dbStore.answerFacilitatorQuestion(db, io, data, debugOn)
         break
 
       // Facilitator
       //
       case 'updateTeamActive':
-        dbStore.updateTeamActive(err, db, io, data, debugOn)
+        dbStore.updateTeamActive(db, io, data, debugOn)
         break
       case 'updateGameInclude':
-        dbStore.updateGameInclude(err, db, io, data, debugOn)
+        dbStore.updateGameInclude(db, io, data, debugOn)
         break
       case 'updateStealth':
-        dbStore.updateStealth(err, db, io, data, debugOn)
+        dbStore.updateStealth(db, io, data, debugOn)
         break
       case 'updateConfig':
-        dbStore.updateConfig(err, db, io, data, debugOn)
+        dbStore.updateConfig(db, io, data, debugOn)
         break
 
      // Game State
@@ -146,40 +146,46 @@ function doDb(fun, data) {
        dbStore.gameState(db, io, data)
        break
     case 'getGames':
-      dbStore.getGames(err, db, io, data, debugOn)
+      dbStore.getGames(db, io, data, debugOn)
       break
     case 'getGameDetails':
-      dbStore.getGameDetails(err, db, io, data, debugOn)
+      dbStore.getGameDetails(db, io, data, debugOn)
       break
 
     // Results
 
     case 'showResult':
-      results.showResult(err, db, io, data, debugOn)
+      results.showResult(db, io, data, debugOn)
       break
     case 'hideResult':
-      results.hideResult(err, db, io, data, debugOn)
+      results.hideResult(db, io, data, debugOn)
+      break
+    case 'showSourceOfVariation':
+      results.showSourceOfVariation(db, io, data, debugOn)
       break
     case 'setCardSize':
-      results.setCardSize(err, db, io, data, debugOn)
+      results.setCardSize(db, io, data, debugOn)
       break
     case 'setMonteCarloRunTo':
-      results.setMonteCarloRunTo(err, db, io, data, debugOn)
+      results.setMonteCarloRunTo(db, io, data, debugOn)
       break
     case 'setMonteCarloRuns':
-      results.setMonteCarloRuns(err, db, io, data, debugOn)
+      results.setMonteCarloRuns(db, io, data, debugOn)
       break
 
       // Demo
 
       case 'runDemoToMvp':
-        demo.runDemoToMvp(err, db, io, data, debugOn)
+        demo.runDemoToMvp(db, io, data, debugOn)
         break
       case 'runDemoToEnd':
-        demo.runDemoToEnd(err, db, io, data, debugOn)
+        demo.runDemoToEnd(db, io, data, debugOn)
         break
       case 'runGameTo':
-        runGame.runTo(err, db, io, data, debugOn)
+        runGame.runTo(db, io, data, debugOn)
+        break
+      case 'setupRunGame':
+        runGame.setUp(db, io, data, debugOn)
         break
 
       default:
@@ -287,6 +293,8 @@ io.on('connection', (socket) => {
 
   socket.on('hideResult', (data) => { doDb('hideResult', data) })
 
+  socket.on('showSourceOfVariation', (data) => { doDb('showSourceOfVariation', data) })
+
   socket.on('setCardSize', (data) => { doDb('setCardSize', data) })
 
   socket.on('setMonteCarloRunTo', (data) => { doDb('setMonteCarloRunTo', data) })
@@ -300,6 +308,8 @@ io.on('connection', (socket) => {
   socket.on('runDemoToEnd', (data) => { doDb('runDemoToEnd', data) })
 
   socket.on('runGameTo', (data) => { doDb('runGameTo', data) })
+
+  socket.on('setupRunGame', (data) => { doDb('setupRunGame', data) })
 })
 
 const port = process.argv[2] || 3007

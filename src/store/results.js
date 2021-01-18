@@ -7,7 +7,7 @@ const monteCarlo = require('./results/monteCarlo.js')
 
 module.exports = {
 
-  showResult: function(err, db, io, data, debugOn) {
+  showResult: function(db, io, data, debugOn) {
 
     if (debugOn) { console.log('showResult', data) }
 
@@ -23,6 +23,9 @@ module.exports = {
                 return c.name == 'done'
               }).cards
               switch(data.result) {
+                case 'sources-of-variation':
+                  data.results = gameRes.sourcesOfVariation
+                  break
                 case 'correlation':
                   data.results = correlation.run(cards)
                   break
@@ -50,7 +53,7 @@ module.exports = {
     })
   },
 
-  hideResult: function(err, db, io, data, debugOn) {
+  hideResult: function(db, io, data, debugOn) {
 
     if (debugOn) { console.log('showResult', data) }
 
@@ -65,7 +68,31 @@ module.exports = {
     })
   },
 
-  setCardSize: function(err, db, io, data, debugOn) {
+  showSourceOfVariation: function(db, io, data, debugOn) {
+
+    if (debugOn) { console.log('showSourceOfVariation', data) }
+
+    db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, res) {
+      if (err) throw err
+      if (res) {
+        const sources = []
+        for (let i = 0; i < res.sourcesOfVariation.length; i++) {
+          const source = res.sourcesOfVariation[i]
+          if (source.name == data.source.name) {
+            source.show = true
+          }
+          sources.push(source)
+        }
+        db.collection('noEstimatesGames').updateOne({'_id': res._id}, {$set: {sourcesOfVariation: sources}}, function(err) {
+          if (err) throw err
+          data.results = sources
+          io.emit('showResult', data)
+        })
+      }
+    })
+  },
+
+  setCardSize: function(db, io, data, debugOn) {
 
     if (debugOn) { console.log('setCardSize', data) }
 
@@ -82,7 +109,8 @@ module.exports = {
       }
     })
   },
-  setMonteCarloRunTo: function(err, db, io, data, debugOn) {
+
+  setMonteCarloRunTo: function(db, io, data, debugOn) {
 
     if (debugOn) { console.log('setMonteCarloCards', data) }
 
@@ -100,7 +128,7 @@ module.exports = {
     })
   },
 
-  setMonteCarloRuns: function(err, db, io, data, debugOn) {
+  setMonteCarloRuns: function(db, io, data, debugOn) {
 
     if (debugOn) { console.log('setMonteCarloRuns', data) }
 

@@ -7,10 +7,21 @@
         <i v-if="!showGameDisplay" @click="setShowGameDisplay(true)" title="expand" class="fas fa-caret-down toggle" />
       </td>
     </tr>
-    <tr v-if="showGameDisplay" class="header">
-      <td rowspan="5" class="show-results-td">
+    <tr v-if="showGameDisplay">
+      <td rowspan="6" class="show-results-td">
         Show results
       </td>
+      <td>
+        <button class="btn btn-sm btn-site-primary" @click="showResult('sources-of-variation')">
+          Show
+        </button>
+        <button class="btn btn-sm btn-site-primary" @click="hideResult('sources-of-variation')">
+          Hide
+        </button>
+        Sources of Variation
+      </td>
+    </tr>
+    <tr v-if="showGameDisplay" class="header">
       <td>
         <button class="btn btn-sm btn-site-primary" @click="showResult('correlation')">
           Show

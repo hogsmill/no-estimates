@@ -68,7 +68,7 @@ export default {
     },
     showFacilitator() {
       return this.$store.getters.getShowFacilitator
-    },
+    }
   },
   methods: {
     updateShowFacilitator(payload) {

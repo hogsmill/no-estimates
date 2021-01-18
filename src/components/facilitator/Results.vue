@@ -20,7 +20,7 @@
             <div v-if="isHost" class="source-show">
               <input type="checkbox" :checked="source.show" @click="showSourceOfVariation(source)">
             </div>
-            <div v-if="!isHost" class="source-show">
+            <div v-if="!isHost && source.show" class="source-show">
               <i class="fas fa-exclamation-circle"></i>
             </div>
             <div v-if="isHost || source.show" class="source-name">

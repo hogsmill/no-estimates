@@ -21,7 +21,7 @@
               <input type="checkbox" :checked="source.show" @click="showSourceOfVariation(source)">
             </div>
             <div v-if="!isHost && source.show" class="source-show">
-              <i class="fas fa-exclamation-circle"></i>
+              <i class="fas fa-exclamation-circle" />
             </div>
             <div v-if="isHost || source.show" class="source-name">
               {{ source.name }}
@@ -201,7 +201,6 @@ export default {
         'scatter-plot',
         'monte-carlo'
       ],
-      sourcesOfVariation: [],
       correlation: 0,
       cycleTime: {
         data: {
@@ -352,6 +351,9 @@ export default {
     },
     noOfDoneCards() {
       return this.$store.getters.getNoOfDoneCards
+    },
+    sourcesOfVariation() {
+      return this.$store.getters.getSourcesOfVariation
     }
   },
   created() {
@@ -391,6 +393,12 @@ export default {
         self.hide(data.result)
       }
     })
+
+    this.socket.on('updateSourcesOfVariation', (data) => {
+      if (this.gameName == data.gameName) {
+        self.$store.dispatch('updateSourcesOfVariation', data.results)
+      }
+    })
   },
   methods: {
     hide(modal) {
@@ -399,8 +407,7 @@ export default {
     correlationPosition(value, n) {
       return parseInt(290 * (value + 1)) - 290 - n + 'px'
     },
-    showSourcesOfVariation(data) {
-      this.sourcesOfVariation = data.results
+    showSourcesOfVariation() {
       this.$modal.show('sources-of-variation')
     },
     showSourceOfVariation(source) {

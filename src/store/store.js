@@ -105,6 +105,7 @@ export const store = new Vuex.Store({
       percentageBlocked: 0.05,
       percentageDeployFail: 0.5
     },
+    sourcesOfVariation: [],
     graphConfig: {
       cycleTime: {
         small: 15,
@@ -343,6 +344,9 @@ export const store = new Vuex.Store({
     getGames: (state) => {
       return state.games
     },
+    getSourcesOfVariation: (state) => {
+      return state.sourcesOfVariation
+    },
     getAvailableGames: (state) => {
       const games = []
       for (let i = 0; i < state.games.length; i++) {
@@ -403,6 +407,7 @@ export const store = new Vuex.Store({
       state.stealth = payload.stealth
       state.percentageBlocked = payload.percentageBlocked
       state.percentageDeployFail = payload.percentageDeployFail
+      state.sourcesOfVariation = payload.sourcesOfVariation
       state.graphConfig = payload.graphConfig
     },
     updateGameName: (state, payload) => {
@@ -435,6 +440,9 @@ export const store = new Vuex.Store({
           state.games[i].hosts = payload.details.hosts
         }
       }
+    },
+    updateSourcesOfVariation: (state, payload) => {
+      state.sourcesOfVariation = payload
     },
     updateConnections: (state, payload) => {
       state.connections = payload
@@ -485,6 +493,9 @@ export const store = new Vuex.Store({
     },
     updateGameDetails: ({ commit }, payload) => {
       commit('updateGameDetails', payload)
+    },
+    updateSourcesOfVariation: ({ commit }, payload) => {
+      commit('updateSourcesOfVariation', payload)
     },
     updateConnections: ({ commit }, payload) => {
       commit('updateConnections', payload)

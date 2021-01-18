@@ -86,7 +86,7 @@ module.exports = {
         db.collection('noEstimatesGames').updateOne({'_id': res._id}, {$set: {sourcesOfVariation: sources}}, function(err) {
           if (err) throw err
           data.results = sources
-          io.emit('updateSourcesOfVariation', sources)
+          io.emit('updateSourcesOfVariation', data)
         })
       }
     })

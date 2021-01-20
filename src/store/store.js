@@ -99,6 +99,7 @@ export const store = new Vuex.Store({
     messages: {},
     facilitatorMessages: {},
     config: {
+      facilitatorStarts: false,
       doRetros: false,
       retroDays: 7,
       mvpCards: 11,
@@ -244,6 +245,9 @@ export const store = new Vuex.Store({
     },
     getPairing: (state) => {
       return state.pairing
+    },
+    getFacilitatorStarts: (state) => {
+      return state.config.facilitatorStarts
     },
     getPercentageBlocked: (state) => {
       return state.config.percentageBlocked

@@ -53,6 +53,9 @@ export default {
     },
     teamMembers() {
       return this.$store.getters.getMembers
+    },
+    facilitatorStarts() {
+      return this.$store.getters.getFacilitatorStarts
     }
   },
   methods: {
@@ -72,6 +75,10 @@ export default {
       return captain
     },
     pullInCard() {
+      if (this.facilitatorStarts && this.currentWorkCard == 0) {
+        alert('Please wait for the game to start')
+        return
+      }
       const currentCard = this.workCards[this.currentWorkCard]
       if (this.currentWorkCard == 0 && !this.captain()) {
         this.show()

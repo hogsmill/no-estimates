@@ -98,6 +98,7 @@ function newGame(data) {
     teams: JSON.parse(JSON.stringify(initialTeams)),
     facilitatorMessages: [],
     config: {
+      facilitatorStarts: false,
       doRetros: false,
       retroDays: 7,
       mvpCards: 11,

@@ -74,8 +74,14 @@ export default {
     currentDay() {
       return this.$store.getters.getCurrentDay
     },
+    currentWorkCard() {
+      return this.$store.getters.getCurrentWorkCard
+    },
     columns() {
       return this.$store.getters.getColumns
+    },
+    facilitatorStarts() {
+      return this.$store.getters.getFacilitatorStarts
     },
     doRetros() {
       return this.$store.getters.getDoRetros
@@ -112,6 +118,10 @@ export default {
       return days
     },
     next() {
+      if (this.facilitatorStarts && this.currentWorkCard == 0) {
+        alert('Please wait for the game to start')
+        return
+      }
       if (this.doRetros && !this.retrosDone[this.currentDay] && this.currentDay % this.retroDays == 0) {
         this.show()
         this.socket.emit('retroDone', {gameName: this.gameName, teamName: this.teamName, currentDay: this.currentDay})

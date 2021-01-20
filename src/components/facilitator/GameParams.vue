@@ -8,6 +8,12 @@
       </td>
     </tr>
     <tr v-if="showGameParams">
+      <td>Facilitator must start game: </td>
+      <td colspan="3" class="left">
+        <input type="checkbox" id="facilitator-starts" class="form-control" :checked="facilitatorStarts" @click="saveFacilitatorStarts()">
+      </td>
+    </tr>
+    <tr v-if="showGameParams">
       <td>Blocked frequency: </td>
       <td class="center">
         <input type="text" id="percentage-blocked" class="form-control" :value="percentageBlocked">
@@ -108,6 +114,9 @@ export default {
     teams() {
       return this.$store.getters.getTeams
     },
+    facilitatorStarts() {
+      return this.$store.getters.getFacilitatorStarts
+    },
     percentageBlocked() {
       return this.$store.getters.getPercentageBlocked
     },
@@ -145,6 +154,10 @@ export default {
       const include = document.getElementById('team-active-' + team).checked
       this.socket.emit('updateTeamActive', {gameName: this.gameName, teamName: team, include: include})
     },
+    saveFacilitatorStarts: function() {
+      const facilitatorStarts = document.getElementById('facilitator-starts').checked
+      this.socket.emit('updateConfig', {gameName: this.gameName, field: 'facilitatorStarts', value: facilitatorStarts})
+    },
     savePercentageBlocked: function() {
       const percentageBlocked = document.getElementById('percentage-blocked').value
       this.socket.emit('updateConfig', {gameName: this.gameName, field: 'percentageBlocked', value: percentageBlocked})
@@ -167,6 +180,9 @@ export default {
 </script>
 
 <style lang="scss">
+  #facilitator-starts {
+    margin: 0;
+  }
   .mvp-label {
     left: 0;
   }

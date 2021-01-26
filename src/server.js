@@ -67,6 +67,9 @@ function doDb(fun, data) {
       case 'loadGame':
         dbStore.loadGame(db, io, data, debugOn)
         break
+      case 'makeCaptain':
+        dbStore.makeCaptain(db, io, data, debugOn)
+        break
       case 'restartGame':
         dbStore.restartGame(db, io, data, debugOn)
         break
@@ -216,6 +219,8 @@ io.on('connection', (socket) => {
 
   socket.on('loadGame', (data) => { doDb('loadGame', data) })
 
+  socket.on('makeCaptain', (data) => { doDb('makeCaptain', data) })
+
   socket.on('restartGame', (data) => { doDb('restartGame', data) })
 
   socket.on('deleteGame', (data) => {
@@ -223,11 +228,15 @@ io.on('connection', (socket) => {
     doDb('deleteGame', data)
   })
 
+  socket.on('retro', (data) => { emit('retro', data) })
+
   socket.on('retroDone', (data) => { doDb('retroDone', data) })
 
   socket.on('showEventCard', (data) => { emit('showEventCard', data) })
 
   socket.on('updateCurrentDay', (data) => { doDb('updateCurrentDay', data) })
+
+  socket.on('hide', (data) => { emit('hide', data) })
 
   socket.on('pullInCard', (data) => { doDb('pullInCard', data) })
 

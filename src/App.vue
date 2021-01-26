@@ -159,6 +159,14 @@ export default {
       }
     }
 
+    this.socket.on('makeCaptain', (data) => {
+      if (this.gameName == data.gameName && this.teamName == data.teamName) {
+        const myName = JSON.parse(localStorage.getItem('myName'))
+        myName.captain = data.myName.id == myName.id
+        localStorage.setItem('myName', JSON.stringify(myName))
+      }
+    })
+
     this.socket.on('loadMembers', (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         this.$store.dispatch('loadMembers', data)

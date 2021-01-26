@@ -287,6 +287,26 @@ module.exports = {
     })
   },
 
+  makeCaptain: function(db, io, data, debugOn) {
+
+    if (debugOn) { console.log('makeCaptain', data) }
+
+    db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
+      if (err) throw err
+      if (res) {
+        const members = []
+        for (let i = 0; i < res.members.length; i++) {
+          const member = res.members[i]
+          member.captain = member.id == data.myName.id
+          members.push(member)
+        }
+        res.members = members
+        updateTeam(db, io, res)
+        io.emit('makeCaptain', data)
+      }
+    })
+  },
+
   restartGame: function(db, io, data, debugOn) {
 
     if (debugOn) { console.log('restartGame', data) }
@@ -297,7 +317,7 @@ module.exports = {
         const restarted = res.restarted
         restarted.push(new Date().toISOString())
         res.restarted = restarted
-        db.collection('noEstimatesGames').updateOne({'_id': res._id}, {$set: {restarted: restarted} }, function(err) {
+        db.collection('noEstimatesGames').updateOne({'_id': res._id}, {$set: {restarted: restarted}}, function(err) {
           if (err) throw err
           io.emit('loadGame', res)
           db.collection('noEstimates').find({gameName: data.gameName}).toArray(function(err, gameRes) {

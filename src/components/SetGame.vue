@@ -4,6 +4,9 @@
     <button class="btn btn-sm btn-secondary smaller-font" @click="show()">
       Set Up
     </button>
+    <button v-if="gameName && myName.id" class="btn btn-sm btn-secondary smaller-font" @click="makeMeCaptain()">
+      Make Me Captain
+    </button>
 
     <modal name="set-up" :height="385" class="rounded">
       <div class="float-right mr-2 mt-1">
@@ -30,7 +33,9 @@
               </div>
             </td>
             <td class="button">
-              <i v-if="gameName && !gameNameEditing" class="fas fa-edit" @click="changeGameName()" />
+              <button class="btn btn-sm btn-secondary smaller-font" @click="changeGameName()">
+                Change
+              </button>
             </td>
           </tr>
 
@@ -43,12 +48,11 @@
               <div v-if="!myName.id || myNameEditing" class="my-name-edit">
                 <input type="text" id="my-name" class="form-control" :value="myName.name">
               </div>
-              <div>
-                <input type="checkbox" id="captain" :disabled="!myNameEditing" :checked="myName.captain"> Team Captain?
-              </div>
             </td>
             <td class="button">
-              <i v-if="myName.id && !myNameEditing" class="fas fa-edit" @click="changeMyName()" />
+              <button class="btn btn-sm btn-secondary smaller-font" @click="changeMyName()">
+                Change
+              </button>
             </td>
           </tr>
 
@@ -66,7 +70,9 @@
               </select>
             </td>
             <td class="button">
-              <i v-if="teamName && !teamNameEditing && canRestructure()" class="fas fa-edit" @click="changeTeamName()" />
+              <button class="btn btn-sm btn-secondary smaller-font" @click="changeTeamName()">
+                Change
+              </button>
             </td>
           </tr>
 
@@ -84,7 +90,9 @@
               </select>
             </td>
             <td class="button">
-              <i v-if="myRole && !myRoleEditing && canRestructure()" class="fas fa-edit" @click="changeMyRole()" />
+              <button class="btn btn-sm btn-secondary smaller-font" @click="changeMyRole()">
+                Change
+              </button>
             </td>
           </tr>
         </table>
@@ -134,6 +142,9 @@ export default {
     },
     activeTeams() {
       return this.$store.getters.getActiveTeams
+    },
+    members() {
+      return this.$store.getters.getMembers
     },
     roles() {
       return this.$store.getters.getRoleNames
@@ -216,9 +227,7 @@ export default {
       myNameData.host = params.isParam('host')
       if (document.getElementById('my-name')) {
         const myName = document.getElementById('my-name').value
-        const captain = document.getElementById('captain').checked
         myNameData.name = stringFuns.sanitize(myName)
-        myNameData.captain = captain
       }
       return myNameData
     },
@@ -279,6 +288,11 @@ export default {
         this.reset()
         this.hide()
       }
+    },
+    makeMeCaptain() {
+      if (confirm('Make yourself captain of the ' + this.teamName + ' team?')) {
+        this.socket.emit('makeCaptain', {gameName: this.gameName, teamName: this.teamName, myName: this.myName})
+      }
     }
   }
 }
@@ -320,7 +334,12 @@ export default {
       }
 
       &.button {
-        width: 50px;
+        vertical-align: middle;
+        width: 60px;
+
+        button {
+          margin: 6px;
+        }
       }
 
       .fas {

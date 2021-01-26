@@ -13,7 +13,7 @@
         <h4>Day {{ currentDay + 1 }}</h4>
         <ProjectValue />
         <p v-html="currentEventCard.text.replace('[MVPCARDS]', mvpCards)" />
-        <div class="event-card-buttons">
+        <div v-if="myName.captain" class="event-card-buttons">
           <button v-if="!currentEventCard.function" class="btn btn-sm btn-info" @click="done()">
             Done
           </button>
@@ -27,6 +27,15 @@
             No
           </button>
         </div>
+        <div v-if="!myName.captain" class="event-card-buttons">
+          <p v-if="currentEventCard.confirm">
+            (<i>The captain will select the answer</i>)
+          </p>
+          <button v-if="!currentEventCard.function" class="btn btn-sm btn-outline-info" @click="dismiss()">
+            Dismiss
+          </button>
+        </div>
+
       </div>
     </modal>
 
@@ -159,6 +168,12 @@ export default {
       }
     })
 
+    this.socket.on('hide', (data) => {
+      if (this.gameName == data.gameName && this.teamName == data.teamName) {
+        self.$modal.hide(data.popup)
+      }
+    })
+
     this.socket.on('autodeployComplete', (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         self.$modal.show('autodeploy-complete-popup')
@@ -176,18 +191,21 @@ export default {
     })
   },
   methods: {
+    dismiss() {
+      this.$modal.hide('event-card-popup')
+    },
     hide(name) {
-      this.$modal.hide(name)
+      this.socket.emit('hide', {gameName: this.gameName, teamName: this.teamName, popup: name})
     },
     doneGraph() {
       if (this.myName.captain) {
-        this.socket.emit('updateCurrentDay', {gameName: this.gameName, teamName: this.teamName, currentDay: this.currentDay + 1})
+        this.socket.emit('updateCurrentDay', {gameName: this.gameName, teamName: this.teamName})
       }
       this.hide('event-graph-popup')
     },
     done(data) {
       if (this.myName.captain) {
-        const updateData = {gameName: this.gameName, teamName: this.teamName, currentDay: this.currentDay + 1}
+        const updateData = {gameName: this.gameName, teamName: this.teamName}
         if (data) {
           for (const key in data) {
             updateData[key] = data[key]

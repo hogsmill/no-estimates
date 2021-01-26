@@ -415,6 +415,11 @@ export const store = new Vuex.Store({
       state.concurrentDevAndTest = payload.concurrentDevAndTest
       state.canStartAutoDeploy = payload.canStartAutoDeploy
       state.autoDeploy = payload.autoDeploy
+
+      const member = state.members.find(function(m) {
+        return m.id == state.myName.id
+      })
+      state.myName.captain = member.captain
     },
     loadGame: (state, payload) => {
       state.teams = payload.teams

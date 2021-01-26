@@ -3,7 +3,7 @@
     <div class="row days">
       <div class="days">
         <div class="days-label">
-          Day
+          Day {{ myName.captain }}
         </div>
         <span class="passed" v-if="days()[0] > 1"> . . . </span>
         <div class="day rounded-circle" :class="getClass(day)" v-for="(day, index) in days()" :key="index">
@@ -106,6 +106,20 @@ export default {
       return this.$store.getters.getRetroTime
     },
   },
+  created() {
+    const self = this
+    this.socket.on('retro', (data) => {
+      if (this.gameName == data.gameName && this.teamName == data.teamName) {
+        self.show()
+      }
+    })
+
+    this.socket.on('hide', (data) => {
+      if (this.gameName == data.gameName && this.teamName == data.teamName) {
+        self.$modal.hide(data.popup)
+      }
+    })
+  },
   methods: {
     setRetroTime(t) {
       this.retroTimeLeft = t
@@ -131,7 +145,7 @@ export default {
     },
     hide() {
       this.retroTimerRunning = false
-      this.$modal.hide('retro')
+      this.socket.emit('hide', {gameName: this.gameName, teamName: this.teamName, popup: 'retro'})
     },
     retroTimeString() {
       if (!this.retroTimer) {
@@ -165,9 +179,10 @@ export default {
         return
       }
       if (this.doRetros && !this.retrosDone[this.currentDay] && this.currentDay % this.retroDays == 0) {
-        this.show()
+        this.socket.emit('retro', {gameName: this.gameName, teamName: this.teamName})
         this.socket.emit('retroDone', {gameName: this.gameName, teamName: this.teamName, currentDay: this.currentDay})
       } else {
+        this.hide()
         this.socket.emit('showEventCard', {gameName: this.gameName, teamName: this.teamName})
       }
     }

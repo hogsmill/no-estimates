@@ -21,7 +21,7 @@ function addEffortToCard(db, io, game, member) {
   for (let i = game.columns.length - 1; i >= 0; i--) {
     const column = game.columns[i]
     for (let j = 0; j < column.cards.length; j++) {
-      card = column.cards[j]
+      const card = column.cards[j]
       if (!added && run.cardIsPlayable(card) && run.memberHasEffort(member)) {
         console.log('      ' + member.name + ' adding to #' + card.number)
         card.effort[column.name] = card.effort[column.name] + 1
@@ -111,6 +111,8 @@ module.exports = {
   },
 
   runTo: function(db, io, data, debugOn) {
+
+    if (debugOn) { console.log('runTo', data) }
 
     db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
       if (err) throw err

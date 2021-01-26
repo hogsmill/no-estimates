@@ -9,7 +9,7 @@ function randomDelivery(commit) {
 
 function effort(card) {
   const effort = {}
-  for (let key in Object.keys(card.effort)) {
+  for (const key in Object.keys(card.effort)) {
     effort.key = card.key
   }
   return effort

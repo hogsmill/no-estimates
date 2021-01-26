@@ -15,16 +15,16 @@
     <tr v-if="showGameState" class="header">
       <td>Team</td>
       <td>
-        <div class="white rounded-circle member-role designer">
+        <div class="white rounded-circle member-role designer" title="Designer">
           D
         </div>
-        <div class="white rounded-circle member-role developer">
+        <div class="white rounded-circle member-role developer" title="Developer">
           D
         </div>
-        <div class="white rounded-circle member-role tester">
+        <div class="white rounded-circle member-role tester" title="Tester">
           T
         </div>
-        <div class="white rounded-circle member-role deployer">
+        <div class="white rounded-circle member-role deployer" title="Deployer">
           D
         </div>
         <br>
@@ -48,7 +48,7 @@
       <td v-if="showTeamState(team)">
         <div v-for="(member, m) in team.members" :key="m">
           <b>{{ member.name }}</b>
-          <div class="white rounded-circle member-role" :class="roleClass(member.role)">
+          <div class="white rounded-circle member-role" :class="roleClass(member.role)" :title="roleString(member)">
             {{ effort(member) }}
           </div>
         </div>
@@ -78,6 +78,8 @@
 </template>
 
 <script>
+import stringFuns from '../../lib/stringFuns.js'
+
 import OtherCards from './gameState/OtherCards.vue'
 import Column from './gameState/Column.vue'
 
@@ -150,6 +152,9 @@ export default {
     },
     roleClass(role) {
       return role.toLowerCase()
+    },
+    roleString(member) {
+      return stringFuns.properCase(member.role)
     }
   }
 }

@@ -25,7 +25,7 @@ module.exports = {
       return a.y - b.y
     })
     const len = data.length - 1
-    limits = {
+    const limits = {
       75: data[Math.round(len * 0.75)].y,
       90: data[Math.round(len * 0.90)].y,
       95: data[Math.round(len * 0.95)].y,

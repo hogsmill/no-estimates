@@ -39,6 +39,8 @@ export default {
     padding: 8px;
     font-weight: bold;
     font-size: large;
+    background-color: green;
+    color: white;
 
     &.negative {
       background-color: red;

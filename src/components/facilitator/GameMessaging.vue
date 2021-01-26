@@ -11,7 +11,7 @@
       <td>
         <div>Message: </div>
         <input type="text" id="gameMessageText">
-        <button class="btn btn-sm btn-site-primary" @click="sendMessage">
+        <button class="btn btn-sm btn-site-primary" @click="sendMessage()">
           Send
         </button>
       </td>

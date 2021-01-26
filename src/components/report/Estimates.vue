@@ -7,10 +7,10 @@
         <span v-if="projectEstimate && !editingEstimate"><b>{{ projectEstimate }}</b></span>
       </td>
       <td>
-        <button v-if="!projectEstimate || editingEstimate" class="btn btn-sm btn-site-primary" :disabled="!gameName || !teamName" @click="saveEstimate">
+        <button v-if="!projectEstimate || editingEstimate" class="btn btn-sm btn-site-primary" :disabled="!gameName || !teamName" @click="saveEstimate()">
           Save
         </button>
-        <button v-if="projectEstimate && !editingEstimate && currentDay < 2" class="btn btn-sm btn-site-primary" :disabled="!gameName || !teamName" @click="editEstimate">
+        <button v-if="projectEstimate && !editingEstimate && currentDay < 2" class="btn btn-sm btn-site-primary" :disabled="!gameName || !teamName" @click="editEstimate()">
           Change
         </button>
       </td>
@@ -45,10 +45,10 @@
         <span v-if="reEstimate && !editingReEstimate"><b>{{ reEstimate }}</b></span>
       </td>
       <td>
-        <button v-if="!reEstimate || editingReEstimate" class="btn btn-sm btn-site-primary" @click="saveReEstimate">
+        <button v-if="!reEstimate || editingReEstimate" class="btn btn-sm btn-site-primary" @click="saveReEstimate()">
           Save
         </button>
-        <button v-if="reEstimate && !editingReEstimate" class="btn btn-sm btn-site-primary" @click="editReEstimate">
+        <button v-if="reEstimate && !editingReEstimate" class="btn btn-sm btn-site-primary" @click="editReEstimate()">
           Change
         </button>
       </td>

@@ -19,20 +19,18 @@
     </div>
 
     <modal name="retro" class="popup" :height="460" :classes="['rounded']">
-      <div class="float-right mr-2 mt-1">
-        <button type="button" class="close" @click="hide()" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
       <div class="mt-4">
-        <h2>Retro!</h2>
+        <h2>
+          Retro!
+          {{ retroClock() }}
+        </h2>
         <div class="retro-div">
           <div class="retro-img-div rounded">
             <div class="retro-img" />
           </div>
           <div class="retro-text">
             <h5>
-              Why not take some a few minutes to reflect on how it's gone so far?
+              Why not take {{ retroTimeString() }} to reflect on how it's gone so far?
             </h5>
             <p>
               For instance:
@@ -61,6 +59,12 @@ export default {
   props: [
     'socket'
   ],
+  data() {
+    return {
+      retroTimeLeft: 0,
+      retroTimerRunning: false
+    }
+  },
   computed: {
     gameName() {
       return this.$store.getters.getGameName
@@ -83,6 +87,9 @@ export default {
     facilitatorStarts() {
       return this.$store.getters.getFacilitatorStarts
     },
+    gameRunning() {
+      return this.$store.getters.getGameRunning
+    },
     doRetros() {
       return this.$store.getters.getDoRetros
     },
@@ -91,14 +98,49 @@ export default {
     },
     retrosDone() {
       return this.$store.getters.getRetrosDone
-    }
+    },
+    retroTimer() {
+      return this.$store.getters.getRetroTimer
+    },
+    retroTime() {
+      return this.$store.getters.getRetroTime
+    },
   },
   methods: {
+    setRetroTime(t) {
+      this.retroTimeLeft = t
+      if (this.retroTimerRunning && t > 0) {
+        const self = this
+        window.setTimeout(function() {
+          self.setRetroTime(t - 1)
+        }, 1000)
+      }
+    },
+    retroClock() {
+      const minutes = parseInt(this.retroTimeLeft / 60)
+      let seconds = this.retroTimeLeft - (minutes * 60)
+      if (seconds < 10) {
+        seconds = '0' + seconds
+      }
+      return minutes + ':' + seconds
+    },
     show() {
+      this.retroTimerRunning = true
+      this.setRetroTime(this.retroTime * 60)
       this.$modal.show('retro')
     },
     hide() {
+      this.retroTimerRunning = false
       this.$modal.hide('retro')
+    },
+    retroTimeString() {
+      if (!this.retroTimer) {
+        return 'a few minutes'
+      } else if (this.retroTime == 1) {
+        return 'a minute'
+      } else {
+        return this.retroTime + ' minutes'
+      }
     },
     getClass(day) {
       if (day < this.currentDay) {
@@ -118,7 +160,7 @@ export default {
       return days
     },
     next() {
-      if (this.facilitatorStarts && this.currentWorkCard == 0) {
+      if (this.facilitatorStarts && !this.gameRunning) {
         alert('Please wait for the game to start')
         return
       }
@@ -214,6 +256,10 @@ export default {
         float: right;
         width: 320px;
       }
+    }
+
+    .retro-timer {
+      font-weight: bold;
     }
   }
 

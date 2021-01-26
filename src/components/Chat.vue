@@ -7,7 +7,7 @@
 
     <modal name="chat-popup" class="popup" :height="600" :width:="800" :classes="['rounded']">
       <div class="text-right">
-        <span @click="hide" class="glyphicon glyphicon-star">x</span>
+        <span @click="hide()" class="glyphicon glyphicon-star">x</span>
       </div>
       <div>
         <h4>Chat to Other Teams</h4>

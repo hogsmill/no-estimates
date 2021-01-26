@@ -14,7 +14,7 @@
           <button class="btn btn-sm btn-site-primary" @click="setUpGame()">
             Set Up Game
           </button>
-          <i v-if="gameName" title="Restart Game" @click="restartGame" class="fas fa-undo-alt restart" />
+          <i v-if="gameName" title="Restart Game" @click="restartGame()" class="fas fa-undo-alt restart" />
         </div>
         <div>
           Run Game To:

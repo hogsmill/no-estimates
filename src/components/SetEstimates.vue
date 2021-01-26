@@ -1,13 +1,13 @@
 <template>
   <span>
 
-    <button class="btn btn-sm btn-secondary smaller-font" :disabled="!gameName || !teamName" @click="show">
+    <button class="btn btn-sm btn-secondary smaller-font" :disabled="!gameName || !teamName" @click="show()">
       Set Estimates
     </button>
 
     <modal name="set-up-estimates" :height="400" :width="800" class="rounded">
       <div class="float-right mr-2 mt-1">
-        <button type="button" class="close" @click="hide" aria-label="Close">
+        <button type="button" class="close" @click="hide()" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -19,7 +19,7 @@
           card<span v-if="completed() != 1">s</span>.</p>
         <p>Estimates are <b>the number of days to complete the work</b>.</p>
         <Estimates :socket="socket" />
-        <button class="btn btn-sm btn-primary smaller-font" @click="hide">
+        <button class="btn btn-sm btn-primary smaller-font" @click="hide()">
           Done
         </button>
       </div>
@@ -58,10 +58,10 @@ export default {
     }
   },
   methods: {
-    show () {
+    show() {
       this.$modal.show('set-up-estimates')
     },
-    hide () {
+    hide() {
       this.$modal.hide('set-up-estimates')
     },
     areString() {

@@ -4,7 +4,9 @@
       <td class="left" colspan="16">
         <h4>
           Game State: (Game: {{ gameName }})
-          <i v-if="gameName" title="Restart Game" @click="restartGame" class="fas fa-undo-alt restart" />
+          <i v-if="facilitatorStarts && !gameRunning && gameName" title="Start Game" @click="startGame()" class="fas fa-play-circle start" />
+          <i v-if="facilitatorStarts && gameRunning && gameName" title="Game Started" @click="stopGame()" class="fas fa-stop-circle stop" />
+          <i v-if="gameName" title="Restart Game" @click="restartGame()" class="fas fa-undo-alt restart" />
         </h4>
         <i v-if="showGameState" @click="setShowGameState(false)" title="collapse" class="fas fa-caret-up toggle" />
         <i v-if="!showGameState" @click="setShowGameState(true)" title="expand" class="fas fa-caret-down toggle" />
@@ -99,6 +101,12 @@ export default {
     gameName() {
       return this.$store.getters.getGameName
     },
+    facilitatorStarts() {
+      return this.$store.getters.getFacilitatorStarts
+    },
+    gameRunning() {
+      return this.$store.getters.getGameRunning
+    },
     gameState() {
       return this.$store.getters.getGameState
     },
@@ -124,6 +132,12 @@ export default {
       const mvp = team.mvpEstimate ? team.mvpEstimate : '-'
       const re = team.reEstimate ? team.reEstimate : '-'
       return proj + ' / ' + mvp + ' / ' + re
+    },
+    startGame() {
+      this.socket.emit('updateConfig', {gameName: this.gameName, field: 'gameRunning', value: true})
+    },
+    stopGame() {
+      this.socket.emit('updateConfig', {gameName: this.gameName, field: 'gameRunning', value: false})
     },
     restartGame() {
       const restartGame = confirm('Are you sure you want to re-start this game?')
@@ -152,11 +166,12 @@ export default {
       font-weight: bold;
     }
 
-    .restart {
+    .restart, .start, .stop {
       position: relative;
       left: 6px;
       top: 4px;
       color: #888;
+      margin-right: 6px;
 
       &:hover {
         color: #111;

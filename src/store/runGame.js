@@ -69,7 +69,6 @@ function makeMove(db, io, game, teams) {
 }
 
 function updateTeam(db, io, res) {
-  console.log('updateTeam')
   const id = res._id
   delete res._id
   db.collection('noEstimates').updateOne({'_id': id}, {$set: res}, function(err) {

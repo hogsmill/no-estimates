@@ -3,13 +3,13 @@
     <button
       v-if="walkThrough && !showFacilitator"
       class="btn btn-sm btn-info explain"
-      @click="help"
+      @click="help()"
     >
       Explain this for me...
     </button>
     <modal name="walk-through" id="walk-through" :classes="['rounded']">
       <div class="float-right mr-2 mt-1">
-        <button type="button" class="close" @click="hide" aria-label="Close">
+        <button type="button" class="close" @click="hide()" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -43,7 +43,7 @@
         </div>
       </div>
       <div class="buttons" v-if="step < noOfScreens()">
-        <button class="btn btn-info" @click="incrementStep">
+        <button class="btn btn-info" @click="incrementStep()">
           Next
         </button>
         <button class="btn btn-info" @click="hide()">

@@ -359,7 +359,7 @@ export default {
   created() {
     const self = this
     this.socket.on('showResult', (data) => {
-      if (this.gameName == data.gameName && this.teamName == data.teamName) {
+      if (this.gameName == data.gameName && this.teamName == data.teamName && data.target == 'game') {
         for (let i = 0; i < this.modals.length; i++) {
           self.hide(this.modals[i])
         }

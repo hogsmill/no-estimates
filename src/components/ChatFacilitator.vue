@@ -7,7 +7,7 @@
 
     <modal name="faciltator-chat-popup" class="popup" :height="600" :classes="['rounded']">
       <div class="text-right">
-        <span @click="hide" class="glyphicon glyphicon-star">x</span>
+        <span @click="hide()" class="glyphicon glyphicon-star">x</span>
       </div>
       <div>
         <h4>Questions to Facilitators</h4>

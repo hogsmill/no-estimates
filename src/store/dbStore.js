@@ -73,6 +73,7 @@ function resetGame(game) {
   game.concurrentDevAndTest = false
   game.currentDay = 1
   game.currentWorkCard = 0
+  game.retrosDone = {}
   game.messages = {}
   game.mvpEstimate = null
   game.mvpActual = null
@@ -99,8 +100,11 @@ function newGame(data) {
     facilitatorMessages: [],
     config: {
       facilitatorStarts: false,
+      gameRunning: false,
       doRetros: false,
       retroDays: 7,
+      retroTimer: false,
+      retroTime: 0,
       mvpCards: 11,
       percentageBlocked: 0.05,
       percentageDeployFail: 0.5,
@@ -296,17 +300,16 @@ module.exports = {
         db.collection('noEstimatesGames').updateOne({'_id': res._id}, {$set: {restarted: restarted} }, function(err) {
           if (err) throw err
           io.emit('loadGame', res)
+          db.collection('noEstimates').find({gameName: data.gameName}).toArray(function(err, gameRes) {
+            if (err) throw err
+            if (gameRes.length) {
+              for (let r = 0; r < gameRes.length; r++) {
+                gameRes[r] = resetGame(gameRes[r])
+                updateTeam(db, io, gameRes[r])
+              }
+            }
+          })
         })
-      }
-    })
-
-    db.collection('noEstimates').find({gameName: data.gameName}).toArray(function(err, gameRes) {
-      if (err) throw err
-      if (gameRes.length) {
-        for (let r = 0; r < gameRes.length; r++) {
-          gameRes[r] = resetGame(gameRes[r])
-          updateTeam(db, io, gameRes[r])
-        }
       }
     })
   },
@@ -557,6 +560,7 @@ module.exports = {
         if (autoDeploy.effort >= 8) {
           autoDeploy.doing = false
           autoDeploy.done = true
+          io.emit('autodeployComplete', data)
         }
         res.autoDeploy = autoDeploy
         res.members = teamFuns.decrementMyEffort(res.members, data.name, data.effort)

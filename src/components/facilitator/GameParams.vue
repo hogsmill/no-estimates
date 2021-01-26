@@ -20,7 +20,7 @@
       </td>
       <td>x 10 out of every 10 cards (<em>Default: 0.05 - 1 in 20</em>)</td>
       <td class="center">
-        <button class="btn btn-sm btn-site-primary" @click="savePercentageBlocked">
+        <button class="btn btn-sm btn-site-primary" @click="savePercentageBlocked()">
           Save
         </button>
       </td>
@@ -32,7 +32,7 @@
       </td>
       <td>x 10 out of every 10 deployments  (<em>Default: 0.5 - 1 in 2</em>)</td>
       <td class="center">
-        <button class="btn btn-sm btn-site-primary" @click="savePercentageDeployFail">
+        <button class="btn btn-sm btn-site-primary" @click="savePercentageDeployFail()">
           Save
         </button>
       </td>
@@ -45,7 +45,7 @@
         <input type="text" id="mvp-cards" class="form-control" :value="mvpCards">
       </td>
       <td colspan="2" class="left">
-        <button class="btn btn-sm btn-site-primary" @click="saveMvpCards">
+        <button class="btn btn-sm btn-site-primary" @click="saveMvpCards()">
           Save
         </button>
         (<em>Default 11</em>)
@@ -55,14 +55,30 @@
       <td class="left-col">
         Retros
       </td>
-      <td class="center">
+      <td class="left">
         <input id="do-retros" type="checkbox" :checked="doRetros" @click="toggleDoRetros()">
       </td>
       <td class="left">
-        Every <input type="text" id="retro-days" class="form-control" :value="retroDays"> days
+        Every <input type="text" id="retro-days" class="form-control" :value="retroDays"> days,
       </td>
       <td class="center">
         <button class="btn btn-sm btn-site-primary" @click="saveRetroDays()">
+          Save
+        </button>
+      </td>
+    </tr>
+    <tr v-if="showGameParams">
+      <td class="left-col">
+        Retro Timer?
+      </td>
+      <td class="left">
+        <input id="retro-timer" type="checkbox" :checked="retroTimer" @click="toggleRetroTimer()">
+      </td>
+      <td class="left">
+        <input type="text" id="retro-time" class="form-control" :value="retroTime"> minutes
+      </td>
+      <td class="center">
+        <button class="btn btn-sm btn-site-primary" @click="saveRetroTime()">
           Save
         </button>
       </td>
@@ -131,7 +147,13 @@ export default {
     },
     retroDays() {
       return this.$store.getters.getRetroDays
-    }
+    },
+    retroTimer() {
+      return this.$store.getters.getRetroTimer
+    },
+    retroTime() {
+      return this.$store.getters.getRetroTime
+    },
   },
   methods: {
     setShowGameParams(val) {
@@ -146,27 +168,35 @@ export default {
       const doRetros = document.getElementById('do-retros').checked
       this.socket.emit('updateConfig', {gameName: this.gameName, field: 'doRetros', value: doRetros})
     },
-    saveRetroDays: function() {
+    saveRetroDays() {
       const retroDays = document.getElementById('retro-days').value
       this.socket.emit('updateConfig', {gameName: this.gameName, field: 'retroDays', value: retroDays})
+    },
+    toggleRetroTimer() {
+      const retroTimer = document.getElementById('retro-timer').checked
+      this.socket.emit('updateConfig', {gameName: this.gameName, field: 'retroTimer', value: retroTimer})
+    },
+    saveRetroTime() {
+      const retroTime = document.getElementById('retro-time').value
+      this.socket.emit('updateConfig', {gameName: this.gameName, field: 'retroTime', value: retroTime})
     },
     toggleTeamActive(team) {
       const include = document.getElementById('team-active-' + team).checked
       this.socket.emit('updateTeamActive', {gameName: this.gameName, teamName: team, include: include})
     },
-    saveFacilitatorStarts: function() {
+    saveFacilitatorStarts() {
       const facilitatorStarts = document.getElementById('facilitator-starts').checked
       this.socket.emit('updateConfig', {gameName: this.gameName, field: 'facilitatorStarts', value: facilitatorStarts})
     },
-    savePercentageBlocked: function() {
+    savePercentageBlocked() {
       const percentageBlocked = document.getElementById('percentage-blocked').value
       this.socket.emit('updateConfig', {gameName: this.gameName, field: 'percentageBlocked', value: percentageBlocked})
     },
-    saveMvpCards: function() {
+    saveMvpCards() {
       const mvpCards = document.getElementById('mvp-cards').value
       this.socket.emit('updateConfig', {gameName: this.gameName, field: 'mvpCards', value: parseInt(mvpCards)})
     },
-    savePercentageDeployFail: function() {
+    savePercentageDeployFail() {
       const percentageDeployFail = document.getElementById('percentage-deploy-fail').value
       this.socket.emit('updateConfig', {gameName: this.gameName, field: 'percentageDeployFail', value: percentageDeployFail})
     },
@@ -186,7 +216,7 @@ export default {
   .mvp-label {
     left: 0;
   }
-  #retro-days {
+  #retro-days, #retro-time {
     display: inline-block;
   }
 </style>

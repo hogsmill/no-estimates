@@ -50,7 +50,21 @@ export default {
       return this.$store.getters.getCurrentDay
     }
   },
+  created() {
+    const self = this
+    this.socket.on('autodeployComplete', (data) => {
+      if (this.gameName == data.gameName && this.teamName == data.teamName) {
+        self.$modal.show('autodeploy-complete-popup')
+      }
+    })
+  },
   methods: {
+    show() {
+      this.$modal.show('autodeploy-complete-popup')
+    },
+    hide() {
+      this.$modal.hide('autodeploy-complete-popup')
+    },
     addEffort() {
       const column = 'deploy'
       const iHaveRole = roles.iHaveRole(column, this.myRole, this.myOtherRoles)

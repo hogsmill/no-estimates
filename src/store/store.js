@@ -49,23 +49,22 @@ export const store = new Vuex.Store({
     eventCards: [
       {number: 1, text: 'Good Luck!<br/><br/>. Have you submitted an initial estimate for the project?<br/><br/>If not, click \'Report\' or \'Set Estimates\' and create your estimate now.'},
       {number: 2, text: 'Remember that manual deployments will fail a certain percentage of the time. In this case, you will need to re-do the deployment effort.'},
-      {number: 3, function: 'Add 1 Point To Everyones Capacity', text: 'Pizza inspires your team to greatness! Add one to each person\'s capacity tomorrow.'},
+      {number: 3, function: 'Show Cycle Time', height: 650, text: 'This graph shows how long each card took to complete, compared to their size - is there a relationship between size and time to complete?'},
+    //  {number: 3, function: 'Add 1 Point To Everyones Capacity', text: 'Pizza inspires your team to greatness! Add one to each person\'s capacity tomorrow.'},
       {number: 4, text: 'Did you remember that people can work in areas outside their speciality? They require two effort points to make one effort point in another area.'},
       {number: 5, function: 'Add 8 points to Deploy', confirm: true, autoDeployCard: true, text: 'You read that automating deployments can lead to better quality and more predictable delivery. If you\'d like to invest in that, you\'ll need to spend 8 effort points in Deploy (you can do this over multiple days)</br></br>(<em>You can do this later by clicking the \'*\' in the Deploy Column header</em>)'},
-      {number: 6, text: 'If you decided yesterday to automate deployments, when you complete the delivery automation, deployments will no longer fail, and you will no longer have to re-do any deploy work.'},
-      {number: 7, text: 'Would someone like to learn a new skill? If a person spends five days working in a work stage different from his or her speciality, the person will be able to work in that state at a 1:1 effort ratio.'},
-      {number: 8, text: 'Perhaps you have delivered at least one card? If so, are you able to forecast when you might deliver the Minimum Viable Product, which the Product Owner has defined as cards #1-11 '},
-      {number: 9, text: 'In this game, you may have been committing to work on an individual work-item basis. Now a new Scrum Master has joined the company, and she wants you to do batch commitment (i.e. pull in as many stories at once as you believe you can accomplish in a week). Will you do this?'},
-      {number: 10, function: 'Concurrent Dev and Test', confirm: true, text: 'Testers and Developers want to work together. You now have the option to do concurrent Dev and Test (i.e. no need to finish Development effort before beginning Testing). Do you want to do this?'},
-      {number: 11, function: 'Spend a Day Estimating', text: 'Vince from the PMO says he\'s nervous that you\'re not producing enough according to your original estimate. As a result, he wants you to spend time re-estimating. Lock the team in a room for a day and do no delivery work tomorrow - update your estimate for delivering the entire project then click Next to go to the next day.'},
-      {number: 12, text: 'Vince is satisfied with your estimate and sends it around to the business in an email titled \'Team commits to deadline\''},
-      {number: 13, function: 'Lose Tester', text: 'Your organisation has lost a tester so if you have testers, one of them now has to support multiple teams. One tester loses two points of effort tomorrow.'},
-      {number: 14, text:'You have found that quality improves when you have someone pair with a Deployer. Deploy failures will be halved whenever someone in addition to Deployer works in deploy. (Disregard if you\'re doing automated deployments)'},
-      {number: 15, function: 'Recharting', text: 'Team rechartering! Would you like to restructure your team? Feel free to change role specialties (<i>click on \'Set Up\'</i>)  or negotiate with other teams to bring on new members.'},
-      {number: 16, text: 'If you restructured your team yesterday, how do you expect the change to impact your forecast?'},
-      {number: 17, text: 'Jim from accounting sales sends an email directing employees to make sure they\'re fully utilised (i.e. follow a policy that you do not leave capacity on the table). Do you obey or silently ignore him?'},
-      {number: 18, text: 'How much work in progress do you have? Has that changed from earlier?'},
-      {number: 19, text: 'When you have completed the MVP (cards 1 to [MVPCARDS]), look at your estimates from earlier. How did you do? This time, try creating a probabilistic forecast for the rest of the backlog using the delivery-time data (ask the facilitator for help).'}
+      {number: 6, text: 'Would someone like to learn a new skill? If a person spends five days working in a work stage different from his or her speciality, the person will be able to work in that state at a 1:1 effort ratio.'},
+      {number: 7, text: 'Perhaps you have delivered at least one card? If so, are you able to forecast when you might deliver the Minimum Viable Product, which the Product Owner has defined as cards #1-11 '},
+      {number: 8, text: 'In this game, you may have been committing to work on an individual work-item basis. Now a new Scrum Master has joined the company, and she wants you to do batch commitment (i.e. pull in as many stories at once as you believe you can accomplish in a week). Will you do this?'},
+      {number: 9, function: 'Concurrent Dev and Test', confirm: true, text: 'Testers and Developers want to work together. You now have the option to do concurrent Dev and Test (i.e. no need to finish Development effort before beginning Testing). Do you want to do this?'},
+      {number: 10, function: 'Spend a Day Estimating', text: 'Vince from the PMO says he\'s nervous that you\'re not producing enough according to your original estimate. As a result, he wants you to spend time re-estimating. Lock the team in a room for a day and do no delivery work tomorrow - update your estimate for delivering the entire project then click Next to go to the next day.'},
+      {number: 11, text: 'Vince is satisfied with your estimate and sends it around to the business in an email titled \'Team commits to deadline\''},
+      {number: 12, function: 'Lose Tester', text: 'Your organisation has lost a tester so if you have testers, one of them now has to support multiple teams. One tester loses two points of effort tomorrow.'},
+      {number: 13, function: 'Recharting', text: 'Team rechartering! Would you like to restructure your team? Feel free to change role specialties (<i>click on \'Set Up\'</i>)  or negotiate with other teams to bring on new members. (Use the chat to talk to other teams!)'},
+      {number: 14, text: 'If you restructured your team yesterday, how do you expect the change to impact your forecast?'},
+      {number: 15, text: 'Jim from accounting sales sends an email directing employees to make sure they\'re fully utilised (i.e. follow a policy that you do not leave capacity on the table). Do you obey or silently ignore him?'},
+      {number: 16, function: 'Show Cycle Time', height: 650, text: 'This graph shows how long each card took to complete, compared to their size - is there a relationship between size and time to complete?'},
+      {number: 17, text: 'How much work in progress do you have? Has that changed from earlier?'}
     ],
     workCards: [
       {number: 1, design: 6, develop: 7, test: 8, deploy: 2, urgent: false, teamDependency: 0, dependentOn: '', commit: 0, blocked: false, effort: {design: 0, develop: 0, test: 0, deploy: 0}, workedOn: {}},
@@ -100,8 +99,11 @@ export const store = new Vuex.Store({
     facilitatorMessages: {},
     config: {
       facilitatorStarts: false,
+      gameRunning: false,
       doRetros: false,
       retroDays: 7,
+      retroTimer: false,
+      retroTime: 0,
       mvpCards: 11,
       percentageBlocked: 0.05,
       percentageDeployFail: 0.5
@@ -249,6 +251,9 @@ export const store = new Vuex.Store({
     getFacilitatorStarts: (state) => {
       return state.config.facilitatorStarts
     },
+    getGameRunning: (state) => {
+      return state.config.gameRunning
+    },
     getPercentageBlocked: (state) => {
       return state.config.percentageBlocked
     },
@@ -263,6 +268,12 @@ export const store = new Vuex.Store({
     },
     getRetroDays: (state) => {
       return state.config.retroDays
+    },
+    getRetroTimer: (state) => {
+      return state.config.retroTimer
+    },
+    getRetroTime: (state) => {
+      return state.config.retroTime
     },
     getRetrosDone: (state) => {
       return state.retrosDone
@@ -304,9 +315,10 @@ export const store = new Vuex.Store({
       return state.columns
     },
     getCurrentEventCard: (state) => {
-      return state.eventCards.find(function(c) {
+      const card = state.eventCards.find(function(c) {
         return c.number == state.currentDay
       })
+      return card ? card : {number: state.currentDay}
     },
     getCurrentWorkCard: (state) => {
       if (state.currentWorkCard < state.workCards.length) {

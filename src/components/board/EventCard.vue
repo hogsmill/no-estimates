@@ -1,51 +1,118 @@
 <template>
-  <modal name="event-card-popup" class="popup" :height="400" :classes="['rounded']">
-    <div class="float-right mr-2 mt-1">
-      <button type="button" class="close" @click="hide()" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <div v-if="!currentEventCard">
-      <h4>We are now on Day {{ currentDay + 1 }}</h4>
-      <button class="btn btn-sm btn-info" @click="done">
-        Done
-      </button>
-    </div>
-    <div v-if="currentEventCard">
-      <h4>Day {{ currentEventCard.number + 1 }}</h4>
-      <ProjectValue />
-      <p v-html="currentEventCard.text.replace('[MVPCARDS]', mvpCards)" />
-      <div class="event-card-buttons">
-        <button v-if="!currentEventCard || !currentEventCard.function" class="btn btn-sm btn-info" @click="done()">
+  <span>
+
+    <modal name="event-card-popup" class="popup" :height="400" :classes="['rounded']">
+      <div v-if="!currentEventCard.text">
+        <h4>We are now on Day {{ currentDay + 1 }}</h4>
+        <ProjectValue />
+        <button class="btn btn-sm btn-info" @click="done()">
           Done
-        </button>
-        <button v-if="currentEventCard.function && !currentEventCard.confirm" class="btn btn-sm btn-info" @click="doFunction()">
-          Done
-        </button>
-        <button v-if="currentEventCard.function && currentEventCard.confirm" class="btn btn-sm btn-info" @click="doFunction()">
-          Yes
-        </button>
-        <button v-if="currentEventCard.function && currentEventCard.confirm" class="btn btn-sm btn-info" @click="done()">
-          No
         </button>
       </div>
-    </div>
-  </modal>
+      <div v-if="currentEventCard.text">
+        <h4>Day {{ currentDay + 1 }}</h4>
+        <ProjectValue />
+        <p v-html="currentEventCard.text.replace('[MVPCARDS]', mvpCards)" />
+        <div class="event-card-buttons">
+          <button v-if="!currentEventCard.function" class="btn btn-sm btn-info" @click="done()">
+            Done
+          </button>
+          <button v-if="currentEventCard.function && !currentEventCard.confirm" class="btn btn-sm btn-info" @click="doFunction()">
+            Done
+          </button>
+          <button v-if="currentEventCard.function && currentEventCard.confirm" class="btn btn-sm btn-info" @click="doFunction()">
+            Yes
+          </button>
+          <button v-if="currentEventCard.function && currentEventCard.confirm" class="btn btn-sm btn-info" @click="done()">
+            No
+          </button>
+        </div>
+      </div>
+    </modal>
+
+    <modal name="event-graph-popup" class="popup" :height="650" :classes="['rounded']">
+      <div>
+        <h4>Day {{ currentDay + 1 }}</h4>
+        <ProjectValue />
+        <div v-if="currentEventCard.function == 'Show Cycle Time'" class="event-card-graph">
+          <table>
+            <tr>
+              <td>Small: </td>
+              <td class="small" />
+              <td>Medium: </td>
+              <td class="medium" />
+              <td>Large: </td>
+              <td class="large" />
+            </tr>
+          </table>
+          <BarChart :chartdata="cycleTime.data" :options="cycleTime.options" />
+        </div>
+        <div class="event-card-buttons">
+          <button class="btn btn-sm btn-info" @click="doneGraph()">
+            Done
+          </button>
+        </div>
+      </div>
+    </modal>
+
+    <modal name="autodeploy-complete-popup" class="popup" :height="400" :classes="['rounded']">
+      <div>
+        <h4>Autodeploy Complete</h4>
+        <h5>Congratulations!</h5>
+        <p>
+          Now that you have completed the auto-deployment work, deployments will no
+          longer fail, and you will no longer have to re-do any deploy work.
+        </p>
+        <button class="btn btn-sm btn-info" @click="hide('autodeploy-complete-popup')">
+          Done
+        </button>
+      </div>
+    </modal>
+
+  </span>
 </template>
 
 <script>
 import ProjectValue from './ProjectValue.vue'
+import BarChart from '../facilitator/results/BarChart.vue'
 
 export default {
   components: {
-    ProjectValue
+    ProjectValue,
+    BarChart
   },
   props: [
     'socket'
   ],
   data() {
     return {
-      showing: false
+      showing: false,
+      cycleTime: {
+        data: {
+          labels: [],
+          datasets: [{
+            backgroundColor: '',
+            pointBackgroundColor: 'white',
+            borderWidth: 1,
+            pointBorderColor: '#249EBF',
+            data: []
+          }]
+        },
+        options: {
+          scales: {
+            yAxes: [{
+              ticks: {beginAtZero: true},
+              gridLines: {display: true}
+            }],
+            xAxes: [{
+              gridLines: {display: false}
+            }]
+          },
+          legend: {display: false},
+          responsive: true,
+          maintainAspectRatio: false
+        }
+      }
     }
   },
   computed: {
@@ -67,6 +134,9 @@ export default {
     currentDay() {
       return this.$store.getters.getCurrentDay
     },
+    graphConfig() {
+      return this.$store.getters.getGraphConfig
+    },
     mvpCards() {
       return this.$store.getters.getMvpCards
     },
@@ -81,13 +151,39 @@ export default {
     const self = this
     this.socket.on('showEventCard', (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
-        self.$modal.show('event-card-popup')
+        if (self.currentEventCard.function == 'Show Cycle Time') {
+          self.socket.emit('showResult', {gameName: this.gameName, result: 'cycle-time', target: 'event-card'})
+        } else {
+          self.$modal.show('event-card-popup')
+        }
+      }
+    })
+
+    this.socket.on('autodeployComplete', (data) => {
+      if (this.gameName == data.gameName && this.teamName == data.teamName) {
+        self.$modal.show('autodeploy-complete-popup')
+      }
+    })
+
+    this.socket.on('showResult', (data) => {
+      if (this.gameName == data.gameName && this.teamName == data.teamName && data.target == 'event-card') {
+        switch(data.result) {
+          case 'cycle-time':
+            self.showCycleTime(data)
+            break
+        }
       }
     })
   },
   methods: {
-    hide() {
-      this.$modal.hide('event-card-popup')
+    hide(name) {
+      this.$modal.hide(name)
+    },
+    doneGraph() {
+      if (this.myName.captain) {
+        this.socket.emit('updateCurrentDay', {gameName: this.gameName, teamName: this.teamName, currentDay: this.currentDay + 1})
+      }
+      this.hide('event-graph-popup')
     },
     done(data) {
       if (this.myName.captain) {
@@ -97,14 +193,12 @@ export default {
             updateData[key] = data[key]
           }
         }
-        if (this.currentEventCard) {
-          if (this.currentEventCard.autoDeployCard) {
-            updateData.canStartAutoDeploy = true
-          }
+        if (this.currentEventCard.autoDeployCard) {
+          updateData.canStartAutoDeploy = true
         }
         this.socket.emit('updateCurrentDay', updateData)
       }
-      this.hide()
+      this.hide('event-card-popup')
     },
     doFunction() {
       const data = {
@@ -134,6 +228,21 @@ export default {
           console.log('Doing \'' + this.currentEventCard.function + '\' (not implemented)')
       }
       this.done(data)
+    },
+    showCycleTime(data) {
+      this.cycleTime.data.datasets[0].backgroundColor = []
+      for (let i = 0; i < data.results.effort.length; i++) {
+        if (data.results.effort[i] < this.graphConfig.cycleTime.medium) {
+          this.cycleTime.data.datasets[0].backgroundColor.push('cadetblue')
+        } else if (data.results.effort[i] < this.graphConfig.cycleTime.large) {
+          this.cycleTime.data.datasets[0].backgroundColor.push('olive')
+        } else {
+          this.cycleTime.data.datasets[0].backgroundColor.push('darkorange')
+        }
+      }
+      this.cycleTime.data.labels = data.results.ids
+      this.cycleTime.data.datasets[0].data = data.results.days
+      this.$modal.show('event-graph-popup')
     }
   }
 }
@@ -151,6 +260,31 @@ export default {
 
     .fas {
       color: #17a2b8;
+    }
+  }
+
+  .event-card-graph {
+    canvas {
+      height: 300px;
+    }
+
+    table {
+      width: 50%;
+      margin: 0 auto;
+      td {
+        width: 50px;
+        text-align: right;
+        padding: 0 4px;
+        &.small {
+          background-color: cadetblue;
+        }
+        &.medium {
+          background-color: olive;
+        }
+        &.large {
+          background-color: darkorange;
+        }
+      }
     }
   }
 

@@ -179,7 +179,7 @@ export default {
       this.showMonteCarloConfig = val
     },
     showResult(result) {
-      this.socket.emit('showResult', {gameName: this.gameName, result: result})
+      this.socket.emit('showResult', {gameName: this.gameName, result: result, target: 'game'})
     },
     hideResult(result) {
       this.socket.emit('hideResult', {gameName: this.gameName, result: result})

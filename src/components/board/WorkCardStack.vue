@@ -56,6 +56,9 @@ export default {
     },
     facilitatorStarts() {
       return this.$store.getters.getFacilitatorStarts
+    },
+    gameRunning() {
+      return this.$store.getters.getGameRunning
     }
   },
   methods: {
@@ -75,7 +78,7 @@ export default {
       return captain
     },
     pullInCard() {
-      if (this.facilitatorStarts && this.currentWorkCard == 0) {
+      if (this.facilitatorStarts && !this.gameRunning) {
         alert('Please wait for the game to start')
         return
       }

@@ -84,7 +84,7 @@ module.exports = {
     if (debugOn) { console.log('setUp', data) }
 
     const names = [
-      {name: 'Allan', id: '1111'},
+      {name: 'Allan', id: '1111', captain: true},
       {name: 'Dolly', id: '2222'},
       {name: 'Herbert', id: '3333'},
       {name: 'Mary', id: '4444'}

@@ -1,10 +1,6 @@
 
 const cardFuns = require('./cards.js')
 
-function cardComplete(card, res) {
-  return cardFuns.cardCompleteInColumn(card, 'deploy', res)
-}
-
 module.exports = {
 
   addDependencyToCard: function(columns, workCard, dependentOn) {
@@ -44,7 +40,7 @@ module.exports = {
           column.cards.push(card)
         }
       }
-      if (column.name == "done" && completeCard) {
+      if (column.name == 'done' && completeCard) {
         column.cards.push(completeCard)
       }
       newColumns.push(column)

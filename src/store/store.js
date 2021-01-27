@@ -419,7 +419,10 @@ export const store = new Vuex.Store({
       const member = state.members.find(function(m) {
         return m.id == state.myName.id
       })
-      state.myName.captain = member.captain
+      // TODO: This is only ever null when running demo...
+      if (member) {
+        state.myName.captain = member.captain
+      }
     },
     loadGame: (state, payload) => {
       state.teams = payload.teams

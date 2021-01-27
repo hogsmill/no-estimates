@@ -17,9 +17,7 @@
           </div>
         </div>
         <div class="other-work-card-effort" @click="addEffort(card)">
-          <div class="other-work-card-column column rounded-circle">
-            X
-          </div>
+          <div class="other-work-card-column column rounded-circle" />
           <div v-for="n in card.teamDependency" :key="n" :class="{'assigned' : n <= card.dependencyDone}" class="other-work-card-column rounded-circle" />
         </div>
         <div v-if="card.dependencyDone == card.teamDependency">
@@ -148,8 +146,12 @@ export default {
           display: inline-block;
           width: 11px;
           height: 11px;
+          padding-left: 2px;
+          margin-right: 2px;
           font-size: 8px;
           padding-left: 2px;
+          position: relative;
+          top: 1px;
         }
       }
 

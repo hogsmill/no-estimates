@@ -30,7 +30,7 @@ function monteCarloRun(cardsPerDay, noOfCards, startFrom) {
   return day
 }
 
-function monteCarlo(cards, cardsPerDay, startFrom, runs, cards) {
+function monteCarlo(cards, cardsPerDay, startFrom, runs, cardsToRunTo) {
   const results = {}
   for (let i = 0; i < runs; i++) {
     const run = monteCarloRun(cardsPerDay, cards, startFrom)

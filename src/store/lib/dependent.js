@@ -1,4 +1,10 @@
 
+const cardFuns = require('./cards.js')
+
+function cardComplete(card, res) {
+  return cardFuns.cardCompleteInColumn(card, 'deploy', res)
+}
+
 module.exports = {
 
   addDependencyToCard: function(columns, workCard, dependentOn) {
@@ -20,8 +26,9 @@ module.exports = {
     return newColumns
   },
 
-  addDependentEffort: function(columns, workCard, effort) {
+  addDependentEffort: function(columns, workCard, effort, res) {
     const newColumns = []
+    let completeCard = null
     for (let i = 0; i < columns.length; i++) {
       const column = columns[i]
       const cards = column.cards
@@ -31,7 +38,14 @@ module.exports = {
         if (card.number == workCard.number) {
           card.dependencyDone = card.dependencyDone + effort
         }
-        column.cards.push(card)
+        if (column.name == 'deploy' && cardFuns.cardCompleteInColumn(card, 'deploy', res)) {
+          completeCard = card
+        } else {
+          column.cards.push(card)
+        }
+      }
+      if (column.name == "done" && completeCard) {
+        column.cards.push(completeCard)
       }
       newColumns.push(column)
     }

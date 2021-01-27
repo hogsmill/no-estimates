@@ -395,7 +395,7 @@ module.exports = {
             if (card.blocked || card.failed || (card.dependentOn && colName == 'deploy')) {
               card.blocked = false
               card.failed = false
-              if (cardFuns.cardCompleteInColumn(card, colName, res.teamName, res.autoDeploy, res.config.percentageBlocked, res.config.percentageDeployFail)) {
+              if (cardFuns.cardCompleteInColumn(card, colName, res)) {
                 cardFuns.moveCard(columns, workCards, card, i, res.currentDay)
               }
             }
@@ -461,7 +461,7 @@ module.exports = {
               const colName = columns[i].name
               card.effort = data.workCard.effort
               card = cardFuns.addWorkedOn(card, data.column, data.name, data.role)
-              if (cardFuns.cardCompleteInColumn(card, colName, res.teamName, res.autoDeploy, res.config.percentageBlocked, res.config.percentageDeployFail)) {
+              if (cardFuns.cardCompleteInColumn(card, colName, res)) {
                 cardFuns.moveCard(columns, workCards, card, i, res.currentDay)
               }
             }
@@ -540,7 +540,7 @@ module.exports = {
     db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.card.team}, function(err, otherRes) {
       if (err) throw err
       if (otherRes) {
-        otherRes.columns = dependent.addDependentEffort(otherRes.columns, data.card, data.effort)
+        otherRes.columns = dependent.addDependentEffort(otherRes.columns, data.card, data.effort, otherRes)
         updateTeam(db, io, otherRes)
       }
     })

@@ -115,7 +115,11 @@ module.exports = {
     return card
   },
 
-  cardCompleteInColumn: function(card, colName, team, autoDeploy, percentageBlocked, percentageDeployFail) {
+  cardCompleteInColumn: function(card, colName, res) {
+    const team = res.teamName
+    const autoDeploy = res.autoDeploy
+    const percentageBlocked = res.config.percentageBlocked
+    const percentageDeployFail = res.config.percentageDeployFail
     blockOrFailCard(card, colName, team, autoDeploy, percentageBlocked, percentageDeployFail)
     let dependentDone = true
     if (colName == 'deploy') {

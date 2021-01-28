@@ -16,6 +16,14 @@ function _memberHasEffort(member) {
 
 module.exports = {
 
+  noCardsLeft: function(game) {
+    const column = game.columns.find(function(c) {
+      return c.name == 'done'
+    })
+    // TODO: handle dependencies - 5 is the umber of cards with dependencies
+    return column.cards.length == game.workCards.length - 5
+  },
+
   aCardIsPlayable: function(game) {
     let playable = false
     for (let i = 0; i < game.columns.length - 1; i++) {
@@ -28,6 +36,7 @@ module.exports = {
         }
       }
     }
+    console.log('playable', playable)
     return playable
   },
 
@@ -51,5 +60,5 @@ module.exports = {
   memberHasEffort: function(member) {
     return _memberHasEffort(member)
   }
-  
+
 }

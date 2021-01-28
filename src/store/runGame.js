@@ -3,19 +3,6 @@ const run = require('./run/funs.js')
 const dbStore = require('./dbStore.js')
 const teamFuns = require('./lib/teams.js')
 
-function doDependencies(workCards) {
-  console.log('  Doing dependencies')
-  const cards = []
-  for (let i = 0; i < workCards.length; i++) {
-    const card = workCards[i]
-    if (card.teamDependency) {
-     card.dependencyDone = card.teamDependency
-    }
-    cards.push(card)
-  }
-  return cards
-}
-
 function addEffortToCard(db, io, game, member) {
   let added = false
   for (let i = game.columns.length - 1; i >= 0; i--) {
@@ -56,7 +43,9 @@ function addEffort(db, io, game) {
 
 function makeMove(db, io, game, teams) {
   const data = {gameName: game.gameName, teamName: game.teamName, teams: teams, currrentDay: game.currentDay}
-  if (!run.aCardIsPlayable(game)) {
+  if (run.noCardsLeft(game)) {
+    console.log('  All cards played')
+  } else if (!run.aCardIsPlayable(game)) {
     console.log('  Pulling in card')
     dbStore.pullInCard(db, io, data, false)
   } else if (!run.effortCanBeAssigned(game)) {
@@ -104,7 +93,6 @@ module.exports = {
           members = teamFuns.addMember(members, names[i], roles[i])
         }
         res.members = members
-        res.workCards = doDependencies(res.workCards)
         updateTeam(db, io, res)
       }
     })

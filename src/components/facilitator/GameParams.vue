@@ -88,7 +88,7 @@
         Hosts
       </td>
       <td colspan="3" class="stealth">
-        <input id="is-stealth" type="checkbox" :checked="stealth" @click="toggleStealth()"> Hosts are in "Stealth" mode? {{ stealth }}
+        <input id="is-stealth" type="checkbox" :checked="stealth" @click="toggleStealth()"> Hosts are in "Stealth" mode?
       </td>
     </tr>
     <tr v-if="showGameParams">

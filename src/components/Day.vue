@@ -3,7 +3,7 @@
     <div class="row days">
       <div class="days">
         <div class="days-label">
-          Day {{ myName.captain }}
+          Day
         </div>
         <span class="passed" v-if="days()[0] > 1"> . . . </span>
         <div class="day rounded-circle" :class="getClass(day)" v-for="(day, index) in days()" :key="index">

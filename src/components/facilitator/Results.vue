@@ -216,7 +216,7 @@ export default {
         options: {
           scales: {
             yAxes: [{
-              ticks: {beginAtZero: true},
+              ticks: {beginAtZero: true, stepSize: 1},
               gridLines: {display: true}
             }],
             xAxes: [{
@@ -243,7 +243,7 @@ export default {
         options: {
           scales: {
             yAxes: [{
-              ticks: {beginAtZero: true},
+              ticks: {beginAtZero: true, stepSize: 1},
               gridLines: {display: true}
             }],
             xAxes: [{

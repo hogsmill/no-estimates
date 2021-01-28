@@ -228,6 +228,8 @@ io.on('connection', (socket) => {
     doDb('deleteGame', data)
   })
 
+  socket.on('showSetEstimates', (data) => { emit('showSetEstimates', data) })
+
   socket.on('retro', (data) => { emit('retro', data) })
 
   socket.on('retroDone', (data) => { doDb('retroDone', data) })

@@ -1,7 +1,7 @@
 <template>
   <span>
 
-    <button class="btn btn-sm btn-secondary smaller-font" :disabled="!gameName || !teamName" @click="show()">
+    <button class="btn btn-sm btn-secondary smaller-font" :disabled="!gameName || !teamName" @click="showSetEstimates()">
       Set Estimates
     </button>
 
@@ -57,6 +57,14 @@ export default {
       return this.$store.getters.getColumns
     }
   },
+  created() {
+    const self = this
+    this.socket.on('showSetEstimates', (data) => {
+      if (this.gameName == data.gameName && this.teamName == data.teamName) {
+        self.show()
+      }
+    })
+  },
   methods: {
     show() {
       this.$modal.show('set-up-estimates')
@@ -75,6 +83,9 @@ export default {
     },
     completed() {
       return this.columns.find(function(c) { return c.name == 'done' }).cards.length
+    },
+    showSetEstimates() {
+      this.socket.emit('showSetEstimates', {gameName: this.gameName, teamName: this.teamName})
     }
   }
 }

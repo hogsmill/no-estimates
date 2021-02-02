@@ -33,7 +33,7 @@
               </div>
             </td>
             <td class="button">
-              <button class="btn btn-sm btn-secondary smaller-font" @click="changeGameName()">
+              <button v-if="!gameFromParams()" class="btn btn-sm btn-secondary smaller-font" @click="changeGameName()">
                 Change
               </button>
             </td>
@@ -172,6 +172,9 @@ export default {
     },
     hide() {
       this.$modal.hide('set-up')
+    },
+    gameFromParams() {
+      return params.getParam('game')
     },
     reset() {
       this.gameNameEditing = false,

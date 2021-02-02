@@ -22,7 +22,7 @@
       <div class="mt-4">
         <h2>
           Retro!
-          {{ retroClock() }}
+          <span v-if="retroTimer">{{ retroClock() }}</span>
         </h2>
         <div class="retro-div">
           <div class="retro-img-div rounded">

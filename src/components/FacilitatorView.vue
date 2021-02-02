@@ -72,7 +72,7 @@ export default {
     }
 
     h4 {
-      width: 50%;
+      width: 75%;
       display: inline-block;
       text-align: left;
     }

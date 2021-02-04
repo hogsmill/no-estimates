@@ -170,5 +170,20 @@ module.exports = {
       }
     }
     return actuals
+  },
+
+  wip: function(columns, currentDay) {
+    let wip = {}
+    overall = 0
+    for (let i = 0; i < columns.length; i++) {
+      const cards = columns[i].cards.length
+      if (columns[i].name != "done") {
+        wip[columns[i].name] = cards
+        overall = overall + cards
+      }
+    }
+    wip.day = currentDay
+    wip.overall = overall
+    return wip
   }
 }

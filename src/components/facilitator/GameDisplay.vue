@@ -8,7 +8,7 @@
       </td>
     </tr>
     <tr v-if="showGameDisplay">
-      <td rowspan="6" class="show-results-td">
+      <td rowspan="7" class="show-results-td">
         Show results
       </td>
       <td>
@@ -19,6 +19,23 @@
           Hide
         </button>
         Sources of Variation
+      </td>
+    </tr>
+    <tr v-if="showGameDisplay">
+      <td>
+        <button class="btn btn-sm btn-site-primary" @click="showResult('wip')">
+          Show
+        </button>
+        <button class="btn btn-sm btn-site-primary" @click="hideResult('wip')">
+          Hide
+        </button>
+        WIP
+        <i v-if="showWipConfig" @click="setShowWipConfig(false)" title="collapse WIP config" class="fas fa-caret-up toggle config" />
+        <i v-if="!showWipConfig" @click="setShowWipConfig(true)" title="expand WIP config" class="fas fa-caret-down toggle config" />
+        <div v-if="showWipConfig" class="wip-config">
+          <input type="radio" name="wip-data-type" :checked="graphConfig.wip.useMovingAverage" @click="setWipUseMovingAverage(true)"> Use Moving Average Data
+          <input type="radio" name="wip-data-type" :checked="!graphConfig.wip.useMovingAverage" @click="setWipUseMovingAverage(false)"> Use Raw Data
+        </div>
       </td>
     </tr>
     <tr v-if="showGameDisplay" class="header">
@@ -156,6 +173,7 @@ export default {
   data() {
     return {
       showGameDisplay: false,
+      showWipConfig: false,
       showCycleTimeConfig: false,
       showMonteCarloConfig: false
     }
@@ -175,6 +193,9 @@ export default {
     setShowCycleTimeConfig(val) {
       this.showCycleTimeConfig = val
     },
+    setShowWipConfig(val) {
+      this.showWipConfig = val
+    },
     setShowMonteCarloConfig(val) {
       this.showMonteCarloConfig = val
     },
@@ -183,6 +204,9 @@ export default {
     },
     hideResult(result) {
       this.socket.emit('hideResult', {gameName: this.gameName, result: result})
+    },
+    setWipUseMovingAverage(val) {
+      this.socket.emit('setWipUseMovingAverage', {gameName: this.gameName, value: val})
     },
     saveCardSize(size) {
       const val = document.getElementById('card-size-' + size).value
@@ -208,6 +232,17 @@ export default {
     position: relative !important;
     left: 6px;
     top: 6px;
+  }
+
+  .wip-config {
+    padding: 6px 0 0 142px;
+
+    input[type=radio] {
+      width: 24px;
+      position: relative;
+      top: 6px;
+      margin: 0 0 10px 24px;
+    }
   }
 
   .card-sizes {

@@ -31,6 +31,29 @@
       </div>
     </modal>
 
+    <!-- WIP -->
+
+    <modal name="wip" class="popup" :height="520" :width="850" :classes="['rounded']">
+      <div class="float-right mr-2 mt-1">
+        <button type="button" class="close" @click="hide('wip')" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="mt-4 cycle-time">
+        <h4>
+          WIP Trend - No. of Cards in Play
+          <span v-if="graphConfig.wip.useMovingAverage">(Moving Average)</span>
+          <span v-if="!graphConfig.wip.useMovingAverage">(Raw Data)</span>
+        </h4>
+        <div>
+          Average: {{ wip.average }}
+        </div>
+        <div>
+          <LineChart :chartdata="wip.data" :options="wip.options" />
+        </div>
+      </div>
+    </modal>
+
     <!-- Correlation -->
 
     <modal name="correlation" class="popup" :height="280" :width="850" :classes="['rounded']">
@@ -180,12 +203,21 @@
 </template>
 
 <script>
+import correlation from './graphConfig/correlation.js'
+import wip from './graphConfig/wip.js'
+import cycleTime from './graphConfig/cycleTime.js'
+import distribution from './graphConfig/distribution.js'
+import scatterPlot from './graphConfig/scatterPlot.js'
+import monteCarlo from './graphConfig/monteCarlo.js'
+
 import BarChart from './results/BarChart.vue'
+import LineChart from './results/LineChart.vue'
 import ScatterPlot from './results/ScatterPlot.vue'
 
 export default {
   components: {
     BarChart,
+    LineChart,
     ScatterPlot
   },
   props: [
@@ -195,136 +227,19 @@ export default {
     return {
       modals: [
         'sources-of-variation',
+        'wip',
         'correlation',
         'cycle-time',
         'distribution',
         'scatter-plot',
         'monte-carlo'
       ],
-      correlation: 0,
-      cycleTime: {
-        data: {
-          labels: [],
-          datasets: [{
-            backgroundColor: '',
-            pointBackgroundColor: 'white',
-            borderWidth: 1,
-            pointBorderColor: '#249EBF',
-            data: []
-          }]
-        },
-        options: {
-          scales: {
-            yAxes: [{
-              ticks: {beginAtZero: true, stepSize: 1},
-              gridLines: {display: true}
-            }],
-            xAxes: [{
-              gridLines: {display: false}
-            }]
-          },
-          legend: {display: false},
-          responsive: true,
-          maintainAspectRatio: false
-        }
-      },
-      distribution: {
-        data: {
-          labels: [],
-          datasets: [{
-            label: 'No. of Cards that took this many days',
-            backgroundColor: '#f87979',
-            pointBackgroundColor: 'white',
-            borderWidth: 1,
-            pointBorderColor: '#249EBF',
-            data: []
-          }]
-        },
-        options: {
-          scales: {
-            yAxes: [{
-              ticks: {beginAtZero: true, stepSize: 1},
-              gridLines: {display: true}
-            }],
-            xAxes: [{
-              gridLines: {display: false}
-            }]
-          },
-          legend: {display: true},
-          responsive: true,
-          maintainAspectRatio: false
-        }
-      },
-      scatterPlot: {
-        data: {
-          labels: [],
-          datasets: [{
-            pointRadius: 8,
-            pointHoverRadius: 12,
-            backgroundColor: '#f87979',
-            pointBackgroundColor: '#f87979',
-            borderWidth: 1,
-            pointBorderColor: '#249EBF',
-            data: []
-          }]
-        },
-        limits: {
-          75: 0,
-          90: 0,
-          95: 0,
-          99: 0
-        },
-        options: {
-          scales: {
-            xAxes: [{type: 'linear', position: 'bottom', ticks: {beginAtZero: true}}],
-            yAxes: [{ticks: {beginAtZero: true}}]
-          },
-          tooltips: {
-            callbacks: {
-              label: function(tooltipItem, data) {
-                return data.datasets[0].data[tooltipItem.index].label
-              }
-            }
-          },
-          legend: {display: false},
-          responsive: true,
-          maintainAspectRatio: false
-        }
-      },
-      monteCarlo: {
-        data: {
-          labels: [],
-          datasets: [{
-            label: 'Number of times run completes in this many days',
-            backgroundColor: '#f87979',
-            pointBackgroundColor: 'white',
-            borderWidth: 1,
-            pointBorderColor: '#249EBF',
-            data: []
-          }]
-        },
-        percentiles: {
-          50: 0,
-          75: 0,
-          90: 0,
-          95: 0,
-          99: 0
-        },
-        options: {
-          scales: {
-            yAxes: [{
-              ticks: {beginAtZero: true},
-              gridLines: {display: true}
-            }],
-            xAxes: [{
-              gridLines: {display: false}
-            }]
-          },
-          legend: {display: false},
-          responsive: true,
-          maintainAspectRatio: false
-        }
-      }
+      correlation: correlation.config(),
+      wip: wip.config(),
+      cycleTime: cycleTime.config(),
+      distribution: distribution.config(),
+      scatterPlot: scatterPlot.config(),
+      monteCarlo:monteCarlo.config()
     }
   },
   computed: {
@@ -366,6 +281,9 @@ export default {
         switch(data.result) {
           case 'sources-of-variation':
             self.showSourcesOfVariation(data)
+            break
+          case 'wip':
+            self.showWip(data)
             break
           case 'correlation':
             self.showCorrelation(data)
@@ -412,6 +330,18 @@ export default {
     },
     showSourceOfVariation(source) {
       this.socket.emit('showSourceOfVariation', {gameName: this.gameName, source: source})
+    },
+    showWip(data) {
+    console.log(this.graphConfig.wip)
+      this.wip.average = data.results.average
+      if (this.graphConfig.wip.useMovingAverage) {
+        this.wip.data.labels = data.results.labelsMovingAverage
+        this.wip.data.datasets[0].data = data.results.wipMovingAverage
+      } else {
+        this.wip.data.labels = data.results.labels
+        this.wip.data.datasets[0].data = data.results.wip
+      }
+      this.$modal.show('wip')
     },
     showCorrelation(data) {
       this.correlation = parseFloat(data.results)

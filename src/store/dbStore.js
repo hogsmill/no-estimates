@@ -75,6 +75,7 @@ function resetGame(game) {
   game.currentWorkCard = 0
   game.retrosDone = {}
   game.messages = {}
+  game.wip = []
   game.mvpEstimate = null
   game.mvpActual = null
   game.projectEstimate = null
@@ -110,6 +111,9 @@ function newGame(data) {
       percentageDeployFail: 0.5,
     },
     graphConfig: {
+      wip: {
+        useMovingAverage: true
+      },
       cycleTime: {
         medium: 15,
         large: 20
@@ -207,9 +211,10 @@ module.exports = {
       if (res.length) {
         const hosts = []
         for (let r = 0; r < res.length; r++) {
-          for (let i = 0; i < res[r].members.length; i++) {
-            if (res[r].members[i].host) {
-              hosts.push(res[r].members[i].name)
+          const members = res[r].members
+          for (let i = 0; i < members.length; i++) {
+            if (members[i].host) {
+              hosts.push(members[i].name)
             }
           }
         }
@@ -251,6 +256,7 @@ module.exports = {
         if (data.oldTeam) {
           db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.oldTeam}, function(err, resOld) {
             if (err) throw err
+            resOld = dbUpdate.team(resOld)
             resOld.members = teamFuns.removeMember(resOld.members, data.myName)
             updateTeam(db, io, resOld)
           })
@@ -258,6 +264,7 @@ module.exports = {
         db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, gameRes) {
           if (err) throw err
           if (gameRes) {
+            gameRes = dbUpdate.team(gameRes)
             gameRes.members = teamFuns.addMember(gameRes.members, data.myName, data.myRole)
             updateTeam(db, io, gameRes)
           }
@@ -422,6 +429,7 @@ module.exports = {
       if (res) {
         res.currentWorkCard = res.currentWorkCard + 1
         res.columns = cardFuns.pullInCard(res.columns, res.workCards, res.currentWorkCard, res.currentDay, data.teams, data.teamName)
+        res.wip.push(cardFuns.wip(res.columns, res.currentDay))
         updateTeam(db, io, res)
         const card = res.workCards.find(function(c) {
           return c.number == res.currentWorkCard
@@ -467,6 +475,7 @@ module.exports = {
             }
           }
         }
+        res.wip.push(cardFuns.wip(columns, res.currentDay))
         res.daysEffort = todaysEffort
         res.columns = columns
         res.workCards = workCards

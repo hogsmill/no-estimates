@@ -1,6 +1,7 @@
 
 const correlation = require('./results/correlation.js')
 const cycleTime = require('./results/cycleTime.js')
+const wipFuns = require('./results/wip.js')
 const distribution = require('./results/distribution.js')
 const scatterPlot = require('./results/scatterPlot.js')
 const monteCarlo = require('./results/monteCarlo.js')
@@ -19,12 +20,16 @@ module.exports = {
           if (res.length) {
             for (let r = 0; r < res.length; r++) {
               data.teamName = res[r].teamName
+              const wip = res[r].wip ? res[r].wip : {}
               const cards = res[r].columns.find(function(c) {
                 return c.name == 'done'
               }).cards
               switch(data.result) {
                 case 'sources-of-variation':
                   data.results = gameRes.sourcesOfVariation
+                  break
+                case 'wip':
+                  data.results = wipFuns.run(wip)
                   break
                 case 'correlation':
                   data.results = correlation.run(cards)
@@ -87,6 +92,24 @@ module.exports = {
           if (err) throw err
           data.results = sources
           io.emit('updateSourcesOfVariation', data)
+        })
+      }
+    })
+  },
+
+  setWipUseMovingAverage: function(db, io, data, debugOn) {
+
+    if (debugOn) { console.log('setWipUseMovingAverage', data) }
+
+    db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, res) {
+      if (err) throw err
+      if (res) {
+        res.graphConfig.wip.useMovingAverage = data.value
+        const id = res._id
+        delete res._id
+        db.collection('noEstimatesGames').updateOne({'_id': id}, {$set: res}, function(err) {
+          if (err) throw err
+          io.emit('loadGame', res)
         })
       }
     })

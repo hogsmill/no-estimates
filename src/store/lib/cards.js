@@ -163,7 +163,9 @@ module.exports = {
     if (!mvp && done.cards.length >= mvpCards) {
       let mvpDone = true
       for (let i = 1; i <= mvpCards; i++) {
-        if (!done.cards.find(function(c) { return c.number == i})) {
+        if (!done.cards.find(function(c) {
+          return c.number == i
+        })) {
           mvpDone = false
         }
       }

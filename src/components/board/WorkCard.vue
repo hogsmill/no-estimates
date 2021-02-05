@@ -70,7 +70,9 @@ import roles from '../../lib/roles.js'
 
 export default {
   props: [
-    'column', 'workCard', 'socket'
+    'column',
+    'workCard',
+    'socket'
   ],
   data() {
     return {
@@ -128,8 +130,17 @@ export default {
         : this.currentDay - this.workCard.commit
     },
     canAssign(column) {
-      const concurrent = this.capabilities.concurrentDevAndTest && (column == 'develop' || column == 'test')
-      return this.column == column || concurrent
+      let canAssign = false
+      if (this.column == column) {
+        canAssign = true
+      } else if (this.capabilities.concurrentDevAndTest) {
+        if (column == 'develop' || column == 'test') {
+          if (this.column == 'develop' || this.column == 'test') {
+            canAssign = true
+          }
+        }
+      }
+      return canAssign
     },
     addEffort(column) {
       let message = '', effort = 0

@@ -18,7 +18,7 @@
       </div>
     </div>
 
-    <modal name="retro" class="popup" :height="460" :classes="['rounded']">
+    <modal name="retro" class="popup" :height="480" :classes="['rounded']">
       <div class="mt-4">
         <h2>
           Retro!
@@ -29,11 +29,13 @@
             <div class="retro-img" />
           </div>
           <div class="retro-text">
-            <h5>
+            <h5 class="rounded">
               Why not take {{ retroTimeString() }} to reflect on how it's gone so far?
             </h5>
             <p>
-              For instance:
+              You have delivered {{ completed() }} cards, and
+              {{ currencyLabel() }}{{ total() }} of value in
+              {{ currentDay }} days. You could maybe discuss:
             </p>
             <ul>
               <li>What's gone well?</li>
@@ -41,8 +43,8 @@
               <li>What can the team do better?</li>
             </ul>
             <p>
-              You may also want to reconsider your project estimate. Click <b>Set
-                Estimates</b> if you want to update it.
+              You may also want to reconsider your project estimate. Click the <b>Set
+                Estimates</b> button if you want to update it.
             </p>
           </div>
         </div>
@@ -55,6 +57,8 @@
 </template>
 
 <script>
+import stringFuns from '../lib/stringFuns.js'
+
 export default {
   props: [
     'socket'
@@ -105,6 +109,12 @@ export default {
     retroTime() {
       return this.$store.getters.getRetroTime
     },
+    currency() {
+      return this.$store.getters.getCurrency
+    },
+    workCards() {
+      return this.$store.getters.getWorkCards
+    }
   },
   created() {
     const self = this
@@ -155,6 +165,23 @@ export default {
       } else {
         return this.retroTime + ' minutes'
       }
+    },
+    currencyLabel() {
+      return stringFuns.htmlDecode(this.currency)
+    },
+    total() {
+      let total = 0
+      for (let i = 0; i < this.workCards.length; i++) {
+        if (this.workCards[i].value) {
+          total += this.workCards[i].value
+        }
+      }
+      return total
+    },
+    completed() {
+      return this.columns.find(function(c) {
+        return c.name == 'done'
+      }).cards.length
     },
     getClass(day) {
       if (day < this.currentDay) {
@@ -228,7 +255,7 @@ export default {
 
   .retro-div {
     margin: 0 auto;
-    height: 320px;
+    height: 340px;
 
     p, li {
       text-align: left;
@@ -242,6 +269,7 @@ export default {
         float: left;
         margin: 6px;
         width: 230px;
+        height: 320px;
         //
         // Gradient
         //

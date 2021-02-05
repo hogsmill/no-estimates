@@ -154,7 +154,9 @@ module.exports = {
       mvp: mvp,
       project: project
     }
-    const done = columns.find(function(c) { return c.name == 'done' })
+    const done = columns.find(function(c) {
+      return c.name == 'done'
+    })
     if (!project && done.cards.length == workCards.length) {
       actuals.project = day
     }

@@ -45,7 +45,7 @@ function makeMove(db, io, game, teams) {
   const data = {gameName: game.gameName, teamName: game.teamName, teams: teams, currrentDay: game.currentDay}
   if (run.noCardsLeft(game)) {
     console.log('  All cards played')
-  } else if (!run.aCardIsPlayable(game)) {
+  } else if (!run.aCardIsPlayable(game) && game.currentWorkCard < 25) {
     console.log('  Pulling in card')
     dbStore.pullInCard(db, io, data, false)
   } else if (!run.effortCanBeAssigned(game)) {

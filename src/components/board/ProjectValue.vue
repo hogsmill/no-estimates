@@ -1,6 +1,7 @@
 <template>
   <h5 class="current-value" :class="{ 'negative': total() < 1 }">
     Current Value Delivered: {{ currencyLabel() }}{{ total() }}
+    <span v-if="cards != null"><br>Current Cards Delivered:  {{ cards }}</span>
   </h5>
 </template>
 
@@ -8,6 +9,9 @@
 import stringFuns from '../../lib/stringFuns.js'
 
 export default {
+  props: [
+    'cards'
+  ],
   computed: {
     currency() {
       return this.$store.getters.getCurrency

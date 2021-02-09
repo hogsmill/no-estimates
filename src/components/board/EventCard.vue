@@ -4,14 +4,16 @@
     <modal name="event-card-popup" class="popup" :height="400" :classes="['rounded']">
       <div v-if="!currentEventCard.text">
         <h4>We are now on Day {{ currentDay + 1 }}</h4>
-        <ProjectValue />
+        <ProjectValue :cards="completed()" />
         <button class="btn btn-sm btn-info" @click="done()">
           Done
         </button>
       </div>
       <div v-if="currentEventCard.text">
-        <h4>Day {{ currentDay + 1 }}</h4>
-        <ProjectValue />
+        <h4>
+          Day {{ currentDay + 1 }}
+        </h4>
+        <ProjectValue :cards="completed()" />
         <p v-html="currentEventCard.text.replace('[MVPCARDS]', mvpCards)" />
         <div v-if="myName.captain" class="event-card-buttons">
           <button v-if="!currentEventCard.function" class="btn btn-sm btn-info" @click="done()">
@@ -134,6 +136,9 @@ export default {
     members() {
       return this.$store.getters.getMembers
     },
+    columns() {
+      return this.$store.getters.getColumns
+    },
     myName() {
       return this.$store.getters.getMyName
     },
@@ -196,6 +201,11 @@ export default {
     },
     hide(name) {
       this.socket.emit('hide', {gameName: this.gameName, teamName: this.teamName, popup: name})
+    },
+    completed() {
+      return this.columns.find(function(c) {
+        return c.name == 'done'
+      }).cards.length
     },
     doneGraph() {
       if (this.myName.captain) {

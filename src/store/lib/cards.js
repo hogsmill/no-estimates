@@ -189,5 +189,15 @@ module.exports = {
     wip.day = currentDay
     wip.overall = overall
     return wip
+  },
+
+  cumulative: function(columns, currentDay) {
+    const cumulative = {}
+    for (let i = 0; i < columns.length; i++) {
+      const cards = columns[i].cards.length
+      cumulative[columns[i].name] = cards
+    }
+    cumulative.day = currentDay
+    return cumulative
   }
 }

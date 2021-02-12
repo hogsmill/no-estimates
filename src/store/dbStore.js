@@ -76,6 +76,7 @@ function resetGame(game) {
   game.retrosDone = {}
   game.messages = {}
   game.wip = []
+  game.cumulative = []
   game.mvpEstimate = null
   game.mvpActual = null
   game.projectEstimate = null
@@ -112,7 +113,11 @@ function newGame(data) {
     },
     graphConfig: {
       wip: {
-        useMovingAverage: true
+        useMovingAverage: true,
+        useMoves: true
+      },
+      cumulativeFlow: {
+        useMoves: true
       },
       cycleTime: {
         medium: 15,
@@ -430,6 +435,7 @@ module.exports = {
         res.currentWorkCard = res.currentWorkCard + 1
         res.columns = cardFuns.pullInCard(res.columns, res.workCards, res.currentWorkCard, res.currentDay, data.teams, data.teamName)
         res.wip.push(cardFuns.wip(res.columns, res.currentDay))
+        res.cumulative.push(cardFuns.cumulative(res.columns, res.currentDay))
         updateTeam(db, io, res)
         const card = res.workCards.find(function(c) {
           return c.number == res.currentWorkCard
@@ -476,6 +482,7 @@ module.exports = {
           }
         }
         res.wip.push(cardFuns.wip(columns, res.currentDay))
+        res.cumulative.push(cardFuns.cumulative(columns, res.currentDay))
         res.daysEffort = todaysEffort
         res.columns = columns
         res.workCards = workCards

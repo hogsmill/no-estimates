@@ -6,13 +6,16 @@ const gameUpdates = [
         medium: 15,
         large: 25
       },
-
     }
   },
 
   {name: 'graphConfig', value: {
       'wip': {
-        useMovingAverage: true
+        useMovingAverage: true,
+        useMoves: true
+      },
+      'cumulativeFlow': {
+        useMoves: true
       }
     }
   }
@@ -20,7 +23,9 @@ const gameUpdates = [
 
 const teamUpdates = [
 
-  {name: 'wip', value: []}
+  {name: 'wip', value: []},
+
+  {name: 'cumulative', value: []}
 ]
 
 module.exports = {

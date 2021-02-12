@@ -18,3 +18,24 @@ module.exports = {
     return sources
   }
 }
+
+/*
+Multitasking/Context switching (Duarte calls this “focus factor”)
+Work in progress (strong lead indicator)
+Dependencies (Team, System)
+Team composition
+Availability of specialists
+Blockers
+Selection policy (urgent cards “jump” over other WIP, incurring flow debt)
+Collaboration policy
+Utilization policy
+Time spent estimating! 
+Waiting for availability
+Rework
+Stages in team development (Tuckman)
+Steps/ handoffs
+Essential complication
+Accidental complication 
+Technology/ domain/ product
+Specialization
+*/

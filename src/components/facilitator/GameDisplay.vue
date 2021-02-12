@@ -8,7 +8,7 @@
       </td>
     </tr>
     <tr v-if="showGameDisplay">
-      <td rowspan="7" class="show-results-td">
+      <td rowspan="8" class="show-results-td">
         Show results
       </td>
       <td>
@@ -33,8 +33,36 @@
         <i v-if="showWipConfig" @click="setShowWipConfig(false)" title="collapse WIP config" class="fas fa-caret-up toggle config" />
         <i v-if="!showWipConfig" @click="setShowWipConfig(true)" title="expand WIP config" class="fas fa-caret-down toggle config" />
         <div v-if="showWipConfig" class="wip-config">
-          <input type="radio" name="wip-data-type" :checked="graphConfig.wip.useMovingAverage" @click="setWipUseMovingAverage(true)"> Use Moving Average Data
-          <input type="radio" name="wip-data-type" :checked="!graphConfig.wip.useMovingAverage" @click="setWipUseMovingAverage(false)"> Use Raw Data
+          <div>
+            Data
+            <input type="radio" name="wip-data-type" :checked="graphConfig.wip.useMovingAverage" @click="setWipUseMovingAverage(true)"> Use Moving Average Data
+            <input type="radio" name="wip-data-type" :checked="!graphConfig.wip.useMovingAverage" @click="setWipUseMovingAverage(false)"> Use Raw Data
+          </div>
+          <div>
+            Scope
+            <input type="radio" name="wip-data-type" :checked="graphConfig.wip.useMoves" @click="setWipUseMoves(true)"> Plot by move
+            <input type="radio" name="wip-data-type" :checked="!graphConfig.wip.useMoves" @click="setWipUseMoves(false)"> Plot by day
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr v-if="showGameDisplay">
+      <td>
+        <button class="btn btn-sm btn-site-primary" @click="showResult('cumulative-flow')">
+          Show
+        </button>
+        <button class="btn btn-sm btn-site-primary" @click="hideResult('cumulative-flow')">
+          Hide
+        </button>
+        Cumulative Flow
+        <i v-if="showCumulativeFlowConfig" @click="setShowCumulativeFlowConfig(false)" title="collapse Cumulative Flow config" class="fas fa-caret-up toggle config" />
+        <i v-if="!showCumulativeFlowConfig" @click="setShowCumulativeFlowConfig(true)" title="expand Cumulative Flow config" class="fas fa-caret-down toggle config" />
+        <div v-if="showCumulativeFlowConfig" class="cumulative-flow-config">
+          <div>
+            Scope
+            <input type="radio" name="cumulative-flow-data-type" :checked="graphConfig.cumulativeFlow.useMoves" @click="setCumulativeFlowUseMoves(true)"> Plot by move
+            <input type="radio" name="cumulative-flow-data-type" :checked="!graphConfig.cumulativeFlow.useMoves" @click="setCumulativeFlowUseMoves(false)"> Plot by day
+          </div>
         </div>
       </td>
     </tr>
@@ -174,6 +202,7 @@ export default {
     return {
       showGameDisplay: false,
       showWipConfig: false,
+      showCumulativeFlowConfig: false,
       showCycleTimeConfig: false,
       showMonteCarloConfig: false
     }
@@ -196,6 +225,9 @@ export default {
     setShowWipConfig(val) {
       this.showWipConfig = val
     },
+    setShowCumulativeFlowConfig(val) {
+      this.showCumulativeFlowConfig = val
+    },
     setShowMonteCarloConfig(val) {
       this.showMonteCarloConfig = val
     },
@@ -207,6 +239,12 @@ export default {
     },
     setWipUseMovingAverage(val) {
       this.socket.emit('setWipUseMovingAverage', {gameName: this.gameName, value: val})
+    },
+    setWipUseMoves(val) {
+      this.socket.emit('setWipUseMoves', {gameName: this.gameName, value: val})
+    },
+    setCumulativeFlowUseMoves(val) {
+      this.socket.emit('setCumulativeFlowUseMoves', {gameName: this.gameName, value: val})
     },
     saveCardSize(size) {
       const val = document.getElementById('card-size-' + size).value
@@ -234,7 +272,7 @@ export default {
     top: 6px;
   }
 
-  .wip-config {
+  .wip-config, .cumulative-flow-config {
     padding: 6px 0 0 142px;
 
     input[type=radio] {

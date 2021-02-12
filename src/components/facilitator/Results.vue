@@ -39,17 +39,39 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="mt-4 cycle-time">
+      <div class="mt-4 wip">
         <h4>
           WIP Trend - No. of Cards in Play
-          <span v-if="graphConfig.wip.useMovingAverage">(Moving Average)</span>
-          <span v-if="!graphConfig.wip.useMovingAverage">(Raw Data)</span>
+          <span v-if="graphConfig.wip.useMovingAverage">(Moving Average,</span>
+          <span v-if="!graphConfig.wip.useMovingAverage">(Raw Data,</span>
+          <span v-if="graphConfig.wip.useMoves"> per Move)</span>
+          <span v-if="!graphConfig.wip.useMoves"> per Day)</span>
         </h4>
         <div>
           Average: {{ wip.average }}
         </div>
         <div>
           <LineChart :chartdata="wip.data" :options="wip.options" />
+        </div>
+      </div>
+    </modal>
+
+    <!-- Cumulative Flow -->
+
+    <modal name="cumulative-flow" class="popup" :height="520" :width="850" :classes="['rounded']">
+      <div class="float-right mr-2 mt-1">
+        <button type="button" class="close" @click="hide('cumulative-flow')" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="mt-4 cumulative-flow">
+        <h4>
+          Cumulative Flow
+          <span v-if="graphConfig.cumulativeFlow.useMoves">(per Move)</span>
+          <span v-if="!graphConfig.cumulativeFlow.useMoves">(per Day)</span>
+        </h4>
+        <div>
+          <BarChart :chartdata="cumulativeFlow.data" :options="cumulativeFlow.options" />
         </div>
       </div>
     </modal>
@@ -205,6 +227,7 @@
 <script>
 import correlation from './graphConfig/correlation.js'
 import wip from './graphConfig/wip.js'
+import cumulativeFlow from './graphConfig/cumulativeFlow.js'
 import cycleTime from './graphConfig/cycleTime.js'
 import distribution from './graphConfig/distribution.js'
 import scatterPlot from './graphConfig/scatterPlot.js'
@@ -228,6 +251,7 @@ export default {
       modals: [
         'sources-of-variation',
         'wip',
+        'cumulative-flow',
         'correlation',
         'cycle-time',
         'distribution',
@@ -236,6 +260,7 @@ export default {
       ],
       correlation: correlation.config(),
       wip: wip.config(),
+      cumulativeFlow: cumulativeFlow.config(),
       cycleTime: cycleTime.config(),
       distribution: distribution.config(),
       scatterPlot: scatterPlot.config(),
@@ -285,6 +310,9 @@ export default {
           case 'wip':
             self.showWip(data)
             break
+          case 'cumulative-flow':
+            self.showCumulativeFlow(data)
+            break
           case 'correlation':
             self.showCorrelation(data)
             break
@@ -332,7 +360,6 @@ export default {
       this.socket.emit('showSourceOfVariation', {gameName: this.gameName, source: source})
     },
     showWip(data) {
-    console.log(this.graphConfig.wip)
       this.wip.average = data.results.average
       if (this.graphConfig.wip.useMovingAverage) {
         this.wip.data.labels = data.results.labelsMovingAverage
@@ -342,6 +369,15 @@ export default {
         this.wip.data.datasets[0].data = data.results.wip
       }
       this.$modal.show('wip')
+    },
+    showCumulativeFlow(data) {
+      this.cumulativeFlow.data.labels = data.results.labels
+      this.cumulativeFlow.data.datasets[0].data = data.results.cumulative.done
+      this.cumulativeFlow.data.datasets[1].data = data.results.cumulative.deploy
+      this.cumulativeFlow.data.datasets[2].data = data.results.cumulative.test
+      this.cumulativeFlow.data.datasets[3].data = data.results.cumulative.develop
+      this.cumulativeFlow.data.datasets[4].data = data.results.cumulative.design
+      this.$modal.show('cumulative-flow')
     },
     showCorrelation(data) {
       this.correlation = parseFloat(data.results)

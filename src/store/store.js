@@ -63,7 +63,10 @@ export const store = new Vuex.Store({
       {number: 14, text: 'If you restructured your team yesterday, how do you expect the change to impact your forecast?'},
       {number: 15, text: 'Jim from accounting sales sends an email directing employees to make sure they\'re fully utilised (i.e. follow a policy that you do not leave capacity on the table). Do you obey or silently ignore him?'},
       {number: 16, function: 'Show Cycle Time', height: 650, text: 'This graph shows how long each card took to complete, compared to their size - is there a relationship between size and time to complete?'},
-      {number: 17, text: 'How much work in progress do you have? Has that changed from earlier?'}
+      {number: 17, text: 'How much work in progress do you have? Has that changed from earlier?'},
+      {number: 18, text: 'Many teams follow a batch-and-queue policy when it comes to deployment. That is, they develop work in sprints and then hand over the work to be deployed in a batch, often by a separate Operations group. What policy are you following in this game and why?'},
+      {number: 19, text: 'Organizations often wonder what their delivery capacity is. Do you have a sense of your team\'s capacity? If so , how would you communicate it to stakeholders?'},
+
     ],
     workCards: [
       {number: 1, design: 6, develop: 7, test: 8, deploy: 2, urgent: false, teamDependency: 0, dependentOn: '', commit: 0, blocked: false, effort: {design: 0, develop: 0, test: 0, deploy: 0}, workedOn: {}},
@@ -110,7 +113,11 @@ export const store = new Vuex.Store({
     sourcesOfVariation: [],
     graphConfig: {
       wip: {
-        useMovingAverage: true
+        useMovingAverage: true,
+        useMoves: true
+      },
+      cumulativeFlow: {
+        useMoves: true
       },
       cycleTime: {
         small: 15,

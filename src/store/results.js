@@ -2,9 +2,19 @@
 const correlation = require('./results/correlation.js')
 const cycleTime = require('./results/cycleTime.js')
 const wipFuns = require('./results/wip.js')
+const cumulativeFlow = require('./results/cumulativeFlow.js')
 const distribution = require('./results/distribution.js')
 const scatterPlot = require('./results/scatterPlot.js')
 const monteCarlo = require('./results/monteCarlo.js')
+
+function _loadGame(db, io, res) {
+  const id = res._id
+  delete res._id
+  db.collection('noEstimatesGames').updateOne({'_id': id}, {$set: res}, function(err) {
+    if (err) throw err
+    io.emit('loadGame', res)
+  })
+}
 
 module.exports = {
 
@@ -21,6 +31,7 @@ module.exports = {
             for (let r = 0; r < res.length; r++) {
               data.teamName = res[r].teamName
               const wip = res[r].wip ? res[r].wip : {}
+              const cumulative = res[r].cumulative ? res[r].cumulative : {}
               const cards = res[r].columns.find(function(c) {
                 return c.name == 'done'
               }).cards
@@ -29,7 +40,10 @@ module.exports = {
                   data.results = gameRes.sourcesOfVariation
                   break
                 case 'wip':
-                  data.results = wipFuns.run(wip)
+                  data.results = wipFuns.run(wip, gameRes.graphConfig.wip.useMoves)
+                  break
+                case 'cumulative-flow':
+                  data.results = cumulativeFlow.run(cumulative, gameRes.graphConfig.cumulativeFlow.useMoves)
                   break
                 case 'correlation':
                   data.results = correlation.run(cards)
@@ -105,12 +119,33 @@ module.exports = {
       if (err) throw err
       if (res) {
         res.graphConfig.wip.useMovingAverage = data.value
-        const id = res._id
-        delete res._id
-        db.collection('noEstimatesGames').updateOne({'_id': id}, {$set: res}, function(err) {
-          if (err) throw err
-          io.emit('loadGame', res)
-        })
+        _loadGame(db, io, res)
+      }
+    })
+  },
+
+  setWipUseMoves: function(db, io, data, debugOn) {
+
+    if (debugOn) { console.log('setWipUseMoves', data) }
+
+    db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, res) {
+      if (err) throw err
+      if (res) {
+        res.graphConfig.wip.useMoves = data.value
+        _loadGame(db, io, res)
+      }
+    })
+  },
+
+  setCumulativeFlowUseMoves: function(db, io, data, debugOn) {
+
+    if (debugOn) { console.log('setCumulativeFlowUseMoves', data) }
+
+    db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, res) {
+      if (err) throw err
+      if (res) {
+        res.graphConfig.cumulativeFlow.useMoves = data.value
+        _loadGame(db, io, res)
       }
     })
   },
@@ -123,12 +158,7 @@ module.exports = {
       if (err) throw err
       if (res) {
         res.graphConfig.cycleTime[data.size] = data.value
-        const id = res._id
-        delete res._id
-        db.collection('noEstimatesGames').updateOne({'_id': id}, {$set: res}, function(err) {
-          if (err) throw err
-          io.emit('loadGame', res)
-        })
+        _loadGame(db, io, res)
       }
     })
   },
@@ -141,12 +171,7 @@ module.exports = {
       if (err) throw err
       if (res) {
         res.graphConfig.monteCarlo.runTo = data.runTo
-        const id = res._id
-        delete res._id
-        db.collection('noEstimatesGames').updateOne({'_id': id}, {$set: res}, function(err) {
-          if (err) throw err
-          io.emit('loadGame', res)
-        })
+        _loadGame(db, io, res)
       }
     })
   },
@@ -159,12 +184,7 @@ module.exports = {
       if (err) throw err
       if (res) {
         res.graphConfig.monteCarlo.runs = data.runs
-        const id = res._id
-        delete res._id
-        db.collection('noEstimatesGames').updateOne({'_id': id}, {$set: res}, function(err) {
-          if (err) throw err
-          io.emit('loadGame', res)
-        })
+        _loadGame(db, io, res)
       }
     })
   }

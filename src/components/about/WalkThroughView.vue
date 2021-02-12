@@ -140,7 +140,7 @@ export default {
     },
     facilitate() {
       mailFuns.post({
-        action: 'Facilitation request from ' + this.thisGame,
+        action: 'Facilitation request (Walkthrough) from ' + this.thisGame,
         email: encodeURIComponent(document.getElementById('email').value),
         comments: 'Facilitation Request'
         },

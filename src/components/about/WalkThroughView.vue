@@ -30,16 +30,7 @@
               https://noestimates.wordpress.com/facilitator-guide
             </a>
           </p>
-          <p>
-            If you'd like more info, or would like to discuss facilitation, send us your email
-            in the box below, and we can discuss your needs.
-          </p>
-          <div>
-            Email: <input type="email" id="email" placeholder="Email address">
-            <button class="btn btn-info btn-sm" @click="facilitate()">
-              Submit
-            </button>
-          </div>
+          <Facilitation />
         </div>
       </div>
       <div class="buttons" v-if="step < noOfScreens()">
@@ -60,10 +51,14 @@
 </template>
 
 <script>
-import mailFuns from '../../lib/mail.js'
 import params from '../../lib/params.js'
 
+import Facilitation from './Facilitation.vue'
+
 export default {
+  components: {
+    Facilitation
+  },
   data() {
     return {
       step: 1,
@@ -137,15 +132,6 @@ export default {
       elem.style.top = positions.top + 'px'
       elem.style.width = positions.width + 'px'
       elem.style.height = positions.height +'px'
-    },
-    facilitate() {
-      mailFuns.post({
-        action: 'Facilitation request (Walkthrough) from ' + this.thisGame,
-        email: encodeURIComponent(document.getElementById('email').value),
-        comments: 'Facilitation Request'
-        },
-        'Thanks for your request - we\'ll get back to you as soon as we can with details'
-      )
     }
   },
 }
@@ -159,11 +145,6 @@ export default {
 
   .explain {
     margin-bottom: 6px;
-  }
-
-  #email {
-    width: 50%;
-    margin: 6px;
   }
 
   #walk-through {

@@ -40,8 +40,8 @@
           </div>
           <div>
             Scope
-            <input type="radio" name="wip-data-type" :checked="graphConfig.wip.useMoves" @click="setWipUseMoves(true)"> Plot by move
-            <input type="radio" name="wip-data-type" :checked="!graphConfig.wip.useMoves" @click="setWipUseMoves(false)"> Plot by day
+            <input type="radio" name="wip-scope" :checked="graphConfig.wip.useMoves" @click="setWipUseMoves(true)"> Plot by move
+            <input type="radio" name="wip-scope" :checked="!graphConfig.wip.useMoves" @click="setWipUseMoves(false)"> Plot by day
           </div>
         </div>
       </td>
@@ -60,8 +60,8 @@
         <div v-if="showCumulativeFlowConfig" class="cumulative-flow-config">
           <div>
             Scope
-            <input type="radio" name="cumulative-flow-data-type" :checked="graphConfig.cumulativeFlow.useMoves" @click="setCumulativeFlowUseMoves(true)"> Plot by move
-            <input type="radio" name="cumulative-flow-data-type" :checked="!graphConfig.cumulativeFlow.useMoves" @click="setCumulativeFlowUseMoves(false)"> Plot by day
+            <input type="radio" name="cumulative-flow-scope" :checked="graphConfig.cumulativeFlow.useMoves" @click="setCumulativeFlowUseMoves(true)"> Plot by move
+            <input type="radio" name="cumulative-flow-scope" :checked="!graphConfig.cumulativeFlow.useMoves" @click="setCumulativeFlowUseMoves(false)"> Plot by day
           </div>
         </div>
       </td>

@@ -41,4 +41,4 @@ export default {
     width: 50%;
     margin: 6px;
   }
-</script>
+</style>

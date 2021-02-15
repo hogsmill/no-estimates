@@ -19,7 +19,12 @@ const initialTeams = [
   { name: 'Brown', include: false },
   { name: 'Magenta', include: false },
   { name: 'Salmon', include: false },
-  { name: 'Teal', include: false }
+  { name: 'Teal', include: false },
+  { name: 'Turquoise', include: false },
+  { name: 'Navy', include: false },
+  { name: 'Olive', include: false },
+  { name: 'Turquoise', include: false },
+  { name: 'Tan', include: false }
 ]
 
 const initialColumns = [

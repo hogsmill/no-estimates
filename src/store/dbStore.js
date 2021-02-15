@@ -355,12 +355,12 @@ module.exports = {
 
     if (debugOn) { console.log('deleteGameMeta', data) }
 
-    db.collection('noEstimatesGames').findOne({name: data.gameName}, function(err, res) {
+    db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, res) {
       if (err) throw err
       if (res) {
         db.collection('noEstimatesGames').deleteOne({'_id': res._id}, function(err, ) {
           if (err) throw err
-          _getGames(err, db, io, data, debugOn)
+          _getGames(db, io, data, debugOn)
         })
       }
     })

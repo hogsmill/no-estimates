@@ -32,7 +32,7 @@ const app = express()
 const http = require('http').createServer(app)
 const io = require('socket.io')(http, {
   cors: {
-    origins: ['http://localhost:*', 'http://agilesimulations.co.uk'],
+    origins: ['http://localhost:*', 'https://agilesimulations.co.uk'],
     methods: ['GET', 'POST'],
     credentials: true
   }

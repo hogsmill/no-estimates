@@ -8,7 +8,7 @@
       </td>
     </tr>
     <tr v-if="showGameDisplay">
-      <td rowspan="8" class="show-results-td">
+      <td rowspan="9" class="show-results-td">
         Show results
       </td>
       <td>
@@ -19,6 +19,17 @@
           Hide
         </button>
         Sources of Variation
+      </td>
+    </tr>
+    <tr v-if="showGameDisplay">
+      <td>
+        <button class="btn btn-sm btn-site-primary" @click="showResult('value-delivered')">
+          Show
+        </button>
+        <button class="btn btn-sm btn-site-primary" @click="hideResult('value-delivered')">
+          Hide
+        </button>
+        Value Delivered
       </td>
     </tr>
     <tr v-if="showGameDisplay">

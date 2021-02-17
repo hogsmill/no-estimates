@@ -1,4 +1,5 @@
 
+const valueDelivered = require('./results/valueDelivered.js')
 const correlation = require('./results/correlation.js')
 const cycleTime = require('./results/cycleTime.js')
 const wipFuns = require('./results/wip.js')
@@ -38,6 +39,9 @@ module.exports = {
               switch(data.result) {
                 case 'sources-of-variation':
                   data.results = gameRes.sourcesOfVariation
+                  break
+                case 'value-delivered':
+                  data.results = valueDelivered.run(res)
                   break
                 case 'wip':
                   data.results = wipFuns.run(wip, gameRes.graphConfig.wip.useMoves)

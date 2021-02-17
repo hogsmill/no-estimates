@@ -31,6 +31,24 @@
       </div>
     </modal>
 
+    <!-- Value Delivered -->
+
+    <modal name="value-delivered" class="popup" :height="540" :width="850" :classes="['rounded']">
+      <div class="float-right mr-2 mt-1">
+        <button type="button" class="close" @click="hide('value-delivered')" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="mt-4 cycle-time">
+        <h4>
+          Value Delivered
+        </h4>
+        <div>
+          <BarChart :chartdata="valueDelivered.data" :options="valueDelivered.options" />
+        </div>
+      </div>
+    </modal>
+
     <!-- WIP -->
 
     <modal name="wip" class="popup" :height="520" :width="850" :classes="['rounded']">
@@ -227,6 +245,7 @@
 <script>
 import correlation from './graphConfig/correlation.js'
 import wip from './graphConfig/wip.js'
+import valueDelivered from './graphConfig/valueDelivered.js'
 import cumulativeFlow from './graphConfig/cumulativeFlow.js'
 import cycleTime from './graphConfig/cycleTime.js'
 import distribution from './graphConfig/distribution.js'
@@ -251,6 +270,7 @@ export default {
       modals: [
         'sources-of-variation',
         'wip',
+        'value-delivered',
         'cumulative-flow',
         'correlation',
         'cycle-time',
@@ -260,6 +280,7 @@ export default {
       ],
       correlation: correlation.config(),
       wip: wip.config(),
+      valueDelivered: valueDelivered.config(),
       cumulativeFlow: cumulativeFlow.config(),
       cycleTime: cycleTime.config(),
       distribution: distribution.config(),
@@ -307,6 +328,10 @@ export default {
           case 'sources-of-variation':
             self.showSourcesOfVariation(data)
             break
+          case 'value-delivered':
+            console.log(data)
+            self.showValueDelivered(data)
+            break
           case 'wip':
             self.showWip(data)
             break
@@ -350,6 +375,15 @@ export default {
     hide(modal) {
       this.$modal.hide(modal)
     },
+    max(list) {
+      let max = 0
+      for (let i = 0; i < list.length; i++) {
+        if (list[i] > max) {
+        max = list[i]
+        }
+      }
+      return max
+    },
     correlationPosition(value, n) {
       return parseInt(290 * (value + 1)) - 290 - n + 'px'
     },
@@ -358,6 +392,22 @@ export default {
     },
     showSourceOfVariation(source) {
       this.socket.emit('showSourceOfVariation', {gameName: this.gameName, source: source})
+    },
+    showValueDelivered(data) {
+      this.valueDelivered.data.labels = data.results.teams
+      this.valueDelivered.data.datasets[0].data = data.results.value
+      this.valueDelivered.data.datasets[0].backgroundColor = []
+      const max = this.max(data.results.value)
+      for (let i = 0; i < data.results.value.length; i++) {
+        if (data.results.value[i] == max) {
+          this.valueDelivered.data.datasets[0].backgroundColor.push('gold')
+        } else if (data.results.value[i] < 0) {
+          this.valueDelivered.data.datasets[0].backgroundColor.push('lightcoral')
+        } else {
+          this.valueDelivered.data.datasets[0].backgroundColor.push('lightgreen')
+        }
+      }
+      this.$modal.show('value-delivered')
     },
     showWip(data) {
       this.wip.average = data.results.average

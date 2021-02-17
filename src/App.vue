@@ -108,11 +108,12 @@ export default {
     }
   },
   created() {
-    let host = '77.68.122.69'
+    let connStr
     if (location.hostname == 'localhost') {
-      host = 'localhost'
+      connStr = 'http://localhost:3007'
+    } else {
+      connStr = 'https://agilesimulations.co.uk:3007'
     }
-    const connStr = 'https://' + host + ':3007'
     console.log('Connecting to: ' + connStr)
     this.socket = io(connStr)
 

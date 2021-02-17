@@ -25,6 +25,9 @@
                 >
                   <i v-if="message.source == 'them' && !message.seen" class="fas fa-eye-slash" @click="facilitatorMessageSeen(index)" />
                   {{ message.message }}
+                  <div v-if="message.reply" class="reply">
+                    {{ message.reply }}
+                  </div>
                 </div>
               </div>
               <div class="new-facilitator-message">

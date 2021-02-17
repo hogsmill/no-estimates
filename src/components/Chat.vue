@@ -13,8 +13,8 @@
         <h4>Chat to Other Teams</h4>
         <table>
           <tr>
-            <td colspan="2">
-              <h5 v-if="chattingTo">
+            <td colspan="2" class="chatting-to">
+              <h5 v-if="chattingTo" :style="{ 'color': '#fff', 'background-color': chattingTo.toLowerCase() }">
                 Chatting To: '{{ chattingTo }}'
               </h5>
               <h5 v-if="!chattingTo">
@@ -68,7 +68,7 @@
                 <div v-if="chattingTo == 'Facilitators'">
                   <div v-for="(message, index) in facilitatorMessages" :key="index" :class="getMessageClass(message)">
                     <i v-if="message.source == 'them' && !message.seen" class="fas fa-eye-slash" @click="facilitationMessageSeen(message, index)" />
-                    yyy {{ message.message }}
+                    {{ message.message }}
                     <div v-if="message.reply" class="reply">
                       {{ message.reply }}
                     </div>
@@ -240,6 +240,13 @@ export default {
   }
   h4, h5 {
     text-align: center;
+
+  }
+  .chatting-to {
+    h5 {
+      color: #444;
+      background-color: #fff;
+    }
   }
   h5 {
     margin: 12px auto 0 auto;
@@ -330,7 +337,8 @@ export default {
 
       .reply {
         background-color: #fff;
-        margin: 6px 0 0 12px
+        margin: 6px 0 0 12px;
+        color: #444;
       }
     }
     .new-message {

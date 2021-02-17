@@ -329,7 +329,6 @@ export default {
             self.showSourcesOfVariation(data)
             break
           case 'value-delivered':
-            console.log(data)
             self.showValueDelivered(data)
             break
           case 'wip':

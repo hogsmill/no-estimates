@@ -112,7 +112,7 @@ export default {
     if (location.hostname == 'localhost') {
       host = 'localhost'
     }
-    const connStr = 'http://' + host + ':3007'
+    const connStr = 'https://' + host + ':3007'
     console.log('Connecting to: ' + connStr)
     this.socket = io(connStr)
 

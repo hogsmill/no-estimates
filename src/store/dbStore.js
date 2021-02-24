@@ -119,10 +119,10 @@ function newGame(data) {
     graphConfig: {
       wip: {
         useMovingAverage: true,
-        useMoves: true
+        useDays: true
       },
       cumulativeFlow: {
-        useMoves: true
+        useDays: true
       },
       cycleTime: {
         medium: 15,

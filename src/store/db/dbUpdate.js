@@ -12,10 +12,12 @@ const gameUpdates = [
   {name: 'graphConfig', value: {
       'wip': {
         useMovingAverage: true,
-        useMoves: true
+        useMoves: true,
+        useDays: true
       },
       'cumulativeFlow': {
-        useMoves: true
+        useMoves: true,
+        useDays: true
       }
     }
   }

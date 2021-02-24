@@ -62,8 +62,8 @@
           WIP Trend - No. of Cards in Play
           <span v-if="graphConfig.wip.useMovingAverage">(Moving Average,</span>
           <span v-if="!graphConfig.wip.useMovingAverage">(Raw Data,</span>
-          <span v-if="graphConfig.wip.useMoves"> per Move)</span>
-          <span v-if="!graphConfig.wip.useMoves"> per Day)</span>
+          <span v-if="graphConfig.wip.useDays"> per Day)</span>
+          <span v-if="!graphConfig.wip.useDays"> per Move)</span>
         </h4>
         <div>
           Average: {{ wip.average }}
@@ -85,8 +85,8 @@
       <div class="mt-4 cumulative-flow">
         <h4>
           Cumulative Flow
-          <span v-if="graphConfig.cumulativeFlow.useMoves">(per Move)</span>
-          <span v-if="!graphConfig.cumulativeFlow.useMoves">(per Day)</span>
+          <span v-if="graphConfig.cumulativeFlow.useDays">(per Day)</span>
+          <span v-if="!graphConfig.cumulativeFlow.useDays">(per Move)</span>
         </h4>
         <div>
           <BarChart :chartdata="cumulativeFlow.data" :options="cumulativeFlow.options" />

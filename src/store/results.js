@@ -44,10 +44,10 @@ module.exports = {
                   data.results = valueDelivered.run(res)
                   break
                 case 'wip':
-                  data.results = wipFuns.run(wip, gameRes.graphConfig.wip.useMoves)
+                  data.results = wipFuns.run(wip, gameRes.graphConfig.wip.useDays)
                   break
                 case 'cumulative-flow':
-                  data.results = cumulativeFlow.run(cumulative, gameRes.graphConfig.cumulativeFlow.useMoves)
+                  data.results = cumulativeFlow.run(cumulative, gameRes.graphConfig.cumulativeFlow.useDays)
                   break
                 case 'correlation':
                   data.results = correlation.run(cards)
@@ -128,27 +128,27 @@ module.exports = {
     })
   },
 
-  setWipUseMoves: function(db, io, data, debugOn) {
+  setWipUseDays: function(db, io, data, debugOn) {
 
-    if (debugOn) { console.log('setWipUseMoves', data) }
+    if (debugOn) { console.log('setWipUseDays', data) }
 
     db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, res) {
       if (err) throw err
       if (res) {
-        res.graphConfig.wip.useMoves = data.value
+        res.graphConfig.wip.useDays = data.value
         _loadGame(db, io, res)
       }
     })
   },
 
-  setCumulativeFlowUseMoves: function(db, io, data, debugOn) {
+  setCumulativeFlowUseDays: function(db, io, data, debugOn) {
 
-    if (debugOn) { console.log('setCumulativeFlowUseMoves', data) }
+    if (debugOn) { console.log('setCumulativeFlowUseDays', data) }
 
     db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, res) {
       if (err) throw err
       if (res) {
-        res.graphConfig.cumulativeFlow.useMoves = data.value
+        res.graphConfig.cumulativeFlow.useDays = data.value
         _loadGame(db, io, res)
       }
     })

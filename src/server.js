@@ -193,11 +193,11 @@ function doDb(fun, data) {
     case 'setWipUseMovingAverage':
       results.setWipUseMovingAverage(db, io, data, debugOn)
       break
-    case 'setWipUseMoves':
-      results.setWipUseMoves(db, io, data, debugOn)
+    case 'setWipUseDays':
+      results.setWipUseDays(db, io, data, debugOn)
       break
-    case 'setCumulativeFlowUseMoves':
-      results.setCumulativeFlowUseMoves(db, io, data, debugOn)
+    case 'setCumulativeFlowUseDays':
+      results.setCumulativeFlowUseDays(db, io, data, debugOn)
       break
     case 'setCardSize':
       results.setCardSize(db, io, data, debugOn)
@@ -341,9 +341,9 @@ io.on('connection', (socket) => {
 
   socket.on('setWipUseMovingAverage', (data) => { doDb('setWipUseMovingAverage', data) })
 
-  socket.on('setWipUseMoves', (data) => { doDb('setWipUseMoves', data) })
+  socket.on('setWipUseDays', (data) => { doDb('setWipUseDays', data) })
 
-  socket.on('setCumulativeFlowUseMoves', (data) => { doDb('setCumulativeFlowUseMoves', data) })
+  socket.on('setCumulativeFlowUseDays', (data) => { doDb('setCumulativeFlowUseDays', data) })
 
   socket.on('setCardSize', (data) => { doDb('setCardSize', data) })
 

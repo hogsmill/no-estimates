@@ -28,7 +28,7 @@ function calculateDays(results) {
 
 module.exports = {
 
-  run: function(wip, useMoves) {
+  run: function(wip, useDays) {
     let results = {
       day: [],
       wip: [],
@@ -45,7 +45,7 @@ module.exports = {
       results.labels.push(i)
     }
 
-    if (!useMoves) {
+    if (useDays) {
       results = calculateDays(results)
     }
     results.wipMovingAverage = sma(results.wip, 12)

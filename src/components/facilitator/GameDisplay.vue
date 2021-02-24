@@ -51,8 +51,8 @@
           </div>
           <div>
             Scope
-            <input type="radio" name="wip-scope" :checked="graphConfig.wip.useMoves" @click="setWipUseMoves(true)"> Plot by move
-            <input type="radio" name="wip-scope" :checked="!graphConfig.wip.useMoves" @click="setWipUseMoves(false)"> Plot by day
+            <input type="radio" name="wip-scope" :checked="graphConfig.wip.useDays" @click="setWipUseDays(true)"> Plot by day
+            <input type="radio" name="wip-scope" :checked="!graphConfig.wip.useDays" @click="setWipUseDays(false)"> Plot by move
           </div>
         </div>
       </td>
@@ -71,8 +71,8 @@
         <div v-if="showCumulativeFlowConfig" class="cumulative-flow-config">
           <div>
             Scope
-            <input type="radio" name="cumulative-flow-scope" :checked="graphConfig.cumulativeFlow.useMoves" @click="setCumulativeFlowUseMoves(true)"> Plot by move
-            <input type="radio" name="cumulative-flow-scope" :checked="!graphConfig.cumulativeFlow.useMoves" @click="setCumulativeFlowUseMoves(false)"> Plot by day
+            <input type="radio" name="cumulative-flow-scope" :checked="graphConfig.cumulativeFlow.useDays" @click="setCumulativeFlowUseDays(true)"> Plot by day
+            <input type="radio" name="cumulative-flow-scope" :checked="!graphConfig.cumulativeFlow.useDays" @click="setCumulativeFlowUseDays(false)"> Plot by move
           </div>
         </div>
       </td>
@@ -251,11 +251,11 @@ export default {
     setWipUseMovingAverage(val) {
       this.socket.emit('setWipUseMovingAverage', {gameName: this.gameName, value: val})
     },
-    setWipUseMoves(val) {
-      this.socket.emit('setWipUseMoves', {gameName: this.gameName, value: val})
+    setWipUseMDays(val) {
+      this.socket.emit('setWipUseDays', {gameName: this.gameName, value: val})
     },
-    setCumulativeFlowUseMoves(val) {
-      this.socket.emit('setCumulativeFlowUseMoves', {gameName: this.gameName, value: val})
+    setCumulativeFlowUseDays(val) {
+      this.socket.emit('setCumulativeFlowUseDays', {gameName: this.gameName, value: val})
     },
     saveCardSize(size) {
       const val = document.getElementById('card-size-' + size).value

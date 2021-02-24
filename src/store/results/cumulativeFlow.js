@@ -49,7 +49,7 @@ function calculateDays(results) {
 
 module.exports = {
 
-  run: function(cumulative, useMoves) {
+  run: function(cumulative, useDays) {
     let results = {
       cumulative: {
         day: [],
@@ -71,7 +71,7 @@ module.exports = {
       results.cumulative.done.push(parseInt(cumulative[i].done))
       results.labels.push(i)
     }
-    if (!useMoves) {
+    if (useDays) {
       results = calculateDays(results)
     }
     return results

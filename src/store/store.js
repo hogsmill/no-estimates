@@ -118,10 +118,10 @@ export const store = new Vuex.Store({
     graphConfig: {
       wip: {
         useMovingAverage: true,
-        useMoves: true
+        useDays: true
       },
       cumulativeFlow: {
-        useMoves: true
+        useDays: true
       },
       cycleTime: {
         small: 15,

@@ -31,7 +31,7 @@ module.exports = {
       column.cards = []
       for (let j = 0; j < cards.length; j++) {
         const card = cards[j]
-        if (card.number == workCard.number) {
+        if (card.number == workCard.number && card.dependencyDone < card.teamDependency) {
           card.dependencyDone = card.dependencyDone + effort
         }
         if (column.name == 'deploy' && cardFuns.cardCompleteInColumn(card, 'deploy', res)) {

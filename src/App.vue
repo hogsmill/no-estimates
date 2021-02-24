@@ -156,7 +156,7 @@ export default {
     const self = this
     window.onload = function() {
       if (gameName && myName && teamName) {
-        self.socket.emit('loadGame', {gameName: gameName, teamName: teamName, myName: myName, myRole: myRole}) //, myEffort: myEffort})
+        self.socket.emit('loadGame', {gameName: gameName, teamName: teamName, myName: myName, myRole: myRole})
       }
     }
 

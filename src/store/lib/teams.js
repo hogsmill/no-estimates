@@ -77,7 +77,7 @@ module.exports = {
     const newMembers = []
     for (let i = 0; i < members.length; i++) {
       const member = members[i]
-      if (member.id == name.id) {
+      if (member.id == name.id && member.effort.available - effort >= 0)) {
         member.effort.assigned = member.effort.assigned + effort
         member.effort.available = member.effort.available - effort
       }

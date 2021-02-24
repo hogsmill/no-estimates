@@ -42,11 +42,6 @@ export default {
       myRole: 'Designer'
     }
   },
-  computed: {
-  },
-  created() {
-    this.socket.emit('getGames')
-  },
   methods: {
     setShowDemoAndTest(val) {
       this.showDemoAndTest = val

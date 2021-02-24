@@ -2,7 +2,9 @@
   <table class="games">
     <tr>
       <td class="left" colspan="16">
-        <h4>Games</h4>
+        <h4>
+          Games
+        </h4>
         <i v-if="showGames" @click="setShowGames(false)" title="collapse" class="fas fa-caret-up toggle" />
         <i v-if="!showGames" @click="setShowGames(true)" title="expand" class="fas fa-caret-down toggle" />
       </td>
@@ -69,12 +71,12 @@ export default {
       return this.$store.getters.getGames
     }
   },
-  created() {
-    this.socket.emit('getGames')
-  },
   methods: {
     setShowGames(val) {
       this.showGames = val
+      if (val) {
+        this.socket.emit('getGames')
+      }
     },
     idSafe(game) {
       return stringFuns.idSafe(game.gameName)

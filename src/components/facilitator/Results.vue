@@ -59,7 +59,7 @@
       </div>
       <div class="mt-4 wip">
         <h4>
-          WIP Trend - No. of Cards in Play
+          Team {{ selectedGraphTeam1 }} WIP Trend - No. of Cards in Play
           <span v-if="graphConfig.wip.useMovingAverage">(Moving Average,</span>
           <span v-if="!graphConfig.wip.useMovingAverage">(Raw Data,</span>
           <span v-if="graphConfig.wip.useDays"> per Day)</span>
@@ -325,7 +325,6 @@ export default {
   created() {
     const self = this
     this.socket.on('showResult', (data) => {
-      console.log(data)
       if (this.hostId == data.hostId && data.target == 'game') {
         for (let i = 0; i < this.modals.length; i++) {
           self.hide(this.modals[i])
@@ -410,12 +409,13 @@ export default {
     },
     showWip(data) {
       this.wip.average = data.results.average
+      this.wip.data.datasets[0].borderColor = data.teamName.toLowerCase()
       if (this.graphConfig.wip.useMovingAverage) {
-        this.wip.data.labels = data.results[0].labelsMovingAverage
-        this.wip.data.datasets[0].data = data.results[0].wipMovingAverage
+        this.wip.data.labels = data.results.labelsMovingAverage
+        this.wip.data.datasets[0].data = data.results.wipMovingAverage
       } else {
-        this.wip.data.labels = data.results[0].labels
-        this.wip.data.datasets[0].data = data.results[0].wip
+        this.wip.data.labels = data.results.labels
+        this.wip.data.datasets[0].data = data.results.wip
       }
       this.$modal.show('wip')
     },

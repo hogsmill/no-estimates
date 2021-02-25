@@ -108,6 +108,9 @@ module.exports = {
               return c.name == 'done'
             }).cards
             switch(data.result) {
+              case 'wip':
+                data.results = wipFuns.run(wip, gameRes.graphConfig.wip.useDays)
+                break
               case 'cumulative-flow':
                 data.results = cumulativeFlow.run(cumulative, gameRes.graphConfig.cumulativeFlow.useDays)
                 break
@@ -154,30 +157,9 @@ module.exports = {
                 return c.name == 'done'
               }).cards
               switch(data.result) {
-                case 'wip':
-                  results.push(wipFuns.run(wip, gameRes.graphConfig.wip.useDays))
-                  break
-                //case 'cumulative-flow':
-                //  data.results = cumulativeFlow.run(cumulative, gameRes.graphConfig.cumulativeFlow.useDays)
-                //  break
                 case 'correlation':
                   results.push(correlation.run(cards))
                   break
-                //case 'cycle-time':
-                //  data.results = cycleTime.run(cards)
-                //  break
-                //case 'distribution':
-                //  data.results = distribution.run(cards)
-                //  break
-                //case 'scatter-plot':
-                //  data.results = scatterPlot.run(cards)
-                //  if (data.results.length) {
-                //    data.limits = scatterPlot.limits(data.results)
-                //  }
-                //  break
-                //case 'monte-carlo':
-                //  data.results = monteCarlo.run(cards, gameRes.graphConfig.monteCarlo)
-                //  break
               }
             }
             data.results = results

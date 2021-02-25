@@ -48,7 +48,7 @@
     </tr>
     <tr v-if="showGameDisplay">
       <td>
-        <button class="btn btn-sm btn-site-primary" @click="showMultipleTeamsResult('wip')">
+        <button class="btn btn-sm btn-site-primary" @click="showSingleTeamResult('wip')">
           Show
         </button>
         <button class="btn btn-sm btn-site-primary" @click="hideResult('wip')">
@@ -60,8 +60,8 @@
         <div v-if="showWipConfig" class="wip-config">
           <div>
             Data
-            <input type="radio" name="wip-data-type" :checked="graphConfig.wip.useMovingAverage" @click="setWipUseMovingAverage(true)"> Use Moving Average Data
-            <input type="radio" name="wip-data-type" :checked="!graphConfig.wip.useMovingAverage" @click="setWipUseMovingAverage(false)"> Use Raw Data
+            <input type="radio" name="wip-data-type" :checked="graphConfig.wip.useMovingAverage" @click="setWipUseMovingAverage(true)"> Moving Average
+            <input type="radio" name="wip-data-type" :checked="!graphConfig.wip.useMovingAverage" @click="setWipUseMovingAverage(false)"> Raw
           </div>
           <div>
             Scope
@@ -71,7 +71,7 @@
         </div>
       </td>
       <td>
-        <Teams :multiple="true" :graph="'wip'" />
+        <Teams :multiple="false" :graph="'wip'" />
       </td>
     </tr>
     <tr v-if="showGameDisplay">
@@ -328,7 +328,7 @@ export default {
     setWipUseMovingAverage(val) {
       this.socket.emit('setWipUseMovingAverage', {gameName: this.gameName, value: val})
     },
-    setWipUseMDays(val) {
+    setWipUseDays(val) {
       this.socket.emit('setWipUseDays', {gameName: this.gameName, value: val})
     },
     setCumulativeFlowUseDays(val) {

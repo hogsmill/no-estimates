@@ -1,7 +1,6 @@
 <template>
   <div class="container about">
     <h1>No Estimates - <span v-if="stealth">(Stealth)</span> Facilitator View</h1>
-    <h2>{{ hostId }}</h2>
     <Connections :socket="socket" />
     <GameMessaging :socket="socket" />
     <GameDisplay :socket="socket" />

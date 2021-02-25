@@ -2,7 +2,7 @@
   <div class="graph-teams">
     <div v-if="!multiple">
       Select Team
-      <select :id="'graph-team-' + graph" @change="setSelectedGraphTeam(graph, 1)">
+      <select :id="'graph-team-' + graph + '-1'" @change="setSelectedGraphTeam(graph, 1)">
         <option value="">
           -- Select --
         </option>

@@ -181,11 +181,17 @@ function doDb(fun, data) {
 
     // Results
 
-    case 'showResult':
-      results.showResult(db, io, data, debugOn)
+    case 'showGameResult':
+      results.showGameResult(db, io, data, debugOn)
       break
-    case 'hideResult':
-      results.hideResult(db, io, data, debugOn)
+    case 'showAllTeamsResult':
+      results.showAllTeamsResult(db, io, data, debugOn)
+      break
+    case 'showSingleTeamResult':
+      results.showSingleTeamResult(db, io, data, debugOn)
+      break
+    case 'showMultipleTeamsResult':
+      results.showMultipleTeamsResult(db, io, data, debugOn)
       break
     case 'showSourceOfVariation':
       results.showSourceOfVariation(db, io, data, debugOn)
@@ -333,9 +339,13 @@ io.on('connection', (socket) => {
 
   // Results
 
-  socket.on('showResult', (data) => { doDb('showResult', data) })
+  socket.on('showGameResult', (data) => { doDb('showGameResult', data) })
 
-  socket.on('hideResult', (data) => { doDb('hideResult', data) })
+  socket.on('showAllTeamsResult', (data) => { doDb('showAllTeamsResult', data) })
+
+  socket.on('showSingleTeamResult', (data) => { doDb('showSingleTeamResult', data) })
+
+  socket.on('showMultipleTeamsResult', (data) => { doDb('showMultipleTeamsResult', data) })
 
   socket.on('showSourceOfVariation', (data) => { doDb('showSourceOfVariation', data) })
 

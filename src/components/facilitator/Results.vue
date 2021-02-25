@@ -33,7 +33,7 @@
 
     <!-- Value Delivered -->
 
-    <modal name="value-delivered" class="popup" :height="540" :width="850" :classes="['rounded']">
+    <modal name="value-delivered" class="popup" :height="540" :width="920" :classes="['rounded']">
       <div class="float-right mr-2 mt-1">
         <button type="button" class="close" @click="hide('value-delivered')" aria-label="Close">
           <span aria-hidden="true">&times;</span>
@@ -51,7 +51,7 @@
 
     <!-- WIP -->
 
-    <modal name="wip" class="popup" :height="520" :width="850" :classes="['rounded']">
+    <modal name="wip" class="popup" :height="520" :width="920" :classes="['rounded']">
       <div class="float-right mr-2 mt-1">
         <button type="button" class="close" @click="hide('wip')" aria-label="Close">
           <span aria-hidden="true">&times;</span>
@@ -76,7 +76,7 @@
 
     <!-- Cumulative Flow -->
 
-    <modal name="cumulative-flow" class="popup" :height="520" :width="850" :classes="['rounded']">
+    <modal name="cumulative-flow" class="popup" :height="520" :width="920" :classes="['rounded']">
       <div class="float-right mr-2 mt-1">
         <button type="button" class="close" @click="hide('cumulative-flow')" aria-label="Close">
           <span aria-hidden="true">&times;</span>
@@ -84,7 +84,7 @@
       </div>
       <div class="mt-4 cumulative-flow">
         <h4>
-          Cumulative Flow
+          Team {{ selectedGraphTeam1 }} Cumulative Flow
           <span v-if="graphConfig.cumulativeFlow.useDays">(per Day)</span>
           <span v-if="!graphConfig.cumulativeFlow.useDays">(per Move)</span>
         </h4>
@@ -96,7 +96,7 @@
 
     <!-- Correlation -->
 
-    <modal name="correlation" class="popup" :height="280" :width="850" :classes="['rounded']">
+    <modal name="correlation" class="popup" :height="520" :width="920" :classes="['rounded']">
       <div class="float-right mr-2 mt-1">
         <button type="button" class="close" @click="hide('correlation')" aria-label="Close">
           <span aria-hidden="true">&times;</span>
@@ -120,28 +120,15 @@
             No correlation
           </div>
         </div>
-        <div class="correlation-holder">
-          <div class="correlation-label">
-            -1
-          </div>
-          <div class="correlation-div rounded">
-            <div :style="{ 'left': correlationPosition(correlation, 0) }">
-              {{ correlation }}
-            </div>
-            <div class="correlation-marker" :style="{ 'left': correlationPosition(correlation, 100) }">
-              <i class="fas fa-caret-up" />
-            </div>
-          </div>
-          <div class="correlation-label">
-            +1
-          </div>
-        </div>
+        <Correlation v-if="selectedGraphTeam1" :team="selectedGraphTeam1" :correlation="correlation1" />
+        <Correlation v-if="selectedGraphTeam2" :team="selectedGraphTeam2" :correlation="correlation2" />
+        <Correlation v-if="selectedGraphTeam3" :team="selectedGraphTeam3" :correlation="correlation3" />
       </div>
     </modal>
 
     <!-- Cycle Time -->
 
-    <modal name="cycle-time" class="popup" :height="520" :width="850" :classes="['rounded']">
+    <modal name="cycle-time" class="popup" :height="520" :width="920" :classes="['rounded']">
       <div class="float-right mr-2 mt-1">
         <button type="button" class="close" @click="hide('cycle-time')" aria-label="Close">
           <span aria-hidden="true">&times;</span>
@@ -149,7 +136,7 @@
       </div>
       <div class="mt-4 cycle-time">
         <h4>
-          Cycle Time - Time to complete card in days
+          Team {{ selectedGraphTeam1 }} Cycle Time - Time to complete card in days
         </h4>
         <table>
           <tr>
@@ -169,7 +156,7 @@
 
     <!-- Distribution -->
 
-    <modal name="distribution" class="popup" :height="540" :width="850" :classes="['rounded']">
+    <modal name="distribution" class="popup" :height="540" :width="920" :classes="['rounded']">
       <div class="float-right mr-2 mt-1">
         <button type="button" class="close" @click="hide('distribution')" aria-label="Close">
           <span aria-hidden="true">&times;</span>
@@ -177,7 +164,7 @@
       </div>
       <div class="mt-4 cycle-time">
         <h4>
-          Distribution
+          Team {{ selectedGraphTeam1 }} Distribution
         </h4>
         <div>
           <BarChart :chartdata="distribution.data" :options="distribution.options" />
@@ -187,7 +174,7 @@
 
     <!-- Scatter Plot -->
 
-    <modal name="scatter-plot" class="popup" :height="520" :width="850" :classes="['rounded']">
+    <modal name="scatter-plot" class="popup" :height="520" :width="920" :classes="['rounded']">
       <div class="float-right mr-2 mt-1">
         <button type="button" class="close" @click="hide('scatter-plot')" aria-label="Close">
           <span aria-hidden="true">&times;</span>
@@ -195,7 +182,7 @@
       </div>
       <div class="mt-4 scatter-plot">
         <h4>
-          Scatter Plot
+          Team {{ selectedGraphTeam1 }} Scatter Plot
         </h4>
         <p>
           75% of cards completed in {{ scatterPlot.limits[75] }} days,
@@ -211,7 +198,7 @@
 
     <!-- Monte Carlo -->
 
-    <modal name="monte-carlo" class="popup" :height="520" :width="850" :classes="['rounded']">
+    <modal name="monte-carlo" class="popup" :height="520" :width="920" :classes="['rounded']">
       <div class="float-right mr-2 mt-1">
         <button type="button" class="close" @click="hide('monte-carlo')" aria-label="Close">
           <span aria-hidden="true">&times;</span>
@@ -219,7 +206,7 @@
       </div>
       <div class="mt-4 monte-carlo">
         <h4>
-          Monte Carlo: {{ parseInt(graphConfig.monteCarlo.runs).toLocaleString() }} runs to complete {{ monteCarloCards() }} cards
+          Team {{ selectedGraphTeam1 }} Monte Carlo: {{ parseInt(graphConfig.monteCarlo.runs).toLocaleString() }} runs to complete {{ monteCarloCards() }} cards
         </h4>
         <div class="estimates">
           <div v-if="graphConfig.monteCarlo.runTo == 'Remaining'">Initial Estimate: <b>{{ projectEstimate }}</b> days, Re-estimate: <b>{{ reEstimate }}</b> days</div>
@@ -252,12 +239,14 @@ import distribution from './graphConfig/distribution.js'
 import scatterPlot from './graphConfig/scatterPlot.js'
 import monteCarlo from './graphConfig/monteCarlo.js'
 
+import Correlation from './results/Correlation.vue'
 import BarChart from './results/BarChart.vue'
 import LineChart from './results/LineChart.vue'
 import ScatterPlot from './results/ScatterPlot.vue'
 
 export default {
   components: {
+    Correlation,
     BarChart,
     LineChart,
     ScatterPlot
@@ -285,12 +274,19 @@ export default {
       cycleTime: cycleTime.config(),
       distribution: distribution.config(),
       scatterPlot: scatterPlot.config(),
-      monteCarlo:monteCarlo.config()
+      monteCarlo:monteCarlo.config(),
+
+      correlation1: null,
+      correlation2: null,
+      correlation3: null
     }
   },
   computed: {
     isHost() {
       return this.$store.getters.getHost
+    },
+    hostId() {
+      return this.$store.getters.getHostId
     },
     gameName() {
       return this.$store.getters.getGameName
@@ -315,12 +311,22 @@ export default {
     },
     sourcesOfVariation() {
       return this.$store.getters.getSourcesOfVariation
+    },
+    selectedGraphTeam1() {
+      return this.$store.getters.getSelectedGraphTeam1
+    },
+    selectedGraphTeam2() {
+      return this.$store.getters.getSelectedGraphTeam2
+    },
+    selectedGraphTeam3() {
+      return this.$store.getters.getSelectedGraphTeam3
     }
   },
   created() {
     const self = this
     this.socket.on('showResult', (data) => {
-      if (this.gameName == data.gameName && this.teamName == data.teamName && data.target == 'game') {
+      console.log(data)
+      if (this.hostId == data.hostId && data.target == 'game') {
         for (let i = 0; i < this.modals.length; i++) {
           self.hide(this.modals[i])
         }
@@ -355,12 +361,6 @@ export default {
           default:
             console.log('Unknown result ', data.result)
         }
-      }
-    })
-
-    this.socket.on('hideResult', (data) => {
-      if (this.gameName == data.gameName && this.teamName == data.teamName) {
-        self.hide(data.result)
       }
     })
 
@@ -411,11 +411,11 @@ export default {
     showWip(data) {
       this.wip.average = data.results.average
       if (this.graphConfig.wip.useMovingAverage) {
-        this.wip.data.labels = data.results.labelsMovingAverage
-        this.wip.data.datasets[0].data = data.results.wipMovingAverage
+        this.wip.data.labels = data.results[0].labelsMovingAverage
+        this.wip.data.datasets[0].data = data.results[0].wipMovingAverage
       } else {
-        this.wip.data.labels = data.results.labels
-        this.wip.data.datasets[0].data = data.results.wip
+        this.wip.data.labels = data.results[0].labels
+        this.wip.data.datasets[0].data = data.results[0].wip
       }
       this.$modal.show('wip')
     },
@@ -429,7 +429,15 @@ export default {
       this.$modal.show('cumulative-flow')
     },
     showCorrelation(data) {
-      this.correlation = parseFloat(data.results)
+      if (this.selectedGraphTeam1) {
+        this.correlation1 = parseFloat(data.results[0])
+      }
+      if (this.selectedGraphTeam2) {
+        this.correlation2 = parseFloat(data.results[1])
+      }
+      if (this.selectedGraphTeam3) {
+        this.correlation3 = parseFloat(data.results[2])
+      }
       this.$modal.show('correlation')
     },
     showCycleTime(data) {

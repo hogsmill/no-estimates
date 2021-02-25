@@ -1,17 +1,18 @@
 
-function total(workCards) {
-  let total = 0
-  for (let i = 0; i < workCards.length; i++) {
-    if (workCards[i].value) {
-      total += workCards[i].value
-    }
-  }
-  return total
-}
 
 module.exports = {
 
-  run: function(res) {
+  total: function(res) {
+    let total = 0
+    for (let i = 0; i < res.workCards.length; i++) {
+      if (res.workCards[i].value) {
+        total += res.workCards[i].value
+      }
+    }
+    return total
+  }
+/*
+  : function(res) {
     const results = {
       teams: [],
       value: []
@@ -22,4 +23,5 @@ module.exports = {
     }
     return results
   }
+  */
 }

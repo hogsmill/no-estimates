@@ -11,8 +11,8 @@
       <td rowspan="9" class="show-results-td">
         Show results
       </td>
-      <td>
-        <button class="btn btn-sm btn-site-primary" @click="showResult('sources-of-variation')">
+      <td colspan="2">
+        <button class="btn btn-sm btn-site-primary" @click="showGameResult('sources-of-variation')">
           Show
         </button>
         <button class="btn btn-sm btn-site-primary" @click="hideResult('sources-of-variation')">
@@ -22,8 +22,8 @@
       </td>
     </tr>
     <tr v-if="showGameDisplay">
-      <td>
-        <button class="btn btn-sm btn-site-primary" @click="showResult('value-delivered')">
+      <td colspan="2">
+        <button class="btn btn-sm btn-site-primary" @click="showAllTeamsResult('value-delivered')">
           Show
         </button>
         <button class="btn btn-sm btn-site-primary" @click="hideResult('value-delivered')">
@@ -32,9 +32,23 @@
         Value Delivered
       </td>
     </tr>
+    <tr v-if="showGameDisplay" class="header">
+      <td>
+        <button class="btn btn-sm btn-site-primary" @click="showMultipleTeamsResult('correlation')">
+          Show
+        </button>
+        <button class="btn btn-sm btn-site-primary" @click="hideResult('correlation')">
+          Hide
+        </button>
+        Correlation
+      </td>
+      <td>
+        <Teams :multiple="true" :graph="'correlation'" />
+      </td>
+    </tr>
     <tr v-if="showGameDisplay">
       <td>
-        <button class="btn btn-sm btn-site-primary" @click="showResult('wip')">
+        <button class="btn btn-sm btn-site-primary" @click="showMultipleTeamsResult('wip')">
           Show
         </button>
         <button class="btn btn-sm btn-site-primary" @click="hideResult('wip')">
@@ -56,10 +70,13 @@
           </div>
         </div>
       </td>
+      <td>
+        <Teams :multiple="true" :graph="'wip'" />
+      </td>
     </tr>
     <tr v-if="showGameDisplay">
       <td>
-        <button class="btn btn-sm btn-site-primary" @click="showResult('cumulative-flow')">
+        <button class="btn btn-sm btn-site-primary" @click="showSingleTeamResult('cumulative-flow')">
           Show
         </button>
         <button class="btn btn-sm btn-site-primary" @click="hideResult('cumulative-flow')">
@@ -76,21 +93,13 @@
           </div>
         </div>
       </td>
-    </tr>
-    <tr v-if="showGameDisplay" class="header">
       <td>
-        <button class="btn btn-sm btn-site-primary" @click="showResult('correlation')">
-          Show
-        </button>
-        <button class="btn btn-sm btn-site-primary" @click="hideResult('correlation')">
-          Hide
-        </button>
-        Correlation
+        <Teams :multiple="false" :graph="'cumulative-flow'" />
       </td>
     </tr>
     <tr v-if="showGameDisplay">
       <td>
-        <button class="btn btn-sm btn-site-primary" @click="showResult('cycle-time')">
+        <button class="btn btn-sm btn-site-primary" @click="showSingleTeamResult('cycle-time')">
           Show
         </button>
         <button class="btn btn-sm btn-site-primary" @click="hideResult('cycle-time')">
@@ -127,10 +136,13 @@
           </table>
         </div>
       </td>
+      <td>
+        <Teams :multiple="false" :graph="'cycle-time'" />
+      </td>
     </tr>
     <tr v-if="showGameDisplay">
       <td>
-        <button class="btn btn-sm btn-site-primary" @click="showResult('distribution')">
+        <button class="btn btn-sm btn-site-primary" @click="showSingleTeamResult('distribution')">
           Show
         </button>
         <button class="btn btn-sm btn-site-primary" @click="hideResult('distribution')">
@@ -138,10 +150,13 @@
         </button>
         Distribution
       </td>
+      <td>
+        <Teams :multiple="false" :graph="'distribution'" />
+      </td>
     </tr>
     <tr v-if="showGameDisplay">
       <td>
-        <button class="btn btn-sm btn-site-primary" @click="showResult('scatter-plot')">
+        <button class="btn btn-sm btn-site-primary" @click="showSingleTeamResult('scatter-plot')">
           Show
         </button>
         <button class="btn btn-sm btn-site-primary" @click="hideResult('scatter-plot')">
@@ -149,10 +164,13 @@
         </button>
         Scatter Plot
       </td>
+      <td>
+        <Teams :multiple="false" :graph="'scatter-plot'" />
+      </td>
     </tr>
     <tr v-if="showGameDisplay">
       <td>
-        <button class="btn btn-sm btn-site-primary" @click="showResult('monte-carlo')">
+        <button class="btn btn-sm btn-site-primary" @click="showSingleTeamResult('monte-carlo')">
           Show
         </button>
         <button class="btn btn-sm btn-site-primary" @click="hideResult('monte-carlo')">
@@ -200,12 +218,22 @@
           </table>
         </div>
       </td>
+      <td>
+        <Teams :multiple="false" :graph="'monte-carlo'" />
+      </td>
     </tr>
   </table>
 </template>
 
 <script>
+import { v4 as uuidv4 } from 'uuid'
+
+import Teams from './teams/Teams.vue'
+
 export default {
+  components: {
+    Teams
+  },
   props: [
     'socket'
   ],
@@ -215,16 +243,32 @@ export default {
       showWipConfig: false,
       showCumulativeFlowConfig: false,
       showCycleTimeConfig: false,
-      showMonteCarloConfig: false
+      showMonteCarloConfig: false,
+      id: ''
     }
   },
   computed: {
+    hostId() {
+      return this.$store.getters.getHostId
+    },
     gameName() {
       return this.$store.getters.getGameName
     },
     graphConfig() {
       return this.$store.getters.getGraphConfig
+    },
+    selectedGraphTeam1() {
+      return this.$store.getters.getSelectedGraphTeam1
+    },
+    selectedGraphTeam2() {
+      return this.$store.getters.getSelectedGraphTeam2
+    },
+    selectedGraphTeam3() {
+      return this.$store.getters.getSelectedGraphTeam3
     }
+  },
+  created() {
+    this.$store.dispatch('updateHostId', uuidv4())
   },
   methods: {
     setShowGameDisplay(val) {
@@ -242,11 +286,44 @@ export default {
     setShowMonteCarloConfig(val) {
       this.showMonteCarloConfig = val
     },
-    showResult(result) {
-      this.socket.emit('showResult', {gameName: this.gameName, result: result, target: 'game'})
+    showGameResult(result) {
+      this.socket.emit('showGameResult', {
+        hostId: this.hostId,
+        gameName: this.gameName,
+        result: result,
+        target: 'game'
+      })
+    },
+    showAllTeamsResult(result) {
+      this.socket.emit('showAllTeamsResult', {
+        hostId: this.hostId,
+        gameName: this.gameName,
+        result: result,
+        target: 'game'
+      })
+    },
+    showSingleTeamResult(result) {
+      this.socket.emit('showSingleTeamResult', {
+        hostId: this.hostId,
+        gameName: this.gameName,
+        teamName: this.selectedGraphTeam1,
+        result: result,
+        target: 'game'
+      })
+    },
+    showMultipleTeamsResult(result) {
+      this.socket.emit('showMultipleTeamsResult', {
+        hostId: this.hostId,
+        gameName: this.gameName,
+        team1: this.selectedGraphTeam1,
+        team2: this.selectedGraphTeam2,
+        team3: this.selectedGraphTeam3,
+        result: result,
+        target: 'game'
+      })
     },
     hideResult(result) {
-      this.socket.emit('hideResult', {gameName: this.gameName, result: result})
+      this.$modal.hide(result)
     },
     setWipUseMovingAverage(val) {
       this.socket.emit('setWipUseMovingAverage', {gameName: this.gameName, value: val})

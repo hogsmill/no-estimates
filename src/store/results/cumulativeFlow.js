@@ -61,7 +61,6 @@ module.exports = {
       },
       labels: []
     }
-    let sum = 0
     for (let i = 0; i < cumulative.length; i++) {
       results.cumulative.day.push(parseInt(cumulative[i].day))
       results.cumulative.design.push(parseInt(cumulative[i].design))

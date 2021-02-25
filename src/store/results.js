@@ -17,18 +17,135 @@ function _loadGame(db, io, res) {
   })
 }
 
+function getQuery(data) {
+  const query = {
+    gameName: data.gameName
+  }
+  if (!data.team2 && !data.team3) {
+    query.teamName = data.team1
+  } else if (data.team2 && !data.team3) {
+    query['$or'] = [
+      {teamName: data.team1},
+      {teamName: data.team2}
+    ]
+  } else if (data.team2 && data.team3) {
+    query['$or'] = [
+      {teamName: data.team1},
+      {teamName: data.team2},
+      {teamName: data.team3}
+    ]
+  }
+  return query
+}
+
 module.exports = {
 
-  showResult: function(db, io, data, debugOn) {
+  showGameResult: function(db, io, data, debugOn) {
 
-    if (debugOn) { console.log('showResult', data) }
+    if (debugOn) { console.log('showGameResult', data) }
 
     db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, gameRes) {
       if (err) throw err
       if (gameRes) {
-        db.collection('noEstimates').find({gameName: data.gameName}).toArray(function(err, res) {
+        switch(data.result) {
+          case 'sources-of-variation':
+            data.results = gameRes.sourcesOfVariation
+            break
+        }
+        io.emit('showResult', data)
+      }
+    })
+  },
+
+  showAllTeamsResult: function(db, io, data, debugOn) {
+
+    if (debugOn) { console.log('showAllTeamsResult', data) }
+
+    db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, gameRes) {
+      if (err) throw err
+      const include = {}
+      for (let i = 0; i < gameRes.teams.length; i++) {
+        include[gameRes.teams[i].name] = gameRes.teams[i].include
+      }
+      db.collection('noEstimates').find({gameName: data.gameName}).toArray(function(err, res) {
+        if (err) throw err
+        if (res.length) {
+          const results = {
+            teams: [],
+            value: []
+          }
+          for (let r = 0; r < res.length; r++) {
+            switch(data.result) {
+              case 'value-delivered':
+                if (include[res[r].teamName]) {
+                  results.teams.push(res[r].teamName)
+                  results.value.push(valueDelivered.total(res[r]))
+                }
+                break
+            }
+          }
+          data.results = results
+          io.emit('showResult', data)
+        }
+      })
+    })
+  },
+
+  showSingleTeamResult: function(db, io, data, debugOn) {
+
+    if (debugOn) { console.log('showSingleTeamResult', data) }
+
+    db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, gameRes) {
+      if (err) throw err
+      if (gameRes) {
+        db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
+          if (err) throw err
+          if (res) {
+            data.teamName = res.teamName
+            const wip = res.wip ? res.wip : {}
+            const cumulative = res.cumulative ? res.cumulative : {}
+            const cards = res.columns.find(function(c) {
+              return c.name == 'done'
+            }).cards
+            switch(data.result) {
+              case 'cumulative-flow':
+                data.results = cumulativeFlow.run(cumulative, gameRes.graphConfig.cumulativeFlow.useDays)
+                break
+              case 'cycle-time':
+                data.results = cycleTime.run(cards)
+                break
+              case 'distribution':
+                data.results = distribution.run(cards)
+                break
+              case 'scatter-plot':
+                data.results = scatterPlot.run(cards)
+                if (data.results.length) {
+                  data.limits = scatterPlot.limits(data.results)
+                }
+                break
+              case 'monte-carlo':
+                data.results = monteCarlo.run(cards, gameRes.graphConfig.monteCarlo)
+                break
+            }
+            io.emit('showResult', data)
+          }
+        })
+      }
+    })
+  },
+
+  showMultipleTeamsResult: function(db, io, data, debugOn) {
+
+    if (debugOn) { console.log('showMultipleTeamsResult', data) }
+
+    db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, gameRes) {
+      if (err) throw err
+      if (gameRes) {
+        const query = getQuery(data)
+        db.collection('noEstimates').find(query).toArray(function(err, res) {
           if (err) throw err
           if (res.length) {
+            const results = []
             for (let r = 0; r < res.length; r++) {
               data.teamName = res[r].teamName
               const wip = res[r].wip ? res[r].wip : {}
@@ -37,56 +154,36 @@ module.exports = {
                 return c.name == 'done'
               }).cards
               switch(data.result) {
-                case 'sources-of-variation':
-                  data.results = gameRes.sourcesOfVariation
-                  break
-                case 'value-delivered':
-                  data.results = valueDelivered.run(res)
-                  break
                 case 'wip':
-                  data.results = wipFuns.run(wip, gameRes.graphConfig.wip.useDays)
+                  results.push(wipFuns.run(wip, gameRes.graphConfig.wip.useDays))
                   break
-                case 'cumulative-flow':
-                  data.results = cumulativeFlow.run(cumulative, gameRes.graphConfig.cumulativeFlow.useDays)
-                  break
+                //case 'cumulative-flow':
+                //  data.results = cumulativeFlow.run(cumulative, gameRes.graphConfig.cumulativeFlow.useDays)
+                //  break
                 case 'correlation':
-                  data.results = correlation.run(cards)
+                  results.push(correlation.run(cards))
                   break
-                case 'cycle-time':
-                  data.results = cycleTime.run(cards)
-                  break
-                case 'distribution':
-                  data.results = distribution.run(cards)
-                  break
-                case 'scatter-plot':
-                  data.results = scatterPlot.run(cards)
-                  if (data.results.length) {
-                    data.limits = scatterPlot.limits(data.results)
-                  }
-                  break
-                case 'monte-carlo':
-                  data.results = monteCarlo.run(cards, gameRes.graphConfig.monteCarlo)
-                  break
+                //case 'cycle-time':
+                //  data.results = cycleTime.run(cards)
+                //  break
+                //case 'distribution':
+                //  data.results = distribution.run(cards)
+                //  break
+                //case 'scatter-plot':
+                //  data.results = scatterPlot.run(cards)
+                //  if (data.results.length) {
+                //    data.limits = scatterPlot.limits(data.results)
+                //  }
+                //  break
+                //case 'monte-carlo':
+                //  data.results = monteCarlo.run(cards, gameRes.graphConfig.monteCarlo)
+                //  break
               }
-              io.emit('showResult', data)
             }
+            data.results = results
+            io.emit('showResult', data)
           }
         })
-      }
-    })
-  },
-
-  hideResult: function(db, io, data, debugOn) {
-
-    if (debugOn) { console.log('showResult', data) }
-
-    db.collection('noEstimates').find({gameName: data.gameName}).toArray(function(err, res) {
-      if (err) throw err
-      if (res.length) {
-        for (let r = 0; r < res.length; r++) {
-          data.teamName = res[r].teamName
-          io.emit('hideResult', data)
-        }
       }
     })
   },

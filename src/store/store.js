@@ -10,6 +10,7 @@ export const store = new Vuex.Store({
     walkThrough: false,
     showFacilitator: false,
     host: false,
+    hostId: '',
     stealth: false,
     currency: '&#163;',
     gameName: '',
@@ -132,6 +133,9 @@ export const store = new Vuex.Store({
         runTo: '50'
       }
     },
+    selectedGraphTeam1: 'Blue',
+    selectedGraphTeam2: 'Red',
+    selectedGraphTeam3: 'Green',
     retrosDone: {},
     recharting: false,
     concurrentDevAndTest: false,
@@ -161,6 +165,9 @@ export const store = new Vuex.Store({
     },
     getHost: (state) => {
       return state.host
+    },
+    getHostId: (state) => {
+      return state.hostId
     },
     getStealth: (state) => {
       return state.stealth
@@ -295,6 +302,15 @@ export const store = new Vuex.Store({
     getGraphConfig: (state) => {
       return state.graphConfig
     },
+    getSelectedGraphTeam1: (state) => {
+      return state.selectedGraphTeam1
+    },
+    getSelectedGraphTeam2: (state) => {
+      return state.selectedGraphTeam2
+    },
+    getSelectedGraphTeam3: (state) => {
+      return state.selectedGraphTeam3
+    },
     getCurrentDay: (state) => {
       return state.currentDay
     },
@@ -400,6 +416,9 @@ export const store = new Vuex.Store({
     updateHost: (state, payload) => {
       state.host = payload
     },
+    updateHostId: (state, payload) => {
+      state.hostId = payload
+    },
     updateStealth: (state, payload) => {
       state.stealth = payload.stealth
     },
@@ -467,6 +486,19 @@ export const store = new Vuex.Store({
     updateTeamName: (state, payload) => {
       state.teamName = payload
     },
+    setSelectedGraphTeam: (state, payload) => {
+      switch(payload.n) {
+        case 1:
+          state.selectedGraphTeam1 = payload.team
+          break
+        case 2:
+          state.selectedGraphTeam2 = payload.team
+          break
+        case 3:
+          state.selectedGraphTeam3 = payload.team
+          break
+      }
+    },
     updateGameState: (state, payload) => {
       state.gameState = payload.gameState
     },
@@ -497,6 +529,9 @@ export const store = new Vuex.Store({
     updateHost: ({ commit }, payload) => {
       commit('updateHost', payload)
     },
+    updateHostId: ({ commit }, payload) => {
+      commit('updateHostId', payload)
+    },
     updateStealth: ({ commit }, payload) => {
       commit('updateStealth', payload)
     },
@@ -523,6 +558,9 @@ export const store = new Vuex.Store({
     },
     updateTeamName: ({ commit }, payload) => {
       commit('updateTeamName', payload)
+    },
+    setSelectedGraphTeam: ({ commit }, payload) => {
+      commit('setSelectedGraphTeam', payload)
     },
     updateGameState: ({ commit }, payload) => {
       commit('updateGameState', payload)

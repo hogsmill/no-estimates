@@ -126,6 +126,35 @@
       </div>
     </modal>
 
+    <!-- Flow Efficiency -->
+
+    <modal name="flow-efficiency" class="popup" :height="520" :width="920" :classes="['rounded']">
+      <div class="float-right mr-2 mt-1">
+        <button type="button" class="close" @click="hide('flow-efficiency')" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="mt-4 flow-efficiency">
+        <h4>
+          Flow Efficiency
+        </h4>
+        <p>
+          Ratio of days cards worked on / days cards worked on + days cards not worked on
+        </p>
+        <div class="flow-efficiency-labels">
+          <div class="positive-flow-efficiency">
+            Perfect flow
+          </div>
+          <div class="negative-flow-efficiency">
+            Worst flow
+          </div>
+        </div>
+        <FlowEfficiency v-if="selectedGraphTeam1" :team="selectedGraphTeam1" :flow-efficiency="flowEfficiency1" />
+        <FlowEfficiency v-if="selectedGraphTeam2" :team="selectedGraphTeam2" :flow-efficiency="flowEfficiency2" />
+        <FlowEfficiency v-if="selectedGraphTeam3" :team="selectedGraphTeam3" :flow-efficiency="flowEfficiency3" />
+      </div>
+    </modal>
+
     <!-- Cycle Time -->
 
     <modal name="cycle-time" class="popup" :height="520" :width="920" :classes="['rounded']">
@@ -240,6 +269,7 @@ import scatterPlot from './graphConfig/scatterPlot.js'
 import monteCarlo from './graphConfig/monteCarlo.js'
 
 import Correlation from './results/Correlation.vue'
+import FlowEfficiency from './results/FlowEfficiency.vue'
 import BarChart from './results/BarChart.vue'
 import LineChart from './results/LineChart.vue'
 import ScatterPlot from './results/ScatterPlot.vue'
@@ -247,6 +277,7 @@ import ScatterPlot from './results/ScatterPlot.vue'
 export default {
   components: {
     Correlation,
+    FlowEfficiency,
     BarChart,
     LineChart,
     ScatterPlot
@@ -262,6 +293,7 @@ export default {
         'value-delivered',
         'cumulative-flow',
         'correlation',
+        'flow-efficiency',
         'cycle-time',
         'distribution',
         'scatter-plot',
@@ -278,7 +310,11 @@ export default {
 
       correlation1: null,
       correlation2: null,
-      correlation3: null
+      correlation3: null,
+
+      flowEfficiency1: null,
+      flowEfficiency2: null,
+      flowEfficiency3: null
     }
   },
   computed: {
@@ -345,6 +381,9 @@ export default {
           case 'correlation':
             self.showCorrelation(data)
             break
+          case 'flow-efficiency':
+            self.showFlowEfficiency(data)
+            break
           case 'cycle-time':
             self.showCycleTime(data)
             break
@@ -381,9 +420,6 @@ export default {
         }
       }
       return max
-    },
-    correlationPosition(value, n) {
-      return parseInt(290 * (value + 1)) - 290 - n + 'px'
     },
     showSourcesOfVariation() {
       this.$modal.show('sources-of-variation')
@@ -439,6 +475,19 @@ export default {
         this.correlation3 = parseFloat(data.results[2])
       }
       this.$modal.show('correlation')
+    },
+    showFlowEfficiency(data) {
+      console.log(data)
+      if (this.selectedGraphTeam1) {
+        this.flowEfficiency1 = data.results[0] ? parseFloat(data.results[0]) : 0
+      }
+      if (this.selectedGraphTeam2) {
+        this.flowEfficiency2 = data.results[1] ? parseFloat(data.results[1]) : 0
+      }
+      if (this.selectedGraphTeam3) {
+        this.flowEfficiency3 = data.results[2] ? parseFloat(data.results[2]) : 0
+      }
+      this.$modal.show('flow-efficiency')
     },
     showCycleTime(data) {
       this.cycleTime.data.datasets[0].backgroundColor = []
@@ -549,42 +598,25 @@ export default {
         float: right;
       }
     }
-    .correlation-holder {
+  }
+
+  .flow-efficiency {
+    .flow-efficiency-labels {
+      width: 640px;
+      height: 24px;
+      margin: 48px auto 0 auto;
 
       div {
-        display: inline-block;
+        width: 200px;
+        font-weight: bold;
       }
-      .correlation-label {
-        width: 20px;
-        text-align: center;
-        position: relative;
-        top: -8px;
+      .negative-flow-efficiency {
+        text-align: left;
+        float: left;
       }
-      .correlation-div {
-        width: 600px;
-        margin: 0 auto;
-        position: relative;
-        background: rgb(245,39,13);
-        background: linear-gradient(90deg, rgba(245,39,13,1) 0%, rgba(100,210,12,1) 100%);
-
-        div {
-          position: relative;
-          width: 100px;
-          text-align: center;
-          font-size: xx-large;
-          font-weight: bold;
-          color: #fff;
-        }
-
-        .correlation-marker {
-          position: relative;
-          top: 32px;
-          font-size: xx-large;
-
-          .fas {
-            color: #888;
-          }
-        }
+      .positive-flow-efficiency {
+        text-align: right;
+        float: right;
       }
     }
   }

@@ -144,7 +144,6 @@ export const store = new Vuex.Store({
       effort: 0,
       done: false
     },
-    wip: [],
     projectEstimate: 0,
     projectActual: 0,
     mvpEstimate: 0,
@@ -439,7 +438,6 @@ export const store = new Vuex.Store({
       state.currentWorkCard = payload.currentWorkCard
       state.messages = payload.messages
       state.config = payload.config
-      state.wip = payload.wip
       state.projectEstimate = payload.projectEstimate
       state.reEstimate = payload.reEstimate
       state.projectActual = payload.projectActual

@@ -8,7 +8,7 @@
       </td>
     </tr>
     <tr v-if="showGameDisplay">
-      <td rowspan="9" class="show-results-td">
+      <td rowspan="10" class="show-results-td">
         Show results
       </td>
       <td colspan="2">
@@ -44,6 +44,20 @@
       </td>
       <td>
         <Teams :multiple="true" :graph="'correlation'" />
+      </td>
+    </tr>
+    <tr v-if="showGameDisplay" class="header">
+      <td>
+        <button class="btn btn-sm btn-site-primary" @click="showMultipleTeamsResult('flow-efficiency')">
+          Show
+        </button>
+        <button class="btn btn-sm btn-site-primary" @click="hideResult('flow-efficiency')">
+          Hide
+        </button>
+        Flow Efficiency
+      </td>
+      <td>
+        <Teams :multiple="true" :graph="'flow-efficiency'" />
       </td>
     </tr>
     <tr v-if="showGameDisplay">
@@ -352,6 +366,15 @@ export default {
 <style lang="scss">
   .show-results-td {
     width: 110px;
+  }
+
+  .multiple {
+    tr {
+      td {
+        border: none;
+        text-align: center;
+      }
+    }
   }
 
   i.config {

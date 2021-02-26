@@ -26,8 +26,7 @@ const gameUpdates = [
 const teamUpdates = [
 
   {name: 'wip', value: []},
-
-  {name: 'cumulative', value: []}
+  {name: 'cumulative', value: []},
 ]
 
 module.exports = {

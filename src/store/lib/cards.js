@@ -67,6 +67,21 @@ function getCardFirstColumn(card, columns) {
   return column
 }
 
+function newCard(card) {
+  card.dependentOn = ''
+  card.blocked = false
+  card.effort = {
+    design: 0,
+    develop: 0,
+    test: 0,
+    deploy: 0
+  }
+  card.workedOn = {}
+  card.daysWorkedOn = []
+
+  return card
+}
+
 module.exports = {
 
   totalEffort: function(card) {
@@ -78,9 +93,10 @@ module.exports = {
 
   pullInCard: function(columns, workCards, currentWorkCard, currentDay, teams, teamName) {
     const newColumns = []
-    const card = workCards.find(function(c) {
+    let card = workCards.find(function(c) {
       return c.number == currentWorkCard
     })
+    card = newCard(card)
     if (teams.length < 2) {
       card.teamDependency = 0
     }
@@ -99,6 +115,19 @@ module.exports = {
       newColumns.push(column)
     }
     return newColumns
+  },
+
+  addCardWorkedOnInDay: function(card, day) {
+    let found = false
+    for (let i = 0; i < card.daysWorkedOn.length; i++) {
+      if (card.daysWorkedOn[i] == day) {
+        found = true
+      }
+    }
+    if (!found) {
+      card.daysWorkedOn.push(day)
+    }
+    return card
   },
 
   addWorkedOn: function(card, column, name, role) {

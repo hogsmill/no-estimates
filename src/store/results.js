@@ -1,6 +1,7 @@
 
 const valueDelivered = require('./results/valueDelivered.js')
 const correlation = require('./results/correlation.js')
+const flowEfficiency = require('./results/flowEfficiency.js')
 const cycleTime = require('./results/cycleTime.js')
 const wipFuns = require('./results/wip.js')
 const cumulativeFlow = require('./results/cumulativeFlow.js')
@@ -151,14 +152,15 @@ module.exports = {
             const results = []
             for (let r = 0; r < res.length; r++) {
               data.teamName = res[r].teamName
-              const wip = res[r].wip ? res[r].wip : {}
-              const cumulative = res[r].cumulative ? res[r].cumulative : {}
               const cards = res[r].columns.find(function(c) {
                 return c.name == 'done'
               }).cards
               switch(data.result) {
                 case 'correlation':
                   results.push(correlation.run(cards))
+                  break
+                case 'flow-efficiency':
+                  results.push(flowEfficiency.run(res[r].columns, res[r].currentDay))
                   break
               }
             }

@@ -217,14 +217,23 @@ function doDb(fun, data) {
 
       // Demo
 
+      case 'setDemoRunTo':
+        dbStore.setDemoRunTo(db, io, data, debugOn)
+        break
+      case 'setDemoStepThrough':
+        dbStore.setDemoStepThrough(db, io, data, debugOn)
+        break
+      case 'setDemoRunning':
+        dbStore.setDemoRunning(db, io, data, debugOn)
+        break
       case 'runDemoToMvp':
         demo.runDemoToMvp(db, io, data, debugOn)
         break
       case 'runDemoToEnd':
         demo.runDemoToEnd(db, io, data, debugOn)
         break
-      case 'runGameTo':
-        runGame.runTo(db, io, data, debugOn)
+      case 'runDemoGame':
+        runGame.run(db, io, data, debugOn)
         break
       case 'setupRunGame':
         runGame.setUp(db, io, data, debugOn)
@@ -363,11 +372,17 @@ io.on('connection', (socket) => {
 
   // Demo
 
+  socket.on('setDemoRunTo', (data) => { doDb('setDemoRunTo', data) })
+
+  socket.on('setDemoStepThrough', (data) => { doDb('setDemoStepThrough', data) })
+
+  socket.on('setDemoRunning', (data) => { doDb('setDemoRunning', data) })
+
   socket.on('runDemoToMvp', (data) => { doDb('runDemoToMvp', data) })
 
   socket.on('runDemoToEnd', (data) => { doDb('runDemoToEnd', data) })
 
-  socket.on('runGameTo', (data) => { doDb('runGameTo', data) })
+  socket.on('runDemoGame', (data) => { doDb('runDemoGame', data) })
 
   socket.on('setupRunGame', (data) => { doDb('setupRunGame', data) })
 })

@@ -16,6 +16,21 @@ function _memberHasEffort(member) {
 
 module.exports = {
 
+  dependency: function(game) {
+    let card, found = false, i = 0
+    while (!found && i < game.columns.length) {
+      for (let j = 0; j < game.columns[i].cards.length; j++) {
+        const colCard = game.columns[i].cards[j]
+        if (colCard.teamDependency > 0 && colCard.dependencyDone < colCard.teamDependency) {
+          card = colCard
+          found = true
+        }
+      }
+      i = i + 1
+    }
+    return card
+  },
+
   noCardsLeft: function(game) {
     const column = game.columns.find(function(c) {
       return c.name == 'done'

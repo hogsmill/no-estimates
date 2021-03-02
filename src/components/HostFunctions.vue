@@ -18,13 +18,16 @@
         </div>
         <div>
           Run Game To:
-          <input type="radio" id="run-to-mvp" :checked="runTo == 'MVP'" @click="setRunTo('MVP')"> MVP
-          <input type="radio" id="run-to-end" :checked="runTo == 'End'" @click="setRunTo('End')"> End
-          <input type="checkbox" id="step-through" :checked="stepThrough" @click="setStepThrough()"> Step Through?
-          <button v-if="!stepThrough" class="btn btn-sm btn-site-primary" @click="run()">
+          <input type="radio" id="run-to-mvp" @click="setRunTo('MVP')" :checked="demoConfig.runTo == 'MVP'"> MVP
+          <input type="radio" id="run-to-end" @click="setRunTo('End')" :checked="demoConfig.runTo == 'End'"> End
+          <input type="checkbox" id="step-through" @click="setStepThrough()" :checked="demoConfig.stepThrough"> Step Through?
+          <button v-if="!demoConfig.stepThrough" class="btn btn-sm btn-site-primary" @click="runGame()">
             Run
           </button>
-          <button v-if="stepThrough" class="btn btn-sm btn-site-primary" @click="run()">
+          <button v-if="!demoConfig.stepThrough" class="btn btn-sm btn-site-primary" @click="stopGame()">
+            Stop
+          </button>
+          <button v-if="demoConfig.stepThrough" class="btn btn-sm btn-site-primary" @click="run()">
             Step
           </button>
         </div>
@@ -41,21 +44,15 @@ export default {
   data() {
     return {
       showRunGame: false,
-      runTo: 'MVP',
-      stepThrough: true,
-      running: false,
-      membersAdded: false
+      membersAdded: false,
     }
   },
   computed: {
-    teamName() {
-      return this.$store.getters.getTeamName
-    },
     gameName() {
       return this.$store.getters.getGameName
     },
-    teams() {
-      return this.$store.getters.getTeams
+    teamName() {
+      return this.$store.getters.getTeamName
     },
     columns() {
       return this.$store.getters.getColumns
@@ -68,12 +65,26 @@ export default {
     },
     workCards() {
       return this.$store.getters.getWorkCards
+    },
+    demoConfig() {
+      return this.$store.getters.getDemoConfig
     }
   },
   created() {
     const self = this
     this.socket.on('loadTeam', (data) => {
-      if (!this.stepThrough && this.running && this.gameName == data.gameName && this.teamName == data.teamName) {
+      if (self.demoConfig.running && self.gameName == data.gameName && self.teamName == data.teamName) {
+        self.checkRunComplete(data)
+        if (!self.runComplete) {
+          window.setTimeout(function() {
+            self.run()
+          }, 1000)
+        }
+      }
+    })
+
+    this.socket.on('startRun', (data) => {
+      if (self.gameName == data.gameName) {
         self.run()
       }
     })
@@ -83,7 +94,7 @@ export default {
       this.showRunGame = val
     },
     setRunTo(runTo) {
-      this.runTo = runTo
+      this.socket.emit('setDemoRunTo', {gameName: this.gameName, runTo: runTo})
     },
     clearLocalStorage() {
       if (confirm('Clear localStorage?')) {
@@ -94,35 +105,39 @@ export default {
       }
     },
     setStepThrough() {
-      this.stepThrough = document.getElementById('step-through').checked
+      const stepThrough = document.getElementById('step-through').checked
+      this.socket.emit('setDemoStepThrough', {gameName: this.gameName, stepThrough: stepThrough})
+
     },
-    runComplete() {
-      return this.columns.find(function(c) {
+    checkRunComplete(data) {
+    console.log(data.teamName, data.columns.find(function(c) {
+      return c.name == 'done'
+    }).cards.length + ' >= ' + this.demoConfig.runToCards)
+
+      this.runComplete = data.columns.find(function(c) {
         return c.name == 'done'
-      }).cards.length >= this.runToCards()
-    },
-    runToCards() {
-      return this.runTo == 'MVP'
-        ? this.mvpCards
-        : this.workCards.length
+      }).cards.length >= this.demoConfig.runToCards
     },
     setUpGame() {
-      this.socket.emit('setupRunGame', {gameName: this.gameName, teamName: this.teamName})
+      this.socket.emit('setupRunGame', {gameName: this.gameName})
+    },
+    runGame() {
+      this.socket.emit('setDemoRunning', {gameName: this.gameName, running: true})
+    },
+    stopGame() {
+      this.socket.emit('setDemoRunning', {gameName: this.gameName, running: false})
     },
     run() {
-      const complete = this.runComplete()
-      if (complete) {
-        this.running = false
-        console.log('Run Complete to ' + this.runToCards() + ' cards')
+      if (this.runComplete) {
+        console.log('Run Complete to ' + this.demoConfig.runToCards + ' cards')
       } else {
-        this.running = true
-        this.socket.emit('runGameTo', {gameName: this.gameName, teamName: this.teamName, teams: this.teams, stepThrough: this.stepThrough})
+        this.socket.emit('runDemoGame', {gameName: this.gameName, teamName: this.teamName})
       }
     },
     restartGame() {
       const restartGame = confirm('Are you sure you want to re-start this game?')
       if (restartGame) {
-        this.running = false
+        this.socket.emit('setDemoRunning', {gameName: this.gameName, running: false})
         this.socket.emit('restartGame', {gameName: this.gameName, stealth: this.stealth})
       }
     },

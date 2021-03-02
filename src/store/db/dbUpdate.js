@@ -20,13 +20,21 @@ const gameUpdates = [
         useDays: true
       }
     }
+  },
+
+  {name: 'demoConfig', value: {
+      'runTo': 'MVP',
+      'runToCards': 11,
+      'stepThrough': false,
+      'running': false
+    }
   }
 ]
 
 const teamUpdates = [
 
   {name: 'wip', value: []},
-  {name: 'cumulative', value: []},
+  {name: 'cumulative', value: []}
 ]
 
 module.exports = {

@@ -112,6 +112,9 @@ module.exports = {
               case 'wip':
                 data.results = wipFuns.run(wip, gameRes.graphConfig.wip.useDays)
                 break
+              case 'flow-efficiency-cards':
+                data.results = flowEfficiency.cards(cards)
+                break
               case 'cumulative-flow':
                 data.results = cumulativeFlow.run(cumulative, gameRes.graphConfig.cumulativeFlow.useDays)
                 break

@@ -43,7 +43,19 @@ function addEffort(db, io, game) {
 
 function makeMove(db, io, game, teams) {
   const data = {gameName: game.gameName, teamName: game.teamName, teams: teams, currrentDay: game.currentDay}
-  if (run.noCardsLeft(game)) {
+  const card = run.dependency(game)
+  if (parseInt(Math.random() * 4) && card) {
+    console.log('  Doing a dependency, card ', card.number)
+    card.team = game.teamName
+    const otherData = {
+      gameName: game.gameName,
+      teamName: card.dependentOn.name,
+      card: card,
+      myName: game.members[0],
+      effort: 1
+    }
+    dbStore.addEffortToOthersCard(db, io, otherData, false)
+  } else if (run.noCardsLeft(game)) {
     console.log('  All cards played')
   } else if (!run.aCardIsPlayable(game) && game.currentWorkCard < 25) {
     console.log('  Pulling in card')
@@ -66,6 +78,10 @@ function updateTeam(db, io, res) {
   })
 }
 
+function running(res) {
+  return res.demoConfig.stepThrough || res.demoConfig.running
+}
+
 module.exports = {
 
   setUp: function(db, io, data, debugOn) {
@@ -85,27 +101,44 @@ module.exports = {
       'Deployer'
     ]
 
-    db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
+    db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, res) {
       if (err) throw err
       if (res) {
-        let members = []
-        for (let i = 0; i < 4; i++) {
-          members = teamFuns.addMember(members, names[i], roles[i])
+        for (let i = 0; i < res.teams.length; i++) {
+          if (res.teams[i].include) {
+            if (debugOn) { console.log('  setting up', res.teams[i].name) }
+            db.collection('noEstimates').findOne({gameName: data.gameName, teamName: res.teams[i].name}, function(err, teamRes) {
+              if (err) throw err
+              if (teamRes) {
+                let members = []
+                for (let j = 0; j < 4; j++) {
+                  members = teamFuns.addMember(members, names[j], roles[j])
+                }
+                teamRes.members = members
+                updateTeam(db, io, teamRes)
+              }
+            })
+          }
         }
-        res.members = members
-        updateTeam(db, io, res)
       }
     })
   },
 
-  runTo: function(db, io, data, debugOn) {
+  run: function(db, io, data, debugOn) {
 
     if (debugOn) { console.log('runTo', data) }
 
-    db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
+    db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, res) {
       if (err) throw err
-      if (res) {
-        makeMove(db, io, res, data.teams)
+      if (res && running(res)) {
+        for (let i = 0; i < res.teams.length; i++) {
+          if (res.teams[i].include) {
+            db.collection('noEstimates').findOne({gameName: data.gameName, teamName: res.teams[i].name}, function(err, teamRes) {
+              if (err) throw err
+              makeMove(db, io, teamRes, res.teams)
+            })
+          }
+        }
       }
     })
   }

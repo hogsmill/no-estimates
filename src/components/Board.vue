@@ -29,7 +29,7 @@
             </th>
             <th v-for="(column, index) in columns" :key="index" :class="columnClass(column)">
               <div :class="column.name">
-                {{ columnDisplayName(column.name) }}
+                {{ columnDisplayName(column.name) }} ({{ column.cards.length }})
                 <span class="autoDeploy" v-if="showAutoDeploy(column)" title="Deployment is now automated">&#10004;</span>
                 <span class="canStartAutoDeploy rounded-circle" v-if="canStartAutoDeploy(column)" @click="startAutoDeploy()">&#10033;</span>
               </div>

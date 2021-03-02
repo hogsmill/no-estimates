@@ -54,10 +54,24 @@
         <button class="btn btn-sm btn-site-primary" @click="hideResult('flow-efficiency')">
           Hide
         </button>
-        Flow Efficiency
+        Flow Efficiency (Overall)
       </td>
       <td>
         <Teams :multiple="true" :graph="'flow-efficiency'" />
+      </td>
+    </tr>
+    <tr v-if="showGameDisplay">
+      <td>
+        <button class="btn btn-sm btn-site-primary" @click="showSingleTeamResult('flow-efficiency-cards')">
+          Show
+        </button>
+        <button class="btn btn-sm btn-site-primary" @click="hideResult('flow-efficiency-cards')">
+          Hide
+        </button>
+        Flow Efficiency (Selected cards)
+      </td>
+      <td>
+        <Teams :multiple="false" :graph="'flow-efficiency-cards'" />
       </td>
     </tr>
     <tr v-if="showGameDisplay">

@@ -833,4 +833,60 @@ module.exports = {
     })
   },
 
+  setDemoRunTo: function(db, io, data, debugOn) {
+
+    if (debugOn) { console.log('setDemoRunTo', data) }
+
+    db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, res) {
+      if (err) throw err
+      if (res) {
+        const demoConfig = res.demoConfig
+        demoConfig.runTo = data.runTo
+        demoConfig.runToCards = data.runTo == 'MVP' ? res.mvpCards : initialCards.length
+        res.demoConfig = demoConfig
+        db.collection('noEstimatesGames').updateOne({'_id': res._id}, {$set: {demoConfig: demoConfig}}, function(err) {
+          if (err) throw err
+          io.emit('loadGame', res)
+        })
+      }
+    })
+  },
+
+  setDemoStepThrough: function(db, io, data, debugOn) {
+
+    if (debugOn) { console.log('setDemoStepThrough', data) }
+
+    db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, res) {
+      if (err) throw err
+      if (res) {
+        const demoConfig = res.demoConfig
+        demoConfig.stepThrough = data.stepThrough
+        res.demoConfig = demoConfig
+        db.collection('noEstimatesGames').updateOne({'_id': res._id}, {$set: {demoConfig: demoConfig}}, function(err) {
+          if (err) throw err
+          io.emit('loadGame', res)
+        })
+      }
+    })
+  },
+
+  setDemoRunning: function(db, io, data, debugOn) {
+
+    if (debugOn) { console.log('setDemoRunning', data) }
+
+    db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, res) {
+      if (err) throw err
+      if (res) {
+        const demoConfig = res.demoConfig
+        demoConfig.running = data.running
+        res.demoConfig = demoConfig
+        db.collection('noEstimatesGames').updateOne({'_id': res._id}, {$set: {demoConfig: demoConfig}}, function(err) {
+          if (err) throw err
+          io.emit('loadGame', res)
+          io.emit('startRun', data)
+        })
+      }
+    })
+  }
+
 }

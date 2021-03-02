@@ -133,6 +133,12 @@ export const store = new Vuex.Store({
         runTo: '50'
       }
     },
+    demoConfig: {
+      runTo: 'MVP',
+      runToCards: 11,
+      stepThrough: false,
+      running: false
+    },
     selectedGraphTeam1: 'Blue',
     selectedGraphTeam2: 'Red',
     selectedGraphTeam3: 'Green',
@@ -301,6 +307,9 @@ export const store = new Vuex.Store({
     getGraphConfig: (state) => {
       return state.graphConfig
     },
+    getDemoConfig: (state) => {
+      return state.demoConfig
+    },
     getSelectedGraphTeam1: (state) => {
       return state.selectedGraphTeam1
     },
@@ -465,6 +474,7 @@ export const store = new Vuex.Store({
       state.percentageDeployFail = payload.percentageDeployFail
       state.sourcesOfVariation = payload.sourcesOfVariation
       state.graphConfig = payload.graphConfig
+      state.demoConfig = payload.demoConfig
     },
     updateGameName: (state, payload) => {
       state.gameName = payload

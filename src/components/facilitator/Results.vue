@@ -126,7 +126,7 @@
       </div>
     </modal>
 
-    <!-- Flow Efficiency -->
+    <!-- Flow Efficiency (overall) -->
 
     <modal name="flow-efficiency" class="popup" :height="520" :width="920" :classes="['rounded']">
       <div class="float-right mr-2 mt-1">
@@ -152,6 +152,28 @@
         <FlowEfficiency v-if="selectedGraphTeam1" :team="selectedGraphTeam1" :flow-efficiency="flowEfficiency1" />
         <FlowEfficiency v-if="selectedGraphTeam2" :team="selectedGraphTeam2" :flow-efficiency="flowEfficiency2" />
         <FlowEfficiency v-if="selectedGraphTeam3" :team="selectedGraphTeam3" :flow-efficiency="flowEfficiency3" />
+      </div>
+    </modal>
+
+    <!-- Flow Efficiency (selected cards) -->
+
+    <modal name="flow-efficiency-cards" class="popup" :height="520" :width="920" :classes="['rounded']">
+      <div class="float-right mr-2 mt-1">
+        <button type="button" class="close" @click="hide('flow-efficiency-cards')" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="mt-4 flow-efficiency">
+        <h4>
+          Flow Efficiency (Selected Cards)
+        </h4>
+        <div class="flow-efficiency-card-key">
+          <div class="working-on" /> Worked On
+          <div class="waiting" /> Waiting
+        </div>
+        <FlowEfficiencyCard :type="'Worst'" :card="flowEfficiencyCard1" />
+        <FlowEfficiencyCard :type="'Best'" :card="flowEfficiencyCard2" />
+        <FlowEfficiencyCard :type="'Longest in play'" :card="flowEfficiencyCard3" />
       </div>
     </modal>
 
@@ -270,6 +292,7 @@ import monteCarlo from './graphConfig/monteCarlo.js'
 
 import Correlation from './results/Correlation.vue'
 import FlowEfficiency from './results/FlowEfficiency.vue'
+import FlowEfficiencyCard from './results/FlowEfficiencyCard.vue'
 import BarChart from './results/BarChart.vue'
 import LineChart from './results/LineChart.vue'
 import ScatterPlot from './results/ScatterPlot.vue'
@@ -278,6 +301,7 @@ export default {
   components: {
     Correlation,
     FlowEfficiency,
+    FlowEfficiencyCard,
     BarChart,
     LineChart,
     ScatterPlot
@@ -294,6 +318,7 @@ export default {
         'cumulative-flow',
         'correlation',
         'flow-efficiency',
+        'flow-efficiency-cards',
         'cycle-time',
         'distribution',
         'scatter-plot',
@@ -314,7 +339,11 @@ export default {
 
       flowEfficiency1: null,
       flowEfficiency2: null,
-      flowEfficiency3: null
+      flowEfficiency3: null,
+
+      flowEfficiencyCard1: null,
+      flowEfficiencyCard2: null,
+      flowEfficiencyCard3: null
     }
   },
   computed: {
@@ -383,6 +412,9 @@ export default {
             break
           case 'flow-efficiency':
             self.showFlowEfficiency(data)
+            break
+          case 'flow-efficiency-cards':
+            self.showFlowEfficiencyCards(data)
             break
           case 'cycle-time':
             self.showCycleTime(data)
@@ -477,7 +509,6 @@ export default {
       this.$modal.show('correlation')
     },
     showFlowEfficiency(data) {
-      console.log(data)
       if (this.selectedGraphTeam1) {
         this.flowEfficiency1 = data.results[0] ? parseFloat(data.results[0]) : 0
       }
@@ -488,6 +519,13 @@ export default {
         this.flowEfficiency3 = data.results[2] ? parseFloat(data.results[2]) : 0
       }
       this.$modal.show('flow-efficiency')
+    },
+    showFlowEfficiencyCards(data) {
+      console.log(data)
+      this.flowEfficiencyCard1 = data.results[0]
+      this.flowEfficiencyCard2 = data.results[1]
+      this.flowEfficiencyCard3 = data.results[2]
+      this.$modal.show('flow-efficiency-cards')
     },
     showCycleTime(data) {
       this.cycleTime.data.datasets[0].backgroundColor = []
@@ -617,6 +655,27 @@ export default {
       .positive-flow-efficiency {
         text-align: right;
         float: right;
+      }
+    }
+  }
+
+  .flow-efficiency-card-key {
+    margin: 0 auto;
+
+    div {
+      height: 16px;
+      width: 50px;
+      display: inline-block;
+      position: relative;
+      top: 3px;
+
+      &.working-on {
+        background-color: #339933;
+      }
+
+      &.waiting {
+        background-color:  #f5270d;
+        margin-left: 32px; 
       }
     }
   }

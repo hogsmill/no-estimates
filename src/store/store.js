@@ -8,7 +8,7 @@ export const store = new Vuex.Store({
     thisGame: 'No Estimates',
     connections: 0,
     walkThrough: false,
-    showFacilitator: false,
+    currentTab: 'game',
     host: false,
     hostId: '',
     stealth: false,
@@ -162,8 +162,8 @@ export const store = new Vuex.Store({
     thisGame: (state) => {
       return state.thisGame
     },
-    getShowFacilitator: (state) => {
-      return state.showFacilitator
+    getCurrentTab: (state) => {
+      return state.currentTab
     },
     getWalkThrough: (state) => {
       return state.walkThrough
@@ -415,8 +415,8 @@ export const store = new Vuex.Store({
     }
   },
   mutations: {
-    updateShowFacilitator: (state, payload) => {
-      state.showFacilitator = payload
+    updateCurrentTab: (state, payload) => {
+      state.currentTab = payload
     },
     updateWalkThrough: (state, payload) => {
       state.walkThrough = payload
@@ -528,11 +528,8 @@ export const store = new Vuex.Store({
     }
   },
   actions: {
-    updateShowFacilitator: ({ commit }, payload) => {
-      commit('updateShowFacilitator', payload)
-    },
-    updateWalkThrough: ({ commit }, payload) => {
-      commit('updateWalkThrough', payload)
+    updateCurrentTab: ({ commit }, payload) => {
+      commit('updateCurrentTab', payload)
     },
     updateHost: ({ commit }, payload) => {
       commit('updateHost', payload)

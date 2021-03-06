@@ -1,12 +1,15 @@
 <template>
   <div id="app" class="mb-4">
-    <appHeader />
+    <Header />
     <WalkThroughView />
     <Results :socket="socket" />
-    <div v-if="showFacilitator">
+    <div v-if="currentTab == 'facilitator'">
       <FacilitatorView :socket="socket" />
     </div>
-    <div class="main" v-else>
+    <div v-if="currentTab == 'mobile'">
+      <MobileView :socket="socket" />
+    </div>
+    <div v-if="currentTab == 'game'" class="main">
       <HostFunctions v-if="isHost" :socket="socket" />
       <div v-if="!connections.connections" class="not-connected">
         WARNING: You are not connected to the server
@@ -49,6 +52,7 @@ import SetEstimates from './components/SetEstimates.vue'
 import Status from './components/Status.vue'
 import Message from './components/Message.vue'
 import FacilitatorView from './components/FacilitatorView.vue'
+import MobileView from './components/MobileView.vue'
 import WalkThroughView from './components/about/WalkThroughView.vue'
 
 import Roles from './components/Roles.vue'
@@ -60,9 +64,10 @@ import Board from './components/Board.vue'
 export default {
   name: 'App',
   components: {
-    appHeader: Header,
+    Header,
     HostFunctions,
     FacilitatorView,
+    MobileView,
     WalkThroughView,
     SetGame,
     SetEstimates,
@@ -91,8 +96,8 @@ export default {
     walkThrough() {
       return this.$store.getters.getWalkThrough
     },
-    showFacilitator() {
-      return this.$store.getters.getShowFacilitator
+    currentTab() {
+      return this.$store.getters.getCurrentTab
     },
     teamName() {
       return this.$store.getters.getTeamName

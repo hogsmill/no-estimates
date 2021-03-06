@@ -6,7 +6,8 @@
     <div v-for="(n, index) in flowResult(card)" :key="index"
          class="flow-result"
          :class="{ 'worked-on' : n.workedOn, 'rounded-left': index == 0, 'rounded-right': index == resultLength - 1 }"
-         :style="{ 'width': resultWidth + 'px' }" />
+         :style="{ 'width': resultWidth + 'px' }"
+    />
   </div>
 </template>
 

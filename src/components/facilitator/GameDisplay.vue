@@ -8,7 +8,7 @@
       </td>
     </tr>
     <tr v-if="showGameDisplay">
-      <td rowspan="10" class="show-results-td">
+      <td rowspan="11" class="show-results-td">
         Show results
       </td>
       <td colspan="2">

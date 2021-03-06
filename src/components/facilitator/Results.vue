@@ -165,7 +165,7 @@
       </div>
       <div class="mt-4 flow-efficiency">
         <h4>
-          Flow Efficiency (Selected Cards)
+          Flow Efficiency (Selected Cards, Team {{ selectedGraphTeam1 }})
         </h4>
         <div class="flow-efficiency-card-key">
           <div class="working-on" /> Worked On
@@ -675,7 +675,7 @@ export default {
 
       &.waiting {
         background-color:  #f5270d;
-        margin-left: 32px; 
+        margin-left: 32px;
       }
     }
   }

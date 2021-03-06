@@ -212,7 +212,8 @@ export default {
       return card.design + card.develop + card.test + card.deploy
     },
     addEffort(card, column) {
-      alert(column + ' ' + card.effort[column] < card[column])
+      const str = [column, card.effort[column], card[column], card.effort[column] < card[column]].join(', ')
+      alert(str)
     }
   }
 }

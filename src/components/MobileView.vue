@@ -228,8 +228,7 @@ $done: navy;
 }
 
 .mobile {
-  width: 375px;
-  height: 667px;
+  max-width: 400px;
   margin: 12px auto;
   border: 1px solid;
   overflow-y: scroll;

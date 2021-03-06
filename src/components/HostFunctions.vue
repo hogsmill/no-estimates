@@ -3,6 +3,9 @@
     <button class="btn btn-sm btn-outline-secondary smaller-font clear-local-storage" @click="clearLocalStorage()">
       Clear Local Storage
     </button>
+    <button class="btn btn-sm btn-outline-secondary smaller-font clear-local-storage" @click="goMobile()">
+      Go Mobile
+    </button>
     <div class="run-demo rounded">
       <div class="expand">
         <i v-if="showRunGame" @click="setShowRunGame(false)" title="collapse" class="fas fa-caret-up toggle" />
@@ -103,6 +106,9 @@ export default {
         localStorage.removeItem('myRole')
         localStorage.removeItem('gameName')
       }
+    },
+    goMobile() {
+      this.$store.dispatch('updateCurrentTab', 'mobile')
     },
     setStepThrough() {
       const stepThrough = document.getElementById('step-through').checked

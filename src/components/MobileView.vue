@@ -230,8 +230,6 @@ $done: navy;
 .mobile {
   max-width: 400px;
   margin: 12px auto;
-  border: 1px solid;
-  overflow-y: scroll;
 
   .header {
     text-align: right;

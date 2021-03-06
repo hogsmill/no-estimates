@@ -212,7 +212,7 @@ export default {
       return card.design + card.develop + card.test + card.deploy
     },
     addEffort(card, column) {
-      console.log(column, card.effort[column] < card[column])
+      alert(column + ' ' + card.effort[column] < card[column])
     }
   }
 }

@@ -66,76 +66,62 @@
         </tr>
       </table>
     </div>
+
     <div v-if="!showSettings" class="game">
       <div>
-        {{ myName.name }}
-        <span v-for="n in myEffort.assigned" :key="n">
-          <div class="mobile-effort full rounded-circle" />
-        </span>
-        <span v-for="n in myEffort.available" :key="n">
-          <div class="mobile-effort rounded-circle" />
-        </span>
+        <h3>{{ myName.name }}
+          <span v-for="n in myEffort.assigned" :key="'n-' + n">
+            <div class="mobile-effort full rounded-circle" />
+          </span>
+          <span v-for="a in myEffort.available" :key="'a-' + a">
+            <div class="mobile-effort rounded-circle" />
+          </span>
+        </h3>
       </div>
-      <table>
-        <thead>
-          <tr>
-            <th class="mobile-header-column">
-              Column
-            </th>
-            <th class="mobile-header-cards">
-              Cards
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(column, index) in columns" :key="index">
-            <td v-if="column.name != 'done'">
-              {{ columnName(column.name) }}
-            </td>
-            <td v-if="column.name != 'done'">
-              <div v-for="(card, cindex) in column.cards" :key="cindex" class="mobile-card">
-                <div v-if="card.urgent" class="urgent">
-                  URGENT
-                </div>
-                <div class="mobile-card-header">
-                  <div class="right">
-                    {{ effortDone(card) }}/{{ totalEffort(card) }}
-                  </div>
-                  <div class="left">
-                    #{{ card.number }}
-                  </div>
-                </div>
-                <table>
-                  <tr>
-                    <td>
-                      <div class="mobile-card-column design rounded" :class="{ 'complete': card.effort.design >= card.design }" @click="addEffort(card, 'design')">
-                        {{ card.effort.design }} / {{ card.design }}
-                      </div>
-                    </td>
-                    <td>
-                      <div class="mobile-card-column develop rounded" :class="{ 'complete': card.effort.develop >= card.develop }" @click="addEffort(card, 'develop')">
-                        {{ card.effort.develop }} / {{ card.develop }}
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <div class="mobile-card-column test rounded" :class="{ 'complete': card.effort.test >= card.test }" @click="addEffort(card, 'test')">
-                        {{ card.effort.test }} / {{ card.test }}
-                      </div>
-                    </td>
-                    <td>
-                      <div class="mobile-card-column deploy rounded" :class="{ 'complete': card.effort.deploy >= card.deploy }" @click="addEffort(card, 'deploy')">
-                        {{ card.effort.deploy }} / {{ card.deploy }}
-                      </div>
-                    </td>
-                  </tr>
-                </table>
+      <div v-for="(column, index) in columns" :key="index">
+        <div v-if="column.name != 'done'" class="mobile-column" :class="column.name">
+          <h4 class="mobile-column-header" :class="column.name">{{ columnName(column.name) }}</h4>
+          <div v-for="(card, cindex) in column.cards" :key="cindex" class="mobile-card">
+            <div v-if="card.urgent" class="urgent">
+              URGENT
+            </div>
+            <div class="mobile-card-header">
+              <div class="right">
+                {{ effortDone(card) }}/{{ totalEffort(card) }}
               </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+              <div class="left">
+                #{{ card.number }}
+              </div>
+            </div>
+            <table>
+              <tr>
+                <td>
+                  <div class="mobile-card-column design rounded" :class="{ 'complete': card.effort.design >= card.design }" @click="addEffort(card, 'design')">
+                    {{ card.effort.design }} / {{ card.design }}
+                  </div>
+                </td>
+                <td>
+                  <div class="mobile-card-column develop rounded" :class="{ 'complete': card.effort.develop >= card.develop }" @click="addEffort(card, 'develop')">
+                    {{ card.effort.develop }} / {{ card.develop }}
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="mobile-card-column test rounded" :class="{ 'complete': card.effort.test >= card.test }" @click="addEffort(card, 'test')">
+                    {{ card.effort.test }} / {{ card.test }}
+                  </div>
+                </td>
+                <td>
+                  <div class="mobile-card-column deploy rounded" :class="{ 'complete': card.effort.deploy >= card.deploy }" @click="addEffort(card, 'deploy')">
+                    {{ card.effort.deploy }} / {{ card.deploy }}
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -212,8 +198,10 @@ export default {
       return card.design + card.develop + card.test + card.deploy
     },
     addEffort(card, column) {
-      const str = [column, card.effort[column], card[column], card.effort[column] < card[column]].join(', ')
-      alert(str)
+      if (card.effort[column] < card[column]) {
+        const str = 'Adding effort to #' + card.number + ' in ' + column
+        alert(str)
+      }
     }
   }
 }
@@ -225,6 +213,19 @@ $develop: #76a001;
 $test: #0067b1;
 $deploy: #4f0384;
 $done: navy;
+
+.design {
+  background-color: $design;
+}
+.develop {
+  background-color: $develop;
+}
+.test {
+  background-color: $test;
+}
+.deploy {
+  background-color: $deploy;
+}
 
 .mobile {
   width: 375px;
@@ -251,13 +252,12 @@ $done: navy;
   .game {
 
     .mobile-effort {
-      width: 12px;
-      height: 12px;
+      width: 16px;
+      height: 16px;
       border: 1px solid;
       display: inline-block;
       margin: 0 2px;
       position: relative;
-      top: 2px;
       color: #444;
       box-shadow: 2px 2px 3px #444;
 
@@ -266,8 +266,13 @@ $done: navy;
       }
     }
 
-    .mobile-header-column {
-      width: 25%;
+    .mobile-column-header {
+      color: #fff;
+      padding: 3px;
+    }
+
+    .mobile-column {
+      padding-bottom: 12px;
     }
 
     .mobile-header-cards {
@@ -275,10 +280,15 @@ $done: navy;
     }
 
     .mobile-card {
-      border: 1px solid;
-      margin: 12px;
+      background-color: #fff;
+      width: 80%;
+      margin: 12px auto;
       box-shadow: 2px 2px 3px #444;
       color: #444;
+
+      .mobile-card-header {
+        font-weight: bold;
+      }
 
       .left {
         text-align: left;
@@ -302,7 +312,7 @@ $done: navy;
       .mobile-card-column {
         margin: 0 auto;
         width: 100px;
-        margin: 6px;
+        margin: 6px auto;
         padding: 12px;
         border: 1px solid;
         font-weight: bold;
@@ -312,19 +322,6 @@ $done: navy;
           border: 1px dashed #aaa;
           color: #aaa;
           background-color: #fff !important;
-        }
-
-        &.design {
-          background-color: $design;
-        }
-        &.develop {
-          background-color: $develop;
-        }
-        &.test {
-          background-color: $test;
-        }
-        &.deploy {
-          background-color: $deploy;
         }
       }
     }

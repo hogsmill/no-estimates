@@ -106,6 +106,7 @@ export const store = new Vuex.Store({
     facilitatorMessages: {},
     config: {
       facilitatorStarts: false,
+      allowMobile: false,
       gameRunning: false,
       doRetros: false,
       retroDays: 7,
@@ -276,6 +277,9 @@ export const store = new Vuex.Store({
     },
     getFacilitatorStarts: (state) => {
       return state.config.facilitatorStarts
+    },
+    getAllowMobile: (state) => {
+      return state.config.allowMobile
     },
     getGameRunning: (state) => {
       return state.config.gameRunning

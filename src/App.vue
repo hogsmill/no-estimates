@@ -16,7 +16,7 @@
       </div>
       <SetGame :socket="socket" />
       <SetEstimates v-if="gameName" :socket="socket" />
-      <GoMobile />
+      <GoMobile v-if="allowMobile" />
       <Status :socket="socket" />
       <div class="container board">
         <h3 class="board-title">
@@ -113,6 +113,9 @@ export default {
     },
     myTeamMembers() {
       return this.$store.getters.getMyTeamMembers
+    },
+    allowMobile() {
+      return this.$store.getters.getAllowMobile
     }
   },
   created() {

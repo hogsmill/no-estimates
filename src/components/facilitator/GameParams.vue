@@ -14,6 +14,12 @@
       </td>
     </tr>
     <tr v-if="showGameParams">
+      <td>Allow mobile?: </td>
+      <td colspan="3" class="left">
+        <input type="checkbox" id="allow-mobile" class="form-control" :checked="allowMobile" @click="saveAllowMobile()">
+      </td>
+    </tr>
+    <tr v-if="showGameParams">
       <td>Blocked frequency: </td>
       <td class="center">
         <input type="text" id="percentage-blocked" class="form-control" :value="percentageBlocked">
@@ -133,6 +139,9 @@ export default {
     facilitatorStarts() {
       return this.$store.getters.getFacilitatorStarts
     },
+    allowMobile() {
+      return this.$store.getters.getAllowMobile
+    },
     percentageBlocked() {
       return this.$store.getters.getPercentageBlocked
     },
@@ -188,6 +197,10 @@ export default {
       const facilitatorStarts = document.getElementById('facilitator-starts').checked
       this.socket.emit('updateConfig', {gameName: this.gameName, field: 'facilitatorStarts', value: facilitatorStarts})
     },
+    saveAllowMobile() {
+      const allowMobile = document.getElementById('allow-mobile').checked
+      this.socket.emit('updateConfig', {gameName: this.gameName, field: 'allowMobile', value: allowMobile})
+    },
     savePercentageBlocked() {
       const percentageBlocked = document.getElementById('percentage-blocked').value
       this.socket.emit('updateConfig', {gameName: this.gameName, field: 'percentageBlocked', value: percentageBlocked})
@@ -210,7 +223,7 @@ export default {
 </script>
 
 <style lang="scss">
-  #facilitator-starts {
+  #facilitator-starts, #allow-mobile {
     margin: 0;
   }
   .mvp-label {

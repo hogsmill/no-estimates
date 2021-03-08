@@ -16,6 +16,7 @@
       </div>
       <SetGame :socket="socket" />
       <SetEstimates v-if="gameName" :socket="socket" />
+      <GoMobile />
       <Status :socket="socket" />
       <div class="container board">
         <h3 class="board-title">
@@ -47,6 +48,7 @@ import Header from './components/Header.vue'
 import HostFunctions from './components/HostFunctions.vue'
 import Report from './components/report/Report.vue'
 import Results from './components/facilitator/Results.vue'
+import GoMobile from './components/GoMobile.vue'
 import SetGame from './components/SetGame.vue'
 import SetEstimates from './components/SetEstimates.vue'
 import Status from './components/Status.vue'
@@ -69,6 +71,7 @@ export default {
     FacilitatorView,
     MobileView,
     WalkThroughView,
+    GoMobile,
     SetGame,
     SetEstimates,
     Status,

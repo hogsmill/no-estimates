@@ -23,9 +23,6 @@
         <li v-if="isHost" class="nav-item" :class="{ active: currentTab == 'facilitator' }">
           <a class="nav-link pointer" @click="setCurrentTab('facilitator')">Facilitator</a>
         </li>
-        <li v-if="isHost" class="nav-item" :class="{ active: currentTab == 'mobile' }">
-          <a class="nav-link pointer" @click="setCurrentTab('mobile')">Mobile</a>
-        </li>
         <li class="nav-item">
           <a class="nav-link pointer" @click="show()">Feedback</a>
         </li>

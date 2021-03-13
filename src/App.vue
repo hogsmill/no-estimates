@@ -6,9 +6,6 @@
     <div v-if="currentTab == 'facilitator'">
       <FacilitatorView :socket="socket" />
     </div>
-    <div v-if="currentTab == 'mobile'">
-      <MobileView :socket="socket" />
-    </div>
     <div v-if="currentTab == 'game'" class="main">
       <HostFunctions v-if="isHost" :socket="socket" />
       <div v-if="!connections.connections" class="not-connected">
@@ -54,7 +51,6 @@ import SetEstimates from './components/SetEstimates.vue'
 import Status from './components/Status.vue'
 import Message from './components/Message.vue'
 import FacilitatorView from './components/FacilitatorView.vue'
-import MobileView from './components/MobileView.vue'
 import WalkThroughView from './components/about/WalkThroughView.vue'
 
 import Roles from './components/Roles.vue'
@@ -69,7 +65,6 @@ export default {
     Header,
     HostFunctions,
     FacilitatorView,
-    MobileView,
     WalkThroughView,
     GoMobile,
     SetGame,

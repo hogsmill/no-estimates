@@ -77,13 +77,11 @@ function emit(event, data) {
   io.emit(event, data)
 }
 
-function doDb(fun, data) {
-  currentAction = fun
-  currentData = data
-  MongoClient.connect(url, { useUnifiedTopology: true, maxIdleTimeMS: maxIdleTime }, function (err, client) {
-    if (err) throw err
-    const db = client.db('db')
+MongoClient.connect(url, { useUnifiedTopology: true, maxIdleTimeMS: maxIdleTime }, function (err, client) {
+  if (err) throw err
+  const db = client.db('db')
 
+/*
     switch(fun) {
       case 'getAvailableGames':
         dbStore.getAvailableGames(db, io, data, debugOn)
@@ -171,7 +169,7 @@ function doDb(fun, data) {
      //
      case 'gameState':
        dbStore.gameState(db, io, data)
-       break
+        break
     case 'getGames':
       dbStore.getGames(db, io, data, debugOn)
       break
@@ -238,153 +236,151 @@ function doDb(fun, data) {
       case 'setupRunGame':
         runGame.setUp(db, io, data, debugOn)
         break
+      */
 
-      default:
-        console.log('Unknown function: \'' + fun + '\'')
-    }
-  })
-}
-
-io.on('connection', (socket) => {
-  const connection = socket.handshake.headers.host
-  connections[connection] = connections[connection] ? connections[connection] + 1 : 1
-  if (Object.keys(connections).length > maxConnections || connections[connection] > maxConnections) {
-    console.log(`Too many connections. Socket ${socket.id} closed`)
-    socket.disconnect(0)
-  } else {
-    connectDebugOff || console.log(`A user connected with socket id ${socket.id} from ${connection} - ${connections[connection]} connections. (${Object.keys(connections).length} clients)`)
-    emit('updateConnections', {connections: connections, maxConnections: maxConnections})
-  }
-
-  socket.on('disconnect', () => {
+  io.on('connection', (socket) => {
     const connection = socket.handshake.headers.host
-    connections[connection] = connections[connection] - 1
-    connectDebugOff || console.log(`User with socket id ${socket.id} has disconnected.`)
-    emit('updateConnections', {connections: connections, maxConnections: maxConnections})
+    connections[connection] = connections[connection] ? connections[connection] + 1 : 1
+    if (Object.keys(connections).length > maxConnections || connections[connection] > maxConnections) {
+      console.log(`Too many connections. Socket ${socket.id} closed`)
+      socket.disconnect(0)
+    } else {
+      connectDebugOff || console.log(`A user connected with socket id ${socket.id} from ${connection} - ${connections[connection]} connections. (${Object.keys(connections).length} clients)`)
+      emit('updateConnections', {connections: connections, maxConnections: maxConnections})
+    }
+
+    socket.on('disconnect', () => {
+      const connection = socket.handshake.headers.host
+      connections[connection] = connections[connection] - 1
+      connectDebugOff || console.log(`User with socket id ${socket.id} has disconnected.`)
+      emit('updateConnections', {connections: connections, maxConnections: maxConnections})
+    })
+
+    socket.on('getAvailableGames', (data) => { dbStore.getAvailableGames(db, io, data, debugOn) })
+
+    socket.on('loadGame', (data) => { dbStore.loadGame(db, io, data, debugOn) })
+
+    socket.on('makeCaptain', (data) => { dbStore.makeCaptain(db, io, data, debugOn) })
+
+    socket.on('restartGame', (data) => { dbStore.restartGame(db, io, data, debugOn) })
+
+    socket.on('sendRestartGame', (data) => { dbStore.restartGame(db, io, data, debugOn) })
+
+    socket.on('deleteGame', (data) => {
+      dbStore.deleteGameMeta(db, io, data, debugOn)
+      dbStore.deleteGame(db, io, data, debugOn)
+    })
+
+    socket.on('showSetEstimates', (data) => { emit('showSetEstimates', data) })
+
+    socket.on('retro', (data) => { emit('retro', data) })
+
+    socket.on('retroDone', (data) => { dbStore.retroDone(db, io, data, debugOn) })
+
+    socket.on('showEventCard', (data) => { emit('showEventCard', data) })
+
+    socket.on('updateCurrentDay', (data) => { dbStore.updateCurrentDay(db, io, data, debugOn) })
+
+    socket.on('hide', (data) => { emit('hide', data) })
+
+    socket.on('pullInCard', (data) => { dbStore.pullInCard(db, io, data, debugOn) })
+
+    socket.on('hint', (data) => { emit('hint', data) })
+
+    socket.on('updatePersonEffort', (data) => { emit('updatePersonEffort', data) })
+
+    socket.on('updatePersonAutoDeployEffort', (data) => { emit('updatePersonAutoDeployEffort', data) })
+
+    socket.on('updateEffort', (data) => { dbStore.updateEffort(db, io, data, debugOn) })
+
+    socket.on('pairingDay', (data) => { dbStore.pairingDay(db, io, data, debugOn) })
+
+    socket.on('resetEffort', (data) => { emit('resetEffort', data) })
+
+    socket.on('addEffortToOthersCard', (data) => { dbStore.addEffortToOthersCard(db, io, data, debugOn) })
+
+    socket.on('updateOtherTeamEffort', (data) => { emit('updateOtherTeamEffort', data) })
+
+    socket.on('sendMessage', (data) => { dbStore.sendMessage(db, io, data, debugOn) })
+
+    socket.on('sendMessageToFacilitators', (data) => { dbStore.sendMessageToFacilitators(db, io, data, debugOn) })
+
+    socket.on('updateMessages', (data) => { dbStore.updateMessages(db, io, data, debugOn) })
+
+    socket.on('updateFacilitatorMessages', (data) => { dbStore.updateFacilitatorMessages(db, io, data, debugOn) })
+
+    socket.on('answerFacilitatorQuestion', (data) => { dbStore.answerFacilitatorQuestion(db, io, data, debugOn) })
+
+    socket.on('updateProjectEstimate', (data) => { dbStore.updateProjectEstimate(db, io, data, debugOn) })
+
+    socket.on('updateMVPEstimate', (data) => { dbStore.updateMVPEstimate(db, io, data, debugOn) })
+
+    socket.on('updateReEstimate', (data) => { dbStore.updateReEstimate(db, io, data, debugOn) })
+
+    socket.on('startAutoDeploy', (data) => { dbStore.startAutoDeploy(db, io, data, debugOn) })
+
+    socket.on('incrementAutoDeploy', (data) => { dbStore.incrementAutoDeploy(db, io, data, debugOn) })
+
+    // Facilitator View
+
+    socket.on('updateConfig', (data) => { dbStore.updateConfig(db, io, data, debugOn) })
+
+    socket.on('broadcastMessage', (data) => { emit('broadcastMessage', data) })
+
+    socket.on('updateStealth', (data) => { dbStore.updateStealth(db, io, data, debugOn) })
+
+    socket.on('updateTeamActive', (data) => { dbStore.updateTeamActive(db, io, data, debugOn) })
+
+    socket.on('updateGameInclude', (data) => { dbStore.updateGameInclude(db, io, data, debugOn) })
+
+    // Game State
+
+    socket.on('getGames', (data) => { dbStore.getGames(db, io, data, debugOn) })
+
+    socket.on('getGameDetails', (data) => { dbStore.getGameDetails(db, io, data, debugOn) })
+
+    socket.on('gameState', (data) => { dbStore.gameState(db, io, data) })
+
+    // Results
+
+    socket.on('showGameResult', (data) => { results.showGameResult(db, io, data, debugOn) })
+
+    socket.on('showAllTeamsResult', (data) => { results.showAllTeamsResult(db, io, data, debugOn) })
+
+    socket.on('showSingleTeamResult', (data) => { results.showSingleTeamResult(db, io, data, debugOn) })
+
+    socket.on('showMultipleTeamsResult', (data) => { results.showMultipleTeamsResult(db, io, data, debugOn) })
+
+    socket.on('showSourceOfVariation', (data) => { results.showSourceOfVariation(db, io, data, debugOn) })
+
+    socket.on('setWipUseMovingAverage', (data) => { results.setWipUseMovingAverage(db, io, data, debugOn) })
+
+    socket.on('setWipUseDays', (data) => { results.setWipUseDays(db, io, data, debugOn) })
+
+    socket.on('setCumulativeFlowUseDays', (data) => { results.setCumulativeFlowUseDays(db, io, data, debugOn) })
+
+    socket.on('setCardSize', (data) => { results.setCardSize(db, io, data, debugOn) })
+
+    socket.on('setMonteCarloRunTo', (data) => { results.setMonteCarloRunTo(db, io, data, debugOn) })
+
+    socket.on('setMonteCarloRuns', (data) => { results.setMonteCarloRuns(db, io, data, debugOn) })
+
+    // Demo
+
+    socket.on('sendSetDemoRunTo', (data) => { dbStore.setDemoRunTo(db, io, data, debugOn) })
+
+    socket.on('sendSetDemoStepThrough', (data) => { dbStore.setDemoStepThrough(db, io, data, debugOn) })
+
+    socket.on('sendSetDemoRunning', (data) => { dbStore.setDemoRunning(db, io, data, debugOn) })
+
+    socket.on('runDemoToMvp', (data) => { demo.runDemoToMvp(db, io, data, debugOn) })
+
+    socket.on('runDemoToEnd', (data) => { demo.runDemoToEnd(db, io, data, debugOn) })
+
+    socket.on('sendRunDemoGame', (data) => { runGame.run(db, io, data, debugOn) })
+
+    socket.on('sendSetupRunGame', (data) => { runGame.setUp(db, io, data, debugOn) })
   })
-
-  socket.on('getAvailableGames', (data) => { doDb('getAvailableGames', data) })
-
-  socket.on('loadGame', (data) => { doDb('loadGame', data) })
-
-  socket.on('makeCaptain', (data) => { doDb('makeCaptain', data) })
-
-  socket.on('restartGame', (data) => { doDb('restartGame', data) })
-
-  socket.on('deleteGame', (data) => {
-    doDb('deleteGameMeta', data)
-    doDb('deleteGame', data)
-  })
-
-  socket.on('showSetEstimates', (data) => { emit('showSetEstimates', data) })
-
-  socket.on('retro', (data) => { emit('retro', data) })
-
-  socket.on('retroDone', (data) => { doDb('retroDone', data) })
-
-  socket.on('showEventCard', (data) => { emit('showEventCard', data) })
-
-  socket.on('updateCurrentDay', (data) => { doDb('updateCurrentDay', data) })
-
-  socket.on('hide', (data) => { emit('hide', data) })
-
-  socket.on('pullInCard', (data) => { doDb('pullInCard', data) })
-
-  socket.on('hint', (data) => { emit('hint', data) })
-
-  socket.on('updatePersonEffort', (data) => { emit('updatePersonEffort', data) })
-
-  socket.on('updatePersonAutoDeployEffort', (data) => { emit('updatePersonAutoDeployEffort', data) })
-
-  socket.on('updateEffort', (data) => { doDb('updateEffort', data) })
-
-  socket.on('pairingDay', (data) => { doDb('pairingDay', data) })
-
-  socket.on('resetEffort', (data) => { emit('resetEffort', data) })
-
-  socket.on('addEffortToOthersCard', (data) => { doDb('addEffortToOthersCard', data) })
-
-  socket.on('updateOtherTeamEffort', (data) => { emit('updateOtherTeamEffort', data) })
-
-  socket.on('sendMessage', (data) => { doDb('sendMessage', data) })
-
-  socket.on('sendMessageToFacilitators', (data) => { doDb('sendMessageToFacilitators', data) })
-
-  socket.on('updateMessages', (data) => { doDb('updateMessages', data) })
-
-  socket.on('updateFacilitatorMessages', (data) => { doDb('updateFacilitatorMessages', data) })
-
-  socket.on('answerFacilitatorQuestion', (data) => { doDb('answerFacilitatorQuestion', data) })
-
-  socket.on('updateProjectEstimate', (data) => { doDb('updateProjectEstimate', data) })
-
-  socket.on('updateMVPEstimate', (data) => { doDb('updateMVPEstimate', data) })
-
-  socket.on('updateReEstimate', (data) => { doDb('updateReEstimate', data) })
-
-  socket.on('startAutoDeploy', (data) => { doDb('startAutoDeploy', data) })
-
-  socket.on('incrementAutoDeploy', (data) => { doDb('incrementAutoDeploy', data) })
-
-  // Facilitator View
-
-  socket.on('updateConfig', (data) => { doDb('updateConfig', data) })
-
-  socket.on('broadcastMessage', (data) => { emit('broadcastMessage', data) })
-
-  socket.on('updateStealth', (data) => { doDb('updateStealth', data) })
-
-  socket.on('updateTeamActive', (data) => { doDb('updateTeamActive', data) })
-
-  socket.on('updateGameInclude', (data) => { doDb('updateGameInclude', data) })
-
-  socket.on('getGames', (data) => { doDb('getGames', data) })
-
-  socket.on('getGameDetails', (data) => { doDb('getGameDetails', data) })
-
-  // Game State
-
-  socket.on('gameState', (data) => { doDb('gameState', data) })
-
-  // Results
-
-  socket.on('showGameResult', (data) => { doDb('showGameResult', data) })
-
-  socket.on('showAllTeamsResult', (data) => { doDb('showAllTeamsResult', data) })
-
-  socket.on('showSingleTeamResult', (data) => { doDb('showSingleTeamResult', data) })
-
-  socket.on('showMultipleTeamsResult', (data) => { doDb('showMultipleTeamsResult', data) })
-
-  socket.on('showSourceOfVariation', (data) => { doDb('showSourceOfVariation', data) })
-
-  socket.on('setWipUseMovingAverage', (data) => { doDb('setWipUseMovingAverage', data) })
-
-  socket.on('setWipUseDays', (data) => { doDb('setWipUseDays', data) })
-
-  socket.on('setCumulativeFlowUseDays', (data) => { doDb('setCumulativeFlowUseDays', data) })
-
-  socket.on('setCardSize', (data) => { doDb('setCardSize', data) })
-
-  socket.on('setMonteCarloRunTo', (data) => { doDb('setMonteCarloRunTo', data) })
-
-  socket.on('setMonteCarloRuns', (data) => { doDb('setMonteCarloRuns', data) })
-
-  // Demo
-
-  socket.on('setDemoRunTo', (data) => { doDb('setDemoRunTo', data) })
-
-  socket.on('setDemoStepThrough', (data) => { doDb('setDemoStepThrough', data) })
-
-  socket.on('setDemoRunning', (data) => { doDb('setDemoRunning', data) })
-
-  socket.on('runDemoToMvp', (data) => { doDb('runDemoToMvp', data) })
-
-  socket.on('runDemoToEnd', (data) => { doDb('runDemoToEnd', data) })
-
-  socket.on('runDemoGame', (data) => { doDb('runDemoGame', data) })
-
-  socket.on('setupRunGame', (data) => { doDb('setupRunGame', data) })
 })
 
 const port = process.argv[2] || 3007

@@ -126,7 +126,7 @@ module.exports = {
 
   run: function(db, io, data, debugOn) {
 
-    if (debugOn) { console.log('runTo', data) }
+    if (debugOn) { console.log('run', data) }
 
     db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, res) {
       if (err) throw err

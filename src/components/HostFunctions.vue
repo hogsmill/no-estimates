@@ -37,14 +37,14 @@
 </template>
 
 <script>
+import bus from '../socket.js'
+
 export default {
-  props: [
-    'socket'
-  ],
   data() {
     return {
       showRunGame: false,
       membersAdded: false,
+      runComplete: false
     }
   },
   computed: {
@@ -72,7 +72,8 @@ export default {
   },
   created() {
     const self = this
-    this.socket.on('loadTeam', (data) => {
+    bus.$on('loadTeam', (data) => {
+      console.log('loadTeam', data)
       if (self.demoConfig.running && self.gameName == data.gameName && self.teamName == data.teamName) {
         self.checkRunComplete(data)
         if (!self.runComplete) {
@@ -83,7 +84,7 @@ export default {
       }
     })
 
-    this.socket.on('startRun', (data) => {
+    bus.$on('startRun', (data) => {
       if (self.gameName == data.gameName) {
         self.run()
       }
@@ -94,7 +95,7 @@ export default {
       this.showRunGame = val
     },
     setRunTo(runTo) {
-      this.socket.emit('setDemoRunTo', {gameName: this.gameName, runTo: runTo})
+      bus.$emit('sendSetDemoRunTo', {gameName: this.gameName, runTo: runTo})
     },
     clearLocalStorage() {
       if (confirm('Clear localStorage?')) {
@@ -109,39 +110,35 @@ export default {
     },
     setStepThrough() {
       const stepThrough = document.getElementById('step-through').checked
-      this.socket.emit('setDemoStepThrough', {gameName: this.gameName, stepThrough: stepThrough})
+      bus.$emit('setDemoStepThrough', {gameName: this.gameName, stepThrough: stepThrough})
 
     },
     checkRunComplete(data) {
-    console.log(data.teamName, data.columns.find(function(c) {
-      return c.name == 'done'
-    }).cards.length + ' >= ' + this.demoConfig.runToCards)
-
       this.runComplete = data.columns.find(function(c) {
         return c.name == 'done'
       }).cards.length >= this.demoConfig.runToCards
     },
     setUpGame() {
-      this.socket.emit('setupRunGame', {gameName: this.gameName})
+      bus.$emit('sendSetupRunGame', {gameName: this.gameName})
     },
     runGame() {
-      this.socket.emit('setDemoRunning', {gameName: this.gameName, running: true})
+      bus.$emit('sendSetDemoRunning', {gameName: this.gameName, running: true})
     },
     stopGame() {
-      this.socket.emit('setDemoRunning', {gameName: this.gameName, running: false})
+      bus.$emit('sendSetDemoRunning', {gameName: this.gameName, running: false})
     },
     run() {
       if (this.runComplete) {
         console.log('Run Complete to ' + this.demoConfig.runToCards + ' cards')
       } else {
-        this.socket.emit('runDemoGame', {gameName: this.gameName, teamName: this.teamName})
+        bus.$emit('sendRunDemoGame', {gameName: this.gameName, teamName: this.teamName})
       }
     },
     restartGame() {
       const restartGame = confirm('Are you sure you want to re-start this game?')
       if (restartGame) {
-        this.socket.emit('setDemoRunning', {gameName: this.gameName, running: false})
-        this.socket.emit('restartGame', {gameName: this.gameName, stealth: this.stealth})
+        bus.$emit('sendSetDemoRunning', {gameName: this.gameName, running: false})
+        bus.$emit('sendRestartGame', {gameName: this.gameName, stealth: this.stealth})
       }
     },
   }

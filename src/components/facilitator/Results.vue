@@ -281,6 +281,8 @@
 </template>
 
 <script>
+import bus from '../../socket.js'
+
 import correlation from './graphConfig/correlation.js'
 import wip from './graphConfig/wip.js'
 import valueDelivered from './graphConfig/valueDelivered.js'
@@ -306,9 +308,6 @@ export default {
     LineChart,
     ScatterPlot
   },
-  props: [
-    'socket'
-  ],
   data() {
     return {
       modals: [
@@ -389,7 +388,7 @@ export default {
   },
   created() {
     const self = this
-    this.socket.on('showResult', (data) => {
+    bus.$on('showResult', (data) => {
       if (this.hostId == data.hostId && data.target == 'game') {
         for (let i = 0; i < this.modals.length; i++) {
           self.hide(this.modals[i])
@@ -434,7 +433,7 @@ export default {
       }
     })
 
-    this.socket.on('updateSourcesOfVariation', (data) => {
+    bus.$on('updateSourcesOfVariation', (data) => {
       if (this.gameName == data.gameName) {
         self.$store.dispatch('updateSourcesOfVariation', data.results)
       }
@@ -457,7 +456,7 @@ export default {
       this.$modal.show('sources-of-variation')
     },
     showSourceOfVariation(source) {
-      this.socket.emit('showSourceOfVariation', {gameName: this.gameName, source: source})
+      bus.$emit('sendShowSourceOfVariation', {gameName: this.gameName, source: source})
     },
     showValueDelivered(data) {
       this.valueDelivered.data.labels = data.results.teams

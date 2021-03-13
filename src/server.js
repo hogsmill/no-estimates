@@ -351,7 +351,7 @@ MongoClient.connect(url, { useUnifiedTopology: true, maxIdleTimeMS: maxIdleTime 
 
     socket.on('sendShowMultipleTeamsResult', (data) => { results.showMultipleTeamsResult(db, io, data, debugOn) })
 
-    socket.on('showSourceOfVariation', (data) => { results.showSourceOfVariation(db, io, data, debugOn) })
+    socket.on('sendShowSourceOfVariation', (data) => { results.showSourceOfVariation(db, io, data, debugOn) })
 
     socket.on('sendSetWipUseMovingAverage', (data) => { results.setWipUseMovingAverage(db, io, data, debugOn) })
 

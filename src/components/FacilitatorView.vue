@@ -2,8 +2,8 @@
   <div class="container about">
     <h1>No Estimates - <span v-if="stealth">(Stealth)</span> Facilitator View</h1>
     <Connections />
-    <GameMessaging :socket="socket" />
-    <GameDisplay :socket="socket" />
+    <GameMessaging />
+    <GameDisplay />
     <GameParams :socket="socket" />
     <GameState :socket="socket" />
     <Games :socket="socket" />

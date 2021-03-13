@@ -14,7 +14,7 @@ const socket = io(connStr)
 
 bus.$on('sendRestartGame', (data) => { socket.emit('sendRestartGame', data) })
 
-// Graphs
+// Results
 
 bus.$on('sendShowGameResult', (data) => { socket.emit('sendShowGameResult', data) })
 
@@ -36,6 +36,8 @@ bus.$on('sendSetMonteCarloRuns', (data) => { socket.emit('sendSetMonteCarloRuns'
 
 bus.$on('sendSetMonteCarloRunTo', (data) => { socket.emit('sendSetMonteCarloRunTo', data) })
 
+bus.$on('sendShowSourceOfVariation', (data) => { socket.emit('sendShowSourceOfVariation', data) })
+
 // Demo
 
 bus.$on('sendSetDemoStepThrough', (data) => { socket.emit('sendSetDemoStepThrough', data) })
@@ -52,9 +54,15 @@ bus.$on('sendRunDemoGame', (data) => { socket.emit('sendRunDemoGame', data) })
 
 socket.on('sendBroadcastMessage', (data) => { bus.$emit('sendBroadcastMessage', data) })
 
+socket.on('loadTeam', (data) => { bus.$emit('loadTeam', data) })
+
 // Facilitator
 
-socket.on('loadTeam', (data) => { bus.$emit('loadTeam', data) })
+// Graphs
+
+socket.on('showResult', (data) => { bus.$emit('showResult', data) })
+
+socket.on('updateSourcesOfVariation', (data) => { bus.$emit('updateSourcesOfVariation', data) })
 
 // Demo
 

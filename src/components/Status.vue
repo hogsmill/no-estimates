@@ -16,12 +16,11 @@
 </template>
 
 <script>
+import bus from '../socket.js'
+
 import stringFuns from '../lib/stringFuns.js'
 
 export default {
-  props: [
-    'socket'
-  ],
   data() {
     return {
       status: '',
@@ -38,28 +37,28 @@ export default {
   },
   mounted() {
     const self = this
-    this.socket.on('hint', (data) => {
+    bus.$on('hint', (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         self.setStatus(data.hint, 'hint')
       }
     })
-    this.socket.on('updatePersonEffort', (data) => {
+    bus.$on('updatePersonEffort', (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         const column = stringFuns.properCase(data.column)
         self.setStatus(data.name.name + ' has added effort to card #' + data.workCard.number + ' in ' + column, 'info')
       }
     })
-    this.socket.on('updatePersonAutoDeployEffort', (data) => {
+    bus.$on('updatePersonAutoDeployEffort', (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         self.setStatus(data.name.name + ' has added Auto Deploy effort', 'info')
       }
     })
-    this.socket.on('updateOtherTeamEffort', (data) => {
+    bus.$on('updateOtherTeamEffort', (data) => {
       if (this.gameName == data.gameName && this.teamName != data.teamName) {
         self.setStatus('Team ' + data.teamName + ' has added effort to card #' + data.card.number, 'info')
       }
     })
-    this.socket.on('broadcastMessage', (data) => {
+    bus.$on('broadcastMessage', (data) => {
       if (this.gameName == data.gameName) {
         if (data.sendTo == 'Everybody' || data.sendTo == this.teamName) {
           self.setStatus(data.message, 'urgent')

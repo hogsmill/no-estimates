@@ -28,7 +28,7 @@
         </div>
         <Roles />
         <Message :socket="socket" />
-        <Day :socket="socket" />
+        <Day />
         <Board :socket="socket" />
       </div>
     </div>

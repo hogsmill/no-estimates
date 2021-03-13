@@ -273,15 +273,15 @@ MongoClient.connect(url, { useUnifiedTopology: true, maxIdleTimeMS: maxIdleTime 
 
     socket.on('showSetEstimates', (data) => { emit('showSetEstimates', data) })
 
-    socket.on('retro', (data) => { emit('retro', data) })
+    socket.on('sendRetro', (data) => { emit('retro', data) })
 
-    socket.on('retroDone', (data) => { dbStore.retroDone(db, io, data, debugOn) })
+    socket.on('sendRetroDone', (data) => { dbStore.retroDone(db, io, data, debugOn) })
 
-    socket.on('showEventCard', (data) => { emit('showEventCard', data) })
+    socket.on('sendShowEventCard', (data) => { emit('showEventCard', data) })
 
     socket.on('updateCurrentDay', (data) => { dbStore.updateCurrentDay(db, io, data, debugOn) })
 
-    socket.on('hide', (data) => { emit('hide', data) })
+    socket.on('sendHide', (data) => { emit('hide', data) })
 
     socket.on('pullInCard', (data) => { dbStore.pullInCard(db, io, data, debugOn) })
 

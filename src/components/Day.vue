@@ -57,12 +57,11 @@
 </template>
 
 <script>
+import bus from '../socket.js'
+
 import stringFuns from '../lib/stringFuns.js'
 
 export default {
-  props: [
-    'socket'
-  ],
   data() {
     return {
       retroTimeLeft: 0,
@@ -118,13 +117,13 @@ export default {
   },
   created() {
     const self = this
-    this.socket.on('retro', (data) => {
+    bus.$on('retro', (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         self.show()
       }
     })
 
-    this.socket.on('hide', (data) => {
+    bus.$on('hide', (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         self.$modal.hide(data.popup)
       }
@@ -155,7 +154,7 @@ export default {
     },
     hide() {
       this.retroTimerRunning = false
-      this.socket.emit('hide', {gameName: this.gameName, teamName: this.teamName, popup: 'retro'})
+      bus.$emit('sendHide', {gameName: this.gameName, teamName: this.teamName, popup: 'retro'})
     },
     retroTimeString() {
       if (!this.retroTimer) {
@@ -206,11 +205,11 @@ export default {
         return
       }
       if (this.doRetros && !this.retrosDone[this.currentDay] && this.currentDay % this.retroDays == 0) {
-        this.socket.emit('retro', {gameName: this.gameName, teamName: this.teamName})
-        this.socket.emit('retroDone', {gameName: this.gameName, teamName: this.teamName, currentDay: this.currentDay})
+        bus.$emit('sendRetro', {gameName: this.gameName, teamName: this.teamName})
+        bus.$emit('sendRetroDone', {gameName: this.gameName, teamName: this.teamName, currentDay: this.currentDay})
       } else {
         this.hide()
-        this.socket.emit('showEventCard', {gameName: this.gameName, teamName: this.teamName})
+        bus.$emit('sendShowEventCard', {gameName: this.gameName, teamName: this.teamName})
       }
     }
   }

@@ -256,15 +256,14 @@
 <script>
 import { v4 as uuidv4 } from 'uuid'
 
+import bus from '../../socket.js'
+
 import Teams from './teams/Teams.vue'
 
 export default {
   components: {
     Teams
   },
-  props: [
-    'socket'
-  ],
   data() {
     return {
       showGameDisplay: false,
@@ -315,7 +314,7 @@ export default {
       this.showMonteCarloConfig = val
     },
     showGameResult(result) {
-      this.socket.emit('showGameResult', {
+      bus.$emit('sendShowGameResult', {
         hostId: this.hostId,
         gameName: this.gameName,
         result: result,
@@ -323,7 +322,7 @@ export default {
       })
     },
     showAllTeamsResult(result) {
-      this.socket.emit('showAllTeamsResult', {
+      bus.$emit('sendShowAllTeamsResult', {
         hostId: this.hostId,
         gameName: this.gameName,
         result: result,
@@ -331,7 +330,7 @@ export default {
       })
     },
     showSingleTeamResult(result) {
-      this.socket.emit('showSingleTeamResult', {
+      bus.$emit('sendShowSingleTeamResult', {
         hostId: this.hostId,
         gameName: this.gameName,
         teamName: this.selectedGraphTeam1,
@@ -340,7 +339,7 @@ export default {
       })
     },
     showMultipleTeamsResult(result) {
-      this.socket.emit('showMultipleTeamsResult', {
+      bus.$emit('sendShowMultipleTeamsResult', {
         hostId: this.hostId,
         gameName: this.gameName,
         team1: this.selectedGraphTeam1,
@@ -354,24 +353,24 @@ export default {
       this.$modal.hide(result)
     },
     setWipUseMovingAverage(val) {
-      this.socket.emit('setWipUseMovingAverage', {gameName: this.gameName, value: val})
+      bus.$emit('sendSetWipUseMovingAverage', {gameName: this.gameName, value: val})
     },
     setWipUseDays(val) {
-      this.socket.emit('setWipUseDays', {gameName: this.gameName, value: val})
+      bus.$emit('sendSetWipUseDays', {gameName: this.gameName, value: val})
     },
     setCumulativeFlowUseDays(val) {
-      this.socket.emit('setCumulativeFlowUseDays', {gameName: this.gameName, value: val})
+      bus.$emit('sendSetCumulativeFlowUseDays', {gameName: this.gameName, value: val})
     },
     saveCardSize(size) {
       const val = document.getElementById('card-size-' + size).value
-      this.socket.emit('setCardSize', {gameName: this.gameName, size: size, value: val})
+      bus.$emit('sendSetCardSize', {gameName: this.gameName, size: size, value: val})
     },
     saveMonteCarloRuns() {
       const runs = document.getElementById('monte-carlo-runs').value
-      this.socket.emit('setMonteCarloRuns', {gameName: this.gameName, runs: runs})
+      bus.$emit('sendSetMonteCarloRuns', {gameName: this.gameName, runs: runs})
     },
     saveMonteCarloRunTo(runTo) {
-      this.socket.emit('setMonteCarloRunTo', {gameName: this.gameName, runTo: runTo})
+      bus.$emit('sendSetMonteCarloRunTo', {gameName: this.gameName, runTo: runTo})
     }
   }
 }

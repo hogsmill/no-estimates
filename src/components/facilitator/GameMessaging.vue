@@ -33,10 +33,9 @@
 </template>
 
 <script>
+import bus from '../../socket.js'
+
 export default {
-  props: [
-    'socket'
-  ],
   data() {
     return {
       showGameMessaging: false
@@ -58,7 +57,7 @@ export default {
       const message = document.getElementById('gameMessageText').value
       const sendTo =  document.getElementById('sendTo').value
       if (message) {
-        this.socket.emit('broadcastMessage', {gameName: this.gameName, message: message, sendTo: sendTo})
+        bus.$emit('sendBroadcastMessage', {gameName: this.gameName, message: message, sendTo: sendTo})
       }
     }
   }

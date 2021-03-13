@@ -325,7 +325,7 @@ MongoClient.connect(url, { useUnifiedTopology: true, maxIdleTimeMS: maxIdleTime 
 
     socket.on('updateConfig', (data) => { dbStore.updateConfig(db, io, data, debugOn) })
 
-    socket.on('broadcastMessage', (data) => { emit('broadcastMessage', data) })
+    socket.on('sendBroadcastMessage', (data) => { emit('broadcastMessage', data) })
 
     socket.on('updateStealth', (data) => { dbStore.updateStealth(db, io, data, debugOn) })
 
@@ -343,27 +343,27 @@ MongoClient.connect(url, { useUnifiedTopology: true, maxIdleTimeMS: maxIdleTime 
 
     // Results
 
-    socket.on('showGameResult', (data) => { results.showGameResult(db, io, data, debugOn) })
+    socket.on('sendShowGameResult', (data) => { results.showGameResult(db, io, data, debugOn) })
 
-    socket.on('showAllTeamsResult', (data) => { results.showAllTeamsResult(db, io, data, debugOn) })
+    socket.on('sendShowAllTeamsResult', (data) => { results.showAllTeamsResult(db, io, data, debugOn) })
 
-    socket.on('showSingleTeamResult', (data) => { results.showSingleTeamResult(db, io, data, debugOn) })
+    socket.on('sendShowSingleTeamResult', (data) => { results.showSingleTeamResult(db, io, data, debugOn) })
 
-    socket.on('showMultipleTeamsResult', (data) => { results.showMultipleTeamsResult(db, io, data, debugOn) })
+    socket.on('sendShowMultipleTeamsResult', (data) => { results.showMultipleTeamsResult(db, io, data, debugOn) })
 
     socket.on('showSourceOfVariation', (data) => { results.showSourceOfVariation(db, io, data, debugOn) })
 
-    socket.on('setWipUseMovingAverage', (data) => { results.setWipUseMovingAverage(db, io, data, debugOn) })
+    socket.on('sendSetWipUseMovingAverage', (data) => { results.setWipUseMovingAverage(db, io, data, debugOn) })
 
-    socket.on('setWipUseDays', (data) => { results.setWipUseDays(db, io, data, debugOn) })
+    socket.on('sendSetWipUseDays', (data) => { results.setWipUseDays(db, io, data, debugOn) })
 
-    socket.on('setCumulativeFlowUseDays', (data) => { results.setCumulativeFlowUseDays(db, io, data, debugOn) })
+    socket.on('sendSetCumulativeFlowUseDays', (data) => { results.setCumulativeFlowUseDays(db, io, data, debugOn) })
 
-    socket.on('setCardSize', (data) => { results.setCardSize(db, io, data, debugOn) })
+    socket.on('sendSetCardSize', (data) => { results.setCardSize(db, io, data, debugOn) })
 
-    socket.on('setMonteCarloRunTo', (data) => { results.setMonteCarloRunTo(db, io, data, debugOn) })
+    socket.on('sendSetMonteCarloRunTo', (data) => { results.setMonteCarloRunTo(db, io, data, debugOn) })
 
-    socket.on('setMonteCarloRuns', (data) => { results.setMonteCarloRuns(db, io, data, debugOn) })
+    socket.on('sendSetMonteCarloRuns', (data) => { results.setMonteCarloRuns(db, io, data, debugOn) })
 
     // Demo
 

@@ -253,12 +253,14 @@ module.exports = {
 
   setMonteCarloRunTo: function(db, io, data, debugOn) {
 
-    if (debugOn) { console.log('setMonteCarloCards', data) }
+    if (debugOn) { console.log('setMonteCarloRunTo', data) }
 
     db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, res) {
       if (err) throw err
       if (res) {
+        console.log('here')
         res.graphConfig.monteCarlo.runTo = data.runTo
+        console.log(res.graphConfig)
         _loadGame(db, io, res)
       }
     })

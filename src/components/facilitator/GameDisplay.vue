@@ -408,8 +408,6 @@ export default {
   }
 
   .card-sizes {
-    margin-left: 80px;
-    width: 50%;
 
     td {
       text-align: right !important;
@@ -427,7 +425,7 @@ export default {
 
   .monte-carlo-params {
     position: relative;
-    left: 200px;
+    left: 100px;
 
     table {
       width: 300px;

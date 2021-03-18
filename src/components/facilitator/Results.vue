@@ -41,7 +41,7 @@
       </div>
       <div class="mt-4 cycle-time">
         <h4>
-          Value Delivered
+          Value Delivered per team
         </h4>
         <div>
           <BarChart :chartdata="valueDelivered.data" :options="valueDelivered.options" />
@@ -520,7 +520,6 @@ export default {
       this.$modal.show('flow-efficiency')
     },
     showFlowEfficiencyCards(data) {
-      console.log(data)
       this.flowEfficiencyCard1 = data.results[0]
       this.flowEfficiencyCard2 = data.results[1]
       this.flowEfficiencyCard3 = data.results[2]

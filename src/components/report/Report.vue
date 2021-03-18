@@ -10,7 +10,7 @@
             Close
           </button>
         </h4>
-        <Estimates :socket="socket" />
+        <Estimates />
         <div v-if="tab == 'Report'" class="scroller">
           <table class="results">
             <thead>
@@ -51,9 +51,6 @@ export default {
   components: {
     Estimates
   },
-  props: [
-    'socket'
-  ],
   data() {
     return {
       tab: 'Report'

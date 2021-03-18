@@ -4,10 +4,10 @@
     <Connections />
     <GameMessaging />
     <GameDisplay />
-    <GameParams :socket="socket" />
-    <GameState :socket="socket" />
-    <Games :socket="socket" />
-    <DemoAndTest :socket="socket" />
+    <GameParams />
+    <GameState />
+    <Games />
+    <DemoAndTest />
     <div v-if="isDev()">
       <Utils />
     </div>
@@ -35,9 +35,6 @@ export default {
     DemoAndTest,
     Utils
   },
-  props: [
-    'socket'
-  ],
   computed: {
     hostId() {
       return this.$store.getters.getHostId

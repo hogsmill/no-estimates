@@ -3,7 +3,7 @@
     <div class="deploy-card-header">
       Auto Deploy
     </div>
-    <div class="deploy-card-effort" @click="addEffort('auto-deploy')">
+    <div class="deploy-card-effort" @click="addAutoDeployEffort()">
       <div class="deploy-card-column column rounded-circle">
         A
       </div>
@@ -13,12 +13,11 @@
 </template>
 
 <script>
+import bus from '../../socket.js'
+
 import roles from '../../lib/roles.js'
 
 export default {
-  props: [
-    'socket'
-  ],
   data() {
     return {
       message: ''
@@ -52,9 +51,18 @@ export default {
   },
   created() {
     const self = this
-    this.socket.on('autodeployComplete', (data) => {
+
+    bus.$on('autoDeployComplete', (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         self.$modal.show('autodeploy-complete-popup')
+      }
+    })
+
+    bus.$on('autoDeployIncremented', (data) => {
+      if (this.gameName == data.gameName && this.teamName == data.teamName) {
+        if (!roles.iHaveRole('deploy', this.myRole, this.myOtherRoles)) {
+          bus.$emit('sendPairingDay', {gameName: this.gameName, teamName: this.teamName, name: this.myName, column: 'deploy', day: this.currentDay})
+        }
       }
     })
   },
@@ -65,16 +73,11 @@ export default {
     hide() {
       this.$modal.hide('autodeploy-complete-popup')
     },
-    addEffort() {
-      const column = 'deploy'
-      const iHaveRole = roles.iHaveRole(column, this.myRole, this.myOtherRoles)
-      const effort = iHaveRole ? 1 : 2
+    addAutoDeployEffort() {
+      const effort = roles.iHaveRole('deploy', this.myRole, this.myOtherRoles) ? 1 : 2
       if (this.myEffort.available >= effort) {
-        this.socket.emit('incrementAutoDeploy', {gameName: this.gameName, teamName: this.teamName, name: this.myName, effort: effort})
-        this.socket.emit('updatePersonAutoDeployEffort', {gameName: this.gameName, teamName: this.teamName, name: this.myName})
-        if (!iHaveRole) {
-          this.socket.emit('pairingDay', {gameName: this.gameName, teamName: this.teamName, name: this.myName, column: column, day: this.currentDay})
-        }
+        bus.$emit('sendIncrementAutoDeploy', {gameName: this.gameName, teamName: this.teamName, name: this.myName, effort: effort})
+        bus.$emit('sendUpdatePersonAutoDeployEffort', {gameName: this.gameName, teamName: this.teamName, name: this.myName})
       } else {
         this.$store.dispatch('updateMessage', 'No effort available (Autodeploy)')
         const self = this

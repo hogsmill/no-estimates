@@ -603,11 +603,18 @@ module.exports = {
         if (autoDeploy.effort >= 8) {
           autoDeploy.doing = false
           autoDeploy.done = true
-          io.emit('autodeployComplete', data)
+          io.emit('autoDeployComplete', data)
         }
         res.autoDeploy = autoDeploy
         res.members = teamFuns.decrementMyEffort(res.members, data.name, data.effort)
-        updateTeam(db, io, res)
+        const id = res._id
+        delete res._id
+        db.collection('noEstimates').updateOne({'_id': id}, {$set: res}, function(err) {
+          if (err) throw err
+          io.emit('loadTeam', res)
+          io.emit('autoDeployIncremented', data)
+          gameState.update(db, io, res)
+        })
       }
     })
   },

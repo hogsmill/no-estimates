@@ -78,6 +78,8 @@
 </template>
 
 <script>
+import bus from '../../socket.js'
+
 import stringFuns from '../../lib/stringFuns.js'
 
 import OtherCards from './gameState/OtherCards.vue'
@@ -88,9 +90,6 @@ export default {
     OtherCards,
     Column
   },
-  props: [
-    'socket'
-  ],
   data() {
     return {
       showGameState: true,
@@ -136,15 +135,15 @@ export default {
       return proj + ' / ' + mvp + ' / ' + re
     },
     startGame() {
-      this.socket.emit('updateConfig', {gameName: this.gameName, field: 'gameRunning', value: true})
+      bus.$emit('sendUpdateConfig', {gameName: this.gameName, field: 'gameRunning', value: true})
     },
     stopGame() {
-      this.socket.emit('updateConfig', {gameName: this.gameName, field: 'gameRunning', value: false})
+      bus.$emit('sendUpdateConfig', {gameName: this.gameName, field: 'gameRunning', value: false})
     },
     restartGame() {
       const restartGame = confirm('Are you sure you want to re-start this game?')
       if (restartGame) {
-        this.socket.emit('restartGame', {gameName: this.gameName, stealth: this.stealth})
+        bus.$emit('sendRestartGame', {gameName: this.gameName, stealth: this.stealth})
       }
     },
     effort(role) {

@@ -17,13 +17,14 @@ export default {
       options: {
         scales: {
           yAxes: [{
+            ticks: {beginAtZero: true, stepSize: 200},
             gridLines: {display: true}
           }],
           xAxes: [{
             gridLines: {display: false}
           }]
         },
-        legend: {display: true},
+        legend: {display: false},
         responsive: true,
         maintainAspectRatio: false
       }

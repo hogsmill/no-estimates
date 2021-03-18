@@ -44,10 +44,9 @@
 </template>
 
 <script>
+import bus from '../socket.js'
+
 export default {
-  props: [
-    'socket'
-  ],
   data() {
     return {
       selectedMessage: ''
@@ -102,12 +101,12 @@ export default {
       this.facilitatorMessageSeen(this.selectedMessage)
       const message = this.facilitatorMessages[this.selectedMessage]
       const reply = document.getElementById('facilitator-answer').value
-      this.socket.emit('answerFacilitatorQuestion', {gameName: this.gameName, message: message, reply: reply})
+      bus.$emit('sendAnswerFacilitatorQuestion', {gameName: this.gameName, message: message, reply: reply})
     },
     facilitatorMessageSeen(index) {
       const messages = this.facilitatorMessages
       messages[index].seen = true
-      this.socket.emit('updateFacilitatorMessages', {gameName: this.gameName, teamName: this.teamName, messages: messages})
+      bus.$emit('sendUpdateFacilitatorMessages', {gameName: this.gameName, teamName: this.teamName, messages: messages})
     }
   }
 }

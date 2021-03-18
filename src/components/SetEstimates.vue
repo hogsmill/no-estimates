@@ -18,7 +18,7 @@
         <p>You are currently on day <b>{{ currentDay }}</b>, and have completed <b>{{ completed() }}</b>
           card<span v-if="completed() != 1">s</span>.</p>
         <p>Estimates are <b>the number of days to complete the work</b>.</p>
-        <Estimates :socket="socket" />
+        <Estimates />
         <button class="btn btn-sm btn-primary smaller-font" @click="hide()">
           Done
         </button>
@@ -29,6 +29,8 @@
 </template>
 
 <script>
+import bus from '../socket.js'
+
 import stringFuns from '../lib/stringFuns.js'
 
 import Estimates from './report/Estimates.vue'
@@ -37,9 +39,6 @@ export default {
   components: {
     Estimates
   },
-  props: [
-    'socket'
-  ],
   computed: {
     gameName() {
       return this.$store.getters.getGameName
@@ -59,7 +58,7 @@ export default {
   },
   created() {
     const self = this
-    this.socket.on('showSetEstimates', (data) => {
+    bus.$on('showSetEstimates', (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         self.show()
       }
@@ -85,7 +84,7 @@ export default {
       return this.columns.find(function(c) { return c.name == 'done' }).cards.length
     },
     showSetEstimates() {
-      this.socket.emit('showSetEstimates', {gameName: this.gameName, teamName: this.teamName})
+      bus.$emit('sendShowSetEstimates', {gameName: this.gameName, teamName: this.teamName})
     }
   }
 }

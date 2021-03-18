@@ -16,7 +16,7 @@
             <span :style="{ 'background-color': card.team.toLowerCase()}">{{ card.team }}</span>
           </div>
         </div>
-        <div class="other-work-card-effort" @click="addEffort(card)">
+        <div v-if="card.dependencyDone < card.teamDependency" class="other-work-card-effort" @click="addEffort(card)">
           <div class="other-work-card-column column rounded-circle" />
           <div v-for="n in card.teamDependency" :key="n" :class="{'assigned' : n <= card.dependencyDone}" class="other-work-card-column rounded-circle" />
         </div>
@@ -29,10 +29,9 @@
 </template>
 
 <script>
+import bus from '../../socket.js'
+
 export default {
-  props: [
-    'socket'
-  ],
   data() {
     return {
       message: ''
@@ -74,8 +73,8 @@ export default {
           self.$store.dispatch('updateMessage', '')
         }, 2000)
       } else {
-        this.socket.emit('addEffortToOthersCard', {gameName: this.gameName, teamName: this.teamName, card: card, myName: this.myName, effort: 1})
-        this.socket.emit('updateOtherTeamEffort', {gameName: this.gameName, teamName: this.teamName, card: card, name: this.myName, effort: this.myEffort})
+        bus.$emit('sendAddEffortToOthersCard', {gameName: this.gameName, teamName: this.teamName, card: card, myName: this.myName, effort: 1})
+        bus.$emit('sendUpdateOtherTeamEffort', {gameName: this.gameName, teamName: this.teamName, card: card, name: this.myName, effort: this.myEffort})
       }
     }
   }

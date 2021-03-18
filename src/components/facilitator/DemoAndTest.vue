@@ -29,10 +29,9 @@
 <script>
 import { v4 as uuidv4 } from 'uuid'
 
+import bus from '../../socket.js'
+
 export default {
-  props: [
-    'socket'
-  ],
   data() {
     return {
       showDemoAndTest: false,
@@ -49,19 +48,19 @@ export default {
     createDemo() {
       const uuid = uuidv4()
       const myNameData = {id: uuid, name: this.myName, captain: true}
-      this.socket.emit('loadGame', {gameName: this.gameName, teamName: this.teamName, myName: myNameData, myRole: this.myRole})
+      bus.$emit('sendLoadGame', {gameName: this.gameName, teamName: this.teamName, myName: myNameData, myRole: this.myRole})
     },
     restartDemo() {
       const restartGame = confirm('Are you sure you want to re-start the demo game?')
       if (restartGame) {
-        this.socket.emit('restartGame', {gameName: this.gameName, teamName: this.teamName})
+        bus.$emit('sendRestartGame', {gameName: this.gameName, teamName: this.teamName})
       }
     },
     runDemoToMvp() {
-      this.socket.emit('runDemoToMvp', {gameName: this.gameName, teamName: this.teamName})
+      bus.$emit('sendRunDemoToMvp', {gameName: this.gameName, teamName: this.teamName})
     },
     runDemoToEnd() {
-      this.socket.emit('runDemoToEnd', {gameName: this.gameName, teamName: this.teamName})
+      bus.$emit('sendRunDemoToEnd', {gameName: this.gameName, teamName: this.teamName})
     }
   }
 }

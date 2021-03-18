@@ -48,6 +48,8 @@
 </template>
 
 <script>
+import bus from '../../socket.js'
+
 import stringFuns from '../../lib/stringFuns.js'
 import TimeAgo from 'javascript-time-ago'
 import en from 'javascript-time-ago/locale/en'
@@ -55,9 +57,6 @@ TimeAgo.addDefaultLocale(en)
 const timeAgo = new TimeAgo('en-GB')
 
 export default {
-  props: [
-    'socket'
-  ],
   data() {
     return {
       showGames: false
@@ -75,7 +74,7 @@ export default {
     setShowGames(val) {
       this.showGames = val
       if (val) {
-        this.socket.emit('getGames')
+         bus.$emit('sendGetGames')
       }
     },
     idSafe(game) {
@@ -86,10 +85,10 @@ export default {
     },
     toggleGameInclude(game) {
       const include = document.getElementById('game-active-' + this.idSafe(game)).checked
-      this.socket.emit('updateGameInclude', {gameName: game.gameName, include: include})
+      bus.$emit('sendUpdateGameInclude', {gameName: game.gameName, include: include})
     },
     deleteGame(game) {
-      this.socket.emit('deleteGame', {gameName: game.gameName})
+      bus.$emit('sendDeleteGame', {gameName: game.gameName})
     }
   }
 }

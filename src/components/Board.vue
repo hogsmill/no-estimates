@@ -1,6 +1,6 @@
 <template>
   <div class="board-container">
-    <EventCard :socket="socket" />
+    <EventCard />
     <div class="game-board">
       <table class="board-table rounded">
         <thead>
@@ -39,12 +39,12 @@
         <tbody>
           <tr>
             <td>
-              <WorkCardStack :socket="socket" />
+              <WorkCardStack />
               <OtherSkills />
-              <OtherTeams v-if="teams.length > 1" :socket="socket" />
+              <OtherTeams v-if="teams.length > 1" />
             </td>
             <td v-for="(column, index) in columns" :key="index" :class="columnClass(column)">
-              <Column :column="column" :socket="socket" />
+              <Column :column="column" />
             </td>
           </tr>
         </tbody>
@@ -54,6 +54,8 @@
 </template>
 
 <script>
+import bus from '../socket.js'
+
 import stringFuns from '../lib/stringFuns.js'
 
 import OtherTeams from './board/OtherTeams.vue'
@@ -70,9 +72,6 @@ export default {
     Column,
     EventCard
   },
-  props: [
-    'socket'
-  ],
   computed: {
     gameName() {
       return this.$store.getters.getGameName
@@ -131,7 +130,7 @@ export default {
         column.name == 'deploy'
     },
     startAutoDeploy() {
-      this.socket.emit('startAutoDeploy', {gameName: this.gameName, teamName: this.teamName})
+      bus.$emit('sendStartAutoDeploy', {gameName: this.gameName, teamName: this.teamName})
     }
   }
 }

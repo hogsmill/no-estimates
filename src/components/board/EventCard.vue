@@ -84,6 +84,8 @@
 </template>
 
 <script>
+import bus from '../../socket.js'
+
 import ProjectValue from './ProjectValue.vue'
 import BarChart from '../facilitator/results/BarChart.vue'
 
@@ -92,9 +94,6 @@ export default {
     ProjectValue,
     BarChart
   },
-  props: [
-    'socket'
-  ],
   data() {
     return {
       showing: false,
@@ -163,29 +162,29 @@ export default {
   },
   mounted() {
     const self = this
-    this.socket.on('showEventCard', (data) => {
+    bus.$on('showEventCard', (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         if (self.currentEventCard.function == 'Show Cycle Time') {
-          self.socket.emit('showResult', {gameName: this.gameName, result: 'cycle-time', target: 'event-card'})
+          bus.$emit('sendShowSingleTeamResult', {gameName: this.gameName, teamName: this.teamName, result: 'cycle-time', target: 'event-card'})
         } else {
           self.$modal.show('event-card-popup')
         }
       }
     })
 
-    this.socket.on('hide', (data) => {
+    bus.$on('hide', (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         self.$modal.hide(data.popup)
       }
     })
 
-    this.socket.on('autodeployComplete', (data) => {
+    bus.$on('autoDeployComplete', (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         self.$modal.show('autodeploy-complete-popup')
       }
     })
 
-    this.socket.on('showResult', (data) => {
+    bus.$on('showResult', (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName && data.target == 'event-card') {
         switch(data.result) {
           case 'cycle-time':
@@ -200,7 +199,7 @@ export default {
       this.$modal.hide('event-card-popup')
     },
     hide(name) {
-      this.socket.emit('hide', {gameName: this.gameName, teamName: this.teamName, popup: name})
+      bus.$emit('sendHide', {gameName: this.gameName, teamName: this.teamName, popup: name})
     },
     completed() {
       return this.columns.find(function(c) {
@@ -209,7 +208,7 @@ export default {
     },
     doneGraph() {
       if (this.myName.captain) {
-        this.socket.emit('updateCurrentDay', {gameName: this.gameName, teamName: this.teamName})
+        bus.$emit('sendUpdateCurrentDay', {gameName: this.gameName, teamName: this.teamName})
       }
       this.hide('event-graph-popup')
     },
@@ -224,7 +223,7 @@ export default {
         if (this.currentEventCard.autoDeployCard) {
           updateData.canStartAutoDeploy = true
         }
-        this.socket.emit('updateCurrentDay', updateData)
+        bus.$emit('sendUpdateCurrentDay', updateData)
       }
       this.hide('event-card-popup')
     },

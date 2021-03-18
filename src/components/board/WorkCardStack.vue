@@ -31,10 +31,9 @@
 </template>
 
 <script>
+import bus from '../../socket.js'
+
 export default {
-  props: [
-    'socket'
-  ],
   computed: {
     gameName() {
       return this.$store.getters.getGameName
@@ -87,10 +86,10 @@ export default {
         this.show()
       } else {
         if (currentCard.teamDependency) {
-          this.socket.emit('hint', {gameName: this.gameName, teamName: this.teamName, hint: 'You can click the chat icon to chat with other teams about dependent work...'})
+          bus.$emit('sendHint', {gameName: this.gameName, teamName: this.teamName, hint: 'You can click the chat icon to chat with other teams about dependent work...'})
         }
         if (this.currentWorkCard !== false) {
-          this.socket.emit('pullInCard', {gameName: this.gameName, teamName: this.teamName, teams: this.teams})
+          bus.$emit('sendPullInCard', {gameName: this.gameName, teamName: this.teamName, teams: this.teams})
         }
       }
     }

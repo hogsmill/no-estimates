@@ -2,19 +2,19 @@
   <div id="app" class="mb-4">
     <Header />
     <WalkThroughView />
-    <Results :socket="socket" />
+    <Results />
     <div v-if="currentTab == 'facilitator'">
-      <FacilitatorView :socket="socket" />
+      <FacilitatorView />
     </div>
     <div v-if="currentTab == 'game'" class="main">
-      <HostFunctions v-if="isHost" :socket="socket" />
+      <HostFunctions v-if="isHost" />
       <div v-if="!connections.connections" class="not-connected">
         WARNING: You are not connected to the server
       </div>
-      <SetGame :socket="socket" />
-      <SetEstimates v-if="gameName" :socket="socket" />
+      <SetGame />
+      <SetEstimates v-if="gameName" />
       <GoMobile v-if="allowMobile" />
-      <Status :socket="socket" />
+      <Status />
       <div class="container board">
         <h3 class="board-title">
           <span v-if="gameName">Game: {{ gameName }}</span>
@@ -22,21 +22,21 @@
           <span v-if="teamName">Team: {{ teamName }} ({{ myTeamMembers }} {{ membersString() }})</span>
         </h3>
         <div class="game-buttons">
-          <Report :socket="socket" />
-          <Chat :socket="socket" />
-          <ChatFacilitator v-if="isHost" :socket="socket" />
+          <Report />
+          <Chat />
+          <ChatFacilitator v-if="isHost" />
         </div>
         <Roles />
-        <Message :socket="socket" />
+        <Message />
         <Day />
-        <Board :socket="socket" />
+        <Board />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import io from 'socket.io-client'
+import bus from './socket.js'
 
 import params from './lib/params.js'
 import stringFuns from './lib/stringFuns.js'
@@ -114,15 +114,6 @@ export default {
     }
   },
   created() {
-    let connStr
-    if (location.hostname == 'localhost') {
-      connStr = 'http://localhost:3007'
-    } else {
-      connStr = 'https://agilesimulations.co.uk:3007'
-    }
-    console.log('Connecting to: ' + connStr)
-    this.socket = io(connStr)
-
     if (params.isParam('host')) {
       this.$store.dispatch('updateHost', true)
     }
@@ -133,7 +124,7 @@ export default {
       localStorage.setItem('gameName', game)
     }
 
-    this.socket.on('updateStealth', (data) => {
+    bus.$on('updateStealth', (data) => {
       if (this.gameName == data.gameName) {
         this.$store.dispatch('updateStealth', data)
       }
@@ -142,14 +133,14 @@ export default {
     const gameName = localStorage.getItem('gameName')
     if (gameName) {
       this.$store.dispatch('updateGameName', gameName)
-      this.socket.emit('gameState', {gameName: gameName})
+       bus.$emit('sendGameState', {gameName: gameName})
     }
 
     let myName = localStorage.getItem('myName')
     if (myName) {
       myName = JSON.parse(myName)
       this.$store.dispatch('updateMyName', myName)
-      this.socket.emit('getAvailableGames', {host: myName})
+      bus.$emit('sendGetAvailableGames', {host: myName})
     }
 
     const teamName = localStorage.getItem('teamName')
@@ -159,14 +150,13 @@ export default {
 
     const myRole = localStorage.getItem('myRole')
 
-    const self = this
     window.onload = function() {
       if (gameName && myName && teamName) {
-        self.socket.emit('loadGame', {gameName: gameName, teamName: teamName, myName: myName, myRole: myRole})
+        bus.$emit('sendLoadGame', {gameName: gameName, teamName: teamName, myName: myName, myRole: myRole})
       }
     }
 
-    this.socket.on('makeCaptain', (data) => {
+    bus.$on('makeCaptain', (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         const myName = JSON.parse(localStorage.getItem('myName'))
         myName.captain = data.myName.id == myName.id
@@ -174,42 +164,42 @@ export default {
       }
     })
 
-    this.socket.on('loadMembers', (data) => {
+    bus.$on('loadMembers', (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         this.$store.dispatch('loadMembers', data)
       }
     })
 
-    this.socket.on('loadTeam', (data) => {
+    bus.$on('loadTeam', (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         this.$store.dispatch('loadTeam', data)
       }
     })
 
-    this.socket.on('loadGame', (data) => {
+    bus.$on('loadGame', (data) => {
       if (this.gameName == data.gameName) {
         this.$store.dispatch('loadGame', data)
       }
     })
 
-    this.socket.on('updateGameState', (data) => {
+    bus.$on('updateGameState', (data) => {
       if (this.gameName == data.gameName) {
         this.$store.dispatch('updateGameState', data)
       }
     })
 
-    this.socket.on('updateGames', (data) => {
+    bus.$on('updateGames', (data) => {
       this.$store.dispatch('updateGames', data)
       for (let i = 0; i < data.length; i++) {
-        this.socket.emit('getGameDetails', {gameName: data[i].gameName})
+        bus.$emit('sendGetGameDetails', {gameName: data[i].gameName})
       }
     })
 
-    this.socket.on('updateGameDetails', (data) => {
+    bus.$on('updateGameDetails', (data) => {
       this.$store.dispatch('updateGameDetails', data)
     })
 
-    this.socket.on('updateConnections', (data) => {
+    bus.$on('updateConnections', (data) => {
       this.$store.dispatch('updateConnections', data)
     })
   },

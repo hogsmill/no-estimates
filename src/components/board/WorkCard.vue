@@ -66,13 +66,14 @@
 </template>
 
 <script>
+import bus from '../../socket.js'
+
 import roles from '../../lib/roles.js'
 
 export default {
   props: [
     'column',
-    'workCard',
-    'socket'
+    'workCard'
   ],
   data() {
     return {
@@ -159,7 +160,7 @@ export default {
               workCard.effort[column] = workCard.effort[column] + 1
               effort = 2
               if (column == this.column) {
-                this.socket.emit('pairingDay', {gameName: this.gameName, teamName: this.teamName, name: this.myName, column: column, day: this.currentDay})
+                bus.$emit('sendPairingDay', {gameName: this.gameName, teamName: this.teamName, name: this.myName, column: column, day: this.currentDay})
               }
             }
           }
@@ -178,8 +179,8 @@ export default {
           self.$store.dispatch('updateMessage', '')
         }, 2000)
       } else {
-        this.socket.emit('updatePersonEffort', {gameName: this.gameName, teamName: this.teamName, workCard: workCard, name: this.myName, column: column})
-        this.socket.emit('updateEffort', {
+        bus.$emit('sendUpdatePersonEffort', {gameName: this.gameName, teamName: this.teamName, workCard: workCard, name: this.myName, column: column})
+        bus.$emit('sendUpdateEffort', {
           gameName: this.gameName,
           teamName: this.teamName,
           name: this.myName,

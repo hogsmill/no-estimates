@@ -73,7 +73,6 @@ export default {
   created() {
     const self = this
     bus.$on('loadTeam', (data) => {
-      console.log('loadTeam', data)
       if (self.demoConfig.running && self.gameName == data.gameName && self.teamName == data.teamName) {
         self.checkRunComplete(data)
         if (!self.runComplete) {
@@ -130,6 +129,7 @@ export default {
     run() {
       if (this.runComplete) {
         console.log('Run Complete to ' + this.demoConfig.runToCards + ' cards')
+        bus.$emit('sendSetDemoRunning', {gameName: this.gameName, running: false})
       } else {
         bus.$emit('sendRunDemoGame', {gameName: this.gameName, teamName: this.teamName})
       }

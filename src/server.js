@@ -256,22 +256,20 @@ MongoClient.connect(url, { useUnifiedTopology: true, maxIdleTimeMS: maxIdleTime 
       emit('updateConnections', {connections: connections, maxConnections: maxConnections})
     })
 
-    socket.on('getAvailableGames', (data) => { dbStore.getAvailableGames(db, io, data, debugOn) })
+    socket.on('sendGetAvailableGames', (data) => { dbStore.getAvailableGames(db, io, data, debugOn) })
 
-    socket.on('loadGame', (data) => { dbStore.loadGame(db, io, data, debugOn) })
+    socket.on('sendLoadGame', (data) => { dbStore.loadGame(db, io, data, debugOn) })
 
-    socket.on('makeCaptain', (data) => { dbStore.makeCaptain(db, io, data, debugOn) })
-
-    socket.on('restartGame', (data) => { dbStore.restartGame(db, io, data, debugOn) })
+    socket.on('sendMakeCaptain', (data) => { dbStore.makeCaptain(db, io, data, debugOn) })
 
     socket.on('sendRestartGame', (data) => { dbStore.restartGame(db, io, data, debugOn) })
 
-    socket.on('deleteGame', (data) => {
+    socket.on('sendDeleteGame', (data) => {
       dbStore.deleteGameMeta(db, io, data, debugOn)
       dbStore.deleteGame(db, io, data, debugOn)
     })
 
-    socket.on('showSetEstimates', (data) => { emit('showSetEstimates', data) })
+    socket.on('sendShowSetEstimates', (data) => { emit('showSetEstimates', data) })
 
     socket.on('sendRetro', (data) => { emit('retro', data) })
 
@@ -279,67 +277,65 @@ MongoClient.connect(url, { useUnifiedTopology: true, maxIdleTimeMS: maxIdleTime 
 
     socket.on('sendShowEventCard', (data) => { emit('showEventCard', data) })
 
-    socket.on('updateCurrentDay', (data) => { dbStore.updateCurrentDay(db, io, data, debugOn) })
+    socket.on('sendUpdateCurrentDay', (data) => { dbStore.updateCurrentDay(db, io, data, debugOn) })
 
     socket.on('sendHide', (data) => { emit('hide', data) })
 
-    socket.on('pullInCard', (data) => { dbStore.pullInCard(db, io, data, debugOn) })
+    socket.on('sendPullInCard', (data) => { dbStore.pullInCard(db, io, data, debugOn) })
 
-    socket.on('hint', (data) => { emit('hint', data) })
+    socket.on('sendHint', (data) => { emit('hint', data) })
 
-    socket.on('updatePersonEffort', (data) => { emit('updatePersonEffort', data) })
+    socket.on('sendUpdatePersonEffort', (data) => { emit('updatePersonEffort', data) })
 
-    socket.on('updatePersonAutoDeployEffort', (data) => { emit('updatePersonAutoDeployEffort', data) })
+    socket.on('sendUpdatePersonAutoDeployEffort', (data) => { emit('updatePersonAutoDeployEffort', data) })
 
-    socket.on('updateEffort', (data) => { dbStore.updateEffort(db, io, data, debugOn) })
+    socket.on('sendUpdateEffort', (data) => { dbStore.updateEffort(db, io, data, debugOn) })
 
-    socket.on('pairingDay', (data) => { dbStore.pairingDay(db, io, data, debugOn) })
+    socket.on('sendPairingDay', (data) => { dbStore.pairingDay(db, io, data, debugOn) })
 
-    socket.on('resetEffort', (data) => { emit('resetEffort', data) })
+    socket.on('sendAddEffortToOthersCard', (data) => { dbStore.addEffortToOthersCard(db, io, data, debugOn) })
 
-    socket.on('addEffortToOthersCard', (data) => { dbStore.addEffortToOthersCard(db, io, data, debugOn) })
+    socket.on('sendUpdateOtherTeamEffort', (data) => { emit('updateOtherTeamEffort', data) })
 
-    socket.on('updateOtherTeamEffort', (data) => { emit('updateOtherTeamEffort', data) })
+    socket.on('sendSendMessage', (data) => { dbStore.sendMessage(db, io, data, debugOn) })
 
-    socket.on('sendMessage', (data) => { dbStore.sendMessage(db, io, data, debugOn) })
+    socket.on('sendSendMessageToFacilitators', (data) => { dbStore.sendMessageToFacilitators(db, io, data, debugOn) })
 
-    socket.on('sendMessageToFacilitators', (data) => { dbStore.sendMessageToFacilitators(db, io, data, debugOn) })
+    socket.on('sendUpdateMessages', (data) => { dbStore.updateMessages(db, io, data, debugOn) })
 
-    socket.on('updateMessages', (data) => { dbStore.updateMessages(db, io, data, debugOn) })
+    socket.on('sendUpdateFacilitatorMessages', (data) => { dbStore.updateFacilitatorMessages(db, io, data, debugOn) })
 
-    socket.on('updateFacilitatorMessages', (data) => { dbStore.updateFacilitatorMessages(db, io, data, debugOn) })
+    socket.on('sendAnswerFacilitatorQuestion', (data) => { dbStore.answerFacilitatorQuestion(db, io, data, debugOn) })
 
-    socket.on('answerFacilitatorQuestion', (data) => { dbStore.answerFacilitatorQuestion(db, io, data, debugOn) })
+    socket.on('sendUpdateProjectEstimate', (data) => { dbStore.updateProjectEstimate(db, io, data, debugOn) })
 
-    socket.on('updateProjectEstimate', (data) => { dbStore.updateProjectEstimate(db, io, data, debugOn) })
+    socket.on('sendUpdateMVPEstimate', (data) => { dbStore.updateMVPEstimate(db, io, data, debugOn) })
 
-    socket.on('updateMVPEstimate', (data) => { dbStore.updateMVPEstimate(db, io, data, debugOn) })
+    socket.on('sendUpdateReEstimate', (data) => { dbStore.updateReEstimate(db, io, data, debugOn) })
 
-    socket.on('updateReEstimate', (data) => { dbStore.updateReEstimate(db, io, data, debugOn) })
+    socket.on('sendStartAutoDeploy', (data) => { dbStore.startAutoDeploy(db, io, data, debugOn) })
 
-    socket.on('startAutoDeploy', (data) => { dbStore.startAutoDeploy(db, io, data, debugOn) })
-
-    socket.on('incrementAutoDeploy', (data) => { dbStore.incrementAutoDeploy(db, io, data, debugOn) })
+    socket.on('sendIncrementAutoDeploy', (data) => { dbStore.incrementAutoDeploy(db, io, data, debugOn) })
 
     // Facilitator View
 
-    socket.on('updateConfig', (data) => { dbStore.updateConfig(db, io, data, debugOn) })
+    socket.on('sendUpdateConfig', (data) => { dbStore.updateConfig(db, io, data, debugOn) })
 
     socket.on('sendBroadcastMessage', (data) => { emit('broadcastMessage', data) })
 
-    socket.on('updateStealth', (data) => { dbStore.updateStealth(db, io, data, debugOn) })
+    socket.on('sendUpdateStealth', (data) => { dbStore.updateStealth(db, io, data, debugOn) })
 
-    socket.on('updateTeamActive', (data) => { dbStore.updateTeamActive(db, io, data, debugOn) })
+    socket.on('sendUpdateTeamActive', (data) => { dbStore.updateTeamActive(db, io, data, debugOn) })
 
-    socket.on('updateGameInclude', (data) => { dbStore.updateGameInclude(db, io, data, debugOn) })
+    socket.on('sendUpdateGameInclude', (data) => { dbStore.updateGameInclude(db, io, data, debugOn) })
 
     // Game State
 
-    socket.on('getGames', (data) => { dbStore.getGames(db, io, data, debugOn) })
+    socket.on('sendGetGames', (data) => { dbStore.getGames(db, io, data, debugOn) })
 
-    socket.on('getGameDetails', (data) => { dbStore.getGameDetails(db, io, data, debugOn) })
+    socket.on('sendGetGameDetails', (data) => { dbStore.getGameDetails(db, io, data, debugOn) })
 
-    socket.on('gameState', (data) => { dbStore.gameState(db, io, data) })
+    socket.on('sendGameState', (data) => { dbStore.gameState(db, io, data) })
 
     // Results
 
@@ -373,9 +369,9 @@ MongoClient.connect(url, { useUnifiedTopology: true, maxIdleTimeMS: maxIdleTime 
 
     socket.on('sendSetDemoRunning', (data) => { dbStore.setDemoRunning(db, io, data, debugOn) })
 
-    socket.on('runDemoToMvp', (data) => { demo.runDemoToMvp(db, io, data, debugOn) })
+    socket.on('sendRunDemoToMvp', (data) => { demo.runDemoToMvp(db, io, data, debugOn) })
 
-    socket.on('runDemoToEnd', (data) => { demo.runDemoToEnd(db, io, data, debugOn) })
+    socket.on('sendRunDemoToMvp', (data) => { demo.runDemoToEnd(db, io, data, debugOn) })
 
     socket.on('sendRunDemoGame', (data) => { runGame.run(db, io, data, debugOn) })
 

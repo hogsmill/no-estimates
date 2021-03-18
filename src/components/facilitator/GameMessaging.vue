@@ -23,7 +23,7 @@
           <option>
             Everybody
           </option>
-          <option v-for="(team, index) in activeTeams" :key="index">
+          <option v-for="(team, index) in activeTeams" :key="index" :value="team.name">
             {{ team.name }} Team
           </option>
         </select>

@@ -111,10 +111,9 @@
 </template>
 
 <script>
+import bus from '../../socket.js'
+
 export default {
-  props: [
-    'socket'
-  ],
   data() {
     return {
       showGameParams: false
@@ -171,47 +170,47 @@ export default {
     toggleStealth() {
       const isStealth = document.getElementById('is-stealth').checked
       localStorage.setItem('stealth', isStealth)
-      this.socket.emit('updateStealth', {gameName: this.gameName, stealth: isStealth})
+      bus.$emit('sendUpdateStealth', {gameName: this.gameName, stealth: isStealth})
     },
     toggleDoRetros() {
       const doRetros = document.getElementById('do-retros').checked
-      this.socket.emit('updateConfig', {gameName: this.gameName, field: 'doRetros', value: doRetros})
+      bus.$emit('sendUpdateConfig', {gameName: this.gameName, field: 'doRetros', value: doRetros})
     },
     saveRetroDays() {
       const retroDays = document.getElementById('retro-days').value
-      this.socket.emit('updateConfig', {gameName: this.gameName, field: 'retroDays', value: retroDays})
+      bus.$emit('sendUpdateConfig', {gameName: this.gameName, field: 'retroDays', value: retroDays})
     },
     toggleRetroTimer() {
       const retroTimer = document.getElementById('retro-timer').checked
-      this.socket.emit('updateConfig', {gameName: this.gameName, field: 'retroTimer', value: retroTimer})
+      bus.$emit('sendUpdateConfig', {gameName: this.gameName, field: 'retroTimer', value: retroTimer})
     },
     saveRetroTime() {
       const retroTime = document.getElementById('retro-time').value
-      this.socket.emit('updateConfig', {gameName: this.gameName, field: 'retroTime', value: retroTime})
+      bus.$emit('sendUpdateConfig', {gameName: this.gameName, field: 'retroTime', value: retroTime})
     },
     toggleTeamActive(team) {
       const include = document.getElementById('team-active-' + team).checked
-      this.socket.emit('updateTeamActive', {gameName: this.gameName, teamName: team, include: include})
+      bus.$emit('sendUpdateTeamActive', {gameName: this.gameName, teamName: team, include: include})
     },
     saveFacilitatorStarts() {
       const facilitatorStarts = document.getElementById('facilitator-starts').checked
-      this.socket.emit('updateConfig', {gameName: this.gameName, field: 'facilitatorStarts', value: facilitatorStarts})
+      bus.$emit('sendUpdateConfig', {gameName: this.gameName, field: 'facilitatorStarts', value: facilitatorStarts})
     },
     saveAllowMobile() {
       const allowMobile = document.getElementById('allow-mobile').checked
-      this.socket.emit('updateConfig', {gameName: this.gameName, field: 'allowMobile', value: allowMobile})
+      bus.$emit('sendUpdateConfig', {gameName: this.gameName, field: 'allowMobile', value: allowMobile})
     },
     savePercentageBlocked() {
       const percentageBlocked = document.getElementById('percentage-blocked').value
-      this.socket.emit('updateConfig', {gameName: this.gameName, field: 'percentageBlocked', value: percentageBlocked})
+      bus.$emit('sendUpdateConfig', {gameName: this.gameName, field: 'percentageBlocked', value: percentageBlocked})
     },
     saveMvpCards() {
       const mvpCards = document.getElementById('mvp-cards').value
-      this.socket.emit('updateConfig', {gameName: this.gameName, field: 'mvpCards', value: parseInt(mvpCards)})
+      bus.$emit('sendUpdateConfig', {gameName: this.gameName, field: 'mvpCards', value: parseInt(mvpCards)})
     },
     savePercentageDeployFail() {
       const percentageDeployFail = document.getElementById('percentage-deploy-fail').value
-      this.socket.emit('updateConfig', {gameName: this.gameName, field: 'percentageDeployFail', value: percentageDeployFail})
+      bus.$emit('sendUpdateConfig', {gameName: this.gameName, field: 'percentageDeployFail', value: percentageDeployFail})
     },
     otherCards(team) {
       return this.gameState.find(function(t) {

@@ -12,17 +12,85 @@ const socket = io(connStr)
 
 // --- Send ---
 
+bus.$on('sendLoadGame', (data) => { socket.emit('sendLoadGame', data) })
+
+bus.$on('sendMakeCaptain', (data) => { socket.emit('sendMakeCaptain', data) })
+
 bus.$on('sendRestartGame', (data) => { socket.emit('sendRestartGame', data) })
 
-// Day
-
 bus.$on('sendHide', (data) => { socket.emit('sendHide', data) })
+
+bus.$on('sendGameState', (data) => { socket.emit('sendGameState', data) })
+
+bus.$on('sendGetGameDetails', (data) => { socket.emit('sendGetGameDetails', data) })
+
+bus.$on('sendGetAvailableGames', (data) => { socket.emit('sendGetAvailableGames', data) })
 
 bus.$on('sendRetro', (data) => { socket.emit('sendRetro', data) })
 
 bus.$on('sendRetroDone', (data) => { socket.emit('sendRetroDone', data) })
 
 bus.$on('sendShowEventCard', (data) => { socket.emit('sendShowEventCard', data) })
+
+bus.$on('sendUpdateCurrentDay', (data) => { socket.emit('sendUpdateCurrentDay', data) })
+
+bus.$on('sendStartAutoDeploy', (data) => { socket.emit('sendStartAutoDeploy', data) })
+
+bus.$on('sendIncrementAutoDeploy', (data) => { socket.emit('sendIncrementAutoDeploy', data) })
+
+bus.$on('sendUpdatePersonAutoDeployEffort', (data) => { socket.emit('sendUpdatePersonAutoDeployEffort', data) })
+
+bus.$on('sendPairingDay', (data) => { socket.emit('sendPairingDay', data) })
+
+bus.$on('sendAddEffortToOthersCard', (data) => { socket.emit('sendAddEffortToOthersCard', data) })
+
+bus.$on('sendUpdateOtherTeamEffort', (data) => { socket.emit('sendUpdateOtherTeamEffort', data) })
+
+bus.$on('sendHint', (data) => { socket.emit('sendHint', data) })
+
+bus.$on('sendPullInCard', (data) => { socket.emit('sendPullInCard', data) })
+
+bus.$on('sendUpdatePersonEffort', (data) => { socket.emit('sendUpdatePersonEffort', data) })
+
+bus.$on('sendUpdateEffort', (data) => { socket.emit('sendUpdateEffort', data) })
+
+bus.$on('sendSendMessageToFacilitators', (data) => { socket.emit('sendSendMessageToFacilitators', data) })
+
+bus.$on('sendSendMessage', (data) => { socket.emit('sendSendMessage', data) })
+
+bus.$on('sendUpdateMessages', (data) => { socket.emit('sendUpdateMessages', data) })
+
+bus.$on('sendAnswerFacilitatorQuestion', (data) => { socket.emit('sendAnswerFacilitatorQuestion', data) })
+
+bus.$on('sendUpdateFacilitatorMessages', (data) => { socket.emit('sendUpdateFacilitatorMessages', data) })
+
+bus.$on('sendUpdateProjectEstimate', (data) => { socket.emit('sendUpdateProjectEstimate', data) })
+
+bus.$on('sendUpdateMVPEstimate', (data) => { socket.emit('sendUpdateMVPEstimate', data) })
+
+bus.$on('sendUpdateReEstimate', (data) => { socket.emit('sendUpdateReEstimate', data) })
+
+bus.$on('sendShowSetEstimates', (data) => { socket.emit('sendShowSetEstimates', data) })
+
+// Facilitator
+
+bus.$on('sendBroadcastMessage', (data) => { socket.emit('sendBroadcastMessage', data) })
+
+bus.$on('sendUpdateStealth', (data) => { socket.emit('sendUpdateStealth', data) })
+
+bus.$on('sendUpdateConfig', (data) => { socket.emit('sendUpdateConfig', data) })
+
+bus.$on('sendUpdateTeamActive', (data) => { socket.emit('sendUpdateTeamActive', data) })
+
+bus.$on('sendGetGames', (data) => { socket.emit('sendGetGames', data) })
+
+bus.$on('sendUpdateGameInclude', (data) => { socket.emit('sendUpdateGameInclude', data) })
+
+bus.$on('sendDeleteGame', (data) => { socket.emit('sendDeleteGame', data) })
+
+bus.$on('sendRunDemoToMvp', (data) => { socket.emit('sendRunDemoToMvp', data) })
+
+bus.$on('sendRunDemoToEnd', (data) => { socket.emit('sendRunDemoToEnd', data) })
 
 // Results
 
@@ -62,9 +130,35 @@ bus.$on('sendRunDemoGame', (data) => { socket.emit('sendRunDemoGame', data) })
 
 // --- Receive ---
 
-socket.on('sendBroadcastMessage', (data) => { bus.$emit('sendBroadcastMessage', data) })
+socket.on('broadcastMessage', (data) => { bus.$emit('broadcastMessage', data) })
+
+socket.on('loadGame', (data) => { bus.$emit('loadGame', data) })
 
 socket.on('loadTeam', (data) => { bus.$emit('loadTeam', data) })
+
+socket.on('loadMembers', (data) => { bus.$emit('loadMembers', data) })
+
+socket.on('makeCaptain', (data) => { bus.$emit('makeCaptain', data) })
+
+socket.on('updateStealth', (data) => { bus.$emit('updateStealth', data) })
+
+socket.on('updateGameState', (data) => { bus.$emit('updateGameState', data) })
+
+socket.on('updateGames', (data) => { bus.$emit('updateGames', data) })
+
+socket.on('updateGameDetails', (data) => { bus.$emit('updateGameDetails', data) })
+
+socket.on('updateConnections', (data) => { bus.$emit('updateConnections', data) })
+
+socket.on('showEventCard', (data) => { bus.$emit('showEventCard', data) })
+
+socket.on('autoDeployIncremented', (data) => { bus.$emit('autoDeployIncremented', data) })
+
+socket.on('autoDeployComplete', (data) => { bus.$emit('autoDeployComplete', data) })
+
+socket.on('showResult', (data) => { bus.$emit('showResult', data) })
+
+socket.on('showSetEstimates', (data) => { bus.$emit('showSetEstimates', data) })
 
 // Day
 

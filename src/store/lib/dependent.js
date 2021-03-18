@@ -52,7 +52,7 @@ module.exports = {
     const newOtherCards = []
     for (let i = 0; i < otherCards.length; i++) {
       const otherCard = otherCards[i]
-      if (otherCard.number == workCard.number) {
+      if (otherCard.number == workCard.number && otherCard.team == workCard.team) {
         otherCard.dependencyDone = otherCard.dependencyDone + effort
       }
       newOtherCards.push(otherCard)

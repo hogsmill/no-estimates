@@ -88,10 +88,9 @@
 </template>
 
 <script>
+import bus from '../socket.js'
+
 export default {
-  props: [
-    'socket'
-  ],
   data() {
     return {
       chattingTo: '',
@@ -191,20 +190,20 @@ export default {
       } else {
         const message = document.getElementById('new-message').value
         if (this.chattingTo == 'Facilitators') {
-          this.socket.emit('sendMessageToFacilitators', {gameName: this.gameName, teamName: this.teamName, message: message})
+          bus.$emit('sendSendMessageToFacilitators', {gameName: this.gameName, teamName: this.teamName, message: message})
         } else {
-          this.socket.emit('sendMessage', {gameName: this.gameName, teamName: this.teamName, chattingTo: this.chattingTo, message: message})
+          bus.$emit('sendSendMessage', {gameName: this.gameName, teamName: this.teamName, chattingTo: this.chattingTo, message: message})
         }
       }
     },
     sendMessageToFacilitators() {
       const message = document.getElementById('new-message').value
-      this.socket.emit('sendMessageToFacilitators', {gameName: this.gameName, teamName: this.teamName, message: message})
+      bus.$emit('sendSendMessageToFacilitators', {gameName: this.gameName, teamName: this.teamName, message: message})
     },
     messageSeen(messages, index) {
       messages[index].seen = true
       this.messages[this.chattingTo] = messages
-      this.socket.emit('updateMessages', {gameName: this.gameName, teamName: this.teamName, messages: this.messages})
+      bus.$emit('sendUpdateMessages', {gameName: this.gameName, teamName: this.teamName, messages: this.messages})
     }
   }
 }

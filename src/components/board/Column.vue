@@ -1,8 +1,8 @@
 <template>
   <div>
-    <AutoDeploy v-if="showAutoDeploy(column)" :socket="socket" />
+    <AutoDeploy v-if="showAutoDeploy(column)" />
     <div v-for="(card, index) in column.cards" :key="index">
-      <WorkCard :column="column.name" :work-card="card" :socket="socket" />
+      <WorkCard :column="column.name" :work-card="card" />
     </div>
   </div>
 </template>
@@ -17,7 +17,7 @@ export default {
     AutoDeploy
   },
   props: [
-    'column', 'socket'
+    'column'
   ],
   computed: {
     gameName() {

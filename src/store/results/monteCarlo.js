@@ -97,7 +97,6 @@ module.exports = {
       days: [],
       counts: [],
     }
-    console.log(config)
     if (cards.length) {
       const cardsToRunTo = getCardsToRunTo(config, cards)
       const cardsPerDay = cardsPerDayDistribution(cards, cardsToRunTo.from)

@@ -40,8 +40,6 @@ bus.$on('sendIncrementAutoDeploy', (data) => { socket.emit('sendIncrementAutoDep
 
 bus.$on('sendUpdatePersonAutoDeployEffort', (data) => { socket.emit('sendUpdatePersonAutoDeployEffort', data) })
 
-bus.$on('sendPairingDay', (data) => { socket.emit('sendPairingDay', data) })
-
 bus.$on('sendAddEffortToOthersCard', (data) => { socket.emit('sendAddEffortToOthersCard', data) })
 
 bus.$on('sendUpdateOtherTeamEffort', (data) => { socket.emit('sendUpdateOtherTeamEffort', data) })

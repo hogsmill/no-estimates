@@ -159,9 +159,6 @@ export default {
             } else {
               workCard.effort[column] = workCard.effort[column] + 1
               effort = 2
-              if (column == this.column) {
-                bus.$emit('sendPairingDay', {gameName: this.gameName, teamName: this.teamName, name: this.myName, column: column, day: this.currentDay})
-              }
             }
           }
         }

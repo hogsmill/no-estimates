@@ -134,8 +134,6 @@ MongoClient.connect(url, { useUnifiedTopology: true, maxIdleTimeMS: maxIdleTime 
 
     socket.on('sendUpdateEffort', (data) => { dbStore.updateEffort(db, io, data, debugOn) })
 
-    socket.on('sendPairingDay', (data) => { dbStore.pairingDay(db, io, data, debugOn) })
-
     socket.on('sendAddEffortToOthersCard', (data) => { dbStore.addEffortToOthersCard(db, io, data, debugOn) })
 
     socket.on('sendUpdateOtherTeamEffort', (data) => { emit('updateOtherTeamEffort', data) })

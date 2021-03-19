@@ -207,6 +207,65 @@ function updateGame(db, io, res) {
   })
 }
 
+function pairingDay(db, io, data, debugOn) {
+
+  if (debugOn) { console.log('pairingDay', data) }
+
+  db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
+    if (err) throw err
+    if (res) {
+      let i, player
+      const pairing = [], day = res.currentDay
+      data.day = res.currentDay
+      for (i = 0; i < res.pairing.length; i++) {
+        if (res.pairing[i].name.id == data.name.id) {
+          player = res.pairing[i]
+        } else {
+          pairing.push(res.pairing[i])
+        }
+      }
+      if (!player) {
+        player = {name: data.name, columns: [{column: data.column, days: [data.day]}]}
+      } else {
+        let column
+        for (i = 0; i < player.columns.length; i++) {
+          if (player.columns[i].column == data.column) {
+            column = player.columns[i]
+          }
+        }
+        if (!column) {
+          player.columns.push({column: data.column, days: [data.day]})
+        } else {
+          let dayDone = false
+          for (i = 0; i < column.days.length; i++) {
+            if (column.days[i] == data.day) {
+              dayDone = true
+            }
+          }
+          if (!dayDone) {
+            column.days.push(data.day)
+          }
+          if (column.days.length >= 5) {
+            res.members = pairingFuns.addSecondarySkill(res.members, column.column, data.name)
+          }
+          const columns = []
+          for (i = 0; i < player.columns.length; i++) {
+            if (player.columns[i].column == data.column) {
+              columns.push(column)
+            } else {
+              columns.push(player.columns[i])
+            }
+          }
+          player.columns = columns
+        }
+      }
+      pairing.push(player)
+      res.pairing = pairing
+      updateTeam(db, io, res)
+    }
+  })
+}
+
 module.exports = {
 
   gameState: function(db, io, data) {
@@ -493,65 +552,16 @@ module.exports = {
         res.daysEffort = todaysEffort
         res.columns = columns
         res.workCards = workCards
-        updateTeam(db, io, res)
-      }
-    })
-  },
-
-  pairingDay: function(db, io, data, debugOn) {
-
-    if (debugOn) { console.log('pairingDay', data) }
-
-    db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
-      if (err) throw err
-      if (res) {
-        let i, player
-        const pairing = []
-        for (i = 0; i < res.pairing.length; i++) {
-          if (res.pairing[i].name.id == data.name.id) {
-            player = res.pairing[i]
-          } else {
-            pairing.push(res.pairing[i])
+        const id = res._id
+        delete res._id
+        db.collection('noEstimates').updateOne({'_id': id}, {$set: res}, function(err) {
+          if (err) throw err
+          if (data.column != data.role.replace(/er$/, '').toLowerCase()) {
+            pairingDay(db, io, data, debugOn)
           }
-        }
-        if (!player) {
-          player = {name: data.name, columns: [{column: data.column, days: [data.day]}]}
-        } else {
-          let column
-          for (i = 0; i < player.columns.length; i++) {
-            if (player.columns[i].column == data.column) {
-              column = player.columns[i]
-            }
-          }
-          if (!column) {
-            player.columns.push({column: data.column, days: [data.day]})
-          } else {
-            let dayDone = false
-            for (i = 0; i < column.days.length; i++) {
-              if (column.days[i] == data.day) {
-                dayDone = true
-              }
-            }
-            if (!dayDone) {
-              column.days.push(data.day)
-            }
-            if (column.days.length >= 5) {
-              res.members = pairingFuns.addSecondarySkill(res.members, column.column, data.name)
-            }
-            const columns = []
-            for (i = 0; i < player.columns.length; i++) {
-              if (player.columns[i].column == data.column) {
-                columns.push(column)
-              } else {
-                columns.push(player.columns[i])
-              }
-            }
-            player.columns = columns
-          }
-        }
-        pairing.push(player)
-        res.pairing = pairing
-        updateTeam(db, io, res)
+          io.emit('loadTeam', res)
+          gameState.update(db, io, res)
+        })
       }
     })
   },
@@ -612,7 +622,8 @@ module.exports = {
         db.collection('noEstimates').updateOne({'_id': id}, {$set: res}, function(err) {
           if (err) throw err
           io.emit('loadTeam', res)
-          io.emit('autoDeployIncremented', data)
+          data.column = 'deploy'
+          pairingDay(db, io, data, debugOn)
           gameState.update(db, io, res)
         })
       }

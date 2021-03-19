@@ -51,18 +51,9 @@ export default {
   },
   created() {
     const self = this
-
     bus.$on('autoDeployComplete', (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         self.$modal.show('autodeploy-complete-popup')
-      }
-    })
-
-    bus.$on('autoDeployIncremented', (data) => {
-      if (this.gameName == data.gameName && this.teamName == data.teamName) {
-        if (!roles.iHaveRole('deploy', this.myRole, this.myOtherRoles)) {
-          bus.$emit('sendPairingDay', {gameName: this.gameName, teamName: this.teamName, name: this.myName, column: 'deploy', day: this.currentDay})
-        }
       }
     })
   },

@@ -74,7 +74,7 @@ export default {
         }, 2000)
       } else {
         bus.$emit('sendAddEffortToOthersCard', {gameName: this.gameName, teamName: this.teamName, card: card, myName: this.myName, effort: 1})
-        bus.$emit('sendUpdateOtherTeamEffort', {gameName: this.gameName, teamName: this.teamName, card: card, name: this.myName, effort: this.myEffort})
+        bus.$emit('emitUpdateOtherTeamEffort', {gameName: this.gameName, teamName: this.teamName, card: card, name: this.myName, effort: this.myEffort})
       }
     }
   }

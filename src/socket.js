@@ -18,7 +18,7 @@ bus.$on('sendMakeCaptain', (data) => { socket.emit('sendMakeCaptain', data) })
 
 bus.$on('sendRestartGame', (data) => { socket.emit('sendRestartGame', data) })
 
-bus.$on('sendHide', (data) => { socket.emit('sendHide', data) })
+bus.$on('emitHide', (data) => { socket.emit('emitHide', data) })
 
 bus.$on('sendGameState', (data) => { socket.emit('sendGameState', data) })
 
@@ -26,11 +26,11 @@ bus.$on('sendGetGameDetails', (data) => { socket.emit('sendGetGameDetails', data
 
 bus.$on('sendGetAvailableGames', (data) => { socket.emit('sendGetAvailableGames', data) })
 
-bus.$on('sendRetro', (data) => { socket.emit('sendRetro', data) })
+bus.$on('emitRetro', (data) => { socket.emit('emitRetro', data) })
 
 bus.$on('sendRetroDone', (data) => { socket.emit('sendRetroDone', data) })
 
-bus.$on('sendShowEventCard', (data) => { socket.emit('sendShowEventCard', data) })
+bus.$on('emitShowEventCard', (data) => { socket.emit('emitShowEventCard', data) })
 
 bus.$on('sendUpdateCurrentDay', (data) => { socket.emit('sendUpdateCurrentDay', data) })
 
@@ -38,17 +38,17 @@ bus.$on('sendStartAutoDeploy', (data) => { socket.emit('sendStartAutoDeploy', da
 
 bus.$on('sendIncrementAutoDeploy', (data) => { socket.emit('sendIncrementAutoDeploy', data) })
 
-bus.$on('sendUpdatePersonAutoDeployEffort', (data) => { socket.emit('sendUpdatePersonAutoDeployEffort', data) })
+bus.$on('emitUpdatePersonAutoDeployEffort', (data) => { socket.emit('emitUpdatePersonAutoDeployEffort', data) })
 
 bus.$on('sendAddEffortToOthersCard', (data) => { socket.emit('sendAddEffortToOthersCard', data) })
 
-bus.$on('sendUpdateOtherTeamEffort', (data) => { socket.emit('sendUpdateOtherTeamEffort', data) })
+bus.$on('emitUpdateOtherTeamEffort', (data) => { socket.emit('emitUpdateOtherTeamEffort', data) })
 
-bus.$on('sendHint', (data) => { socket.emit('sendHint', data) })
+bus.$on('emitHint', (data) => { socket.emit('emitHint', data) })
 
 bus.$on('sendPullInCard', (data) => { socket.emit('sendPullInCard', data) })
 
-bus.$on('sendUpdatePersonEffort', (data) => { socket.emit('sendUpdatePersonEffort', data) })
+bus.$on('emitUpdatePersonEffort', (data) => { socket.emit('emitUpdatePersonEffort', data) })
 
 bus.$on('sendUpdateEffort', (data) => { socket.emit('sendUpdateEffort', data) })
 
@@ -68,11 +68,11 @@ bus.$on('sendUpdateMVPEstimate', (data) => { socket.emit('sendUpdateMVPEstimate'
 
 bus.$on('sendUpdateReEstimate', (data) => { socket.emit('sendUpdateReEstimate', data) })
 
-bus.$on('sendShowSetEstimates', (data) => { socket.emit('sendShowSetEstimates', data) })
+bus.$on('emitShowSetEstimates', (data) => { socket.emit('emitShowSetEstimates', data) })
 
 // Facilitator
 
-bus.$on('sendBroadcastMessage', (data) => { socket.emit('sendBroadcastMessage', data) })
+bus.$on('emitBroadcastMessage', (data) => { socket.emit('emitBroadcastMessage', data) })
 
 bus.$on('sendUpdateStealth', (data) => { socket.emit('sendUpdateStealth', data) })
 

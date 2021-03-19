@@ -176,7 +176,7 @@ export default {
           self.$store.dispatch('updateMessage', '')
         }, 2000)
       } else {
-        bus.$emit('sendUpdatePersonEffort', {gameName: this.gameName, teamName: this.teamName, workCard: workCard, name: this.myName, column: column})
+        bus.$emit('emitUpdatePersonEffort', {gameName: this.gameName, teamName: this.teamName, workCard: workCard, name: this.myName, column: column})
         bus.$emit('sendUpdateEffort', {
           gameName: this.gameName,
           teamName: this.teamName,

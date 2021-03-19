@@ -84,7 +84,7 @@ export default {
       return this.columns.find(function(c) { return c.name == 'done' }).cards.length
     },
     showSetEstimates() {
-      bus.$emit('sendShowSetEstimates', {gameName: this.gameName, teamName: this.teamName})
+      bus.$emit('emitShowSetEstimates', {gameName: this.gameName, teamName: this.teamName})
     }
   }
 }

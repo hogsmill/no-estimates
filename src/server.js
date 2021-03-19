@@ -112,31 +112,31 @@ MongoClient.connect(url, { useUnifiedTopology: true, maxIdleTimeMS: maxIdleTime 
       dbStore.deleteGame(db, io, data, debugOn)
     })
 
-    socket.on('sendShowSetEstimates', (data) => { emit('showSetEstimates', data) })
+    socket.on('emitShowSetEstimates', (data) => { emit('showSetEstimates', data) })
 
-    socket.on('sendRetro', (data) => { emit('retro', data) })
+    socket.on('emitRetro', (data) => { emit('retro', data) })
 
     socket.on('sendRetroDone', (data) => { dbStore.retroDone(db, io, data, debugOn) })
 
-    socket.on('sendShowEventCard', (data) => { emit('showEventCard', data) })
+    socket.on('emitShowEventCard', (data) => { emit('showEventCard', data) })
 
     socket.on('sendUpdateCurrentDay', (data) => { dbStore.updateCurrentDay(db, io, data, debugOn) })
 
-    socket.on('sendHide', (data) => { emit('hide', data) })
+    socket.on('emitHide', (data) => { emit('hide', data) })
 
     socket.on('sendPullInCard', (data) => { dbStore.pullInCard(db, io, data, debugOn) })
 
-    socket.on('sendHint', (data) => { emit('hint', data) })
+    socket.on('emitHint', (data) => { emit('hint', data) })
 
-    socket.on('sendUpdatePersonEffort', (data) => { emit('updatePersonEffort', data) })
+    socket.on('emitUpdatePersonEffort', (data) => { emit('updatePersonEffort', data) })
 
-    socket.on('sendUpdatePersonAutoDeployEffort', (data) => { emit('updatePersonAutoDeployEffort', data) })
+    socket.on('emitUpdatePersonAutoDeployEffort', (data) => { emit('updatePersonAutoDeployEffort', data) })
 
     socket.on('sendUpdateEffort', (data) => { dbStore.updateEffort(db, io, data, debugOn) })
 
     socket.on('sendAddEffortToOthersCard', (data) => { dbStore.addEffortToOthersCard(db, io, data, debugOn) })
 
-    socket.on('sendUpdateOtherTeamEffort', (data) => { emit('updateOtherTeamEffort', data) })
+    socket.on('emitUpdateOtherTeamEffort', (data) => { emit('updateOtherTeamEffort', data) })
 
     socket.on('sendSendMessage', (data) => { dbStore.sendMessage(db, io, data, debugOn) })
 
@@ -162,7 +162,7 @@ MongoClient.connect(url, { useUnifiedTopology: true, maxIdleTimeMS: maxIdleTime 
 
     socket.on('sendUpdateConfig', (data) => { dbStore.updateConfig(db, io, data, debugOn) })
 
-    socket.on('sendBroadcastMessage', (data) => { emit('broadcastMessage', data) })
+    socket.on('emitBroadcastMessage', (data) => { emit('broadcastMessage', data) })
 
     socket.on('sendUpdateStealth', (data) => { dbStore.updateStealth(db, io, data, debugOn) })
 

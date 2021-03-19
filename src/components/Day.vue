@@ -154,7 +154,7 @@ export default {
     },
     hide() {
       this.retroTimerRunning = false
-      bus.$emit('sendHide', {gameName: this.gameName, teamName: this.teamName, popup: 'retro'})
+      bus.$emit('emitHide', {gameName: this.gameName, teamName: this.teamName, popup: 'retro'})
     },
     retroTimeString() {
       if (!this.retroTimer) {
@@ -205,11 +205,11 @@ export default {
         return
       }
       if (this.doRetros && !this.retrosDone[this.currentDay] && this.currentDay % this.retroDays == 0) {
-        bus.$emit('sendRetro', {gameName: this.gameName, teamName: this.teamName})
+        bus.$emit('emitRetro', {gameName: this.gameName, teamName: this.teamName})
         bus.$emit('sendRetroDone', {gameName: this.gameName, teamName: this.teamName, currentDay: this.currentDay})
       } else {
         this.hide()
-        bus.$emit('sendShowEventCard', {gameName: this.gameName, teamName: this.teamName})
+        bus.$emit('emitShowEventCard', {gameName: this.gameName, teamName: this.teamName})
       }
     }
   }

@@ -86,7 +86,7 @@ export default {
         this.show()
       } else {
         if (currentCard.teamDependency) {
-          bus.$emit('sendHint', {gameName: this.gameName, teamName: this.teamName, hint: 'You can click the chat icon to chat with other teams about dependent work...'})
+          bus.$emit('emitHint', {gameName: this.gameName, teamName: this.teamName, hint: 'You can click the chat icon to chat with other teams about dependent work...'})
         }
         if (this.currentWorkCard !== false) {
           bus.$emit('sendPullInCard', {gameName: this.gameName, teamName: this.teamName, teams: this.teams})

@@ -199,7 +199,7 @@ export default {
       this.$modal.hide('event-card-popup')
     },
     hide(name) {
-      bus.$emit('sendHide', {gameName: this.gameName, teamName: this.teamName, popup: name})
+      bus.$emit('emitHide', {gameName: this.gameName, teamName: this.teamName, popup: name})
     },
     completed() {
       return this.columns.find(function(c) {

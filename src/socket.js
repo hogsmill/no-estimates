@@ -124,6 +124,8 @@ bus.$on('sendSetupRunGame', (data) => { socket.emit('sendSetupRunGame', data) })
 
 bus.$on('sendSetDemoRunning', (data) => { socket.emit('sendSetDemoRunning', data) })
 
+bus.$on('sendSetDemoNotRunning', (data) => { socket.emit('sendSetDemoNotRunning', data) })
+
 bus.$on('sendRunDemoGame', (data) => { socket.emit('sendRunDemoGame', data) })
 
 // --- Receive ---
@@ -188,5 +190,6 @@ socket.on('updateSourcesOfVariation', (data) => { bus.$emit('updateSourcesOfVari
 
 socket.on('startRun', (data) => { bus.$emit('startRun', data) })
 
+socket.on('demoMoveComplete', (data) => { bus.$emit('demoMoveComplete', data) })
 
 export default bus

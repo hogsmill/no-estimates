@@ -896,12 +896,30 @@ module.exports = {
       if (err) throw err
       if (res) {
         const demoConfig = res.demoConfig
-        demoConfig.running = data.running
+        demoConfig.running = true
         res.demoConfig = demoConfig
         db.collection('noEstimatesGames').updateOne({'_id': res._id}, {$set: {demoConfig: demoConfig}}, function(err) {
           if (err) throw err
           io.emit('loadGame', res)
           io.emit('startRun', data)
+        })
+      }
+    })
+  },
+
+  setDemoNotRunning: function(db, io, data, debugOn) {
+
+    if (debugOn) { console.log('setDemoNotRunning', data) }
+
+    db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, res) {
+      if (err) throw err
+      if (res) {
+        const demoConfig = res.demoConfig
+        demoConfig.running = false
+        res.demoConfig = demoConfig
+        db.collection('noEstimatesGames').updateOne({'_id': res._id}, {$set: {demoConfig: demoConfig}}, function(err) {
+          if (err) throw err
+          io.emit('loadGame', res)
         })
       }
     })

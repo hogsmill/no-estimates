@@ -209,6 +209,8 @@ MongoClient.connect(url, { useUnifiedTopology: true, maxIdleTimeMS: maxIdleTime 
     socket.on('sendSetDemoStepThrough', (data) => { dbStore.setDemoStepThrough(db, io, data, debugOn) })
 
     socket.on('sendSetDemoRunning', (data) => { dbStore.setDemoRunning(db, io, data, debugOn) })
+    
+    socket.on('sendSetDemoNotRunning', (data) => { dbStore.setDemoNotRunning(db, io, data, debugOn) })
 
     socket.on('sendRunDemoToMvp', (data) => { demo.runDemoToMvp(db, io, data, debugOn) })
 

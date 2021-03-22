@@ -67,6 +67,9 @@ function makeMove(db, io, game, teams) {
     console.log('  Adding Effort')
     addEffort(db, io, game)
   }
+  setTimeout(function() {
+    io.emit('demoMoveComplete', data)
+  }, 1000)
 }
 
 function updateTeam(db, io, res) {

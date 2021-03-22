@@ -80,13 +80,11 @@ export default {
   },
   created() {
     const self = this
-    bus.$on('loadTeam', (data) => {
+    bus.$on('demoMoveComplete', (data) => {
       if (self.demoConfig.running && self.gameName == data.gameName && self.teamName == data.teamName) {
-        self.checkRunComplete(data)
+        self.checkRunComplete()
         if (!self.runComplete) {
-          window.setTimeout(function() {
-            self.run()
-          }, 1000)
+          self.run()
         }
       }
     })
@@ -123,8 +121,8 @@ export default {
       bus.$emit('setDemoStepThrough', {gameName: this.gameName, stepThrough: stepThrough})
 
     },
-    checkRunComplete(data) {
-      this.runComplete = data.columns.find(function(c) {
+    checkRunComplete() {
+      this.runComplete = this.columns.find(function(c) {
         return c.name == 'done'
       }).cards.length >= this.demoConfig.runToCards
     },
@@ -132,15 +130,15 @@ export default {
       bus.$emit('sendSetupRunGame', {gameName: this.gameName})
     },
     runGame() {
-      bus.$emit('sendSetDemoRunning', {gameName: this.gameName, running: true})
+      bus.$emit('sendSetDemoRunning', {gameName: this.gameName})
     },
     stopGame() {
-      bus.$emit('sendSetDemoRunning', {gameName: this.gameName, running: false})
+      bus.$emit('sendSetDemoNotRunning', {gameName: this.gameName})
     },
     run() {
       if (this.runComplete) {
         console.log('Run Complete to ' + this.demoConfig.runToCards + ' cards')
-        bus.$emit('sendSetDemoRunning', {gameName: this.gameName, running: false})
+        bus.$emit('sendSetDemoNotRunning', {gameName: this.gameName})
       } else {
         bus.$emit('sendRunDemoGame', {gameName: this.gameName, teamName: this.teamName})
       }
@@ -148,7 +146,7 @@ export default {
     restartGame() {
       const restartGame = confirm('Are you sure you want to re-start this game?')
       if (restartGame) {
-        bus.$emit('sendSetDemoRunning', {gameName: this.gameName, running: false})
+        bus.$emit('sendSetDemoNotRunning', {gameName: this.gameName})
         bus.$emit('sendRestartGame', {gameName: this.gameName, stealth: this.stealth})
       }
     },

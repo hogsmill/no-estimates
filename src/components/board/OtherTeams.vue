@@ -57,7 +57,9 @@ export default {
   methods: {
     addEffort(card) {
       let message = ''
-      if (this.myEffort.available == 0) {
+      if (!this.myRole) {
+        message = 'you don\'t have a role'
+      } else if (this.myEffort.available == 0) {
         message = 'Can\'t assign - all effort assigned'
       } else if (card.dependencyDone == card.teamDependency) {
         message = 'Can\'t assign - card complete'

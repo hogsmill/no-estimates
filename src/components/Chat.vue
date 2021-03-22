@@ -14,7 +14,7 @@
         <table>
           <tr>
             <td colspan="2" class="chatting-to">
-              <h5 v-if="chattingTo" :style="{ 'color': '#fff', 'background-color': chattingTo.toLowerCase() }">
+              <h5 v-if="chattingTo" :style="{ 'color': '#fff', 'background-color': chattingTo == 'Facilitators' ? '#666' : chattingTo.toLowerCase() }">
                 Chatting To: '{{ chattingTo }}'
               </h5>
               <h5 v-if="!chattingTo">

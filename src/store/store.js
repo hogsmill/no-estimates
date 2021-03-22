@@ -7,6 +7,7 @@ export const store = new Vuex.Store({
   state: {
     thisGame: 'No Estimates',
     connections: 0,
+    lastaccess: '',
     walkThrough: false,
     currentTab: 'game',
     host: false,
@@ -416,6 +417,9 @@ export const store = new Vuex.Store({
     },
     getConnections: (state) => {
       return state.connections
+    },
+    getLastAccessed: (state) => {
+      return state.lastaccess
     }
   },
   mutations: {
@@ -479,6 +483,7 @@ export const store = new Vuex.Store({
       state.sourcesOfVariation = payload.sourcesOfVariation
       state.graphConfig = payload.graphConfig
       state.demoConfig = payload.demoConfig
+      state.lastaccess = payload.lastaccess
     },
     updateGameName: (state, payload) => {
       state.gameName = payload

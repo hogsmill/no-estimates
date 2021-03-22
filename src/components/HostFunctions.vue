@@ -1,8 +1,12 @@
 <template>
-  <div>
+  <div class="host-funs">
     <button class="btn btn-sm btn-outline-secondary smaller-font clear-local-storage" @click="clearLocalStorage()">
       Clear Local Storage
     </button>
+    <br>
+    <span class="last-access">
+      last access: {{ lastAccess() }}
+    </span>
     <div class="run-demo rounded">
       <div class="expand">
         <i v-if="showRunGame" @click="setShowRunGame(false)" title="collapse" class="fas fa-caret-up toggle" />
@@ -37,6 +41,7 @@
 </template>
 
 <script>
+import timeAgo from '../lib/timeAgo.js'
 import bus from '../socket.js'
 
 export default {
@@ -68,6 +73,9 @@ export default {
     },
     demoConfig() {
       return this.$store.getters.getDemoConfig
+    },
+    lastAccessed() {
+      return this.$store.getters.getLastAccessed
     }
   },
   created() {
@@ -95,6 +103,9 @@ export default {
     },
     setRunTo(runTo) {
       bus.$emit('sendSetDemoRunTo', {gameName: this.gameName, runTo: runTo})
+    },
+    lastAccess() {
+      return this.lastAccessed ? timeAgo.format(new Date(this.lastAccessed)) : ''
     },
     clearLocalStorage() {
       if (confirm('Clear localStorage?')) {
@@ -146,8 +157,9 @@ export default {
 </script>
 
 <style lang="scss">
-  .clear-local-storage {
+  .host-funs {
     float: right;
+    text-align: right;
   }
 
   .run-demo {

@@ -48,13 +48,10 @@
 </template>
 
 <script>
+import timeAgo from '../../lib/timeAgo.js'
 import bus from '../../socket.js'
 
 import stringFuns from '../../lib/stringFuns.js'
-import TimeAgo from 'javascript-time-ago'
-import en from 'javascript-time-ago/locale/en'
-TimeAgo.addDefaultLocale(en)
-const timeAgo = new TimeAgo('en-GB')
 
 export default {
   data() {

@@ -118,7 +118,7 @@ export default {
     },
     setStepThrough() {
       const stepThrough = document.getElementById('step-through').checked
-      bus.$emit('setDemoStepThrough', {gameName: this.gameName, stepThrough: stepThrough})
+      bus.$emit('sendSetDemoStepThrough', {gameName: this.gameName, stepThrough: stepThrough})
 
     },
     checkRunComplete() {

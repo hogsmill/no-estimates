@@ -114,7 +114,7 @@ module.exports = {
               if (err) throw err
               if (teamRes) {
                 let members = []
-                for (let j = 0; j < 4; j++) {
+                for (let j = 0; j < names.length; j++) {
                   members = teamFuns.addMember(members, names[j], roles[j])
                 }
                 teamRes.members = members

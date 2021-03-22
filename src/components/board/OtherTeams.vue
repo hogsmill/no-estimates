@@ -47,6 +47,9 @@ export default {
     myName() {
       return this.$store.getters.getMyName
     },
+    myRole() {
+      return this.$store.getters.getMyRole
+    },
     myEffort() {
       return this.$store.getters.getMyEffort
     },

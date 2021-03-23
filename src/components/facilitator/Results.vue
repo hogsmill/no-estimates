@@ -261,7 +261,7 @@
         </h4>
         <div class="estimates">
           <div v-if="graphConfig.monteCarlo.runTo == 'Remaining'">
-            Initial Estimate: <b>{{ projectEstimate }}</b> days
+            Initial Estimate: <b>{{ projectEstimate }}</b> days '{{ reEstimate }}'
             <span v-if="reEstimate">- Re-estimate: <b>{{ reEstimate }}</b> days</span>
           </div>
         </div>

@@ -560,6 +560,7 @@ export default {
       return runTo
     },
     showMonteCarlo(data) {
+      console.log(data)
       this.monteCarlo.projectEstimate = data.projectEstimate
       this.monteCarlo.reEstimate = data.reEstimate
       this.monteCarlo.cardsLeft = data.cardsLeft

@@ -133,6 +133,8 @@ module.exports = {
               case 'monte-carlo':
                 data.results = monteCarlo.run(cards, gameRes.graphConfig.monteCarlo)
                 data.cardsLeft = res.workCards.length - cards.length
+                data.projectEstimate = res.projectEstimate
+                data.reEstimate = res.reEstimate
                 break
             }
             io.emit('showResult', data)

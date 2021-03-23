@@ -261,8 +261,8 @@
         </h4>
         <div class="estimates">
           <div v-if="graphConfig.monteCarlo.runTo == 'Remaining'">
-            Initial Estimate: <b>{{ projectEstimate }}</b> days '{{ reEstimate }}'
-            <span v-if="reEstimate">- Re-estimate: <b>{{ reEstimate }}</b> days</span>
+            Initial Estimate: <b>{{ monteCarlo.projectEstimate }}</b> days
+            <span v-if="monteCarlo.reEstimate">- Re-estimate: <b>{{ monteCarlo.reEstimate }}</b> days</span>
           </div>
         </div>
         <div class="monte-carlo-percentiles rounded">
@@ -363,12 +363,6 @@ export default {
     },
     graphConfig() {
       return this.$store.getters.getGraphConfig
-    },
-    projectEstimate() {
-      return this.$store.getters.getProjectEstimate
-    },
-    reEstimate() {
-      return this.$store.getters.getReEstimate
     },
     workCards() {
       return this.$store.getters.getWorkCards
@@ -566,6 +560,8 @@ export default {
       return runTo
     },
     showMonteCarlo(data) {
+      this.monteCarlo.projectEstimate = data.projectEstimate
+      this.monteCarlo.reEstimate = data.reEstimate
       this.monteCarlo.cardsLeft = data.cardsLeft
       this.monteCarlo.data.labels = data.results.days
       this.monteCarlo.data.datasets[0].data = data.results.counts

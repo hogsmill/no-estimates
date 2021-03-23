@@ -107,10 +107,11 @@ module.exports = {
         const result = results[i] ? results[i] : 0
         data.counts.push(result)
       }
+      // TEMP 
+      data.cardsToRunTo = cardsToRunTo
+      data.cardsPerDay = cardsPerDay
     }
     data.percentiles = percentages(data.counts, data.days, config)
-    data.cardsToRunTo = cardsToRunTo
-    data.cardsPerDay = cardsPerDay
     return data
   }
 

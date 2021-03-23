@@ -132,6 +132,7 @@ module.exports = {
                 break
               case 'monte-carlo':
                 data.results = monteCarlo.run(cards, gameRes.graphConfig.monteCarlo)
+                data.cardsLeft = res.workCards.length - cards.length
                 break
             }
             io.emit('showResult', data)

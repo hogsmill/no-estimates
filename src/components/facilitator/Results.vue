@@ -452,6 +452,9 @@ export default {
       }
       return max
     },
+    selectedGraphs() {
+
+    },
     showSourcesOfVariation() {
       this.$modal.show('sources-of-variation')
     },
@@ -553,13 +556,14 @@ export default {
     monteCarloCards() {
       let runTo
       if (this.graphConfig.monteCarlo.runTo == 'Remaining') {
-        runTo = 'the remaining ' + parseInt(this.workCards.length - this.noOfDoneCards)
+        runTo = 'the remaining ' + this.monteCarlo.cardsLeft
       } else {
         runTo = this.graphConfig.monteCarlo.runTo
       }
       return runTo
     },
     showMonteCarlo(data) {
+      this.monteCarlo.cardsLeft = data.cardsLeft
       this.monteCarlo.data.labels = data.results.days
       this.monteCarlo.data.datasets[0].data = data.results.counts
       this.monteCarlo.percentiles = data.results.percentiles

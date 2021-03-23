@@ -109,6 +109,8 @@ module.exports = {
       }
     }
     data.percentiles = percentages(data.counts, data.days, config)
+    data.cardsToRunTo = cardsToRunTo
+    data.cardsPerDay = cardsPerDay
     return data
   }
 

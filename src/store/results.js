@@ -135,10 +135,6 @@ module.exports = {
                 data.cardsLeft = res.workCards.length - cards.length
                 data.projectEstimate = res.projectEstimate
                 data.reEstimate = res.reEstimate
-
-                // TEMP
-                data.cards = cards
-                data.config = gameRes.graphConfig.monteCarlo
                 break
             }
             io.emit('showResult', data)

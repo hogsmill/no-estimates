@@ -93,7 +93,7 @@ function percentages(counts, days, config) {
 module.exports = {
 
   run: function(cards, config) {
-    const data = {
+    let data = {
       days: [],
       counts: [],
     }
@@ -107,7 +107,7 @@ module.exports = {
         const result = results[i] ? results[i] : 0
         data.counts.push(result)
       }
-      // TEMP 
+      // TEMP
       data.cardsToRunTo = cardsToRunTo
       data.cardsPerDay = cardsPerDay
     }

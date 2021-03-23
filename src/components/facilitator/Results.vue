@@ -260,7 +260,10 @@
           Team {{ selectedGraphTeam1 }} Monte Carlo: {{ parseInt(graphConfig.monteCarlo.runs).toLocaleString() }} runs to complete {{ monteCarloCards() }} cards
         </h4>
         <div class="estimates">
-          <div v-if="graphConfig.monteCarlo.runTo == 'Remaining'">Initial Estimate: <b>{{ projectEstimate }}</b> days, Re-estimate: <b>{{ reEstimate }}</b> days</div>
+          <div v-if="graphConfig.monteCarlo.runTo == 'Remaining'">
+            Initial Estimate: <b>{{ projectEstimate }}</b> days
+            <span v-if="reEstimate">- Re-estimate: <b>{{ reEstimate }}</b> days</span>
+          </div>
         </div>
         <div class="monte-carlo-percentiles rounded">
           Probability of completing cards:

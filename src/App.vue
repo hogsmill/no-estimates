@@ -11,8 +11,8 @@
       <div v-if="connectionError" class="not-connected">
         WARNING: You are not connected to the server: {{ connectionError }}
       </div>
-      <div v-if="!localStorageStatus" class="not-connected">
-        WARNING: localStorage disabled - please enable cookies in browser settings
+      <div v-if="localStorageStatus != 'ok'" class="not-connected">
+        WARNING: {{ localStorageStatus }} - please enable cookies in browser settings
       </div>
       <SetGame />
       <SetEstimates v-if="gameName" />

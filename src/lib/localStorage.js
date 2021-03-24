@@ -8,11 +8,13 @@ const LocalStorage = {
     const uuid = uuidv4()
     try {
       localStorage.setItem('agile-simulations-test', uuid)
-      check = localStorage.getItem('agile-simulations-test') == uuid
+      if (localStorage.getItem('agile-simulations-test') == uuid) {
+        check = 'ok'
+      }
       localStorage.removeItem('agile-simulations-test')
     }
     catch(e) {
-      check = false
+      check = e
     }
     return check
   }

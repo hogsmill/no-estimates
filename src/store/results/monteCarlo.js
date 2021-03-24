@@ -45,10 +45,13 @@ function monteCarlo(cardsPerDay, startFrom, runs, runTo) {
 function cardsPerDayDistribution(cards, from) {
   const cardsPerDay = {}
   for (let i = 0; i < cards.length; i++) {
-    if (!cardsPerDay[cards[i].delivery]) {
-      cardsPerDay[cards[i].delivery] = 1
-    } else {
-      cardsPerDay[cards[i].delivery] = cardsPerDay[cards[i].delivery] + 1
+    // Catch if delivery is undefined - need to find root cause
+    if (cards[i].delivery) {
+      if (!cardsPerDay[cards[i].delivery]) {
+        cardsPerDay[cards[i].delivery] = 1
+      } else {
+        cardsPerDay[cards[i].delivery] = cardsPerDay[cards[i].delivery] + 1
+      }
     }
   }
   const days = [],
@@ -61,12 +64,6 @@ function cardsPerDayDistribution(cards, from) {
   return {
     startFrom: min,
     cards: days
-
-    // TEMP
-    ,
-    cardsPerDay: cardsPerDay,
-    cardsLen: cards.length,
-    runTo: max
   }
 }
 
@@ -100,15 +97,11 @@ module.exports = {
   run: function(cards, config) {
     const data = {
       days: [],
-      counts: [],
-      cardsToRunTo: '',
-      cardsPerDay: ''
+      counts: []
     }
     if (cards.length) {
       const cardsToRunTo = getCardsToRunTo(config, cards)
       const cardsPerDay = cardsPerDayDistribution(cards, cardsToRunTo.from)
-      data.cardsToRunTo = cardsToRunTo
-      data.cardsPerDay = cardsPerDay
       const results = monteCarlo(cardsPerDay.cards, cardsPerDay.startFrom, config.runs, cardsToRunTo.to)
       const max = Math.max(...Object.keys(results))
       for (let i = cardsPerDay.startFrom; i <= max; i++) {

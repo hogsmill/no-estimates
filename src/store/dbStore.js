@@ -462,7 +462,7 @@ module.exports = {
     db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
       if (err) throw err
       if (res) {
-        const currentDay = res.currentDay + 1
+        const day = res.currentDay, currentDay = res.currentDay + 1
         res = teamFuns.updateTeamCapabilities(res, data, res.daysEffort)
         const columns = res.columns, workCards = res.workCards
         for (let i = 0; i < columns.length; i++) {
@@ -473,12 +473,12 @@ module.exports = {
               card.blocked = false
               card.failed = false
               if (cardFuns.cardCompleteInColumn(card, colName, res)) {
-                cardFuns.moveCard(columns, workCards, card, i, res.currentDay)
+                cardFuns.moveCard(columns, workCards, card, i, day)
               }
             }
           }
         }
-        const actuals = cardFuns.calculateActuals(columns, res.workCards, res.config.mvpCards, res.currentDay, res.mvpActual, res.projectActual)
+        const actuals = cardFuns.calculateActuals(columns, res.workCards, res.config.mvpCards, day, res.mvpActual, res.projectActual)
         res.currentDay = currentDay
         res.members = teamFuns.setTeamMembersEffort(res.members, data)
         res.columns = columns
@@ -530,7 +530,7 @@ module.exports = {
       if (err) throw err
       if (res) {
         res.members = teamFuns.decrementMyEffort(res.members, data.name, data.effort)
-        const columns = res.columns, workCards = res.workCards
+        const columns = res.columns, workCards = res.workCards, day = res.currentDay
         let todaysEffort = []
         for (let i = 0; i < columns.length; i++) {
           for (let j = 0; j < columns[i].cards.length; j++) {
@@ -542,7 +542,7 @@ module.exports = {
               card = cardFuns.addCardWorkedOnInDay(card, res.currentDay)
               card = cardFuns.addWorkedOn(card, data.column, data.name, data.role)
               if (cardFuns.cardCompleteInColumn(card, colName, res)) {
-                cardFuns.moveCard(columns, workCards, card, i, res.currentDay)
+                cardFuns.moveCard(columns, workCards, card, i, day)
               }
             }
           }

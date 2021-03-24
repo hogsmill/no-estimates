@@ -64,6 +64,8 @@ function cardsPerDayDistribution(cards, from) {
 
     // TEMP
     ,
+    cardsPerDay: cardsPerDay,
+    cardsLen: cards.length,
     runTo: max
   }
 }

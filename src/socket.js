@@ -10,6 +10,8 @@ if (location.hostname == 'localhost') {
 console.log('Connecting to: ' + connStr)
 const socket = io(connStr)
 
+socket.on('connect_error', (err) => { bus.$emit('connectionError', err) })
+
 // --- Send ---
 
 bus.$on('sendLoadGame', (data) => { socket.emit('sendLoadGame', data) })

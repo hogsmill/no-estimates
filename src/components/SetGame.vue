@@ -212,7 +212,9 @@ export default {
       let gameName = ''
       if (document.getElementById('game-name')) {
         gameName = document.getElementById('game-name').value
-        gameName = stringFuns.sanitize(gameName)
+        if (gameName) {
+          gameName = stringFuns.sanitize(gameName)
+        }
       } else if (this.gameName) {
         gameName = this.gameName
       }
@@ -229,7 +231,9 @@ export default {
       myNameData.host = params.isParam('host')
       if (document.getElementById('my-name')) {
         const myName = document.getElementById('my-name').value
-        myNameData.name = stringFuns.sanitize(myName)
+        if (myName) {
+          myNameData.name = stringFuns.sanitize(myName)
+        }
       }
       return myNameData
     },

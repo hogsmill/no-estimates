@@ -7,6 +7,8 @@ export const store = new Vuex.Store({
   state: {
     thisGame: 'No Estimates',
     connections: 0,
+    connectionError: null,
+    localStorageStatus: true,
     lastaccess: '',
     walkThrough: false,
     currentTab: 'game',
@@ -418,6 +420,12 @@ export const store = new Vuex.Store({
     getConnections: (state) => {
       return state.connections
     },
+    getConnectionError: (state) => {
+      return state.connectionError
+    },
+    getLocalStorageStatus: (state) => {
+      return state.localStorageStatus
+    },
     getLastAccessed: (state) => {
       return state.lastaccess
     }
@@ -534,6 +542,12 @@ export const store = new Vuex.Store({
     },
     updateConnections: (state, payload) => {
       state.connections = payload
+    },
+    updateConnectionError: (state, payload) => {
+      state.connectionError = payload
+    },
+    localStorageStatus: (state, payload) => {
+      state.localStorageStatus = payload
     }
   },
   actions: {
@@ -590,6 +604,12 @@ export const store = new Vuex.Store({
     },
     updateConnections: ({ commit }, payload) => {
       commit('updateConnections', payload)
+    },
+    updateConnectionError: ({ commit }, payload) => {
+      commit('updateConnectionError', payload)
+    },
+    localStorageStatus: ({ commit }, payload) => {
+      commit('localStorageStatus', payload)
     }
   }
 })

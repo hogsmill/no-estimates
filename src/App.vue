@@ -8,8 +8,11 @@
     </div>
     <div v-if="currentTab == 'game'" class="main">
       <HostFunctions v-if="isHost" />
-      <div v-if="!connections.connections" class="not-connected">
-        WARNING: You are not connected to the server
+      <div v-if="connectionError" class="not-connected">
+        WARNING: You are not connected to the server: {{ connectionError }}
+      </div>
+      <div v-if="!localStorageStatus" class="not-connected">
+        WARNING: localStorage disabled - please enable cookies in browser settings
       </div>
       <SetGame />
       <SetEstimates v-if="gameName" />
@@ -38,6 +41,7 @@
 <script>
 import bus from './socket.js'
 
+import ls from './lib/localStorage.js'
 import params from './lib/params.js'
 import stringFuns from './lib/stringFuns.js'
 
@@ -88,8 +92,11 @@ export default {
     isHost() {
       return this.$store.getters.getHost
     },
-    connections() {
-      return this.$store.getters.getConnections
+    connectionError() {
+      return this.$store.getters.getConnectionError
+    },
+    localStorageStatus() {
+      return this.$store.getters.getLocalStorageStatus
     },
     walkThrough() {
       return this.$store.getters.getWalkThrough
@@ -114,6 +121,8 @@ export default {
     }
   },
   created() {
+    this.$store.dispatch('localStorageStatus', ls.check())
+
     if (params.isParam('host')) {
       this.$store.dispatch('updateHost', true)
     }
@@ -199,7 +208,12 @@ export default {
       this.$store.dispatch('updateGameDetails', data)
     })
 
+    bus.$on('connectionError', (data) => {
+      this.$store.dispatch('updateConnectionError', data)
+    })
+
     bus.$on('updateConnections', (data) => {
+      this.$store.dispatch('updateConnectionError', null)
       this.$store.dispatch('updateConnections', data)
     })
   },
@@ -217,6 +231,7 @@ export default {
     background-color: red;
     color: #fff;
     font-weight: bold;
+    margin: 6px;
   }
 
   .right {

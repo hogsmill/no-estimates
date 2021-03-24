@@ -61,6 +61,10 @@ function cardsPerDayDistribution(cards, from) {
   return {
     startFrom: min,
     cards: days
+
+    // TEMP
+    ,
+    runTo: max
   }
 }
 

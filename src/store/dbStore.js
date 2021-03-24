@@ -215,7 +215,7 @@ function pairingDay(db, io, data, debugOn) {
     if (err) throw err
     if (res) {
       let i, player
-      const pairing = [], day = res.currentDay
+      const pairing = []
       data.day = res.currentDay
       for (i = 0; i < res.pairing.length; i++) {
         if (res.pairing[i].name.id == data.name.id) {

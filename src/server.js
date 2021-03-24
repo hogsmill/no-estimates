@@ -5,8 +5,8 @@ const prod = os.hostname() == 'agilesimulations' ? true : false
 
 const logFile = prod ? process.argv[4] : 'server.log'
 
-let currentAction = ''
-let currentData = ''
+const currentAction = ''
+const currentData = ''
 ON_DEATH(function(signal, err) {
   let logStr = new Date()
   if (signal) {

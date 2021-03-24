@@ -17,7 +17,6 @@ module.exports = {
   },
 
   cards: function(cards) {
-    const results = []
     let minCard = { flowEfficiency: 1 }
     let maxCard = { flowEfficiency: 0 }
     let longestCard = { days: 0 }

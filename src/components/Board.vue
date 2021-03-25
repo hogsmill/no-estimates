@@ -12,12 +12,12 @@
             </th>
             <th v-for="(column, index) in headerColumns()" :key="index" :class="columnClass(column)" :colspan="devColumn(column)">
               <div v-if="column.name != 'develop'" :class="column.name">
-                {{ columnDisplayName(column.name) }}
+                {{ columnDisplayName(column.name) }} ({{ column.cards.length }})
                 <span class="autoDeploy" v-if="showAutoDeploy(column)" title="Deployment is now automated">&#10004;</span>
                 <span class="canStartAutoDeploy rounded-circle" v-if="canStartAutoDeploy(column)" @click="startAutoDeploy()">&#10033;</span>
               </div>
               <div v-if="column.name == 'develop'" class="develop-test">
-                Develop / Test
+                {{ developTestHeader() }}
               </div>
             </th>
           </tr>
@@ -102,6 +102,15 @@ export default {
     },
     columnDisplayName(s) {
       return stringFuns.properCase(s)
+    },
+    developTestHeader() {
+      const devCards = this.columns.find(function(c) {
+        return c.name == 'develop'
+      }).cards.length
+      const testCards = this.columns.find(function(c) {
+        return c.name == 'test'
+      }).cards.length
+      return 'Develop (' + devCards + ') / Test (' + testCards + ')'
     },
     headerColumns() {
       const columns = []

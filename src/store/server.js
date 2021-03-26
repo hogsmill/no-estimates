@@ -30,7 +30,7 @@ function restartServer() {
           doLog('---- Restarting No Estimates Server ----')
           ps.kill(pid, function(err) {
             if (err) {
-              doLog(logFile, err)
+              doLog(err)
               throw new Error(err)
             } else {
               doLog('Process %s has been killed!', pid)

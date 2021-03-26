@@ -3,6 +3,7 @@
     <h1>No Estimates - <span v-if="stealth">(Stealth)</span> Facilitator View</h1>
     <Connections />
     <GameMessaging />
+    <Server />
     <GameDisplay />
     <GameParams />
     <GameState />
@@ -17,6 +18,7 @@
 <script>
 import Connections from './facilitator/Connections.vue'
 import GameMessaging from './facilitator/GameMessaging.vue'
+import Server from './facilitator/Server.vue'
 import GameDisplay from './facilitator/GameDisplay.vue'
 import GameParams from './facilitator/GameParams.vue'
 import GameState from './facilitator/GameState.vue'
@@ -28,6 +30,7 @@ export default {
   components: {
     Connections,
     GameMessaging,
+    Server,
     GameDisplay,
     GameParams,
     GameState,
@@ -52,7 +55,8 @@ export default {
 </script>
 
 <style lang="scss">
-  .game-messaging, .game-params, .game-display, .game-state, .games, .demo-and-test {
+  .game-messaging, .game-server, .game-params, .game-display,
+  .game-state, .games, .demo-and-test {
 
     width: 100%;
     margin: 12px;

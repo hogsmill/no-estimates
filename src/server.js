@@ -55,6 +55,7 @@ if (!prod) {
   })
 }
 
+const server = require('./store/server.js')
 const dbStore = require('./store/dbStore.js')
 const results = require('./store/results.js')
 const demo = require('./store/demo.js')        // Just set an end state
@@ -98,6 +99,8 @@ MongoClient.connect(url, { useUnifiedTopology: true, maxIdleTimeMS: maxIdleTime 
       connectDebugOff || console.log(`User with socket id ${socket.id} has disconnected.`)
       emit('updateConnections', {connections: connections, maxConnections: maxConnections})
     })
+
+    socket.on('sendCheckServerRestartPassword', (data) => { server.checkServerRestartPassword(db, io, data, logFile, debugOn) })
 
     socket.on('sendGetAvailableGames', (data) => { dbStore.getAvailableGames(db, io, data, debugOn) })
 
@@ -209,7 +212,7 @@ MongoClient.connect(url, { useUnifiedTopology: true, maxIdleTimeMS: maxIdleTime 
     socket.on('sendSetDemoStepThrough', (data) => { dbStore.setDemoStepThrough(db, io, data, debugOn) })
 
     socket.on('sendSetDemoRunning', (data) => { dbStore.setDemoRunning(db, io, data, debugOn) })
-    
+
     socket.on('sendSetDemoNotRunning', (data) => { dbStore.setDemoNotRunning(db, io, data, debugOn) })
 
     socket.on('sendRunDemoToMvp', (data) => { demo.runDemoToMvp(db, io, data, debugOn) })

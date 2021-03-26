@@ -14,6 +14,8 @@ socket.on('connect_error', (err) => { bus.$emit('connectionError', err) })
 
 // --- Send ---
 
+bus.$on('sendCheckServerRestartPassword', (data) => { socket.emit('sendCheckServerRestartPassword', data) })
+
 bus.$on('sendLoadGame', (data) => { socket.emit('sendLoadGame', data) })
 
 bus.$on('sendMakeCaptain', (data) => { socket.emit('sendMakeCaptain', data) })
@@ -131,6 +133,8 @@ bus.$on('sendSetDemoNotRunning', (data) => { socket.emit('sendSetDemoNotRunning'
 bus.$on('sendRunDemoGame', (data) => { socket.emit('sendRunDemoGame', data) })
 
 // --- Receive ---
+
+socket.on('serverRestartPasswordError', (data) => { bus.$emit('serverRestartPasswordError', data) })
 
 socket.on('broadcastMessage', (data) => { bus.$emit('broadcastMessage', data) })
 

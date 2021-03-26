@@ -143,9 +143,9 @@ export const store = new Vuex.Store({
       stepThrough: false,
       running: false
     },
-    selectedGraphTeam1: 'Blue',
-    selectedGraphTeam2: 'Red',
-    selectedGraphTeam3: 'Green',
+    selectedGraphTeam1: '',
+    selectedGraphTeam2: '',
+    selectedGraphTeam3: '',
     retrosDone: {},
     recharting: false,
     concurrentDevAndTest: false,
@@ -226,7 +226,11 @@ export const store = new Vuex.Store({
       return state.teamName
     },
     getOtherCards: (state) => {
-      return state.otherCards
+      return state.otherCards.sort(function(a, b) {
+        const aEffortLeft = a.teamDependency - a.dependencyDone
+        const bEffortLeft = b.teamDependency - b.dependencyDone
+        return bEffortLeft - aEffortLeft
+      })
     },
     getCapabilities: (state) => {
       return {

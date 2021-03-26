@@ -47,6 +47,9 @@
       </td>
       <td v-if="showTeamState(team)">
         <div v-for="(member, m) in team.members" :key="m">
+          <i v-if="!member.disabled" class="far fa-check-square disable-member" @click="disableMember(member, team)" />
+          <i v-if="member.disabled" class="far fa-minus-square  disable-member" @click="deleteMember(member, team)" />
+
           <b>{{ member.name }}</b>
           <div class="white rounded-circle member-role" :class="roleClass(member.role)" :title="roleString(member)">
             {{ effort(member) }}
@@ -146,6 +149,16 @@ export default {
         bus.$emit('sendRestartGame', {gameName: this.gameName, stealth: this.stealth})
       }
     },
+    disableMember(member) {
+      if (confirm('Disable ' + member.name + '?')) {
+        console.log('disableMember', member)
+      }
+    },
+    deleteMember(member) {
+      if (confirm('Delete ' + member.name + '?')) {
+        console.log('deleteMember', member)
+      }
+    },
     effort(role) {
       return role.effort ? role.effort.available : '?'
     },
@@ -204,6 +217,17 @@ export default {
       text-align: center;
     }
 
+    .disable-member {
+      position: initial;
+      color: #888;
+      opacity: 0.5;
+      margin-right: 2px;
+
+      &:hover {
+        cursor: pointer;
+        opacity: 1;
+      }
+    }
     .designer {
       background-color: $design;
     }

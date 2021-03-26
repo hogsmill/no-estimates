@@ -3,6 +3,7 @@ const ON_DEATH = require('death')({uncaughtException: true})
 const os = require('os')
 const prod = os.hostname() == 'agilesimulations' ? true : false
 
+const port = process.argv[2] || 3007
 const logFile = prod ? process.argv[4] : 'server.log'
 
 const currentAction = ''
@@ -100,7 +101,7 @@ MongoClient.connect(url, { useUnifiedTopology: true, maxIdleTimeMS: maxIdleTime 
       emit('updateConnections', {connections: connections, maxConnections: maxConnections})
     })
 
-    socket.on('sendCheckServerRestartPassword', (data) => { server.checkServerRestartPassword(db, io, data, debugOn) })
+    socket.on('sendCheckServerRestartPassword', (data) => { server.checkServerRestartPassword(db, io, data, 'no-estimates.log', port, debugOn) })
 
     socket.on('sendGetAvailableGames', (data) => { dbStore.getAvailableGames(db, io, data, debugOn) })
 
@@ -224,8 +225,6 @@ MongoClient.connect(url, { useUnifiedTopology: true, maxIdleTimeMS: maxIdleTime 
     socket.on('sendSetupRunGame', (data) => { runGame.setUp(db, io, data, debugOn) })
   })
 })
-
-const port = process.argv[2] || 3007
 
 httpServer.listen(port, () => {
   console.log('Listening on *:' + port)

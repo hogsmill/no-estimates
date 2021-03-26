@@ -5,8 +5,8 @@ const ps = require('ps-node')
 const restartPassword = 'gNM5ZJ<N}kZr$V-E'
 
 function doLog(logFile, s) {
-  fs.appendFile(logFile, logStr, function (err) {
-    if (err) console.log(logStr)
+  fs.appendFile(logFile, s, function (err) {
+    if (err) console.log(s)
     process.exit()
   })
 }

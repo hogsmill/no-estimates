@@ -1,4 +1,5 @@
 
+const fs = require('fs')
 const ps = require('ps-node')
 
 const restartPassword = 'gNM5ZJ<N}kZr$V-E'

@@ -28,6 +28,7 @@ function restartServer(logFile) {
           doLog(logFile, '-------------------------- Restarting Server ----------------------------')
           ps.kill(pid, function(err) {
             if (err) {
+              doLog(logFile, err)
               throw new Error(err)
             } else {
               doLog(logFile, 'Process %s has been killed!', pid)

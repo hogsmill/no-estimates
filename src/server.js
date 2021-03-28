@@ -210,19 +210,20 @@ MongoClient.connect(url, { useUnifiedTopology: true, maxIdleTimeMS: maxIdleTime 
 
     socket.on('sendSetDemoRunTo', (data) => { dbStore.setDemoRunTo(db, io, data, debugOn) })
 
-    socket.on('sendSetDemoStepThrough', (data) => { dbStore.setDemoStepThrough(db, io, data, debugOn) })
+    socket.on('sendStartDemoRunning', (data) => { runGame.startDemoRunning(db, io, data, debugOn) })
 
-    socket.on('sendSetDemoRunning', (data) => { dbStore.setDemoRunning(db, io, data, debugOn) })
+    socket.on('sendStopDemoRunning', (data) => { runGame.stopDemoRunning(db, io, data, debugOn) })
 
-    socket.on('sendSetDemoNotRunning', (data) => { dbStore.setDemoNotRunning(db, io, data, debugOn) })
+    socket.on('sendRunDemoGame', (data) => { runGame.startRun(db, io, data, debugOn) })
+
+    socket.on('sendDemoMakeMove', (data) => { runGame.makeMove(db, io, data, debugOn) })
+
+    socket.on('sendSetupRunGame', (data) => { runGame.setUp(db, io, data, debugOn) })
 
     socket.on('sendRunDemoToMvp', (data) => { demo.runDemoToMvp(db, io, data, debugOn) })
 
     socket.on('sendRunDemoToMvp', (data) => { demo.runDemoToEnd(db, io, data, debugOn) })
 
-    socket.on('sendRunDemoGame', (data) => { runGame.run(db, io, data, debugOn) })
-
-    socket.on('sendSetupRunGame', (data) => { runGame.setUp(db, io, data, debugOn) })
   })
 })
 

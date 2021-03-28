@@ -41,35 +41,42 @@ function addEffort(db, io, game) {
   }
 }
 
-function makeMove(db, io, game, teams) {
-  const data = {gameName: game.gameName, teamName: game.teamName, teams: teams, currrentDay: game.currentDay}
-  const card = run.dependency(game)
-  if (parseInt(Math.random() * 4) && card) {
-    console.log('  Doing a dependency, card ', card.number)
-    card.team = game.teamName
-    const otherData = {
-      gameName: game.gameName,
-      teamName: card.dependentOn.name,
-      card: card,
-      myName: game.members[0],
-      effort: 1
+function makeAMove(db, io, config, data, n) {
+  data.teamName = data.teams[n].name
+  db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, game) {
+    if (err) throw err
+    const card = run.dependency(game)
+    if (parseInt(Math.random() * 4) && card) {
+      console.log('  Doing a dependency, card ', card.number)
+      card.team = game.teamName
+      const otherData = {
+        gameName: game.gameName,
+        teamName: card.dependentOn.name,
+        card: card,
+        myName: game.members[0],
+        effort: 1
+      }
+      dbStore.addEffortToOthersCard(db, io, otherData, false)
+    } else if (run.noCardsLeft(game)) {
+      console.log('  All cards played')
+    } else if (!run.aCardIsPlayable(game) && game.currentWorkCard < 25) {
+      console.log('  Pulling in card')
+      dbStore.pullInCard(db, io, data, true)
+    } else if (!run.effortCanBeAssigned(game)) {
+      console.log('  Incrementing day')
+      dbStore.updateCurrentDay(db, io, data, false)
+    } else {
+      console.log('  Adding Effort')
+      addEffort(db, io, game)
     }
-    dbStore.addEffortToOthersCard(db, io, otherData, false)
-  } else if (run.noCardsLeft(game)) {
-    console.log('  All cards played')
-  } else if (!run.aCardIsPlayable(game) && game.currentWorkCard < 25) {
-    console.log('  Pulling in card')
-    dbStore.pullInCard(db, io, data, false)
-  } else if (!run.effortCanBeAssigned(game)) {
-    console.log('  Incrementing day')
-    dbStore.updateCurrentDay(db, io, data, false)
-  } else {
-    console.log('  Adding Effort')
-    addEffort(db, io, game)
-  }
-  setTimeout(function() {
-    io.emit('demoMoveComplete', data)
-  }, 1000)
+
+    if (!run.complete(game, config)) {
+      n = n < data.teams.length - 1 ? n + 1 : 0
+      setTimeout(function() {
+        makeAMove(db, io, config, data, n)
+      }, 100)
+    }
+  })
 }
 
 function updateTeam(db, io, res) {
@@ -127,21 +134,39 @@ module.exports = {
     })
   },
 
-  run: function(db, io, data, debugOn) {
+  startDemoRunning: function(db, io, data, debugOn) {
 
-    if (debugOn) { console.log('run', data) }
+    if (debugOn) { console.log('startDemoRunning', data) }
 
     db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, res) {
       if (err) throw err
-      if (res && running(res)) {
+      if (res) {
+        const demoConfig = res.demoConfig
+        demoConfig.running = true
+        const teams = []
         for (let i = 0; i < res.teams.length; i++) {
           if (res.teams[i].include) {
-            db.collection('noEstimates').findOne({gameName: data.gameName, teamName: res.teams[i].name}, function(err, teamRes) {
-              if (err) throw err
-              makeMove(db, io, teamRes, res.teams)
-            })
+            teams.push(res.teams[i])
           }
         }
+        data.teams = teams
+        makeAMove(db, io, res.demoConfig, data, 0)
+      }
+    })
+  },
+
+  stopDemoRunning: function(db, io, data, debugOn) {
+
+    if (debugOn) { console.log('startDemoRunning', data) }
+
+    db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, res) {
+      if (err) throw err
+      if (res) {
+        const demoConfig = res.demoConfig
+        demoConfig.running = false
+        db.collection('noEstimatesGames').updateOne({'_id': res._id}, {$set: {demoConfig: demoConfig}}, function(err, ) {
+          if (err) throw err
+        })
       }
     })
   }

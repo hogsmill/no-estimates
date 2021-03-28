@@ -11,7 +11,10 @@
       <div class="expand">
         <i v-if="showRunGame" @click="setShowRunGame(false)" title="collapse" class="fas fa-caret-up toggle" />
         <i v-if="!showRunGame" @click="setShowRunGame(true)" title="expand" class="fas fa-caret-down toggle" />
-        <h6>Run Game</h6>
+        <h6>
+          Run Game
+          <span v-if="showRunGame">(running: {{ demoConfig.running }})</span>
+        </h6>
       </div>
       <div v-if="showRunGame">
         <div>
@@ -24,15 +27,11 @@
           Run Game To:
           <input type="radio" id="run-to-mvp" @click="setRunTo('MVP')" :checked="demoConfig.runTo == 'MVP'"> MVP
           <input type="radio" id="run-to-end" @click="setRunTo('End')" :checked="demoConfig.runTo == 'End'"> End
-          <input type="checkbox" id="step-through" @click="setStepThrough()" :checked="demoConfig.stepThrough"> Step Through?
-          <button v-if="!demoConfig.stepThrough" class="btn btn-sm btn-site-primary" @click="runGame()">
+          <button class="btn btn-sm btn-site-primary" @click="startRun()">
             Run
           </button>
-          <button v-if="!demoConfig.stepThrough" class="btn btn-sm btn-site-primary" @click="stopGame()">
+          <button class="btn btn-sm btn-site-primary" @click="stopRun()">
             Stop
-          </button>
-          <button v-if="demoConfig.stepThrough" class="btn btn-sm btn-site-primary" @click="run()">
-            Step
           </button>
         </div>
       </div>
@@ -78,29 +77,9 @@ export default {
       return this.$store.getters.getLastAccessed
     }
   },
-  created() {
-    const self = this
-    bus.$on('demoMoveComplete', (data) => {
-      if (self.demoConfig.running && self.gameName == data.gameName && self.teamName == data.teamName) {
-        self.checkRunComplete()
-        if (!self.runComplete) {
-          self.run()
-        }
-      }
-    })
-
-    bus.$on('startRun', (data) => {
-      if (self.gameName == data.gameName) {
-        self.run()
-      }
-    })
-  },
   methods: {
     setShowRunGame(val) {
       this.showRunGame = val
-    },
-    setRunTo(runTo) {
-      bus.$emit('sendSetDemoRunTo', {gameName: this.gameName, runTo: runTo})
     },
     lastAccess() {
       return this.lastAccessed ? timeAgo.format(new Date(this.lastAccessed)) : ''
@@ -116,37 +95,22 @@ export default {
     goMobile() {
       this.$store.dispatch('updateCurrentTab', 'mobile')
     },
-    setStepThrough() {
-      const stepThrough = document.getElementById('step-through').checked
-      bus.$emit('sendSetDemoStepThrough', {gameName: this.gameName, stepThrough: stepThrough})
-
-    },
-    checkRunComplete() {
-      this.runComplete = this.columns.find(function(c) {
-        return c.name == 'done'
-      }).cards.length >= this.demoConfig.runToCards
+    setRunTo(runTo) {
+      bus.$emit('sendSetDemoRunTo', {gameName: this.gameName, runTo: runTo})
     },
     setUpGame() {
       bus.$emit('sendSetupRunGame', {gameName: this.gameName})
     },
-    runGame() {
-      bus.$emit('sendSetDemoRunning', {gameName: this.gameName})
+    startRun() {
+      bus.$emit('sendStartDemoRunning', {gameName: this.gameName})
     },
-    stopGame() {
-      bus.$emit('sendSetDemoNotRunning', {gameName: this.gameName})
-    },
-    run() {
-      if (this.runComplete) {
-        console.log('Run Complete to ' + this.demoConfig.runToCards + ' cards')
-        bus.$emit('sendSetDemoNotRunning', {gameName: this.gameName})
-      } else {
-        bus.$emit('sendRunDemoGame', {gameName: this.gameName, teamName: this.teamName})
-      }
+    stopRun() {
+      bus.$emit('sendStopDemoRunning', {gameName: this.gameName})
     },
     restartGame() {
       const restartGame = confirm('Are you sure you want to re-start this game?')
       if (restartGame) {
-        bus.$emit('sendSetDemoNotRunning', {gameName: this.gameName})
+        bus.$emit('sendStopDemoRunning', {gameName: this.gameName})
         bus.$emit('sendRestartGame', {gameName: this.gameName, stealth: this.stealth})
       }
     },

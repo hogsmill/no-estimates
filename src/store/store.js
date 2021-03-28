@@ -140,7 +140,6 @@ export const store = new Vuex.Store({
     demoConfig: {
       runTo: 'MVP',
       runToCards: 11,
-      stepThrough: false,
       running: false
     },
     selectedGraphTeam1: '',

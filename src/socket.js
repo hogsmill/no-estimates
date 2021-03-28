@@ -120,17 +120,15 @@ bus.$on('sendShowSourceOfVariation', (data) => { socket.emit('sendShowSourceOfVa
 
 // Demo
 
-bus.$on('sendSetDemoStepThrough', (data) => { socket.emit('sendSetDemoStepThrough', data) })
-
 bus.$on('sendSetDemoRunTo', (data) => { socket.emit('sendSetDemoRunTo', data) })
 
 bus.$on('sendSetupRunGame', (data) => { socket.emit('sendSetupRunGame', data) })
 
-bus.$on('sendSetDemoRunning', (data) => { socket.emit('sendSetDemoRunning', data) })
+bus.$on('sendStartDemoRunning', (data) => { socket.emit('sendStartDemoRunning', data) })
 
-bus.$on('sendSetDemoNotRunning', (data) => { socket.emit('sendSetDemoNotRunning', data) })
+bus.$on('sendStopDemoRunning', (data) => { socket.emit('sendStopDemoRunning', data) })
 
-bus.$on('sendRunDemoGame', (data) => { socket.emit('sendRunDemoGame', data) })
+bus.$on('sendDemoMakeMove', (data) => { socket.emit('sendDemoMakeMove', data) })
 
 // --- Receive ---
 

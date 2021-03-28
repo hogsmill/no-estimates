@@ -31,12 +31,18 @@ module.exports = {
     return card
   },
 
+  complete: function(game, config) {
+    const column = game.columns.find(function(c) {
+      return c.name == 'done'
+    })
+    return column.cards.length == config.runToCards
+  },
+
   noCardsLeft: function(game) {
     const column = game.columns.find(function(c) {
       return c.name == 'done'
     })
-    // TODO: handle dependencies - 5 is the umber of cards with dependencies
-    return column.cards.length == game.workCards.length - 5
+    return column.cards.length == game.workCards.length
   },
 
   aCardIsPlayable: function(game) {

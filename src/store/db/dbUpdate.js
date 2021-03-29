@@ -24,9 +24,7 @@ const gameUpdates = [
 
   {name: 'demoConfig', value: {
       'runTo': 'MVP',
-      'runToCards': 11,
-      'stepThrough': false,
-      'running': false
+      'runToCards': 11
     }
   }
 ]

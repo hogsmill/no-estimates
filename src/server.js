@@ -111,6 +111,12 @@ MongoClient.connect(url, { useUnifiedTopology: true, maxIdleTimeMS: maxIdleTime 
 
     socket.on('sendRestartGame', (data) => { dbStore.restartGame(db, io, data, debugOn) })
 
+    socket.on('sendDisableMember', (data) => { dbStore.disableMember(db, io, data, debugOn) })
+
+    socket.on('sendEnableMember', (data) => { dbStore.enableMember(db, io, data, debugOn) })
+
+    socket.on('sendDeleteMember', (data) => { dbStore.deleteMember(db, io, data, debugOn) })
+
     socket.on('sendDeleteGame', (data) => {
       dbStore.deleteGameMeta(db, io, data, debugOn)
       dbStore.deleteGame(db, io, data, debugOn)

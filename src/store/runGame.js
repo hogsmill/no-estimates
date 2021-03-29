@@ -3,13 +3,18 @@ const run = require('./run/funs.js')
 const dbStore = require('./dbStore.js')
 const teamFuns = require('./lib/teams.js')
 
-function addEffortToCard(db, io, game, member) {
+function playThisCard(card, member, cardToPlay) {
+  const playCard = cardToPlay ? card.number == cardToPlay.number : true
+  return playCard && run.cardIsPlayable(card) && run.memberHasEffort(member)
+}
+
+function addEffortToCard(db, io, game, member, cardToPlay) {
   let added = false
   for (let i = game.columns.length - 1; i >= 0; i--) {
     const column = game.columns[i]
     for (let j = 0; j < column.cards.length; j++) {
       const card = column.cards[j]
-      if (!added && run.cardIsPlayable(card) && run.memberHasEffort(member)) {
+      if (!added && playThisCard(card, member, cardToPlay)) {
         console.log('      ' + member.name + ' adding to #' + card.number)
         card.effort[column.name] = card.effort[column.name] + 1
         const data = {
@@ -30,12 +35,12 @@ function addEffortToCard(db, io, game, member) {
   }
 }
 
-function addEffort(db, io, game) {
+function addEffort(db, io, game, card) {
   let added = false
   for (let i = 0; i < game.members.length; i++) {
     const member = game.members[i]
     if (!added && run.memberHasEffort(member)) {
-      addEffortToCard(db, io, game, member)
+      addEffortToCard(db, io, game, member, card)
       added = true
     }
   }
@@ -45,14 +50,18 @@ function makeAMove(db, io, config, data, n) {
   data.teamName = data.teams[n].name
   db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, game) {
     if (err) throw err
-    const card = run.dependency(game)
-    if (parseInt(Math.random() * 4) && card) {
-      console.log('  Doing a dependency, card ', card.number)
-      card.team = game.teamName
+    const urgentCard = run.urgent(game)
+    const dependentCard = run.dependency(game)
+    if (urgentCard && run.effortCanBeAssigned(game)) {
+      console.log('  Adding Effort to Urgent card')
+      addEffort(db, io, game, urgentCard)
+    } else if (dependentCard && parseInt(Math.random() * 4)) {
+      console.log('  Doing a dependency, card ', dependentCard.number)
+      dependentCard.team = game.teamName
       const otherData = {
         gameName: game.gameName,
-        teamName: card.dependentOn.name,
-        card: card,
+        teamName: dependentCard.dependentOn.name,
+        card: dependentCard,
         myName: game.members[0],
         effort: 1
       }

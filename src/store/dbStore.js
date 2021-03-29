@@ -416,6 +416,68 @@ module.exports = {
     })
   },
 
+  disableMember: function(db, io, data, debugOn) {
+
+    if (debugOn) { console.log('disableMember', data) }
+
+    db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
+      if (err) throw err
+      if (res) {
+        const members = []
+        for (let i = 0; i < res.members.length; i++) {
+          const member = res.members[i]
+          if (member.id == data.member.id) {
+            member.disabled = true
+          }
+          members.push(member)
+        }
+        res.members = members
+        updateTeam(db, io, res)
+      }
+    })
+  },
+
+  enableMember: function(db, io, data, debugOn) {
+
+    if (debugOn) { console.log('enableMember', data) }
+
+    db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
+      if (err) throw err
+      if (res) {
+        const members = []
+        for (let i = 0; i < res.members.length; i++) {
+          const member = res.members[i]
+          if (member.id == data.member.id) {
+            delete member.disabled
+          }
+          members.push(member)
+        }
+        res.members = members
+        updateTeam(db, io, res)
+      }
+    })
+  },
+
+  deleteMember: function(db, io, data, debugOn) {
+
+    if (debugOn) { console.log('deleteMember', data) }
+
+    db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
+      if (err) throw err
+      if (res) {
+        const members = []
+        for (let i = 0; i < res.members.length; i++) {
+          const member = res.members[i]
+          if (member.id != data.member.id) {
+            members.push(member)
+          }
+        }
+        res.members = members
+        updateTeam(db, io, res)
+      }
+    })
+  },
+
   deleteGameMeta: function(db, io, data, debugOn) {
 
     if (debugOn) { console.log('deleteGameMeta', data) }

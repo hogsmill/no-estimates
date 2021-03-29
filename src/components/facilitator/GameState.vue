@@ -47,8 +47,9 @@
       </td>
       <td v-if="showTeamState(team)">
         <div v-for="(member, m) in team.members" :key="m">
-          <i v-if="!member.disabled" class="far fa-check-square disable-member" @click="disableMember(member, team)" />
-          <i v-if="member.disabled" class="far fa-minus-square  disable-member" @click="deleteMember(member, team)" />
+          <i v-if="member.disabled" class="far fa-square disable-member" :title="'Enable ' + member.name" @click="enableMember(member, team)" />
+          <i v-if="!member.disabled" class="far fa-check-square disable-member" :title="'Disable ' + member.name" @click="disableMember(member, team)" />
+          <i class="fas fa-minus-circle disable-member delete-member" :title="'Delete ' + member.name" @click="deleteMember(member, team)" />
 
           <b>{{ member.name }}</b>
           <div class="white rounded-circle member-role" :class="roleClass(member.role)" :title="roleString(member)">
@@ -149,14 +150,19 @@ export default {
         bus.$emit('sendRestartGame', {gameName: this.gameName, stealth: this.stealth})
       }
     },
-    disableMember(member) {
-      if (confirm('Disable ' + member.name + '?')) {
-        console.log('disableMember', member)
+    enableMember(member, team) {
+      if (confirm('Enable ' + member.name + ' in team ' + team.name + '?')) {
+        bus.$emit('sendEnableMember', {gameName: this.gameName, teamName: team.name, member: member})
       }
     },
-    deleteMember(member) {
-      if (confirm('Delete ' + member.name + '?')) {
-        console.log('deleteMember', member)
+    disableMember(member, team) {
+      if (confirm('Disable ' + member.name + ' in team ' + team.name + '?')) {
+        bus.$emit('sendDisableMember', {gameName: this.gameName, teamName: team.name, member: member})
+      }
+    },
+    deleteMember(member, team) {
+      if (confirm('Delete ' + member.name + ' from team ' + team.name + '?')) {
+        bus.$emit('sendDeleteMember', {gameName: this.gameName, teamName: team.name, member: member})
       }
     },
     effort(role) {
@@ -226,8 +232,16 @@ export default {
       &:hover {
         cursor: pointer;
         opacity: 1;
+        color: #000;
       }
     }
+
+    .delete-member {
+      &:hover {
+        color: red;
+      }
+    }
+
     .designer {
       background-color: $design;
     }

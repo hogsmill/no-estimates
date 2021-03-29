@@ -16,6 +16,21 @@ function _memberHasEffort(member) {
 
 module.exports = {
 
+  urgent: function(game) {
+    let card, found = false, i = 0
+    while (!found && i < game.columns.length) {
+      for (let j = 0; j < game.columns[i].cards.length; j++) {
+        const colCard = game.columns[i].cards[j]
+        if (game.columns[i].name != 'done' && colCard.urgent && _cardIsPlayable(colCard)) {
+          card = colCard
+          found = true
+        }
+      }
+      i = i + 1
+    }
+    return card
+  },
+
   dependency: function(game) {
     let card, found = false, i = 0
     while (!found && i < game.columns.length) {
@@ -57,7 +72,6 @@ module.exports = {
         }
       }
     }
-    console.log('playable', playable)
     return playable
   },
 

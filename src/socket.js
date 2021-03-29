@@ -22,6 +22,12 @@ bus.$on('sendMakeCaptain', (data) => { socket.emit('sendMakeCaptain', data) })
 
 bus.$on('sendRestartGame', (data) => { socket.emit('sendRestartGame', data) })
 
+bus.$on('sendDisableMember', (data) => { socket.emit('sendDisableMember', data) })
+
+bus.$on('sendEnableMember', (data) => { socket.emit('sendEnableMember', data) })
+
+bus.$on('sendDeleteMember', (data) => { socket.emit('sendDeleteMember', data) })
+
 bus.$on('emitHide', (data) => { socket.emit('emitHide', data) })
 
 bus.$on('sendGameState', (data) => { socket.emit('sendGameState', data) })

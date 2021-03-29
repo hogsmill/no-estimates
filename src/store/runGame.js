@@ -70,7 +70,7 @@ function makeAMove(db, io, config, data, n) {
       addEffort(db, io, game)
     }
 
-    if (!run.complete(game, config)) {
+    if (!run.complete(game, config) && global.running[data.gameName]) {
       n = n < data.teams.length - 1 ? n + 1 : 0
       setTimeout(function() {
         makeAMove(db, io, config, data, n)
@@ -88,9 +88,7 @@ function updateTeam(db, io, res) {
   })
 }
 
-function running(res) {
-  return res.demoConfig.stepThrough || res.demoConfig.running
-}
+global.running = {}
 
 module.exports = {
 
@@ -141,8 +139,7 @@ module.exports = {
     db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, res) {
       if (err) throw err
       if (res) {
-        const demoConfig = res.demoConfig
-        demoConfig.running = true
+        global.running[data.gameName] = true
         const teams = []
         for (let i = 0; i < res.teams.length; i++) {
           if (res.teams[i].include) {
@@ -162,11 +159,7 @@ module.exports = {
     db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, res) {
       if (err) throw err
       if (res) {
-        const demoConfig = res.demoConfig
-        demoConfig.running = false
-        db.collection('noEstimatesGames').updateOne({'_id': res._id}, {$set: {demoConfig: demoConfig}}, function(err, ) {
-          if (err) throw err
-        })
+        delete global.running[data.gameName]
       }
     })
   }

@@ -4,7 +4,7 @@
       <tr>
         <td class="role" :class="role.role.toLowerCase()" v-for="(role, index) in roles" :key="index">
           <div v-for="(name, m) in roles[index].names" :key="'name-' + m">
-            <div v-if="!(name.host && stealth)" :class="{ 'me': name.id == myName.id }">
+            <div v-if="!(name.host && stealth)" :class="{ 'me': name.id == myName.id, 'disabled': name.disabled }" :title="name.disabled ? name.name + 'is no longer playing' : ''">
               {{ name.name }}
               <span v-if="name.captain" class="captain">&#9733;</span>
               <span>({{ name.effort ? name.effort.available : '?' }})</span>
@@ -76,6 +76,10 @@ export default {
     .me {
       background-color: #888;
       color: #fff;
+    }
+
+    .disabled {
+      opacity: 0.4;
     }
 
     .captain {

@@ -236,14 +236,18 @@
           Team {{ selectedGraphTeam1 }} Scatter Plot
         </h4>
         <p>
-          75% of cards completed in {{ scatterPlot.limits[75] }} days,
-          90% in {{ scatterPlot.limits[90] }} days,
-          95% in {{ scatterPlot.limits[95] }} days and
-          99% in {{ scatterPlot.limits[99] }} days
+          <span class="key l75">75%</span> of cards completed in {{ scatterPlot.limits[75] }} days,
+          <span class="key l90">90%</span> in {{ scatterPlot.limits[90] }} days,
+          <span class="key l95">95%</span> in {{ scatterPlot.limits[95] }} days and
+          <span class="key l99">99%</span> in {{ scatterPlot.limits[99] }} days
         </p>
         <div>
           <ScatterPlot :chartdata="scatterPlot.data" :options="scatterPlot.options" />
         </div>
+        <div class="line l75" :style="{ 'top': scatterPlotLine(75) + 'px' }" />
+        <div class="line l90" :style="{ 'top': scatterPlotLine(90) + 'px' }" />
+        <div class="line l95" :style="{ 'top': scatterPlotLine(95) + 'px' }" />
+        <div class="line l99" :style="{ 'top': scatterPlotLine(99) + 'px' }" />
       </div>
     </modal>
 
@@ -285,6 +289,8 @@
 
 <script>
 import bus from '../../socket.js'
+
+import maths from '../../lib/maths.js'
 
 import correlation from './graphConfig/correlation.js'
 import wip from './graphConfig/wip.js'
@@ -345,7 +351,10 @@ export default {
 
       flowEfficiencyCard1: null,
       flowEfficiencyCard2: null,
-      flowEfficiencyCard3: null
+      flowEfficiencyCard3: null,
+
+      scatterPlotCanvasTop: 80,
+      scatterPlotCanvasBottom: 440
     }
   },
   computed: {
@@ -545,6 +554,12 @@ export default {
       this.distribution.data.datasets[0].data = data.results.counts
       this.$modal.show('distribution')
     },
+    scatterPlotLine(n) {
+      const range = this.scatterPlotCanvasBottom - this.scatterPlotCanvasTop
+      const maxDay = maths.maxOfKey(this.scatterPlot.data.datasets[0].data, 'y')
+      const h = maxDay - this.scatterPlot.limits[n]
+      return (h / maxDay * range) + this.scatterPlotCanvasTop
+    },
     showScatterPlot(data) {
       this.scatterPlot.data.datasets[0].data = data.results
       this.scatterPlot.limits = data.limits
@@ -699,6 +714,39 @@ export default {
           background-color: darkorange;
         }
       }
+    }
+  }
+
+  .scatter-plot {
+    position: relative;
+
+    .key {
+      color:#fff;
+      padding: 2px;
+    }
+
+    .line {
+      height: 1px;
+      color: #fff;
+      border-style: dashed;
+      width: 860px;
+      margin-left: 24px;
+      background-color: red;
+      position: absolute;
+      top: 10px;
+    }
+
+    .l75 {
+      background-color: green;
+    }
+    .l90 {
+      background-color: blue;
+    }
+    .l95 {
+      background-color: purple;
+    }
+    .l99 {
+      background-color: red;
     }
   }
 

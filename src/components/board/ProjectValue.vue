@@ -1,13 +1,11 @@
 <template>
   <h5 class="current-value" :class="{ 'negative': total() < 1 }">
-    Current Value Delivered: {{ currencyLabel() }}{{ total() }}
+    Current Value Delivered: {{ currency.symbol }}{{ total() }}
     <span v-if="cards != null"><br>Current Cards Delivered:  {{ cards }}</span>
   </h5>
 </template>
 
 <script>
-import stringFuns from '../../lib/stringFuns.js'
-
 export default {
   props: [
     'cards'
@@ -21,9 +19,6 @@ export default {
     }
   },
   methods: {
-    currencyLabel() {
-      return stringFuns.htmlDecode(this.currency)
-    },
     total() {
       let total = 0
       for (let i = 0; i < this.workCards.length; i++) {

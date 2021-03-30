@@ -39,10 +39,22 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="mt-4 cycle-time">
+      <div class="mt-4 value-delivered">
         <h4>
-          Value Delivered per team
+          Value Delivered per team <span v-if="currency">({{ currency.symbol }})</span>
         </h4>
+        <div class="key">
+          <div class="winner" />
+          Winner
+        </div>
+        <div class="key">
+          <div class="positive" />
+          Positive
+        </div>
+        <div class="key">
+          <div class="negative" />
+          Negative
+        </div>
         <div>
           <BarChart :chartdata="valueDelivered.data" :options="valueDelivered.options" />
         </div>
@@ -370,6 +382,9 @@ export default {
     teamName() {
       return this.$store.getters.getTeamName
     },
+    currency() {
+      return this.$store.getters.getCurrency
+    },
     graphConfig() {
       return this.$store.getters.getGraphConfig
     },
@@ -650,6 +665,32 @@ export default {
       .positive-correlation {
         text-align: right;
         float: right;
+      }
+    }
+  }
+
+  .value-delivered {
+    .key {
+      width: 200px;
+      height: 20px;
+      text-align: center;
+      display: inline-block;
+
+      div {
+        height: 12px;
+        width: 50px;
+        margin-right: 4px;
+        display: inline-block;
+
+        &.winner {
+          background-color: gold;
+        }
+        &.positive {
+          background-color: lightgreen;
+        }
+        &.negative {
+          background-color: lightcoral;
+        }
       }
     }
   }

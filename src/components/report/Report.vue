@@ -20,7 +20,7 @@
                 <th>Commit<br>Day</th>
                 <th>Delivery<br>Day</th>
                 <th>Delivery<br>Time</th>
-                <th>Total<br><span>{{ currencyLabel() }}{{ total() }}</span></th>
+                <th>Total<br><span v-if="currency">{{ currency.symbol }}{{ total() }}</span></th>
               </tr>
             </thead>
             <tbody>
@@ -43,8 +43,6 @@
 </template>
 
 <script>
-import stringFuns from '../../lib/stringFuns.js'
-
 import Estimates from './Estimates.vue'
 
 export default {
@@ -91,9 +89,6 @@ export default {
     },
     selectTab(tab) {
       this.tab = tab
-    },
-    currencyLabel() {
-      return stringFuns.htmlDecode(this.currency)
     },
     time(card) {
       let t

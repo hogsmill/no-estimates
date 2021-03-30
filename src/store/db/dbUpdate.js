@@ -1,6 +1,13 @@
 
 const gameUpdates = [
 
+  {name: 'currencies', value: [
+      {name: 'pound', symbol: '£', major: '&pound;', minor: 'p', selected: true},
+      {name: 'euro', symbol: '€', major: '&#8364;', minor: 'c', selected: false},
+      {name: 'dollar', symbol: '$', major: '&dollar;', minor: 'c', selected: false}
+    ]
+  },
+
   {name: 'graphConfig', value: {
       'cycleTime': {
         medium: 15,

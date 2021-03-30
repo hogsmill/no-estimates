@@ -170,6 +170,8 @@ MongoClient.connect(url, { useUnifiedTopology: true, maxIdleTimeMS: maxIdleTime 
 
     // Facilitator View
 
+    socket.on('sendUpdateCurrency', (data) => { dbStore.updateCurrency(db, io, data, debugOn) })
+    
     socket.on('sendUpdateConfig', (data) => { dbStore.updateConfig(db, io, data, debugOn) })
 
     socket.on('emitBroadcastMessage', (data) => { emit('broadcastMessage', data) })

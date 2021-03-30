@@ -1,6 +1,6 @@
 
 export default {
-  
+
   config: function() {
     return {
       data: {
@@ -17,10 +17,18 @@ export default {
         scales: {
           yAxes: [{
             ticks: {beginAtZero: true, stepSize: 1},
-            gridLines: {display: true}
+            gridLines: {display: true},
+            scaleLabel: {
+              display: true,
+              labelString: 'Days to cpmplete'
+            }
           }],
           xAxes: [{
-            gridLines: {display: false}
+            gridLines: {display: false},
+            scaleLabel: {
+              display: true,
+              labelString: 'Card Number'
+            }
           }]
         },
         legend: {display: false},

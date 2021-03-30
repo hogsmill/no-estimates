@@ -6,7 +6,6 @@ export default {
       data: {
         labels: [],
         datasets: [{
-          label: 'No. of Cards that took this many days',
           backgroundColor: '#f87979',
           pointBackgroundColor: 'white',
           borderWidth: 1,
@@ -18,13 +17,21 @@ export default {
         scales: {
           yAxes: [{
             ticks: {beginAtZero: true, stepSize: 1},
-            gridLines: {display: true}
+            gridLines: {display: true},
+            scaleLabel: {
+              display: true,
+              labelString: 'Number of cards'
+            }
           }],
           xAxes: [{
-            gridLines: {display: false}
+            gridLines: {display: false},
+            scaleLabel: {
+              display: true,
+              labelString: 'Number of days to complete'
+            }
           }]
         },
-        legend: {display: true},
+        legend: {display: false},
         responsive: true,
         maintainAspectRatio: false
       }

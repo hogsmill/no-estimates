@@ -15,7 +15,7 @@ export const store = new Vuex.Store({
     host: false,
     hostId: '',
     stealth: false,
-    currency: '&#163;',
+    currencies: [],
     gameName: '',
     members: [],
     myName: {id: '', name: '', captain: false, host: false},
@@ -181,7 +181,12 @@ export const store = new Vuex.Store({
       return state.stealth
     },
     getCurrency: (state) => {
-      return state.currency
+      return state.currencies.find(function(c) {
+        return c.selected
+      })
+    },
+    getCurrencies: (state) => {
+      return state.currencies
     },
     getAvailableGames: (state) => {
       return state.availableGames
@@ -489,6 +494,7 @@ export const store = new Vuex.Store({
       state.teams = payload.teams
       state.facilitatorMessages = payload.facilitatorMessages
       state.stealth = payload.stealth
+      state.currencies = payload.currencies
       state.percentageBlocked = payload.percentageBlocked
       state.percentageDeployFail = payload.percentageDeployFail
       state.sourcesOfVariation = payload.sourcesOfVariation

@@ -8,6 +8,12 @@ const gameState = require('./lib/gameState.js')
 const sourceFuns = require('./lib/sources.js')
 const dbUpdate = require('./db/dbUpdate.js')
 
+const currencies = [
+  {name: 'pound', symbol: '£', major: '&pound;', minor: 'p', selected: true},
+  {name: 'euro', symbol: '€', major: '&#8364;', minor: 'c', selected: false},
+  {name: 'dollar', symbol: '$', major: '&dollar;', minor: 'c', selected: false}
+]
+
 const initialTeams = [
   { name: 'Blue', include: true },
   { name: 'Green', include: true },
@@ -105,6 +111,7 @@ function newGame(data) {
     include: false,
     teams: JSON.parse(JSON.stringify(initialTeams)),
     facilitatorMessages: [],
+    currencies: currencies,
     config: {
       facilitatorStarts: false,
       gameRunning: false,
@@ -878,6 +885,28 @@ module.exports = {
         const id = res._id
         delete res._id
         res.stealth = data.stealth
+        db.collection('noEstimatesGames').updateOne({'_id': id}, {$set: res}, function(err) {
+          if (err) throw err
+          io.emit('loadGame', res)
+        })
+      }
+    })
+  },
+
+  updateCurrency: function(db, io, data, debugOn) {
+
+    if (debugOn) { console.log('updateCurrency', data) }
+
+    db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, res) {
+      if (err) throw err
+      if (res) {
+        const currencies = []
+        for (let i = 0; i < currencies.length; i++) {
+          const currency = currencies[i]
+          currency.selected = currency.name == data.currency
+        }
+        const id = res._id
+        delete res._id
         db.collection('noEstimatesGames').updateOne({'_id': id}, {$set: res}, function(err) {
           if (err) throw err
           io.emit('loadGame', res)

@@ -32,9 +32,9 @@
             <h5 class="rounded">
               Why not take {{ retroTimeString() }} to reflect on how it's gone so far?
             </h5>
-            <p>
+            <p v-if="currency">
               You have delivered {{ completed() }} cards, and
-              {{ currencyLabel() }}{{ total() }} of value in
+              {{ currency.symbol }}{{ total() }} of value in
               {{ currentDay }} days. You could maybe discuss:
             </p>
             <ul>
@@ -58,8 +58,6 @@
 
 <script>
 import bus from '../socket.js'
-
-import stringFuns from '../lib/stringFuns.js'
 
 export default {
   data() {
@@ -164,9 +162,6 @@ export default {
       } else {
         return this.retroTime + ' minutes'
       }
-    },
-    currencyLabel() {
-      return stringFuns.htmlDecode(this.currency)
     },
     total() {
       let total = 0

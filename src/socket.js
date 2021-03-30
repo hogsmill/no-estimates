@@ -86,6 +86,8 @@ bus.$on('emitBroadcastMessage', (data) => { socket.emit('emitBroadcastMessage', 
 
 bus.$on('sendUpdateStealth', (data) => { socket.emit('sendUpdateStealth', data) })
 
+bus.$on('sendUpdateCurrency', (data) => { socket.emit('sendUpdateCurrency', data) })
+
 bus.$on('sendUpdateConfig', (data) => { socket.emit('sendUpdateConfig', data) })
 
 bus.$on('sendUpdateTeamActive', (data) => { socket.emit('sendUpdateTeamActive', data) })

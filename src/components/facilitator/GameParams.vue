@@ -20,6 +20,19 @@
       </td>
     </tr>
     <tr v-if="showGameParams">
+      <td>Currency: </td>
+      <td colspan="3" class="left">
+        <select class="form-control" id="currency" @change="changeCurrency()">
+          <option value="">
+            -- Select --
+          </option>
+          <option v-for="(curr, index) in currencies" :key="index" :selected="curr.name == currency.name" :value="curr.name">
+            {{ curr.symbol }} - {{ curr.name }}
+          </option>
+        </select>
+      </td>
+    </tr>
+    <tr v-if="showGameParams">
       <td>Blocked frequency: </td>
       <td class="center">
         <input type="text" id="percentage-blocked" class="form-control" :value="percentageBlocked">
@@ -141,6 +154,12 @@ export default {
     allowMobile() {
       return this.$store.getters.getAllowMobile
     },
+    currency() {
+      return this.$store.getters.getCurrency
+    },
+    currencies() {
+      return this.$store.getters.getCurrencies
+    },
     percentageBlocked() {
       return this.$store.getters.getPercentageBlocked
     },
@@ -200,6 +219,10 @@ export default {
       const allowMobile = document.getElementById('allow-mobile').checked
       bus.$emit('sendUpdateConfig', {gameName: this.gameName, field: 'allowMobile', value: allowMobile})
     },
+    changeCurrency() {
+      const currency = document.getElementById('currency').value
+      bus.$emit('sendChangeCurrency', {gameName: this.gameName, currency: currency})
+    },
     savePercentageBlocked() {
       const percentageBlocked = document.getElementById('percentage-blocked').value
       bus.$emit('sendUpdateConfig', {gameName: this.gameName, field: 'percentageBlocked', value: percentageBlocked})
@@ -224,6 +247,9 @@ export default {
 <style lang="scss">
   #facilitator-starts, #allow-mobile {
     margin: 0;
+  }
+  #currency {
+    width: 200px;
   }
   .mvp-label {
     left: 0;

@@ -13,7 +13,9 @@
       </div>
       <div class="mt-4">
         <h4>Go Mobile</h4>
-        <div class="go-mobile" />
+        <div>
+          <canvas id="qr" />
+        </div>
         <button class="btn btn-sm btn-primary smaller-font" @click="hide()">
           Done
         </button>
@@ -24,26 +26,36 @@
 </template>
 
 <script>
+const qrCode = require('qrcode')
+
 export default {
+  created() {
+  },
   methods: {
     show() {
       this.$modal.show('go-mobile')
+      const self = this
+      window.setTimeout(function() {
+        self.createQrCode()
+      }, 1000)
     },
     hide() {
       this.$modal.hide('go-mobile')
+    },
+    createQrCode() {
+      const canvas = document.getElementById('qr')
+      qrCode.toCanvas(canvas, location.href, function (error) {
+        if (error) console.error(error)
+        console.log('success!')
+      })
     }
   }
 }
 </script>
 
 <style lang="scss">
-.go-mobile {
-  width: 100px;
-  height: 100px;
-  margin: 24px auto;
+#qr {
+  margin: 0 auto;
   padding: 6px;
-  background-repeat: no-repeat;
-  background-size: contain;
-  background-image: url("../assets/img/qr-mobile.jpg");
 }
 </style>

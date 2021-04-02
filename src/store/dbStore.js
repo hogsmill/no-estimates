@@ -1,4 +1,5 @@
 
+const utils = require('./lib/utils.js')
 const teamFuns = require('./lib/teams.js')
 const cardFuns = require('./lib/cards.js')
 const pairingFuns = require('./lib/pairing.js')
@@ -573,8 +574,8 @@ module.exports = {
       if (res) {
         res.currentWorkCard = res.currentWorkCard + 1
         res.columns = cardFuns.pullInCard(res.columns, res.workCards, res.currentWorkCard, res.currentDay, data.teams, data.teamName)
-        res.wip.push(cardFuns.wip(res.columns, res.currentDay))
-        res.cumulative.push(cardFuns.cumulative(res.columns, res.currentDay))
+        res = utils.safePush(res, 'wip', cardFuns.wip(res.columns, res.currentDay))
+        res = utils.safePush(res, 'cumulative', cardFuns.cumulative(res.columns, res.currentDay))
         updateTeam(db, io, res)
         const card = res.workCards.find(function(c) {
           return c.number == res.currentWorkCard
@@ -621,8 +622,8 @@ module.exports = {
             }
           }
         }
-        res.wip.push(cardFuns.wip(columns, res.currentDay))
-        res.cumulative.push(cardFuns.cumulative(columns, res.currentDay))
+        res = utils.safePush(res, 'wip', cardFuns.wip(columns, res.currentDay))
+        res = utils.safePush(res, 'cumulative', cardFuns.cumulative(columns, res.currentDay))
         res.daysEffort = todaysEffort
         res.columns = columns
         res.workCards = workCards

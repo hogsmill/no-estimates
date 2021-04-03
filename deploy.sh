@@ -36,4 +36,4 @@ do
   fi
 
   php /usr/apps/monitor/src/lib/outdated.php &
-Done
+done

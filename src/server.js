@@ -1,10 +1,18 @@
+
+require('dotenv').config()
+
 const fs = require('fs')
 const ON_DEATH = require('death')({uncaughtException: true})
 const os = require('os')
 const prod = os.hostname() == 'agilesimulations' ? true : false
 
+if (prod) {
+  console.log('Port:', process.env.VUE_APP_PORT)  
+}
+
 const port = process.argv[2] || 3007
 const logFile = prod ? process.argv[4] : 'server.log'
+const gameCollection = process.argv[5] ? process.argv[5] : 'noEstimates'
 
 const currentAction = ''
 const currentData = ''
@@ -82,6 +90,7 @@ function emit(event, data) {
 MongoClient.connect(url, { useUnifiedTopology: true, maxIdleTimeMS: maxIdleTime }, function (err, client) {
   if (err) throw err
   const db = client.db('db')
+  db.gameCollection = gameCollection
 
   io.on('connection', (socket) => {
     const connection = socket.handshake.headers.host
@@ -171,7 +180,7 @@ MongoClient.connect(url, { useUnifiedTopology: true, maxIdleTimeMS: maxIdleTime 
     // Facilitator View
 
     socket.on('sendUpdateCurrency', (data) => { dbStore.updateCurrency(db, io, data, debugOn) })
-    
+
     socket.on('sendUpdateConfig', (data) => { dbStore.updateConfig(db, io, data, debugOn) })
 
     socket.on('emitBroadcastMessage', (data) => { emit('broadcastMessage', data) })

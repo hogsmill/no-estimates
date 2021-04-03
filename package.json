@@ -11,6 +11,7 @@
     "chart.js": "^2.9.4",
     "core-js": "^3.10.0",
     "death": "^1.1.0",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "is-svg": ">=4.2.2",
     "javascript-time-ago": "^2.3.4",

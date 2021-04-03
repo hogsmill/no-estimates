@@ -4,6 +4,12 @@ if [ "$1" == "-f" ]; then
   FORCE=true
 fi
 
+APPS=('no-estimates' 'no-estimates-new')
+for APP in ${APPS[@]};
+do
+  echo "/usr/apps/$APP"
+done
+
 PORT=3007
 PWD=`pwd`
 APP=`basename $PWD`

@@ -122,7 +122,7 @@ export default {
   },
   created() {
     console.log(process.env.VAR1)
-    )
+    
     this.$store.dispatch('localStorageStatus', ls.check())
 
     if (params.isParam('host')) {

@@ -7,33 +7,33 @@ fi
 APPS=('no-estimates' 'no-estimates-new')
 for APP in ${APPS[@]};
 do
-  echo "/usr/apps/$APP"
-done
+  echo "------------------------------------------------"
+  echo "Installing $APP"
+  echo "------------------------------------------------"
 
-PORT=3007
-PWD=`pwd`
-APP=`basename $PWD`
-git stash
-GIT=`git pull`
-echo $GIT
-if [ "$FORCE" != "true" -a "$GIT" == "Already up to date." ]; then
-  exit 0
-fi
+  cd "/usr/apps/$APP"
 
-npm install
-npm run build
-rm /var/www/html/$APP/css/*
-rm /var/www/html/$APP/js/*
-cp -R dist/* /var/www/html/$APP
-if [ -f "src/server.js" ]; then
-  SERVER=`ps -ef | grep server.js | grep $PORT | awk {'print $2'}`
-  if [ "$SERVER" != "" ]; then
-    kill -9 $SERVER
+  PORT=3007
+  PWD=`pwd`
+  APP=`basename $PWD`
+  git stash
+  GIT=`git pull`
+  echo $GIT
+  if [ "$FORCE" != "true" -a "$GIT" == "Already up to date." ]; then
+    exit 0
   fi
-  KEEP=`ps -ef | grep keep.sh | grep $PORT | awk {'print $2'}`
-  if [ "$KEEP" != "" ]; then
-    kill -9 $KEEP
-  fi
-fi
 
-php /usr/apps/monitor/src/lib/outdated.php &
+  npm install
+  npm run build
+  rm /var/www/html/$APP/css/*
+  rm /var/www/html/$APP/js/*
+  cp -R dist/* /var/www/html/$APP
+  if [ -f "src/server.js" ]; then
+    SERVER=`ps -ef | grep server.js | grep "/$APP/" | awk {'print $2'}`
+    if [ "$SERVER" != "" ]; then
+      kill -9 $SERVER
+    fi
+  fi
+
+  php /usr/apps/monitor/src/lib/outdated.php &
+Done

@@ -1,7 +1,7 @@
 import io from 'socket.io-client'
 import bus from './EventBus'
 
-let port = process.env.VUE_APP_PORT)
+let port = process.env.VUE_APP_PORT
 
 let connStr
 if (location.hostname == 'localhost') {

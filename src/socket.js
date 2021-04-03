@@ -1,13 +1,13 @@
 import io from 'socket.io-client'
 import bus from './EventBus'
 
-const port = process.env.VUE_APP_PORT
+const prod = location.hostname != 'localhost'
 
 let connStr
-if (location.hostname == 'localhost') {
-  connStr = 'http://localhost:' + port
+if (!prod) {
+  connStr = 'http://localhost:3007'
 } else {
-  connStr = 'https://agilesimulations.co.uk:' + port
+  connStr = 'https://agilesimulations.co.uk:' + process.env.VUE_APP_PORT
 }
 console.log('Connecting to: ' + connStr)
 const socket = io(connStr)

@@ -121,8 +121,8 @@ export default {
     }
   },
   created() {
-    console.log(process.env.VAR1)
-    
+    console.log(process.env.VUE_APP_VAR1)
+
     this.$store.dispatch('localStorageStatus', ls.check())
 
     if (params.isParam('host')) {

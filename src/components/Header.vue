@@ -100,26 +100,28 @@ export default {
 </script>
 
 <style>
-  h1 {
-    letter-spacing: initial;
-    margin-left: 6px;
-    font-weight: bold;
-    text-shadow: 2px 2px 3px #444;
-    font-size: xx-large;
-    line-height: 1;
-  }
-  
-  .feedback {
-    letter-spacing: 0;
-    color: #212529;
-  }
+  nav {
+    h1 {
+      letter-spacing: initial;
+      margin-left: 6px;
+      font-weight: bold;
+      text-shadow: 2px 2px 3px #444;
+      font-size: xx-large;
+      line-height: 1;
+    }
 
-  p.feedback-form {
-    margin-bottom: 12px;
-  }
+    .feedback {
+      letter-spacing: 0;
+      color: #212529;
+    }
 
-  .feedback-form {
-    width: 80%;
-    margin: 0 auto;
+    p.feedback-form {
+      margin-bottom: 12px;
+    }
+
+    .feedback-form {
+      width: 80%;
+      margin: 0 auto;
+    }
   }
 </style>

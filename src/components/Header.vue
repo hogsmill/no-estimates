@@ -100,7 +100,7 @@ export default {
 </script>
 
 <style>
-  nav {
+  .navbar {
     h1 {
       letter-spacing: initial;
       margin-left: 6px;

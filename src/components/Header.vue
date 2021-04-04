@@ -16,6 +16,7 @@
     </button>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <h1 v-if="appName">{{ appName }}</h1>
       <ul class="navbar-nav ml-auto">
         <li class="nav-item" :class="{ active: currentTab == 'game' }">
           <a class="nav-link pointer" @click="setCurrentTab('game')">Game</a>
@@ -69,6 +70,9 @@ export default {
     currentTab() {
       return this.$store.getters.getCurrentTab
     }
+  },
+  created() {
+    this.appName = process.env.VUE_APP_NAME
   },
   methods: {
     setCurrentTab(payload) {

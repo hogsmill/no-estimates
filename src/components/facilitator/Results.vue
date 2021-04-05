@@ -763,7 +763,7 @@ export default {
 
     .key {
       color:#fff;
-      padding: 2px;
+      padding: 4px;
     }
 
     .line {

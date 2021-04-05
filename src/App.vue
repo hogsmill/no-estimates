@@ -120,7 +120,7 @@ export default {
       return this.$store.getters.getAllowMobile
     }
   },
-  created() {
+  created() {    
     this.$store.dispatch('localStorageStatus', ls.check())
 
     if (params.isParam('host')) {

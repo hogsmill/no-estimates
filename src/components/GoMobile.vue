@@ -37,7 +37,7 @@ export default {
       const self = this
       window.setTimeout(function() {
         self.createQrCode()
-      }, 1000)
+      }, 500)
     },
     hide() {
       this.$modal.hide('go-mobile')
@@ -46,7 +46,6 @@ export default {
       const canvas = document.getElementById('qr')
       qrCode.toCanvas(canvas, location.href, function (error) {
         if (error) console.error(error)
-        console.log('success!')
       })
     }
   }

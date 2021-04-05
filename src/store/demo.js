@@ -47,7 +47,8 @@ function moveCardsToDone(res, n) {
 function updateTeam(db, io, res) {
   const id = res._id
   delete res._id
-  db.collection('noEstimates').updateOne({'_id': id}, {$set: res}, function(err) {
+  //db.collection('noEstimates').updateOne({'_id': id}, {$set: res}, function(err) {
+  db.gameCollection.updateOne({'_id': id}, {$set: res}, function(err) {
     if (err) throw err
     io.emit('loadTeam', res)
   })
@@ -59,7 +60,8 @@ module.exports = {
 
     if (debugOn) { console.log('runDemoToMvp', data) }
 
-    db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
+    //db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
+    db.gameCollection.findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
       if (err) throw err
       if (res) {
         res = moveCardsToDone(res, res.config.mvpCards)
@@ -72,7 +74,8 @@ module.exports = {
 
     if (debugOn) { console.log('runDemoToEnd', data) }
 
-    db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
+    //db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
+    db.gameCollection.findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
       if (err) throw err
       if (res) {
         res = moveCardsToDone(res, res.workCards.length)

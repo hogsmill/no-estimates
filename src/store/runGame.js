@@ -48,7 +48,8 @@ function addEffort(db, io, game, card) {
 
 function makeAMove(db, io, config, data, n) {
   data.teamName = data.teams[n].name
-  db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, game) {
+  //db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, game) {
+  db.gameCollection.findOne({gameName: data.gameName, teamName: data.teamName}, function(err, game) {
     if (err) throw err
     const urgentCard = run.urgent(game)
     const dependentCard = run.dependency(game)
@@ -91,7 +92,8 @@ function makeAMove(db, io, config, data, n) {
 function updateTeam(db, io, res) {
   const id = res._id
   delete res._id
-  db.collection('noEstimates').updateOne({'_id': id}, {$set: res}, function(err) {
+  //db.collection('noEstimates').updateOne({'_id': id}, {$set: res}, function(err) {
+  db.gameCollection.updateOne({'_id': id}, {$set: res}, function(err) {
     if (err) throw err
     io.emit('loadTeam', res)
   })
@@ -118,13 +120,15 @@ module.exports = {
       'Deployer'
     ]
 
-    db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, res) {
+    //db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, res) {
+    db.gamesCollection.findOne({gameName: data.gameName}, function(err, res) {
       if (err) throw err
       if (res) {
         for (let i = 0; i < res.teams.length; i++) {
           if (res.teams[i].include) {
             if (debugOn) { console.log('  setting up', res.teams[i].name) }
-            db.collection('noEstimates').findOne({gameName: data.gameName, teamName: res.teams[i].name}, function(err, teamRes) {
+            //db.collection('noEstimates').findOne({gameName: data.gameName, teamName: res.teams[i].name}, function(err, teamRes) {
+            db.gameCollection.findOne({gameName: data.gameName, teamName: res.teams[i].name}, function(err, teamRes) {
               if (err) throw err
               if (teamRes) {
                 let members = []
@@ -145,7 +149,8 @@ module.exports = {
 
     if (debugOn) { console.log('startDemoRunning', data) }
 
-    db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, res) {
+    //db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, res) {
+    db.gamesCollection.findOne({gameName: data.gameName}, function(err, res) {
       if (err) throw err
       if (res) {
         global.running[data.gameName] = true
@@ -165,7 +170,8 @@ module.exports = {
 
     if (debugOn) { console.log('startDemoRunning', data) }
 
-    db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, res) {
+    //db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, res) {
+    db.gamesCollection.findOne({gameName: data.gameName}, function(err, res) {
       if (err) throw err
       if (res) {
         delete global.running[data.gameName]

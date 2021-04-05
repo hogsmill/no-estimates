@@ -6,13 +6,10 @@ const ON_DEATH = require('death')({uncaughtException: true})
 const os = require('os')
 const prod = os.hostname() == 'agilesimulations' ? true : false
 
-if (prod) {
-  console.log('Port:', process.env.VUE_APP_PORT)  
-}
-
-const port = process.argv[2] || 3007
+const port = prod ? process.env.VUE_APP_PORT : 3007
 const logFile = prod ? process.argv[4] : 'server.log'
-const gameCollection = process.argv[5] ? process.argv[5] : 'noEstimates'
+const collection =  prod ? process.env.VUE_APP_COLLECTION : 'noEstimates'
+const gameCollection =  prod ? process.env.VUE_APP_GAME_COLLECTION : 'noEstimatesGames'
 
 const currentAction = ''
 const currentData = ''
@@ -90,7 +87,8 @@ function emit(event, data) {
 MongoClient.connect(url, { useUnifiedTopology: true, maxIdleTimeMS: maxIdleTime }, function (err, client) {
   if (err) throw err
   const db = client.db('db')
-  db.gameCollection = gameCollection
+  db.gameCollection = db.collection(collection)
+  db.gamesCollection = db.collection(gameCollection)
 
   io.on('connection', (socket) => {
     const connection = socket.handshake.headers.host

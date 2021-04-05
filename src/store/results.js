@@ -12,7 +12,8 @@ const monteCarlo = require('./results/monteCarlo.js')
 function _loadGame(db, io, res) {
   const id = res._id
   delete res._id
-  db.collection('noEstimatesGames').updateOne({'_id': id}, {$set: res}, function(err) {
+  //db.collection('noEstimatesGames').updateOne({'_id': id}, {$set: res}, function(err) {
+  db.gamesCollection.updateOne({'_id': id}, {$set: res}, function(err) {
     if (err) throw err
     io.emit('loadGame', res)
   })
@@ -45,7 +46,8 @@ module.exports = {
 
     if (debugOn) { console.log('showGameResult', data) }
 
-    db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, gameRes) {
+    //db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, gameRes) {
+    db.gamesCollection.findOne({gameName: data.gameName}, function(err, gameRes) {
       if (err) throw err
       if (gameRes) {
         switch(data.result) {
@@ -62,13 +64,15 @@ module.exports = {
 
     if (debugOn) { console.log('showAllTeamsResult', data) }
 
-    db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, gameRes) {
+    //db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, gameRes) {
+    db.gamesCollection.findOne({gameName: data.gameName}, function(err, gameRes) {
       if (err) throw err
       const include = {}
       for (let i = 0; i < gameRes.teams.length; i++) {
         include[gameRes.teams[i].name] = gameRes.teams[i].include
       }
-      db.collection('noEstimates').find({gameName: data.gameName}).toArray(function(err, res) {
+      //db.collection('noEstimates').find({gameName: data.gameName}).toArray(function(err, res) {
+      db.gameCollection.find({gameName: data.gameName}).toArray(function(err, res) {
         if (err) throw err
         if (res.length) {
           const results = {
@@ -96,10 +100,12 @@ module.exports = {
 
     if (debugOn) { console.log('showSingleTeamResult', data) }
 
-    db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, gameRes) {
+    //db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, gameRes) {
+    db.gamesCollection.findOne({gameName: data.gameName}, function(err, gameRes) {
       if (err) throw err
       if (gameRes) {
-        db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
+        //db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
+        db.gameCollection.findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
           if (err) throw err
           if (res) {
             data.teamName = res.teamName
@@ -148,11 +154,13 @@ module.exports = {
 
     if (debugOn) { console.log('showMultipleTeamsResult', data) }
 
-    db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, gameRes) {
+    //db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, gameRes) {
+    db.gamesCollection.findOne({gameName: data.gameName}, function(err, gameRes) {
       if (err) throw err
       if (gameRes) {
         const query = getQuery(data)
-        db.collection('noEstimates').find(query).toArray(function(err, res) {
+        //db.collection('noEstimates').find(query).toArray(function(err, res) {
+        db.gameCollection.find(query).toArray(function(err, res) {
           if (err) throw err
           if (res.length) {
             const results = []
@@ -182,7 +190,8 @@ module.exports = {
 
     if (debugOn) { console.log('showSourceOfVariation', data) }
 
-    db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, res) {
+    //db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, res) {
+    db.gamesCollection.findOne({gameName: data.gameName}, function(err, res) {
       if (err) throw err
       if (res) {
         const sources = []
@@ -193,7 +202,8 @@ module.exports = {
           }
           sources.push(source)
         }
-        db.collection('noEstimatesGames').updateOne({'_id': res._id}, {$set: {sourcesOfVariation: sources}}, function(err) {
+        //db.collection('noEstimatesGames').updateOne({'_id': res._id}, {$set: {sourcesOfVariation: sources}}, function(err) {
+        db.gamesCollection.updateOne({'_id': res._id}, {$set: {sourcesOfVariation: sources}}, function(err) {
           if (err) throw err
           data.results = sources
           io.emit('updateSourcesOfVariation', data)
@@ -206,7 +216,8 @@ module.exports = {
 
     if (debugOn) { console.log('setWipUseMovingAverage', data) }
 
-    db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, res) {
+    //db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, res) {
+    db.gamesCollection.findOne({gameName: data.gameName}, function(err, res) {
       if (err) throw err
       if (res) {
         res.graphConfig.wip.useMovingAverage = data.value
@@ -219,7 +230,8 @@ module.exports = {
 
     if (debugOn) { console.log('setWipUseDays', data) }
 
-    db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, res) {
+    //db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, res) {
+    db.gamesCollection.findOne({gameName: data.gameName}, function(err, res) {
       if (err) throw err
       if (res) {
         res.graphConfig.wip.useDays = data.value
@@ -232,7 +244,8 @@ module.exports = {
 
     if (debugOn) { console.log('setCumulativeFlowUseDays', data) }
 
-    db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, res) {
+    //db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, res) {
+    db.gamesCollection.findOne({gameName: data.gameName}, function(err, res) {
       if (err) throw err
       if (res) {
         res.graphConfig.cumulativeFlow.useDays = data.value
@@ -245,7 +258,8 @@ module.exports = {
 
     if (debugOn) { console.log('setCardSize', data) }
 
-    db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, res) {
+    //db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, res) {
+    db.gamesCollection.findOne({gameName: data.gameName}, function(err, res) {
       if (err) throw err
       if (res) {
         res.graphConfig.cycleTime[data.size] = data.value
@@ -258,7 +272,8 @@ module.exports = {
 
     if (debugOn) { console.log('setMonteCarloRunTo', data) }
 
-    db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, res) {
+    //db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, res) {
+    db.gamesCollection.findOne({gameName: data.gameName}, function(err, res) {
       if (err) throw err
       if (res) {
         res.graphConfig.monteCarlo.runTo = data.runTo
@@ -271,7 +286,8 @@ module.exports = {
 
     if (debugOn) { console.log('setMonteCarloRuns', data) }
 
-    db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, res) {
+    //db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, res) {
+    db.gamesCollection.findOne({gameName: data.gameName}, function(err, res) {
       if (err) throw err
       if (res) {
         res.graphConfig.monteCarlo.runs = data.runs

@@ -12,19 +12,6 @@ const logFile = prod ? process.argv[4] : 'server.log'
 const gameCollection =  prod ? process.env.VUE_APP_COLLECTION : 'noEstimates'
 const gamesCollection =  prod ? process.env.VUE_APP_GAME_COLLECTION : 'noEstimatesGames'
 
-fs.appendFile(logFile, port, function (err) {
-  if (err) console.log(err)
-})
-fs.appendFile(logFile, gameCollection, function (err) {
-  if (err) console.log(err)
-})
-fs.appendFile(logFile, gamesCollection, function (err) {
-  if (err) console.log(logStr)
-})
-fs.appendFile(logFile, process.env, function (err) {
-  if (err) console.log(logStr)
-})
-
 const currentAction = ''
 const currentData = ''
 ON_DEATH(function(signal, err) {

@@ -8,12 +8,17 @@ const prod = os.hostname() == 'agilesimulations' ? true : false
 
 const port = prod ? process.env.VUE_APP_PORT : 3007
 const logFile = prod ? process.argv[4] : 'server.log'
-const collection =  prod ? process.env.VUE_APP_COLLECTION : 'noEstimates'
-const gameCollection =  prod ? process.env.VUE_APP_GAME_COLLECTION : 'noEstimatesGames'
+const gameCollection =  prod ? process.env.VUE_APP_COLLECTION : 'noEstimates'
+const gamesCollection =  prod ? process.env.VUE_APP_GAME_COLLECTION : 'noEstimatesGames'
 
-fs.appendFile(logFile, collection, function (err) {
+fs.appendFile(logFile, gameCollection, function (err) {
+  if (err) console.log(err)
+})
+fs.appendFile(logFile, gamesCollection, function (err) {
   if (err) console.log(logStr)
-  process.exit()
+})
+fs.appendFile(logFile, process.env, function (err) {
+  if (err) console.log(logStr)
 })
 
 const currentAction = ''
@@ -92,8 +97,8 @@ function emit(event, data) {
 MongoClient.connect(url, { useUnifiedTopology: true, maxIdleTimeMS: maxIdleTime }, function (err, client) {
   if (err) throw err
   const db = client.db('db')
-  db.gameCollection = db.collection(collection)
-  db.gamesCollection = db.collection(gameCollection)
+  db.gameCollection = db.collection(gameCollection)
+  db.gamesCollection = db.collection(gamesCollection)
 
   io.on('connection', (socket) => {
     const connection = socket.handshake.headers.host

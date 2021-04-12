@@ -25,8 +25,19 @@ do
 
   npm install
   npm run build
-  rm /var/www/html/$APP/css/*
-  rm /var/www/html/$APP/js/*
+  if [ ! -d /var/www/html/$APP/ ]; then
+    mkdir /var/www/html/$APP
+  fi
+  if [ -d /var/www/html/$APP/css ]; then
+    rm /var/www/html/$APP/css/*
+  else
+    mkdir /var/www/html/$APP/css
+  fi
+  if [ -d /var/www/html/$APP/js ]; then
+    rm /var/www/html/$APP/js/*
+  else
+    mkdir /var/www/html/$APP/js
+  fi
   cp -R dist/* /var/www/html/$APP
   if [ -f "src/server.js" ]; then
     SERVER=`ps -ef | grep server.js | grep "/$APP/" | awk {'print $2'}`
@@ -35,5 +46,6 @@ do
     fi
   fi
 
-  php /usr/apps/monitor/src/lib/outdated.php &
 done
+
+php /usr/apps/monitor/src/lib/outdated.php &

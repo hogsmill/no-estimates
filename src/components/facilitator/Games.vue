@@ -3,7 +3,7 @@
     <tr>
       <td class="left" colspan="16">
         <h4>
-          Games
+          Games ({{ games.length }})
         </h4>
         <i v-if="showGames" @click="setShowGames(false)" title="collapse" class="fas fa-caret-up toggle" />
         <i v-if="!showGames" @click="setShowGames(true)" title="expand" class="fas fa-caret-down toggle" />
@@ -66,6 +66,9 @@ export default {
     games() {
       return this.$store.getters.getGames
     }
+  },
+  created() {
+    bus.$emit('sendGetGames')
   },
   methods: {
     setShowGames(val) {

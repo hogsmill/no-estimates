@@ -89,7 +89,7 @@ MongoClient.connect(url, { useUnifiedTopology: true, maxIdleTimeMS: maxIdleTime 
   if (err) throw err
   const db = client.db('db')
 
-  db.createCollection(gameCollection function(error, collection) {})
+  db.createCollection(gameCollection, function(error, collection) {})
   db.createCollection(gamesCollection, function(error, collection) {})
 
   db.gameCollection = db.collection(gameCollection)

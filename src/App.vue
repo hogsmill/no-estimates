@@ -142,7 +142,6 @@ export default {
     const gameName = localStorage.getItem('gameName')
     if (gameName) {
       this.$store.dispatch('updateGameName', gameName)
-      //bus.$emit('sendGameState', {gameName: gameName})
     }
 
     let myName = localStorage.getItem('myName')

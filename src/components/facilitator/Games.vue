@@ -67,9 +67,6 @@ export default {
       return this.$store.getters.getGames
     }
   },
-  created() {
-    bus.$emit('sendGetGames')
-  },
   methods: {
     setShowGames(val) {
       this.showGames = val

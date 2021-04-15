@@ -200,8 +200,6 @@ MongoClient.connect(url, { useUnifiedTopology: true, maxIdleTimeMS: maxIdleTime 
 
     socket.on('sendGetGameDetails', (data) => { dbStore.getGameDetails(db, io, data, debugOn) })
 
-    socket.on('sendGameState', (data) => { dbStore.gameState(db, io, data) })
-
     // Results
 
     socket.on('sendShowGameResult', (data) => { results.showGameResult(db, io, data, debugOn) })

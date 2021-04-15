@@ -32,8 +32,6 @@ bus.$on('sendDeleteMember', (data) => { socket.emit('sendDeleteMember', data) })
 
 bus.$on('emitHide', (data) => { socket.emit('emitHide', data) })
 
-bus.$on('sendGameState', (data) => { socket.emit('sendGameState', data) })
-
 bus.$on('sendGetGameDetails', (data) => { socket.emit('sendGetGameDetails', data) })
 
 bus.$on('sendGetAvailableGames', (data) => { socket.emit('sendGetAvailableGames', data) })
@@ -93,8 +91,6 @@ bus.$on('sendUpdateCurrency', (data) => { socket.emit('sendUpdateCurrency', data
 bus.$on('sendUpdateConfig', (data) => { socket.emit('sendUpdateConfig', data) })
 
 bus.$on('sendUpdateTeamActive', (data) => { socket.emit('sendUpdateTeamActive', data) })
-
-bus.$on('sendGetGames', (data) => { socket.emit('sendGetGames', data) })
 
 bus.$on('sendUpdateGameInclude', (data) => { socket.emit('sendUpdateGameInclude', data) })
 

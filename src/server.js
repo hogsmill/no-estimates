@@ -88,6 +88,10 @@ function emit(event, data) {
 MongoClient.connect(url, { useUnifiedTopology: true, maxIdleTimeMS: maxIdleTime }, function (err, client) {
   if (err) throw err
   const db = client.db('db')
+
+  db.createCollection(gameCollection function(error, collection) {})
+  db.createCollection(gamesCollection, function(error, collection) {})
+
   db.gameCollection = db.collection(gameCollection)
   db.gamesCollection = db.collection(gamesCollection)
 

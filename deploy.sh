@@ -8,6 +8,7 @@ REPO="https://github.com/hogsmill/no-estimates.git"
 APPS=(
   'no-estimates,noEstimatesGames,noEstimates,3007'
   'no-estimates-new,noEstimatesNewGames,noEstimatesNew,3020,No Estimates Private,123456'
+  'no-estimates-bandwidth,noEstimatesBandwidthGames,noEstimatesBandwidth,3022,No Estimates Bandwidth,123456'
 )
 
 for ((i = 0; i < ${#APPS[@]}; i++))

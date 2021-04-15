@@ -7,7 +7,7 @@ fi
 REPO="https://github.com/hogsmill/no-estimates.git"
 APPS=(
   'no-estimates,noEstimatesGames,noEstimates,3007'
-  'no-estimates-mobile,noEstimatesNewGames,noEstimatesNew,3020,No Estimates Private,123456'
+  'no-estimates-new,noEstimatesNewGames,noEstimatesNew,3020,No Estimates Private,123456'
 )
 
 for ((i = 0; i < ${#APPS[@]}; i++))
@@ -18,8 +18,8 @@ do
   COLLECTION=`echo $REC | cut -d, -f2`
   GAMECOLLECTION=`echo $REC | cut -d, -f3`
   PORT=`echo $REC | cut -d, -f4`
-  APPNAME=`echo $REC | cut -d, -f6`
-  PASSWORD=`echo $REC | cut -d, -f7`
+  APPNAME=`echo $REC | cut -d, -f5`
+  PASSWORD=`echo $REC | cut -d, -f6`
 
   echo "------------------------------------------------"
   if [ -z "$APPNAME" ]; then

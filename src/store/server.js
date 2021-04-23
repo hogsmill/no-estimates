@@ -13,7 +13,7 @@ function doLog(s) {
   })
 }
 
-function restartServer(logFile, port) {
+function restartServer(logFile) {
   ps.lookup({
     command: 'node'
   },

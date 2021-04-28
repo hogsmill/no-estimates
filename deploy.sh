@@ -4,7 +4,6 @@ FORCE=false
 OUTDATED=true
 while [ $1 ]
 do
-  echo $1
   if [ "$1" == "-f" ]; then
     FORCE=true
   fi
@@ -16,9 +15,11 @@ done
 
 REPO="https://github.com/hogsmill/no-estimates.git"
 APPS=(
-  'no-estimates,noEstimatesGames,noEstimates,3007'
-  'no-estimates-new,noEstimatesNewGames,noEstimatesNew,3020,No Estimates Private,123456'
-  'no-estimates-bandwidth,noEstimatesBandwidthGames,noEstimatesBandwidth,3022,No Estimates Bandwidth,123456'
+  'no-estimates,noEstimatesGames,noEstimates,3007,No Estimates'
+  'no-estimates-new,noEstimatesNewGames,noEstimatesNew,3020,No Estimates,No Estimates Private,123456'
+  'no-estimates-bandwidth,noEstimatesBandwidthGames,noEstimatesBandwidth,3022,No Estimates,No Estimates Bandwidth,123456'
+  'kanban-playground,kanbanPlaygroundGames,kanbanPlayground,3030,Kanban Playground,Kanban Playground'
+
 )
 
 for ((i = 0; i < ${#APPS[@]}; i++))
@@ -29,8 +30,9 @@ do
   COLLECTION=`echo $REC | cut -d, -f2`
   GAMECOLLECTION=`echo $REC | cut -d, -f3`
   PORT=`echo $REC | cut -d, -f4`
-  APPNAME=`echo $REC | cut -d, -f5`
-  PASSWORD=`echo $REC | cut -d, -f6`
+  APPTYPE=`echo $REC | cut -d, -f5`
+  APPNAME=`echo $REC | cut -d, -f6`
+  PASSWORD=`echo $REC | cut -d, -f7`
 
   echo "------------------------------------------------"
   if [ -z "$APPNAME" ]; then
@@ -46,6 +48,7 @@ do
   fi
   ENVFILE="$DIR/.env"
   echo "VUE_APP_PORT=$PORT" > $ENVFILE
+  echo "VUE_APP_TYPE=$APPTYPE" >> $ENVFILE
   echo "VUE_APP_COLLECTION=$COLLECTION" >> $ENVFILE
   echo "VUE_APP_GAME_COLLECTION=$GAMECOLLECTION" >> $ENVFILE
   if [ ! -z "$APPNAME" ]; then
@@ -66,7 +69,7 @@ do
     exit 0
   fi
 
-  npm install
+  npm install --legacy-peer-deps
   npm run build
   if [ ! -d /var/www/html/$APP/ ]; then
     mkdir /var/www/html/$APP

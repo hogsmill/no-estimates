@@ -5,6 +5,7 @@ Vue.use(Vuex)
 
 export const store = new Vuex.Store({
   state: {
+    appType: 'No Estimates',
     thisGame: 'No Estimates',
     connections: 0,
     connectionError: null,
@@ -439,6 +440,10 @@ export const store = new Vuex.Store({
     }
   },
   mutations: {
+    updateAppType: (state, payload) => {
+      state.appType = payload
+      state.thisGame = payload
+    },
     updateCurrentTab: (state, payload) => {
       state.currentTab = payload
     },
@@ -560,6 +565,9 @@ export const store = new Vuex.Store({
     }
   },
   actions: {
+    updateAppType: ({ commit }, payload) => {
+      commit('updateAppType', payload)
+    },
     updateCurrentTab: ({ commit }, payload) => {
       commit('updateCurrentTab', payload)
     },

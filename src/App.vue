@@ -123,6 +123,16 @@ export default {
   created() {
     this.$store.dispatch('localStorageStatus', ls.check())
 
+    let appType = 'No Estimates'
+    if (process.env.VUE_APP_TYPE) {
+      appType = process.env.VUE_APP_TYPE
+    } else if (params.getParam('appType')) {
+      // To allow appType switching in dev
+      appType = params.getParam('appType')
+    }
+    console.log(appType)
+    this.$store.dispatch('updateAppType', appType)
+
     if (params.isParam('host')) {
       this.$store.dispatch('updateHost', true)
     }

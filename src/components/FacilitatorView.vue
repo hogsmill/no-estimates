@@ -1,6 +1,6 @@
 <template>
   <div class="container about">
-    <h1>No Estimates - <span v-if="stealth">(Stealth)</span> Facilitator View</h1>
+    <h2>{{ appType }} - <span v-if="stealth">(Stealth)</span> Facilitator View</h2>
     <Connections />
     <GameMessaging />
     <Server />
@@ -39,6 +39,9 @@ export default {
     Utils
   },
   computed: {
+    appType() {
+      return this.$store.getters.appType
+    },
     hostId() {
       return this.$store.getters.getHostId
     },

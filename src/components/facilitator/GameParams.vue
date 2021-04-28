@@ -221,7 +221,7 @@ export default {
     },
     changeCurrency() {
       const currency = document.getElementById('currency').value
-      bus.$emit('sendChangeCurrency', {gameName: this.gameName, currency: currency})
+      bus.$emit('sendUpdateCurrency', {gameName: this.gameName, currency: currency})
     },
     savePercentageBlocked() {
       const percentageBlocked = document.getElementById('percentage-blocked').value

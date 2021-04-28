@@ -1,4 +1,23 @@
 
+const initialTeams = [
+  { name: 'Blue', include: true },
+  { name: 'Green', include: true },
+  { name: 'Purple', include: true },
+  { name: 'Red', include: true },
+  { name: 'Orange', include: false },
+  { name: 'Black', include: false },
+  { name: 'Grey', include: false },
+  { name: 'Brown', include: false },
+  { name: 'Magenta', include: false },
+  { name: 'Salmon', include: false },
+  { name: 'Teal', include: false },
+  { name: 'Turquoise', include: false },
+  { name: 'Navy', include: false },
+  { name: 'Olive', include: false },
+  { name: 'Turquoise', include: false },
+  { name: 'Tan', include: false }
+]
+
 const initialEffort = {
   available: 4,
   assigned: 0
@@ -18,6 +37,10 @@ function getCapacity(data) {
 
 module.exports = {
 
+  initialTeams: function() {
+    return initialTeams
+  },
+  
   initialEffort: function() {
     return initialEffort
   },

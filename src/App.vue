@@ -18,7 +18,7 @@
       <SetEstimates v-if="gameName" />
       <GoMobile v-if="allowMobile" />
       <Status />
-      <div class="container board">
+      <div class="container board" :class="appTypeBoard()">
         <h3 class="board-title">
           <span v-if="gameName">Game: {{ gameName }}</span>
           <span v-if="gameName && teamName"> - </span>
@@ -89,6 +89,9 @@ export default {
     }
   },
   computed: {
+    appType() {
+      return this.$store.getters.appType
+    },
     isHost() {
       return this.$store.getters.getHost
     },
@@ -130,7 +133,6 @@ export default {
       // To allow appType switching in dev
       appType = params.getParam('appType')
     }
-    console.log(appType)
     this.$store.dispatch('updateAppType', appType)
 
     if (params.isParam('host')) {
@@ -229,6 +231,18 @@ export default {
   methods: {
     membersString() {
       return stringFuns.pluralString(this.myTeamMembers, 'member')
+    },
+    appTypeBoard() {
+      let c = ''
+      switch(this.appType) {
+        case 'No Estimates':
+          c = 'no-estimates'
+          break
+        case 'Kanban Playground':
+          c = 'kanban-playground'
+          break
+      }
+      return c
     }
   }
 }
@@ -270,21 +284,42 @@ export default {
   }
 
   .board {
-    //
-    // Gradient
-    //
-    /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#7db9e8+0,207cca+44,0000ff+100 */
-    $start: #7db9e8;
-    $mid: #207cca;
-    $end: #0000ff;
-    background: #7db9e8; /* Old browsers */
-    background: -moz-radial-gradient(center, ellipse cover,  $start 0%, $mid 44%, $end 100%); /* FF3.6-15 */
-    background: -webkit-radial-gradient(center, ellipse cover,  $start 0%,$mid 44%,$end 100%); /* Chrome10-25,Safari5.1-6 */
-    background: radial-gradient(ellipse at center,  $start 0%,$mid 44%,$end 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='$start', endColorstr='$end',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
-    //
-    // End Gradient
-    //
+
+    &.no-estimates {
+      //
+      // Gradient
+      //
+      /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#7db9e8+0,207cca+44,0000ff+100 */
+      $start: #7db9e8;
+      $mid: #207cca;
+      $end: #0000ff;
+      background: #7db9e8; /* Old browsers */
+      background: -moz-radial-gradient(center, ellipse cover,  $start 0%, $mid 44%, $end 100%); /* FF3.6-15 */
+      background: -webkit-radial-gradient(center, ellipse cover,  $start 0%,$mid 44%,$end 100%); /* Chrome10-25,Safari5.1-6 */
+      background: radial-gradient(ellipse at center,  $start 0%,$mid 44%,$end 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+      filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='$start', endColorstr='$end',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+      //
+      // End Gradient
+      //
+    }
+
+    &.kanban-playground {
+      //
+      // Gradient
+      //
+      /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#7db9e8+0,207cca+44,0000ff+100 */
+      $start: #ABB2B9;
+      $mid: #566573;
+      $end: #17202A;
+      background: #7db9e8; /* Old browsers */
+      background: -moz-radial-gradient(center, ellipse cover,  $start 0%, $mid 44%, $end 100%); /* FF3.6-15 */
+      background: -webkit-radial-gradient(center, ellipse cover,  $start 0%,$mid 44%,$end 100%); /* Chrome10-25,Safari5.1-6 */
+      background: radial-gradient(ellipse at center,  $start 0%,$mid 44%,$end 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+      filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='$start', endColorstr='$end',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+      //
+      // End Gradient
+      //
+    }
 
     margin-top: 6px;
     color: #fff;

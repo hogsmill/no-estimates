@@ -163,6 +163,9 @@ export const store = new Vuex.Store({
     games: []
   },
   getters: {
+    appType: (state) => {
+      return state.appType
+    },
     thisGame: (state) => {
       return state.thisGame
     },
@@ -441,6 +444,7 @@ export const store = new Vuex.Store({
   },
   mutations: {
     updateAppType: (state, payload) => {
+      console.log('updateAppType', payload)
       state.appType = payload
       state.thisGame = payload
     },

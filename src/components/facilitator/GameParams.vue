@@ -104,7 +104,7 @@
     </tr>
     <tr v-if="showGameParams">
       <td class="left-col">
-        Hosts
+        Stealth
       </td>
       <td colspan="3" class="stealth">
         <input id="is-stealth" type="checkbox" :checked="stealth" @click="toggleStealth()"> Hosts are in "Stealth" mode?
@@ -236,9 +236,10 @@ export default {
       bus.$emit('sendUpdateConfig', {gameName: this.gameName, field: 'percentageDeployFail', value: percentageDeployFail})
     },
     otherCards(team) {
-      return this.gameState.find(function(t) {
+      const _team = this.gameState.find(function(t) {
         return t.name == team.name
-      }).otherCards.length > 0
+      })
+      return _team ? _team.otherCards.length > 0 : []
     }
   }
 }

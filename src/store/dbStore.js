@@ -882,15 +882,11 @@ module.exports = {
 
     if (debugOn) { console.log('updateStealth', data) }
 
-    //db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, res) {
     db.gamesCollection.findOne({gameName: data.gameName}, function(err, res) {
       if (err) throw err
       if (res) {
-        const id = res._id
-        delete res._id
         res.stealth = data.stealth
-        //db.collection('noEstimatesGames').updateOne({'_id': id}, {$set: res}, function(err) {
-        db.gamesCollection.updateOne({'_id': id}, {$set: res}, function(err) {
+        db.gamesCollection.updateOne({'_id': res._id}, {$set: {stealth: res.stealth}}, function(err) {
           if (err) throw err
           io.emit('loadGame', res)
         })

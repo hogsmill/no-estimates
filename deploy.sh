@@ -36,9 +36,9 @@ do
 
   echo "------------------------------------------------"
   if [ -z "$APPNAME" ]; then
-    echo "Installing $APP ($COLLECTION, $GAMECOLLECTION, $PORT)"
+    echo "Installing $APPTYPE:$APP ($COLLECTION, $GAMECOLLECTION, $PORT)"
   else
-    echo "Installing $APP ($COLLECTION, $GAMECOLLECTION, $PORT, $APPNAME, $PASSWORD)"
+    echo "Installing $APPTYPE:$APP ($COLLECTION, $GAMECOLLECTION, $PORT, $APPNAME, $PASSWORD)"
   fi
   echo "------------------------------------------------"
 

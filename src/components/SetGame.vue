@@ -127,6 +127,9 @@ export default {
     }
   },
   computed: {
+    lsSuffix() {
+      return this.$store.getters.lsSuffix
+    },
     gameName() {
       return this.$store.getters.getGameName
     },
@@ -262,10 +265,10 @@ export default {
     },
     setLocalStorage(gameName, myName, teamName, myRole) {
       console.log('Setting localStorage', gameName, myName, teamName, myRole)
-      localStorage.setItem('gameName', gameName)
-      localStorage.setItem('myName', JSON.stringify(myName))
-      localStorage.setItem('teamName', teamName)
-      localStorage.setItem('myRole', myRole)
+      localStorage.setItem('gameName-' + this.lsSuffix, gameName)
+      localStorage.setItem('myName-' + this.lsSuffix, JSON.stringify(myName))
+      localStorage.setItem('teamName-' + this.lsSuffix, teamName)
+      localStorage.setItem('myRole-' + this.lsSuffix, myRole)
     },
     save() {
       const oldTeam = this.teamName

@@ -52,6 +52,9 @@ export default {
     }
   },
   computed: {
+    lsSuffix() {
+      return this.$store.getters.lsSuffix
+    },
     gameName() {
       return this.$store.getters.getGameName
     },
@@ -86,10 +89,10 @@ export default {
     },
     clearLocalStorage() {
       if (confirm('Clear localStorage?')) {
-        localStorage.removeItem('myName')
-        localStorage.removeItem('teamName')
-        localStorage.removeItem('myRole')
-        localStorage.removeItem('gameName')
+        localStorage.removeItem('myName-' + this.lsSuffix)
+        localStorage.removeItem('teamName-' + this.lsSuffix)
+        localStorage.removeItem('myRole-' + this.lsSuffix)
+        localStorage.removeItem('gameName-' + this.lsSuffix)
       }
     },
     goMobile() {

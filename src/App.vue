@@ -92,6 +92,9 @@ export default {
     appType() {
       return this.$store.getters.appType
     },
+    lsSuffix() {
+      return this.$store.getters.lsSuffix
+    },
     isHost() {
       return this.$store.getters.getHost
     },
@@ -125,6 +128,7 @@ export default {
   },
   created() {
     this.$store.dispatch('localStorageStatus', ls.check())
+    ls.fix()
 
     let appType = 'No Estimates'
     if (process.env.VUE_APP_TYPE) {
@@ -142,7 +146,7 @@ export default {
     if (params.getParam('game')) {
       const game = params.getParam('game')
       this.$store.dispatch('updateGameName', game)
-      localStorage.setItem('gameName', game)
+      localStorage.setItem('gameName-' + this.lsSuffix, game)
     }
 
     bus.$on('updateStealth', (data) => {
@@ -151,24 +155,24 @@ export default {
       }
     })
 
-    const gameName = localStorage.getItem('gameName')
+    const gameName = localStorage.getItem('gameName-' + this.lsSuffix)
     if (gameName) {
       this.$store.dispatch('updateGameName', gameName)
     }
 
-    let myName = localStorage.getItem('myName')
+    let myName = localStorage.getItem('myName-' + this.lsSuffix)
     if (myName) {
       myName = JSON.parse(myName)
       this.$store.dispatch('updateMyName', myName)
       bus.$emit('sendGetAvailableGames', {host: myName})
     }
 
-    const teamName = localStorage.getItem('teamName')
+    const teamName = localStorage.getItem('teamName-' + this.lsSuffix)
     if (teamName) {
       this.$store.dispatch('updateTeamName', teamName)
     }
 
-    const myRole = localStorage.getItem('myRole')
+    const myRole = localStorage.getItem('myRole-' + this.lsSuffix)
 
     window.onload = function() {
       if (gameName && myName && teamName) {
@@ -178,9 +182,9 @@ export default {
 
     bus.$on('makeCaptain', (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
-        const myName = JSON.parse(localStorage.getItem('myName'))
+        const myName = JSON.parse(localStorage.getItem('myName-' + this.lsSuffix))
         myName.captain = data.myName.id == myName.id
-        localStorage.setItem('myName', JSON.stringify(myName))
+        localStorage.setItem('myName-' + this.lsSuffix, JSON.stringify(myName))
       }
     })
 

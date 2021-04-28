@@ -166,6 +166,18 @@ export const store = new Vuex.Store({
     appType: (state) => {
       return state.appType
     },
+    lsSuffix: (state) => {
+      let suffix
+      switch(state.appType) {
+        case 'No Estimates':
+          suffix = 'ne'
+          break
+        case 'Kanban Playground':
+          suffix = 'kp'
+          break
+      }
+      return suffix
+    },
     thisGame: (state) => {
       return state.thisGame
     },

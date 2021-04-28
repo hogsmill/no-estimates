@@ -17,6 +17,26 @@ const LocalStorage = {
       check = e
     }
     return check
+  },
+
+  fix: function() {
+
+    // TODO: this should only be temp
+    //
+    const items = [
+      'gameName',
+      'teamName',
+      'myName',
+      'myRole'
+    ]
+    for (let i = 0; i < items.length; i++) {
+      const key = items[i]
+      if (localStorage.getItem(key)) {
+        const val = localStorage.getItem(key)
+        localStorage.setItem(key + '-ne', val)
+        localStorage.removeItem(key)
+      }
+    }
   }
 
 }

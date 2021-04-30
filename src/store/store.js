@@ -3,6 +3,31 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
+function setRows(config, state) {
+  if (config.expediteLane && config.splitColumns) {
+    state.rows = ['expedite', 'done', 'doing']
+  } else if (config.splitColumns) {
+    state.rows = ['done', 'doing']
+  } else if (config.expediteLane) {
+    state.rows = ['expedite', 'notexpedite']
+  } else {
+    state.rows = ['all']
+  }
+}
+
+function gameSpecificConfig(appType, config) {
+  let conf = {}
+  switch(appType) {
+    case 'No Estimates':
+      conf = config.noEstimates
+      break
+    case 'Kanban Playground':
+      conf = config.kanbanPlayground
+      break
+  }
+  return conf
+}
+
 export const store = new Vuex.Store({
   state: {
     appType: 'No Estimates',
@@ -54,6 +79,7 @@ export const store = new Vuex.Store({
       {name: 'deploy', order: 4, cards: []},
       {name: 'done', order: 5, cards: []}
     ],
+    rows: [],
     currentDay: 1,
     eventCards: [
       {number: 1, text: 'Good Luck!<br/><br/>. Have you submitted an initial estimate for the project?<br/><br/>If not, click \'Report\' or \'Set Estimates\' and create your estimate now.'},
@@ -108,18 +134,8 @@ export const store = new Vuex.Store({
     currentWorkCard: 0,
     messages: {},
     facilitatorMessages: {},
-    config: {
-      facilitatorStarts: false,
-      allowMobile: false,
-      gameRunning: false,
-      doRetros: false,
-      retroDays: 7,
-      retroTimer: false,
-      retroTime: 0,
-      mvpCards: 11,
-      percentageBlocked: 0.05,
-      percentageDeployFail: 0.5
-    },
+    config: {},
+    gameSpecificConfig: {},
     sourcesOfVariation: [],
     graphConfig: {
       wip: {
@@ -193,8 +209,23 @@ export const store = new Vuex.Store({
     getHostId: (state) => {
       return state.hostId
     },
+    getConfig: (state) => {
+      return state.config
+    },
+    getGameSpecificConfig: (state) => {
+      return state.gameSpecificConfig
+    },
+    getRows: (state) => {
+      return state.rows
+    },
     getStealth: (state) => {
       return state.stealth
+    },
+    getWipLimits: (state) => {
+      return state.gameSpecificConfig.wipLimits
+    },
+    getWipLimitType: (state) => {
+      return state.gameSpecificConfig.wipLimitType
     },
     getCurrency: (state) => {
       return state.currencies.find(function(c) {
@@ -518,9 +549,12 @@ export const store = new Vuex.Store({
       state.percentageBlocked = payload.percentageBlocked
       state.percentageDeployFail = payload.percentageDeployFail
       state.sourcesOfVariation = payload.sourcesOfVariation
+      state.config = payload.config
+      state.gameSpecificConfig = gameSpecificConfig(state.appType, payload.config)
       state.graphConfig = payload.graphConfig
       state.demoConfig = payload.demoConfig
       state.lastaccess = payload.lastaccess
+      setRows(state.gameSpecificConfig, state)
     },
     updateGameName: (state, payload) => {
       state.gameName = payload

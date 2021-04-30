@@ -6,9 +6,10 @@
         <thead>
           <tr v-if="capabilities.concurrentDevAndTest">
             <th>
-              <div class="options">
-                Options
+              <div class="backlog">
+                Backlog
               </div>
+              <WipLabel />
             </th>
             <th v-for="(column, index) in headerColumns()" :key="index" :class="columnClass(column)" :colspan="devColumn(column)">
               <div v-if="column.name != 'develop'" :class="column.name">
@@ -19,13 +20,15 @@
               <div v-if="column.name == 'develop'" class="develop-test">
                 {{ developTestHeader() }}
               </div>
+              <WipHeader :column="column" />
             </th>
           </tr>
           <tr v-if="!capabilities.concurrentDevAndTest">
             <th>
-              <div class="options">
-                Options
+              <div class="backlog">
+                Backlog
               </div>
+              <WipLabel />
             </th>
             <th v-for="(column, index) in columns" :key="index" :class="columnClass(column)">
               <div :class="column.name">
@@ -33,18 +36,38 @@
                 <span class="autoDeploy" v-if="showAutoDeploy(column)" title="Deployment is now automated">&#10004;</span>
                 <span class="canStartAutoDeploy rounded-circle" v-if="canStartAutoDeploy(column)" @click="startAutoDeploy()">&#10033;</span>
               </div>
+              <WipHeader :column="column" />
             </th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td>
+            <td :rowspan="rowSpan()">
               <WorkCardStack />
               <OtherSkills />
               <OtherTeams v-if="teams.length > 1" />
             </td>
             <td v-for="(column, index) in columns" :key="index" :class="columnClass(column)">
-              <Column :column="column" />
+              <div v-if="rows[0] != 'all'">
+                {{ rows[0] }}
+              </div>
+              <Column :column="column" :type="rows[0]" />
+            </td>
+          </tr>
+          <tr v-if="rows.length > 1">
+            <td v-for="(column, index) in columns" :key="index" :class="columnClass(column)">
+              <div v-if="rows[1] != 'notexpedite'">
+                {{ rows[1] }}
+              </div>
+              <Column :column="column" :type="rows[1]" />
+            </td>
+          </tr>
+          <tr v-if="rows.length > 2">
+            <td v-for="(column, index) in columns" :key="index" :class="columnClass(column)">
+              <div>
+                {{ rows[2] }}
+              </div>
+              <Column :column="column" :type="rows[2]" />
             </td>
           </tr>
         </tbody>
@@ -60,6 +83,8 @@ import stringFuns from '../lib/stringFuns.js'
 
 import OtherTeams from './board/OtherTeams.vue'
 import OtherSkills from './board/OtherSkills.vue'
+import WipLabel from './board/WipLabel.vue'
+import WipHeader from './board/WipHeader.vue'
 import WorkCardStack from './board/WorkCardStack.vue'
 import EventCard from './board/EventCard.vue'
 import Column from './board/Column.vue'
@@ -68,11 +93,19 @@ export default {
   components: {
     OtherTeams,
     OtherSkills,
+    WipLabel,
+    WipHeader,
     WorkCardStack,
     Column,
     EventCard
   },
   computed: {
+    gameSpecificConfig() {
+      return this.$store.getters.getGameSpecificConfig
+    },
+    rows() {
+      return this.$store.getters.getRows
+    },
     gameName() {
       return this.$store.getters.getGameName
     },
@@ -91,14 +124,30 @@ export default {
   },
   methods: {
     columnClass(column) {
-      let colClass
+      let classStr = ''
       if (this.capabilities.concurrentDevAndTest && column.name == 'develop') {
-        colClass = 'dotted-right'
+        classStr = 'dotted-right'
       }
       if (this.capabilities.concurrentDevAndTest && column.name == 'test') {
-        colClass = 'dotted-left'
+        classStr = 'dotted-left'
       }
-      return colClass
+      if (column.type) {
+        classStr = classStr + 'column-' + column.type
+      }
+      if (column.wipLimit && column.cards.length > column.wipLimit) {
+        classStr = classStr = ' over-wip'
+      }
+      return classStr
+    },
+    rowSpan() {
+      let rowSpan = 1
+      if (this.gameSpecificConfig.expediteLane) {
+        rowSpan = rowSpan + 1
+      }
+      if (this.gameSpecificConfig.splitColumns) {
+        rowSpan = rowSpan + 1
+      }
+      return rowSpan
     },
     columnDisplayName(s) {
       return stringFuns.properCase(s)
@@ -186,6 +235,12 @@ export default {
       color: purple;
       font-weight: bold;
       padding: 1px 4px;
+    }
+
+    td {
+      .over-wip {
+        background-color: red;
+      }
     }
   }
 

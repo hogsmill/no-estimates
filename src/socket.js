@@ -40,6 +40,8 @@ bus.$on('emitRetro', (data) => { socket.emit('emitRetro', data) })
 
 bus.$on('sendRetroDone', (data) => { socket.emit('sendRetroDone', data) })
 
+bus.$on('sendSetColumnWip', (data) => { socket.emit('sendSetColumnWip', data) })
+
 bus.$on('emitShowEventCard', (data) => { socket.emit('emitShowEventCard', data) })
 
 bus.$on('sendUpdateCurrentDay', (data) => { socket.emit('sendUpdateCurrentDay', data) })
@@ -85,6 +87,20 @@ bus.$on('emitShowSetEstimates', (data) => { socket.emit('emitShowSetEstimates', 
 bus.$on('emitBroadcastMessage', (data) => { socket.emit('emitBroadcastMessage', data) })
 
 bus.$on('sendUpdateStealth', (data) => { socket.emit('sendUpdateStealth', data) })
+
+bus.$on('sendUpdateWipLimits', (data) => { socket.emit('sendUpdateWipLimits', data) })
+
+bus.$on('sendUpdateWipLimitType', (data) => { socket.emit('sendUpdateWipLimitType', data) })
+
+bus.$on('sendUpdateSplitColumns', (data) => { socket.emit('sendUpdateSplitColumns', data) })
+
+bus.$on('sendUpdateExpediteLane', (data) => { socket.emit('sendUpdateExpediteLane', data) })
+
+bus.$on('sendUpdateBacklogGenerated', (data) => { socket.emit('sendUpdateBacklogGenerated', data) })
+
+bus.$on('sendUpdateBacklogEffort', (data) => { socket.emit('sendUpdateBacklogEffort', data) })
+
+bus.$on('sendSetBacklogEffortPoints', (data) => { socket.emit('sendSetBacklogEffortPoints', data) })
 
 bus.$on('sendUpdateCurrency', (data) => { socket.emit('sendUpdateCurrency', data) })
 

@@ -6,6 +6,7 @@
     <Server />
     <GameDisplay />
     <GameParams />
+    <Backlog />
     <GameState />
     <Games />
     <DemoAndTest />
@@ -21,6 +22,7 @@ import GameMessaging from './facilitator/GameMessaging.vue'
 import Server from './facilitator/Server.vue'
 import GameDisplay from './facilitator/GameDisplay.vue'
 import GameParams from './facilitator/GameParams.vue'
+import Backlog from './facilitator/Backlog.vue'
 import GameState from './facilitator/GameState.vue'
 import Games from './facilitator/Games.vue'
 import DemoAndTest from './facilitator/DemoAndTest.vue'
@@ -33,6 +35,7 @@ export default {
     Server,
     GameDisplay,
     GameParams,
+    Backlog,
     GameState,
     Games,
     DemoAndTest,
@@ -59,7 +62,7 @@ export default {
 
 <style lang="scss">
   .game-messaging, .game-server, .game-params, .game-display,
-  .game-state, .games, .demo-and-test {
+  .game-state, .game-backlog, .games, .demo-and-test {
 
     width: 100%;
     margin: 12px;

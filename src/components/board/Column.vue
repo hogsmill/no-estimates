@@ -2,7 +2,7 @@
   <div>
     <AutoDeploy v-if="showAutoDeploy(column)" />
     <div v-for="(card, index) in column.cards" :key="index">
-      <WorkCard :column="column.name" :work-card="card" />
+      <WorkCard v-if="showCard(card)" :column="column.name" :work-card="card" />
     </div>
   </div>
 </template>
@@ -17,9 +17,13 @@ export default {
     AutoDeploy
   },
   props: [
-    'column'
+    'column',
+    'type'
   ],
   computed: {
+    gameSpecificConfig() {
+      return this.$store.getters.getGameSpecificConfig
+    },
     gameName() {
       return this.$store.getters.getGameName
     },
@@ -33,6 +37,23 @@ export default {
   methods: {
     showAutoDeploy(column) {
       return this.teamName && this.capabilities.autoDeploy.doing && column.name == 'deploy'
+    },
+    cardComplete(card) {
+      return card.effort[this.column.name] == card[this.column.name]
+    },
+    showCard(card) {
+      let show = true
+      const complete = this.cardComplete(card)
+      if (this.type == 'expedite') {
+        show = card.urgent
+      } else if (this.type == 'done') {
+        show = complete
+      } else if (this.type == 'doing' && !this.getGameSpecificConfig.expediteLane) {
+        show = !complete
+      } else if (this.type == 'notexpedite') {
+        show = !card.urgent
+      }
+      return show
     }
   },
 }
@@ -58,7 +79,7 @@ export default {
     }
   }
 
-  .options {
+  .backlog {
     background-color: navy;
 
     div {

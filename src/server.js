@@ -140,6 +140,8 @@ MongoClient.connect(url, { useUnifiedTopology: true, maxIdleTimeMS: maxIdleTime 
 
     socket.on('sendRetroDone', (data) => { dbStore.retroDone(db, io, data, debugOn) })
 
+    socket.on('sendSetColumnWip', (data) => { dbStore.setColumnWip(db, io, data, debugOn) })
+
     socket.on('emitShowEventCard', (data) => { emit('showEventCard', data) })
 
     socket.on('sendUpdateCurrentDay', (data) => { dbStore.updateCurrentDay(db, io, data, debugOn) })
@@ -183,6 +185,20 @@ MongoClient.connect(url, { useUnifiedTopology: true, maxIdleTimeMS: maxIdleTime 
     // Facilitator View
 
     socket.on('sendUpdateCurrency', (data) => { dbStore.updateCurrency(db, io, data, debugOn) })
+
+    socket.on('sendUpdateWipLimitType', (data) => { dbStore.setGameSpecificParameter(db, io, data, 'kanbanPlayground', 'wipLimitType', debugOn) })
+
+    socket.on('sendUpdateWipLimits', (data) => { dbStore.setGameSpecificParameter(db, io, data, 'kanbanPlayground', 'wipLimits', debugOn) })
+
+    socket.on('sendUpdateSplitColumns', (data) => { dbStore.setGameSpecificParameter(db, io, data, 'kanbanPlayground', 'splitColumns', debugOn) })
+
+    socket.on('sendUpdateExpediteLane', (data) => { dbStore.setGameSpecificParameter(db, io, data, 'kanbanPlayground', 'expediteLane', debugOn) })
+
+    socket.on('sendUpdateBacklogGenerated', (data) => { dbStore.setGameSpecificParameter(db, io, data, 'kanbanPlayground', 'backlogGenerated', debugOn) })
+
+    socket.on('sendUpdateBacklogEffort', (data) => { dbStore.setGameSpecificParameter(db, io, data, 'kanbanPlayground', 'backlogEffort', debugOn) })
+
+    socket.on('sendSetBacklogEffortPoints', (data) => { dbStore.setGameSpecificParameter(db, io, data, 'kanbanPlayground', 'backlogEffortPoints', debugOn) })
 
     socket.on('sendUpdateConfig', (data) => { dbStore.updateConfig(db, io, data, debugOn) })
 

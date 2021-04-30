@@ -19,6 +19,34 @@
         <input type="checkbox" id="allow-mobile" class="form-control" :checked="allowMobile" @click="saveAllowMobile()">
       </td>
     </tr>
+    <tr v-if="showGameParams && feature('wipLimits')">
+      <td class="left-col">
+        WIP Limits?
+      </td>
+      <td class="wip-limits">
+        <input id="wip-limits" type="checkbox" :checked="gameSpecificConfig.wipLimits" @click="toggleWipLimits()">
+      </td>
+      <td colspan="2" class="wip-limits">
+        <input name="wip-limits-type" id="wip-limits-hard" type="radio" :checked="gameSpecificConfig.wipLimitType == 'hard'" @click="toggleWipLimitType('hard')"> Hard<br>
+        <input name="wip-limits-type" id="wip-limits-soft" type="radio" :checked="gameSpecificConfig.wipLimitType == 'soft'" @click="toggleWipLimitType('soft')"> Soft
+      </td>
+    </tr>
+    <tr v-if="showGameParams && feature('splitColumns')">
+      <td class="left-col">
+        Split Columns?
+      </td>
+      <td colspan="3" class="wip-limits">
+        <input id="split-columns" type="checkbox" :checked="gameSpecificConfig.splitColumns" @click="toggleSplitColumns()">
+      </td>
+    </tr>
+    <tr v-if="showGameParams && feature('expediteLane')">
+      <td class="left-col">
+        Expedite Lane?
+      </td>
+      <td colspan="3" class="wip-limits">
+        <input id="expedite-lane" type="checkbox" :checked="gameSpecificConfig.expediteLane" @click="toggleExpediteLane()">
+      </td>
+    </tr>
     <tr v-if="showGameParams">
       <td>Currency: </td>
       <td colspan="3" class="left">
@@ -133,6 +161,9 @@ export default {
     }
   },
   computed: {
+    gameSpecificConfig() {
+      return this.$store.getters.getGameSpecificConfig
+    },
     showFacilitator() {
       return this.$store.getters.getShowFacilitator
     },
@@ -186,10 +217,30 @@ export default {
     setShowGameParams(val) {
       this.showGameParams = val
     },
+    feature(feature) {
+      return Object.keys(this.gameSpecificConfig).find(function(k) {
+        return k == feature
+      })
+    },
     toggleStealth() {
       const isStealth = document.getElementById('is-stealth').checked
       localStorage.setItem('stealth', isStealth)
       bus.$emit('sendUpdateStealth', {gameName: this.gameName, stealth: isStealth})
+    },
+    toggleWipLimits() {
+      const wipLimits = document.getElementById('wip-limits').checked
+      bus.$emit('sendUpdateWipLimits', {gameName: this.gameName, wipLimits: wipLimits})
+    },
+    toggleWipLimitType(wipLimitType) {
+      bus.$emit('sendUpdateWipLimitType', {gameName: this.gameName, wipLimitType: wipLimitType})
+    },
+    toggleSplitColumns() {
+      const splitColumns = document.getElementById('split-columns').checked
+      bus.$emit('sendUpdateSplitColumns', {gameName: this.gameName, splitColumns: splitColumns})
+    },
+    toggleExpediteLane() {
+      const expediteLane = document.getElementById('expedite-lane').checked
+      bus.$emit('sendUpdateExpediteLane', {gameName: this.gameName, expediteLane: expediteLane})
     },
     toggleDoRetros() {
       const doRetros = document.getElementById('do-retros').checked

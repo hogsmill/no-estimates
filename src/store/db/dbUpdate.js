@@ -33,6 +33,19 @@ const gameUpdates = [
       'runTo': 'MVP',
       'runToCards': 11
     }
+  },
+
+  {name: 'config', value: {
+    'noEstimates': {
+    },
+    'kanbanPlayground': {
+      'splitColumns': false,
+      'expediteLane': false,
+      'wipLimits': false,
+      'wipLimitType': 'soft',
+      'wipLimit': 3
+    },
+    }
   }
 ]
 

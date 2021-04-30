@@ -11,13 +11,6 @@ const gameState = require('./lib/gameState.js')
 const sourceFuns = require('./lib/sources.js')
 const dbUpdate = require('./db/dbUpdate.js')
 
-/*
-const currencies = [
-  {name: 'pound', symbol: '£', major: '&pound;', minor: 'p', selected: true},
-  {name: 'euro', symbol: '€', major: '&#8364;', minor: 'c', selected: false},
-  {name: 'dollar', symbol: '$', major: '&dollar;', minor: 'c', selected: false}
-]
-*/
 function resetGame(game) {
   game.columns = JSON.parse(JSON.stringify(columnFuns.initialColumns()))
   game.workCards = JSON.parse(JSON.stringify(cardFuns.initialCards()))
@@ -60,9 +53,10 @@ function newGame(data) {
     include: false,
     teams: JSON.parse(JSON.stringify(teamFuns.initialTeams())),
     facilitatorMessages: [],
-    currencies: currency.currencies(),
+    currencies: currencyFuns.currencies(),
     config: {
       facilitatorStarts: false,
+      allowMobile: false,
       gameRunning: false,
       doRetros: false,
       retroDays: 7,
@@ -71,6 +65,18 @@ function newGame(data) {
       mvpCards: 11,
       percentageBlocked: 0.05,
       percentageDeployFail: 0.5,
+      noEstimates: {
+      },
+      kanbanPlayground: {
+        splitColumns: false,
+        expediteLane: false,
+        wipLimits: false,
+        wipLimitType: 'soft',
+        wipLimit: 3,
+        backlogGenerated: false,
+        backlogEffort: false,
+        backlogEffortPoints: 1
+      }
     },
     graphConfig: {
       wip: {
@@ -572,6 +578,33 @@ module.exports = {
     })
   },
 
+  setColumnWip: function(db, io, data, debugOn) {
+
+    if (debugOn) { console.log('setColumnWip', data) }
+
+    db.gameCollection.findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
+      if (err) throw err
+      if (res) {
+        const columns = []
+        for (let i = 0; i < res.columns.length; i++) {
+          const column = res.columns[i]
+          if (column.name == data.column) {
+            column.wipLimit = parseInt(data.wipLimit)
+          }
+          columns.push(column)
+        }
+        res.columns = columns
+        const id = res._id
+        delete res._id
+        db.gameCollection.updateOne({'_id': id}, {$set: res}, function() {
+          if (err) throw err
+          updateTeam(db, io, res)
+          gameState.update(db, io, res)
+        })
+      }
+    })
+  },
+
   updateEffort: function(db, io, data, debugOn) {
 
     if (debugOn) { console.log('updateEffort', data) }
@@ -906,6 +939,21 @@ module.exports = {
           if (err) throw err
           io.emit('loadGame', res)
         })
+      }
+    })
+  },
+
+  setGameSpecificParameter: function(db, io, data, appConfig, field, debugOn) {
+
+    if (debugOn) { console.log('setGameSpecificParameter', appConfig, field, data) }
+
+    db.gamesCollection.findOne({gameName: data.gameName}, function(err, res) {
+      if (err) throw err
+      if (res) {
+        const config = res.config
+        config[appConfig][field] = data[field]
+        res.config = config
+        updateGame(db, io, res)
       }
     })
   },

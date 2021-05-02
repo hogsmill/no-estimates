@@ -7,6 +7,7 @@
     <GameDisplay />
     <GameParams />
     <Backlog />
+    <Delivery />
     <GameState />
     <Games />
     <DemoAndTest />
@@ -23,6 +24,7 @@ import Server from './facilitator/Server.vue'
 import GameDisplay from './facilitator/GameDisplay.vue'
 import GameParams from './facilitator/GameParams.vue'
 import Backlog from './facilitator/Backlog.vue'
+import Delivery from './facilitator/Delivery.vue'
 import GameState from './facilitator/GameState.vue'
 import Games from './facilitator/Games.vue'
 import DemoAndTest from './facilitator/DemoAndTest.vue'
@@ -36,6 +38,7 @@ export default {
     GameDisplay,
     GameParams,
     Backlog,
+    Delivery,
     GameState,
     Games,
     DemoAndTest,

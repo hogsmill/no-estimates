@@ -1,5 +1,5 @@
 <template>
-  <table v-if="feature('backlogGenerated')" class="game-backlog">
+  <table v-if="feature('delivery')" class="game-delivery">
     <tr>
       <td colspan="4">
         <h4>
@@ -25,7 +25,7 @@
         <input type="checkbox" id="backlog-effort" class="form-control" :checked="config.backloEffort" @click="toggleBacklogEffort()">
       </td>
       <td>
-        <input type="text" id="backlog-effort-points" class="form-control" :value="config.backlogEffortPoints">
+        Effort per card <input type="text" id="backlog-effort-points" class="form-control" :value="config.backlogEffortPoints">
       </td>
       <td>
         <button class="btn btn-sm btn-site-primary" @click="setBacklogEffort()">
@@ -85,6 +85,7 @@ export default {
     }
     input {
       margin: 0 !important;
+      display: inline-block;
     }
   }
 </style>

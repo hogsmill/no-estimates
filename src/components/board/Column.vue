@@ -1,6 +1,6 @@
 <template>
   <div>
-    <AutoDeploy v-if="showAutoDeploy(column)" />
+    <AutoDeploy v-if="showAutoDeploy()" />
     <div v-for="(card, index) in column.cards" :key="index">
       <WorkCard v-if="showCard(card)" :column="column.name" :work-card="card" />
     </div>
@@ -35,9 +35,9 @@ export default {
     }
   },
   methods: {
-    showAutoDeploy(column) {
-      return this.teamName && this.capabilities.autoDeploy.doing && column.name == 'deploy' &&
-             this.type == 'expedite' || this.type == 'done' || this.type == 'all'
+    showAutoDeploy() {
+      return this.teamName && this.capabilities.autoDeploy.doing && this.column.name == 'deploy' &&
+             (this.type == 'expedite' || this.type == 'done' || this.type == 'all')
     },
     cardComplete(card) {
       return card.effort[this.column.name] == card[this.column.name]

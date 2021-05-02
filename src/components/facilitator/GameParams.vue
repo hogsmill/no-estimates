@@ -47,6 +47,14 @@
         <input id="expedite-lane" type="checkbox" :checked="config.expediteLane" @click="toggleExpediteLane()">
       </td>
     </tr>
+    <tr v-if="showGameParams && feature('expediteLane')">
+      <td class="left-col">
+        Move complete cards automatically?
+      </td>
+      <td colspan="3" class="wip-limits">
+        <input id="auto-move-complete-cards" type="checkbox" :checked="config.autoMoveCompleteCards" @click="toggleAutoMoveCompleteCards()">
+      </td>
+    </tr>
     <tr v-if="showGameParams">
       <td>Currency: </td>
       <td colspan="3" class="left">
@@ -237,6 +245,10 @@ export default {
     toggleSplitColumns() {
       const splitColumns = document.getElementById('split-columns').checked
       bus.$emit('sendUpdateConfig', {gameName: this.gameName, field: 'splitColumns', value: splitColumns})
+    },
+    toggleAutoMoveCompleteCards() {
+      const autoMoveCompleteCards = document.getElementById('auto-move-complete-cards').checked
+      bus.$emit('sendUpdateConfig', {gameName: this.gameName, field: 'autoMoveCompleteCards', value: autoMoveCompleteCards})
     },
     toggleExpediteLane() {
       const expediteLane = document.getElementById('expedite-lane').checked

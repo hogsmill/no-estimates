@@ -98,9 +98,11 @@ function newGame(data) {
   switch(game.appType) {
     case 'No Estimates':
       game.config.autoMoveCompleteCards = true
+      game.config.deliveryType = 'revenue'
       break
     case 'Kanban Playground':
       game.config.autoMoveCompleteCards = false
+      game.config.deliveryType = 'revenue'
       game.config.splitColumns = false
       game.config.expediteLane = false
       game.config.wipLimits = false
@@ -608,47 +610,53 @@ module.exports = {
 
     if (debugOn) { console.log('updateEffort', data) }
 
-    db.gameCollection.findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
+    db.gamesCollection.findOne({gameName: data.gameName}, function(err, gameRes) {
       if (err) throw err
-      if (res) {
-        res.members = teamFuns.decrementMyEffort(res.members, data.name, data.effort)
-        const columns = res.columns, workCards = res.workCards, day = res.currentDay
-        let todaysEffort = []
-        for (let i = 0; i < columns.length; i++) {
-          for (let j = 0; j < columns[i].cards.length; j++) {
-            if (columns[i].cards[j].number == data.workCard.number) {
-              todaysEffort = pairingFuns.updateTodaysEffort(res, columns[i], data.workCard, data.name)
-              let card = columns[i].cards[j]
-              const colName = columns[i].name
-              card.effort = data.workCard.effort
-              card = cardFuns.addCardWorkedOnInDay(card, res.currentDay)
-              card = cardFuns.addWorkedOn(card, data.column, data.name, data.role)
-              if (res.config.autoMoveCompleteCards && cardFuns.cardCompleteInColumn(card, colName, res)) {
-                cardFuns.moveCard(columns, workCards, card, i, day)
+      if (gameRes) {
+        const config = gameRes.config
+        db.gameCollection.findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
+          if (err) throw err
+          if (res) {
+            res.members = teamFuns.decrementMyEffort(res.members, data.name, data.effort)
+            const columns = res.columns, workCards = res.workCards, day = res.currentDay
+            let todaysEffort = []
+            for (let i = 0; i < columns.length; i++) {
+              for (let j = 0; j < columns[i].cards.length; j++) {
+                if (columns[i].cards[j].number == data.workCard.number) {
+                  todaysEffort = pairingFuns.updateTodaysEffort(res, columns[i], data.workCard, data.name)
+                  let card = columns[i].cards[j]
+                  const colName = columns[i].name
+                  card.effort = data.workCard.effort
+                  card = cardFuns.addCardWorkedOnInDay(card, res.currentDay)
+                  card = cardFuns.addWorkedOn(card, data.column, data.name, data.role)
+                  if (config.autoMoveCompleteCards && cardFuns.cardCompleteInColumn(card, colName, res)) {
+                    cardFuns.moveCard(columns, workCards, card, i, day)
+                  }
+                }
               }
             }
+            res = utils.safePush(res, 'wip', cardFuns.wip(columns, res.currentDay))
+            res = utils.safePush(res, 'cumulative', cardFuns.cumulative(columns, res.currentDay))
+
+            res.daysEffort = todaysEffort
+            res.columns = columns
+            res.workCards = workCards
+
+            const actuals = cardFuns.calculateActuals(columns, res.workCards, config.mvpCards, day, res.mvpActual, res.projectActual)
+            res.mvpActual = actuals.mvp
+            res.projectActual = actuals.project
+
+            const id = res._id
+            delete res._id
+            db.gameCollection.updateOne({'_id': id}, {$set: res}, function(err) {
+              if (err) throw err
+              if (data.column != data.role.replace(/er$/, '').toLowerCase()) {
+                pairingDay(db, io, data, debugOn)
+              }
+              io.emit('loadTeam', res)
+              gameState.update(db, io, res)
+            })
           }
-        }
-        res = utils.safePush(res, 'wip', cardFuns.wip(columns, res.currentDay))
-        res = utils.safePush(res, 'cumulative', cardFuns.cumulative(columns, res.currentDay))
-
-        res.daysEffort = todaysEffort
-        res.columns = columns
-        res.workCards = workCards
-
-        const actuals = cardFuns.calculateActuals(columns, res.workCards, res.config.mvpCards, day, res.mvpActual, res.projectActual)
-        res.mvpActual = actuals.mvp
-        res.projectActual = actuals.project
-
-        const id = res._id
-        delete res._id
-        db.gameCollection.updateOne({'_id': id}, {$set: res}, function(err) {
-          if (err) throw err
-          if (data.column != data.role.replace(/er$/, '').toLowerCase()) {
-            pairingDay(db, io, data, debugOn)
-          }
-          io.emit('loadTeam', res)
-          gameState.update(db, io, res)
         })
       }
     })

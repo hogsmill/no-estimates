@@ -211,7 +211,6 @@ export default {
       return columnFuns.nextColumnName(this.column, this.columns)
     },
     canMoveCard() {
-      console.log(this.workCard, this.column, this.columns, this.wipLimits, this.wipLimitType)
       return columnFuns.canMoveCardToNextColumn(this.workCard, this.column, this.columns, this.wipLimits, this.wipLimitType)
     },
     moveCard() {

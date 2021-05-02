@@ -504,7 +504,6 @@ export const store = new Vuex.Store({
       state.currentDay = payload.currentDay
       state.currentWorkCard = payload.currentWorkCard
       state.messages = payload.messages
-      state.config = payload.config
       state.projectEstimate = payload.projectEstimate
       state.reEstimate = payload.reEstimate
       state.projectActual = payload.projectActual

@@ -49,6 +49,7 @@ function resetGame(game) {
 
 function newGame(data) {
   const game = {
+    appType: data.appType,
     gameName: data.gameName,
     include: false,
     teams: JSON.parse(JSON.stringify(teamFuns.initialTeams())),
@@ -64,19 +65,7 @@ function newGame(data) {
       retroTime: 0,
       mvpCards: 11,
       percentageBlocked: 0.05,
-      percentageDeployFail: 0.5,
-      noEstimates: {
-      },
-      kanbanPlayground: {
-        splitColumns: false,
-        expediteLane: false,
-        wipLimits: false,
-        wipLimitType: 'soft',
-        wipLimit: 3,
-        backlogGenerated: false,
-        backlogEffort: false,
-        backlogEffortPoints: 1
-      }
+      percentageDeployFail: 0.5
     },
     graphConfig: {
       wip: {
@@ -106,6 +95,23 @@ function newGame(data) {
     lastaccess: new Date().toISOString()
   }
 
+  switch(game.appType) {
+    case 'No Estimates':
+      game.config.autoMoveCompleteCards = true
+      break
+    case 'Kanban Playground':
+      game.config.autoMoveCompleteCards = false
+      game.config.splitColumns = false
+      game.config.expediteLane = false
+      game.config.wipLimits = false
+      game.config.wipLimitType = 'soft'
+      game.config.wipLimit = 3
+      game.config.backlogGenerated = false
+      game.config.backlogEffort = false
+      game.config.backlogEffortPoints = 1
+      break
+  }
+
   return game
 }
 
@@ -119,7 +125,7 @@ function newTeam(gameName, teamName, config) {
     pairing: [],
     recharting: false,
     otherCards: [],
-    config: config,
+    //config: config,
     retrosDone: {},
     concurrentDevAndTest: false,
     canStartAutoDeploy: false,
@@ -170,7 +176,6 @@ function updateTeam(db, io, res) {
 function updateGame(db, io, res) {
   const id = res._id
   delete res._id
-  //db.collection('noEstimatesGames').updateOne({'_id': id}, {$set: res}, function(err) {
   db.gamesCollection.updateOne({'_id': id}, {$set: res}, function(err) {
     if (err) throw err
     io.emit('loadGame', res)
@@ -282,7 +287,6 @@ module.exports = {
 
     if (debugOn) { console.log('loadGame') }
 
-    //db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, res) {
     db.gamesCollection.findOne({gameName: data.gameName}, function(err, res) {
       if (err) throw err
       if (res) {
@@ -291,14 +295,12 @@ module.exports = {
         const id = res._id
         delete res._id
         res.sourcesOfVariation = sourceFuns.sources()
-        //db.collection('noEstimatesGames').updateOne({'_id': id}, {$set: res}, function(err) {
         db.gamesCollection.updateOne({'_id': id}, {$set: res}, function(err) {
           if (err) throw err
         })
         console.log('Loading game \'' + data.gameName + '\'')
         io.emit('loadGame', res)
         if (data.oldTeam) {
-          //db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.oldTeam}, function(err, resOld) {
           db.gameCollection.findOne({gameName: data.gameName, teamName: data.oldTeam}, function(err, resOld) {
             if (err) throw err
             resOld = dbUpdate.team(resOld)
@@ -306,7 +308,6 @@ module.exports = {
             updateTeam(db, io, resOld)
           })
         }
-        //db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, gameRes) {
         db.gameCollection.findOne({gameName: data.gameName, teamName: data.teamName}, function(err, gameRes) {
           if (err) throw err
           if (gameRes) {
@@ -319,7 +320,6 @@ module.exports = {
         console.log('Created new game \'' + data.gameName + '\'')
         const game = newGame(data)
         game.sourcesOfVariation = sourceFuns.sources()
-        //db.collection('noEstimatesGames').insertOne(game, function(err) {
         db.gamesCollection.insertOne(game, function(err) {
           if (err) throw err
           io.emit('loadGame', game)
@@ -332,7 +332,6 @@ module.exports = {
           if (teamName == data.teamName) {
             team.members = teamFuns.addMember(team.members, data.myName, data.myRole)
           }
-          //db.collection('noEstimates').insertOne(team, function(err) {
           db.gameCollection.insertOne(team, function(err) {
             if (err) throw err
             io.emit('loadTeam', team)
@@ -609,7 +608,6 @@ module.exports = {
 
     if (debugOn) { console.log('updateEffort', data) }
 
-    //db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
     db.gameCollection.findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
       if (err) throw err
       if (res) {
@@ -625,7 +623,7 @@ module.exports = {
               card.effort = data.workCard.effort
               card = cardFuns.addCardWorkedOnInDay(card, res.currentDay)
               card = cardFuns.addWorkedOn(card, data.column, data.name, data.role)
-              if (cardFuns.cardCompleteInColumn(card, colName, res)) {
+              if (res.config.autoMoveCompleteCards && cardFuns.cardCompleteInColumn(card, colName, res)) {
                 cardFuns.moveCard(columns, workCards, card, i, day)
               }
             }
@@ -644,13 +642,32 @@ module.exports = {
 
         const id = res._id
         delete res._id
-        //db.collection('noEstimates').updateOne({'_id': id}, {$set: res}, function(err) {
         db.gameCollection.updateOne({'_id': id}, {$set: res}, function(err) {
           if (err) throw err
           if (data.column != data.role.replace(/er$/, '').toLowerCase()) {
             pairingDay(db, io, data, debugOn)
           }
           io.emit('loadTeam', res)
+          gameState.update(db, io, res)
+        })
+      }
+    })
+  },
+
+  moveCardToNextColumn: function(db, io, data, debugOn) {
+
+    if (debugOn) { console.log('moveCardToNextColumn', data) }
+
+    db.gameCollection.findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
+      if (err) throw err
+      if (res) {
+        const n = columnFuns.getColumnIndex(res.columns, data.column)
+        cardFuns.moveCard(res.columns, res.workCards, data.workCard, n, res.currentDay)
+        const id = res._id
+        delete res._id
+        db.gameCollection.updateOne({'_id': id}, {$set: res}, function() {
+          if (err) throw err
+          updateTeam(db, io, res)
           gameState.update(db, io, res)
         })
       }

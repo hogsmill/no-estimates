@@ -21,8 +21,8 @@ export default {
     'type'
   ],
   computed: {
-    gameSpecificConfig() {
-      return this.$store.getters.getGameSpecificConfig
+    config() {
+      return this.$store.getters.getConfig
     },
     gameName() {
       return this.$store.getters.getGameName
@@ -36,7 +36,8 @@ export default {
   },
   methods: {
     showAutoDeploy(column) {
-      return this.teamName && this.capabilities.autoDeploy.doing && column.name == 'deploy'
+      return this.teamName && this.capabilities.autoDeploy.doing && column.name == 'deploy' &&
+             this.type == 'expedite' || this.type == 'done' || this.type == 'all'
     },
     cardComplete(card) {
       return card.effort[this.column.name] == card[this.column.name]
@@ -44,14 +45,28 @@ export default {
     showCard(card) {
       let show = true
       const complete = this.cardComplete(card)
-      if (this.type == 'expedite') {
-        show = card.urgent
-      } else if (this.type == 'done') {
-        show = complete
-      } else if (this.type == 'doing' && !this.getGameSpecificConfig.expediteLane) {
-        show = !complete
-      } else if (this.type == 'notexpedite') {
-        show = !card.urgent
+      switch(this.type) {
+        case 'expedite':
+          show = card.urgent
+          break
+        case 'notexpedite':
+          show = !card.urgent
+          break
+        case 'expeditedone':
+          show = !card.urgent && complete
+          break
+        case 'expeditedoing':
+          show = !card.urgent && !complete
+          break
+        case 'done':
+          show = complete
+          break
+        case 'doing':
+          show = !complete
+          break
+        case 'all':
+          show = true
+          break
       }
       return show
     }

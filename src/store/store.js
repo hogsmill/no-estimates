@@ -5,7 +5,7 @@ Vue.use(Vuex)
 
 function setRows(config, state) {
   if (config.expediteLane && config.splitColumns) {
-    state.rows = ['expedite', 'done', 'doing']
+    state.rows = ['expedite', 'expeditedone', 'expeditedoing']
   } else if (config.splitColumns) {
     state.rows = ['done', 'doing']
   } else if (config.expediteLane) {
@@ -13,19 +13,6 @@ function setRows(config, state) {
   } else {
     state.rows = ['all']
   }
-}
-
-function gameSpecificConfig(appType, config) {
-  let conf = {}
-  switch(appType) {
-    case 'No Estimates':
-      conf = config.noEstimates
-      break
-    case 'Kanban Playground':
-      conf = config.kanbanPlayground
-      break
-  }
-  return conf
 }
 
 export const store = new Vuex.Store({
@@ -135,7 +122,6 @@ export const store = new Vuex.Store({
     messages: {},
     facilitatorMessages: {},
     config: {},
-    gameSpecificConfig: {},
     sourcesOfVariation: [],
     graphConfig: {
       wip: {
@@ -212,9 +198,6 @@ export const store = new Vuex.Store({
     getConfig: (state) => {
       return state.config
     },
-    getGameSpecificConfig: (state) => {
-      return state.gameSpecificConfig
-    },
     getRows: (state) => {
       return state.rows
     },
@@ -222,10 +205,10 @@ export const store = new Vuex.Store({
       return state.stealth
     },
     getWipLimits: (state) => {
-      return state.gameSpecificConfig.wipLimits
+      return state.config.wipLimits
     },
     getWipLimitType: (state) => {
-      return state.gameSpecificConfig.wipLimitType
+      return state.config.wipLimitType
     },
     getCurrency: (state) => {
       return state.currencies.find(function(c) {
@@ -550,11 +533,10 @@ export const store = new Vuex.Store({
       state.percentageDeployFail = payload.percentageDeployFail
       state.sourcesOfVariation = payload.sourcesOfVariation
       state.config = payload.config
-      state.gameSpecificConfig = gameSpecificConfig(state.appType, payload.config)
       state.graphConfig = payload.graphConfig
       state.demoConfig = payload.demoConfig
       state.lastaccess = payload.lastaccess
-      setRows(state.gameSpecificConfig, state)
+      setRows(state.config, state)
     },
     updateGameName: (state, payload) => {
       state.gameName = payload

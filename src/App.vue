@@ -176,7 +176,7 @@ export default {
 
     window.onload = function() {
       if (gameName && myName && teamName) {
-        bus.$emit('sendLoadGame', {gameName: gameName, teamName: teamName, myName: myName, myRole: myRole})
+        bus.$emit('sendLoadGame', {gameName: gameName, teamName: teamName, myName: myName, myRole: myRole, appType: appType})
       }
     }
 

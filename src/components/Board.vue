@@ -48,16 +48,16 @@
               <OtherTeams v-if="teams.length > 1" />
             </td>
             <td v-for="(column, index) in columns" :key="index" :class="columnClass(column)">
-              <div v-if="rows[0] != 'all'">
-                {{ rows[0] }}
+              <div v-if="showHeader(rows[0])">
+                {{ headerString(rows[0]) }}
               </div>
               <Column :column="column" :type="rows[0]" />
             </td>
           </tr>
           <tr v-if="rows.length > 1">
             <td v-for="(column, index) in columns" :key="index" :class="columnClass(column)">
-              <div v-if="rows[1] != 'notexpedite'">
-                {{ rows[1] }}
+              <div v-if="showHeader(rows[1])">
+                {{ headerString(rows[1]) }}
               </div>
               <Column :column="column" :type="rows[1]" />
             </td>
@@ -65,7 +65,7 @@
           <tr v-if="rows.length > 2">
             <td v-for="(column, index) in columns" :key="index" :class="columnClass(column)">
               <div>
-                {{ rows[2] }}
+                {{ headerString(rows[2]) }}
               </div>
               <Column :column="column" :type="rows[2]" />
             </td>
@@ -100,8 +100,8 @@ export default {
     EventCard
   },
   computed: {
-    gameSpecificConfig() {
-      return this.$store.getters.getGameSpecificConfig
+    config() {
+      return this.$store.getters.getConfig
     },
     rows() {
       return this.$store.getters.getRows
@@ -141,16 +141,30 @@ export default {
     },
     rowSpan() {
       let rowSpan = 1
-      if (this.gameSpecificConfig.expediteLane) {
+      if (this.config.expediteLane) {
         rowSpan = rowSpan + 1
       }
-      if (this.gameSpecificConfig.splitColumns) {
+      if (this.config.splitColumns) {
         rowSpan = rowSpan + 1
       }
       return rowSpan
     },
     columnDisplayName(s) {
       return stringFuns.properCase(s)
+    },
+    showHeader(column) {
+      return column == 'expeditedone' || column == 'done' ||
+             column == 'expeditedoing' || column == 'doing'
+    },
+    headerString(column) {
+      let str = ''
+      if (column == 'expeditedone' || column == 'done') {
+        str = 'Done'
+      }
+      if (column == 'expeditedoing' || column == 'doing') {
+        str = 'Doing'
+      }
+      return str
     },
     developTestHeader() {
       const devCards = this.columns.find(function(c) {
@@ -237,10 +251,11 @@ export default {
       padding: 1px 4px;
     }
 
-    td {
-      .over-wip {
-        background-color: red;
-      }
+  }
+
+  td {
+    &.over-wip {
+      background-color: red;
     }
   }
 

@@ -12,6 +12,12 @@
     <div v-if="workCard.teamDependency && workCard.dependencyDone < workCard.teamDependency" class="outstanding-dependency">
       DEPENDENCY
     </div>
+    <div v-if="cardComplete()" class="move-card">
+      <button class="btn btn-sm btn-site-primary" :disabled="canMoveCard().error" @click="moveCard()"
+              :title="canMoveCard().message ? canMoveCard().message : 'Move card to ' + nextColumn()">
+        <i class="fas fa-long-arrow-alt-right" />
+      </button>
+    </div>
     <div class="work-card-header">
       <div class="card-number">
         #{{ workCard.number }}
@@ -69,6 +75,7 @@
 import bus from '../../socket.js'
 
 import roles from '../../lib/roles.js'
+import columnFuns from '../../lib/columns.js'
 
 export default {
   props: [
@@ -99,16 +106,28 @@ export default {
     myEffort() {
       return this.$store.getters.getMyEffort
     },
+    columns() {
+      return this.$store.getters.getColumns
+    },
     capabilities() {
       return this.$store.getters.getCapabilities
     },
     currentDay() {
       return this.$store.getters.getCurrentDay
+    },
+    wipLimits() {
+      return this.$store.getters.getWipLimits
+    },
+    wipLimitType() {
+      return this.$store.getters.getWipLimitType
     }
   },
   methods: {
     teamClass() {
       return this.workCard.dependentOn ? this.workCard.dependentOn.name.toLowerCase() : ''
+    },
+    cardComplete() {
+      return this.workCard.effort[this.column] == this.workCard[this.column]
     },
     effort(column) {
       return this.workCard[column]
@@ -187,6 +206,16 @@ export default {
           effort: effort
         })
       }
+    },
+    nextColumn() {
+      return columnFuns.nextColumnName(this.column, this.columns)
+    },
+    canMoveCard() {
+      console.log(this.workCard, this.column, this.columns, this.wipLimits, this.wipLimitType)
+      return columnFuns.canMoveCardToNextColumn(this.workCard, this.column, this.columns, this.wipLimits, this.wipLimitType)
+    },
+    moveCard() {
+      bus.$emit('sendMoveCardToNextColumn', {gameName: this.gameName, teamName: this.teamName, workCard: this.workCard, column: this.column})
     }
   }
 }
@@ -255,6 +284,18 @@ export default {
 
     .failed {
       background-color: #888;
+    }
+
+    .move-card {
+      text-align: right;
+      line-height: 1;
+      background-color: #ccc;
+      padding-bottom: 6px;
+
+      button {
+        padding: 0 8px;
+        margin-top: 4px;
+      }
     }
 
     .work-card-header {

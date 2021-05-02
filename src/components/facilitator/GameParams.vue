@@ -24,11 +24,11 @@
         WIP Limits?
       </td>
       <td class="wip-limits">
-        <input id="wip-limits" type="checkbox" :checked="gameSpecificConfig.wipLimits" @click="toggleWipLimits()">
+        <input id="wip-limits" type="checkbox" :checked="config.wipLimits" @click="toggleWipLimits()">
       </td>
       <td colspan="2" class="wip-limits">
-        <input name="wip-limits-type" id="wip-limits-hard" type="radio" :checked="gameSpecificConfig.wipLimitType == 'hard'" @click="toggleWipLimitType('hard')"> Hard<br>
-        <input name="wip-limits-type" id="wip-limits-soft" type="radio" :checked="gameSpecificConfig.wipLimitType == 'soft'" @click="toggleWipLimitType('soft')"> Soft
+        <input name="wip-limits-type" id="wip-limits-hard" type="radio" :checked="config.wipLimitType == 'hard'" @click="toggleWipLimitType('hard')"> Hard<br>
+        <input name="wip-limits-type" id="wip-limits-soft" type="radio" :checked="config.wipLimitType == 'soft'" @click="toggleWipLimitType('soft')"> Soft
       </td>
     </tr>
     <tr v-if="showGameParams && feature('splitColumns')">
@@ -36,7 +36,7 @@
         Split Columns?
       </td>
       <td colspan="3" class="wip-limits">
-        <input id="split-columns" type="checkbox" :checked="gameSpecificConfig.splitColumns" @click="toggleSplitColumns()">
+        <input id="split-columns" type="checkbox" :checked="config.splitColumns" @click="toggleSplitColumns()">
       </td>
     </tr>
     <tr v-if="showGameParams && feature('expediteLane')">
@@ -44,7 +44,7 @@
         Expedite Lane?
       </td>
       <td colspan="3" class="wip-limits">
-        <input id="expedite-lane" type="checkbox" :checked="gameSpecificConfig.expediteLane" @click="toggleExpediteLane()">
+        <input id="expedite-lane" type="checkbox" :checked="config.expediteLane" @click="toggleExpediteLane()">
       </td>
     </tr>
     <tr v-if="showGameParams">
@@ -161,8 +161,8 @@ export default {
     }
   },
   computed: {
-    gameSpecificConfig() {
-      return this.$store.getters.getGameSpecificConfig
+    config() {
+      return this.$store.getters.getConfig
     },
     showFacilitator() {
       return this.$store.getters.getShowFacilitator
@@ -218,7 +218,7 @@ export default {
       this.showGameParams = val
     },
     feature(feature) {
-      return Object.keys(this.gameSpecificConfig).find(function(k) {
+      return Object.keys(this.config).find(function(k) {
         return k == feature
       })
     },
@@ -229,18 +229,18 @@ export default {
     },
     toggleWipLimits() {
       const wipLimits = document.getElementById('wip-limits').checked
-      bus.$emit('sendUpdateWipLimits', {gameName: this.gameName, wipLimits: wipLimits})
+      bus.$emit('sendUpdateConfig', {gameName: this.gameName, field: 'wipLimits', value: wipLimits})
     },
     toggleWipLimitType(wipLimitType) {
-      bus.$emit('sendUpdateWipLimitType', {gameName: this.gameName, wipLimitType: wipLimitType})
+      bus.$emit('sendUpdateConfig', {gameName: this.gameName, field: 'wipLimitType', value: wipLimitType})
     },
     toggleSplitColumns() {
       const splitColumns = document.getElementById('split-columns').checked
-      bus.$emit('sendUpdateSplitColumns', {gameName: this.gameName, splitColumns: splitColumns})
+      bus.$emit('sendUpdateConfig', {gameName: this.gameName, field: 'splitColumns', value: splitColumns})
     },
     toggleExpediteLane() {
       const expediteLane = document.getElementById('expedite-lane').checked
-      bus.$emit('sendUpdateExpediteLane', {gameName: this.gameName, expediteLane: expediteLane})
+      bus.$emit('sendUpdateConfig', {gameName: this.gameName, field: 'expediteLane', value: expediteLane})
     },
     toggleDoRetros() {
       const doRetros = document.getElementById('do-retros').checked

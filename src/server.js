@@ -158,6 +158,8 @@ MongoClient.connect(url, { useUnifiedTopology: true, maxIdleTimeMS: maxIdleTime 
 
     socket.on('sendUpdateEffort', (data) => { dbStore.updateEffort(db, io, data, debugOn) })
 
+    socket.on('sendMoveCardToNextColumn', (data) => { console.log('here'); dbStore.moveCardToNextColumn(db, io, data, debugOn) })
+
     socket.on('sendAddEffortToOthersCard', (data) => { dbStore.addEffortToOthersCard(db, io, data, debugOn) })
 
     socket.on('emitUpdateOtherTeamEffort', (data) => { emit('updateOtherTeamEffort', data) })
@@ -186,19 +188,11 @@ MongoClient.connect(url, { useUnifiedTopology: true, maxIdleTimeMS: maxIdleTime 
 
     socket.on('sendUpdateCurrency', (data) => { dbStore.updateCurrency(db, io, data, debugOn) })
 
-    socket.on('sendUpdateWipLimitType', (data) => { dbStore.setGameSpecificParameter(db, io, data, 'kanbanPlayground', 'wipLimitType', debugOn) })
+    socket.on('sendUpdateBacklogGenerated', (data) => { dbStore.updateConfig(db, io, data, 'kanbanPlayground', 'backlogGenerated', debugOn) })
 
-    socket.on('sendUpdateWipLimits', (data) => { dbStore.setGameSpecificParameter(db, io, data, 'kanbanPlayground', 'wipLimits', debugOn) })
+    socket.on('sendUpdateBacklogEffort', (data) => { dbStore.updateConfig(db, io, data, 'kanbanPlayground', 'backlogEffort', debugOn) })
 
-    socket.on('sendUpdateSplitColumns', (data) => { dbStore.setGameSpecificParameter(db, io, data, 'kanbanPlayground', 'splitColumns', debugOn) })
-
-    socket.on('sendUpdateExpediteLane', (data) => { dbStore.setGameSpecificParameter(db, io, data, 'kanbanPlayground', 'expediteLane', debugOn) })
-
-    socket.on('sendUpdateBacklogGenerated', (data) => { dbStore.setGameSpecificParameter(db, io, data, 'kanbanPlayground', 'backlogGenerated', debugOn) })
-
-    socket.on('sendUpdateBacklogEffort', (data) => { dbStore.setGameSpecificParameter(db, io, data, 'kanbanPlayground', 'backlogEffort', debugOn) })
-
-    socket.on('sendSetBacklogEffortPoints', (data) => { dbStore.setGameSpecificParameter(db, io, data, 'kanbanPlayground', 'backlogEffortPoints', debugOn) })
+    socket.on('sendSetBacklogEffortPoints', (data) => { dbStore.updateConfig(db, io, data, 'kanbanPlayground', 'backlogEffortPoints', debugOn) })
 
     socket.on('sendUpdateConfig', (data) => { dbStore.updateConfig(db, io, data, debugOn) })
 

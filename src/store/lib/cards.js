@@ -115,7 +115,7 @@ module.exports = {
   initialCards: function() {
     return initialCards
   },
-  
+
   totalEffort: function(card) {
     return card.design +
       card.develop +

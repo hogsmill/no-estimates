@@ -28,6 +28,18 @@
     />
     <script src="https://kit.fontawesome.com/50eff791d6.js" crossorigin="anonymous"></script>
     <title>The No Estimates game | Agile simulations</title>
+    <script>
+      let title = 'No Estimates (Local)'
+      switch(document.location.pathname.replace(/\//g, '')) {
+        case 'kanban-playground':
+          title = 'Kanban Playground'
+          break
+        case 'no-estimates':
+          title = 'The No Estimates Game'
+          break
+      }
+      document.getElementsByTagName('title')[0].innerHTML = title + ' | Agile Simulations'
+    </script>
   </head>
   <body>
     <div id="app"></div>

@@ -188,12 +188,6 @@ MongoClient.connect(url, { useUnifiedTopology: true, maxIdleTimeMS: maxIdleTime 
 
     socket.on('sendUpdateCurrency', (data) => { dbStore.updateCurrency(db, io, data, debugOn) })
 
-    socket.on('sendUpdateBacklogGenerated', (data) => { dbStore.updateConfig(db, io, data, 'kanbanPlayground', 'backlogGenerated', debugOn) })
-
-    socket.on('sendUpdateBacklogEffort', (data) => { dbStore.updateConfig(db, io, data, 'kanbanPlayground', 'backlogEffort', debugOn) })
-
-    socket.on('sendSetBacklogEffortPoints', (data) => { dbStore.updateConfig(db, io, data, 'kanbanPlayground', 'backlogEffortPoints', debugOn) })
-
     socket.on('sendUpdateConfig', (data) => { dbStore.updateConfig(db, io, data, debugOn) })
 
     socket.on('emitBroadcastMessage', (data) => { emit('broadcastMessage', data) })

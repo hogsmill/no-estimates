@@ -65,7 +65,8 @@ export default {
 
 <style lang="scss">
   .game-messaging, .game-server, .game-params, .game-display,
-  .game-state, .game-backlog, .games, .demo-and-test {
+  .game-state, .game-backlog, .game-delivery, .games,
+  .demo-and-test {
 
     width: 100%;
     margin: 12px;

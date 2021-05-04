@@ -1,5 +1,5 @@
 <template>
-  <table v-if="feature('backlogGenerated')" class="game-backlog">
+  <table v-if="feature('deliveryType')" class="game-delivery">
     <tr>
       <td colspan="4">
         <h4>

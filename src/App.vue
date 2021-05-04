@@ -1,7 +1,8 @@
 <template>
   <div id="app" class="mb-4">
     <Header />
-    <WalkThrough />
+    <NoEstimatesWalkThrough v-if="appType == 'No Estimates'" />
+    <KanbanPlaygroundWalkThrough v-if="appType == 'Kanban Playground'" />
     <Results />
     <div v-if="currentTab == 'facilitator'">
       <FacilitatorView />
@@ -55,7 +56,8 @@ import SetEstimates from './components/SetEstimates.vue'
 import Status from './components/Status.vue'
 import Message from './components/Message.vue'
 import FacilitatorView from './components/FacilitatorView.vue'
-import WalkThrough from './components/about/WalkThroughView.vue'
+import NoEstimatesWalkThrough from './components/about/no-estimates/WalkThroughView.vue'
+import KanbanPlaygroundWalkThrough from './components/about/kanban-playground/WalkThroughView.vue'
 
 import Roles from './components/Roles.vue'
 import Day from './components/Day.vue'
@@ -69,7 +71,8 @@ export default {
     Header,
     HostFunctions,
     FacilitatorView,
-    WalkThrough,
+    NoEstimatesWalkThrough,
+    KanbanPlaygroundWalkThrough,
     GoMobile,
     SetGame,
     SetEstimates,

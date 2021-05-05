@@ -135,6 +135,7 @@ export default {
     ls.fix()
 
     const appType = appTypeFuns.get()
+    console.log('App Type 1: "' + appType + '"')
     this.$store.dispatch('updateAppType', appType)
 
     if (params.isParam('host')) {
@@ -174,7 +175,7 @@ export default {
 
     window.onload = function() {
       const appType = appTypeFuns.get()
-      console.log(appType)
+      console.log('App Type 2: "' + appType + '"')
       if (gameName && myName && teamName && appType) {
         bus.$emit('sendLoadGame', {gameName: gameName, teamName: teamName, myName: myName, myRole: myRole, appType: appType})
       }

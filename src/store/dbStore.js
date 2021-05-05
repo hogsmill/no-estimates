@@ -154,7 +154,6 @@ function _getGames(db, io, data, debugOn) {
 
   if (debugOn) { console.log('getGames') }
 
-  //db.collection('noEstimatesGames').find().toArray(function(err, res) {
   db.gamesCollection.find().toArray(function(err, res) {
     if (err) throw err
     if (res.length) {
@@ -533,7 +532,6 @@ module.exports = {
 
     if (debugOn) { console.log('pullInCard', data) }
 
-    //db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
     db.gameCollection.findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
       if (err) throw err
       if (res) {
@@ -546,7 +544,6 @@ module.exports = {
           return c.number == res.currentWorkCard
         })
         if (card.dependentOn) {
-          //db.collection('noEstimates').findOne({gameName: data.gameName, teamName: card.dependentOn.name}, function(err, depRes) {
           db.gameCollection.findOne({gameName: data.gameName, teamName: card.dependentOn.name}, function(err, depRes) {
             if (err) throw err
             if (depRes) {
@@ -670,7 +667,6 @@ module.exports = {
 
     if (debugOn) { console.log('addEffortToOthersCard', data) }
 
-    //db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.card.team}, function(err, otherRes) {
     db.gameCollection.findOne({gameName: data.gameName, teamName: data.card.team}, function(err, otherRes) {
       if (err) throw err
       if (otherRes) {
@@ -678,8 +674,6 @@ module.exports = {
         updateTeam(db, io, otherRes)
       }
     })
-
-    //db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
     db.gameCollection.findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
       if (err) throw err
       if (res) {
@@ -694,7 +688,6 @@ module.exports = {
 
     if (debugOn) { console.log('startAutoDeploy', data) }
 
-    //db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
     db.gameCollection.findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
       if (err) throw err
       if (res) {
@@ -708,7 +701,6 @@ module.exports = {
 
     if (debugOn) { console.log('incrementAutoDeploy', data) }
 
-    //db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
     db.gameCollection.findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
       if (err) throw err
       if (res) {
@@ -723,7 +715,6 @@ module.exports = {
         res.members = teamFuns.decrementMyEffort(res.members, data.name, data.effort)
         const id = res._id
         delete res._id
-        //db.collection('noEstimates').updateOne({'_id': id}, {$set: res}, function(err) {
         db.gameCollection.updateOne({'_id': id}, {$set: res}, function(err) {
           if (err) throw err
           io.emit('loadTeam', res)
@@ -739,7 +730,6 @@ module.exports = {
 
     if (debugOn) { console.log('sendMessage', data) }
 
-    //db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
     db.gameCollection.findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
       if (err) throw err
       if (res) {
@@ -747,7 +737,6 @@ module.exports = {
         updateTeam(db, io, res)
       }
     })
-    //db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.chattingTo}, function(err, otherRes) {
     db.gameCollection.findOne({gameName: data.gameName, teamName: data.chattingTo}, function(err, otherRes) {
       if (err) throw err
       if (otherRes) {
@@ -761,7 +750,6 @@ module.exports = {
 
     if (debugOn) { console.log('sendMessageToFacilitators', data) }
 
-    //db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, res) {
     db.gamesCollection.findOne({gameName: data.gameName}, function(err, res) {
       if (err) throw err
       if (res) {
@@ -769,7 +757,6 @@ module.exports = {
         updateGame(db, io, res)
       }
     })
-    //db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
     db.gameCollection.findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
       if (err) throw err
       if (res) {
@@ -783,7 +770,6 @@ module.exports = {
 
     if (debugOn) { console.log('updateMessages', data) }
 
-    //db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
     db.gameCollection.findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
       if (err) throw err
       if (res) {
@@ -797,7 +783,6 @@ module.exports = {
 
     if (debugOn) { console.log('updateFacilitatorMessages', data) }
 
-    //db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, res) {
     db.gamesCollection.findOne({gameName: data.gameName}, function(err, res) {
       if (err) throw err
       if (res) {
@@ -811,7 +796,6 @@ module.exports = {
 
     if (debugOn) { console.log('answerFacilitatorQuestion', data) }
 
-    //db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, res) {
     db.gamesCollection.findOne({gameName: data.gameName}, function(err, res) {
       if (err) throw err
       if (res) {
@@ -833,7 +817,6 @@ module.exports = {
 
     if (debugOn) { console.log('updateProjectEstimate', data) }
 
-    //db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
     db.gameCollection.findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
       if (err) throw err
       if (res) {
@@ -847,7 +830,6 @@ module.exports = {
 
     if (debugOn) { console.log('updateMVPEstimate', data) }
 
-    //db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
     db.gameCollection.findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
       if (err) throw err
       if (res) {
@@ -861,7 +843,6 @@ module.exports = {
 
     if (debugOn) { console.log('updateReEstimate', data) }
 
-    //db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
     db.gameCollection.findOne({gameName: data.gameName, teamName: data.teamName}, function(err, res) {
       if (err) throw err
       if (res) {
@@ -875,7 +856,6 @@ module.exports = {
 
     if (debugOn) { console.log('updateTeamActive', data) }
 
-    //db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, res) {
     db.gamesCollection.findOne({gameName: data.gameName}, function(err, res) {
       if (err) throw err
       if (res) {
@@ -904,14 +884,12 @@ module.exports = {
 
     if (debugOn) { console.log('updateGameInclude', data) }
 
-    //db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, res) {
     db.gamesCollection.findOne({gameName: data.gameName}, function(err, res) {
       if (err) throw err
       if (res) {
         res.include = data.include
         const id = res._id
         delete res._id
-        //db.collection('noEstimatesGames').updateOne({'_id': id}, {$set: res}, function(err) {
         db.gamesCollection.updateOne({'_id': id}, {$set: res}, function(err) {
           if (err) throw err
           _getGames(db, io, data, debugOn)

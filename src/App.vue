@@ -178,7 +178,7 @@ export default {
     const myRole = localStorage.getItem('myRole-' + this.lsSuffix)
 
     window.onload = function() {
-      if (gameName && myName && teamName) {
+      if (gameName && myName && teamName && appType) {
         bus.$emit('sendLoadGame', {gameName: gameName, teamName: teamName, myName: myName, myRole: myRole, appType: appType})
       }
     }

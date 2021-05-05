@@ -130,6 +130,9 @@ export default {
     lsSuffix() {
       return this.$store.getters.lsSuffix
     },
+    appType() {
+      return this.$store.getters.appType
+    },
     gameName() {
       return this.$store.getters.getGameName
     },
@@ -280,7 +283,8 @@ export default {
         gameName: gameName,
         teamName: teamName,
         myName: myName,
-        myRole: myRole
+        myRole: myRole,
+        appType: this.appType
       }
       if (oldTeam && oldTeam != teamName) {
         data.oldTeam = oldTeam

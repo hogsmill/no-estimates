@@ -204,12 +204,6 @@ export const store = new Vuex.Store({
     getStealth: (state) => {
       return state.stealth
     },
-    getWipLimits: (state) => {
-      return state.config.wipLimits
-    },
-    getWipLimitType: (state) => {
-      return state.config.wipLimitType
-    },
     getCurrency: (state) => {
       return state.currencies.find(function(c) {
         return c.selected

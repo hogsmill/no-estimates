@@ -12,7 +12,7 @@
     <div v-if="workCard.teamDependency && workCard.dependencyDone < workCard.teamDependency" class="outstanding-dependency">
       DEPENDENCY
     </div>
-    <div v-if="cardComplete()" class="move-card">
+    <div v-if="cardComplete() && !config.autoMoveCompleteCards" class="move-card">
       <button class="btn btn-sm btn-site-primary" :disabled="canMoveCard().error" @click="moveCard()"
               :title="canMoveCard().message ? canMoveCard().message : 'Move card to ' + nextColumn()">
         <i class="fas fa-long-arrow-alt-right" />
@@ -115,11 +115,8 @@ export default {
     currentDay() {
       return this.$store.getters.getCurrentDay
     },
-    wipLimits() {
-      return this.$store.getters.getWipLimits
-    },
-    wipLimitType() {
-      return this.$store.getters.getWipLimitType
+    config() {
+      return this.$store.getters.getConfig
     }
   },
   methods: {
@@ -211,7 +208,7 @@ export default {
       return columnFuns.nextColumnName(this.column, this.columns)
     },
     canMoveCard() {
-      return columnFuns.canMoveCardToNextColumn(this.workCard, this.column, this.columns, this.wipLimits, this.wipLimitType)
+      return columnFuns.canMoveCardToNextColumn(this.workCard, this.column, this.columns, this.config.wipLimits, this.config.wipLimitType)
     },
     moveCard() {
       bus.$emit('sendMoveCardToNextColumn', {gameName: this.gameName, teamName: this.teamName, workCard: this.workCard, column: this.column})

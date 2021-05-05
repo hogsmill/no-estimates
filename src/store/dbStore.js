@@ -517,13 +517,13 @@ module.exports = {
             }
           }
         }
-        //const actuals = cardFuns.calculateActuals(columns, res.workCards, res.config.mvpCards, day, res.mvpActual, res.projectActual)
+        const actuals = cardFuns.calculateActuals(columns, res.workCards, res.config.mvpCards, day, res.mvpActual, res.projectActual)
         res.currentDay = currentDay
         res.members = teamFuns.setTeamMembersEffort(res.members, data)
         res.columns = columns
         res.workCards = workCards
-        //res.mvpActual = actuals.mvp
-        //res.projectActual = actuals.project
+        res.mvpActual = actuals.mvp
+        res.projectActual = actuals.project
         updateTeam(db, io, res)
       }
     })

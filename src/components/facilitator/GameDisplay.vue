@@ -339,15 +339,19 @@ export default {
       })
     },
     showMultipleTeamsResult(result) {
-      bus.$emit('sendShowMultipleTeamsResult', {
-        hostId: this.hostId,
-        gameName: this.gameName,
-        team1: this.selectedGraphTeam1,
-        team2: this.selectedGraphTeam2,
-        team3: this.selectedGraphTeam3,
-        result: result,
-        target: 'game'
-      })
+      if (!this.selectedGraphTeam1 && !this.selectedGraphTeam2 && !this.selectedGraphTeam2) {
+        alert('Please select 1 or more teams to display')
+      } else {
+        bus.$emit('sendShowMultipleTeamsResult', {
+          hostId: this.hostId,
+          gameName: this.gameName,
+          team1: this.selectedGraphTeam1,
+          team2: this.selectedGraphTeam2,
+          team3: this.selectedGraphTeam3,
+          result: result,
+          target: 'game'
+        })
+      }
     },
     hideResult(result) {
       this.$modal.hide(result)

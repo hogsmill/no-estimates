@@ -43,6 +43,7 @@
 import bus from './socket.js'
 
 import ls from './lib/localStorage.js'
+import appTypeFuns from './lib/appType.js'
 import params from './lib/params.js'
 import stringFuns from './lib/stringFuns.js'
 
@@ -133,13 +134,7 @@ export default {
     this.$store.dispatch('localStorageStatus', ls.check())
     ls.fix()
 
-    let appType = 'No Estimates'
-    if (process.env.VUE_APP_TYPE) {
-      appType = process.env.VUE_APP_TYPE
-    } else if (params.getParam('appType')) {
-      // To allow appType switching in dev
-      appType = params.getParam('appType')
-    }
+    const appType = appTypeFuns.get()
     this.$store.dispatch('updateAppType', appType)
 
     if (params.isParam('host')) {
@@ -178,6 +173,7 @@ export default {
     const myRole = localStorage.getItem('myRole-' + this.lsSuffix)
 
     window.onload = function() {
+      const appType = appTypeFuns.get()
       if (gameName && myName && teamName && appType) {
         bus.$emit('sendLoadGame', {gameName: gameName, teamName: teamName, myName: myName, myRole: myRole, appType: appType})
       }

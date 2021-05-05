@@ -174,6 +174,7 @@ export default {
 
     window.onload = function() {
       const appType = appTypeFuns.get()
+      console.log(appType)
       if (gameName && myName && teamName && appType) {
         bus.$emit('sendLoadGame', {gameName: gameName, teamName: teamName, myName: myName, myRole: myRole, appType: appType})
       }

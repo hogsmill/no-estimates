@@ -7,7 +7,7 @@
     >
       Explain this for me...
     </button>
-    <modal name="walk-through" id="walk-through" :classes="['rounded']">
+    <modal name="walk-through" id="walk-through" :height="520" :classes="['rounded']">
       <div class="float-right mr-2 mt-1">
         <button type="button" class="close" @click="hide()" aria-label="Close">
           <span aria-hidden="true">&times;</span>
@@ -16,6 +16,10 @@
       <div class="mt-4" v-if="step == 1">
         <h4>Welcome to the No Estimates Game</h4>
         <div>
+          <p>
+            Thanks to <a href="https://www.linkedin.com/in/matthewphilip/">Matt Phillip</a> for inventing this
+            one and collaborating to build the online version.
+          </p>
           <p>
             The No Estimates game allows you to explore sources of variation in
             estimation, and why they will always make your estimation efforts inaccurate
@@ -148,10 +152,6 @@ export default {
   }
 
   #walk-through {
-
-    .vm--modal {
-      height: 460px !important;
-    }
 
     p {
       margin-left: 8px;

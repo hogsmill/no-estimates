@@ -148,10 +148,6 @@ export default {
 
   #walk-through {
 
-    .vm--modal {
-      height: 460px !important;
-    }
-
     p {
       margin-left: 8px;
       margin-right: 8px;

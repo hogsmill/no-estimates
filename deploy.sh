@@ -27,8 +27,8 @@ do
   REC="${APPS[$i]}"
 
   APP=`echo $REC | cut -d, -f1`
-  COLLECTION=`echo $REC | cut -d, -f2`
-  GAMECOLLECTION=`echo $REC | cut -d, -f3`
+  GAMECOLLECTION=`echo $REC | cut -d, -f2`
+  COLLECTION=`echo $REC | cut -d, -f3`
   PORT=`echo $REC | cut -d, -f4`
   APPTYPE=`echo $REC | cut -d, -f5`
   APPNAME=`echo $REC | cut -d, -f6`
@@ -36,9 +36,9 @@ do
 
   echo "------------------------------------------------"
   if [ -z "$APPNAME" ]; then
-    echo "Installing $APPTYPE:$APP ($COLLECTION, $GAMECOLLECTION, $PORT)"
+    echo "Installing $APPTYPE:$APP ($GAMECOLLECTION, $COLLECTION, $PORT)"
   else
-    echo "Installing $APPTYPE:$APP ($COLLECTION, $GAMECOLLECTION, $PORT, $APPNAME, $PASSWORD)"
+    echo "Installing $APPTYPE:$APP ($GAMECOLLECTION, $COLLECTION, $PORT, $APPNAME, $PASSWORD)"
   fi
   echo "------------------------------------------------"
 

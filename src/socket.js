@@ -88,6 +88,8 @@ bus.$on('emitShowSetEstimates', (data) => { socket.emit('emitShowSetEstimates', 
 
 bus.$on('emitBroadcastMessage', (data) => { socket.emit('emitBroadcastMessage', data) })
 
+bus.$on('sendGetGames', (data) => { socket.emit('sendGetGames', data) })
+
 bus.$on('sendUpdateStealth', (data) => { socket.emit('sendUpdateStealth', data) })
 
 bus.$on('sendUpdateCurrency', (data) => { socket.emit('sendUpdateCurrency', data) })

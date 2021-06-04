@@ -24,7 +24,7 @@
     "socket.io-client": "^4.1.2",
     "ssri": "^7.1.1",
     "uuid": "^8.3.2",
-    "vue": "^2.6.12",
+    "vue": "^2.6.13",
     "vue-chartjs": "^3.5.1",
     "vue-js-modal": "^2.0.0-rc.6",
     "vuex": "^3.6.2"
@@ -42,7 +42,7 @@
     "node-sass": "^5.0.0",
     "prettier": "^2.2.1",
     "sass-loader": "^10.1.1",
-    "vue-template-compiler": "^2.6.12"
+    "vue-template-compiler": "^2.6.13"
   },
   "eslintConfig": {
     "root": true,

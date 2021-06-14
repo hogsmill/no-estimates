@@ -1,6 +1,7 @@
 <template>
   <div id="app" class="mb-4">
     <Header />
+    <ConnectionError />
     <NoEstimatesWalkThrough v-if="appType == 'No Estimates'" />
     <KanbanPlaygroundWalkThrough v-if="appType == 'Kanban Playground'" />
     <Results />
@@ -9,12 +10,6 @@
     </div>
     <div v-if="currentTab == 'game'" class="main">
       <HostFunctions v-if="isHost" />
-      <div v-if="connectionError" class="not-connected">
-        WARNING: You are not connected to the server: {{ connectionError }}
-      </div>
-      <div v-if="localStorageStatus != 'ok'" class="not-connected">
-        WARNING: {{ localStorageStatus }} - please enable cookies in browser settings
-      </div>
       <SetGame />
       <SetEstimates v-if="gameName" />
       <GoMobile v-if="allowMobile" />
@@ -49,6 +44,7 @@ import stringFuns from './lib/stringFuns.js'
 
 import Header from './components/Header.vue'
 import HostFunctions from './components/HostFunctions.vue'
+import ConnectionError from './components/error/ConnectionError.vue'
 import Report from './components/report/Report.vue'
 import Results from './components/facilitator/Results.vue'
 import GoMobile from './components/GoMobile.vue'
@@ -71,6 +67,7 @@ export default {
   components: {
     Header,
     HostFunctions,
+    ConnectionError,
     FacilitatorView,
     NoEstimatesWalkThrough,
     KanbanPlaygroundWalkThrough,
@@ -131,6 +128,10 @@ export default {
     }
   },
   created() {
+    bus.$on('connectionError', (data) => {
+      this.$store.dispatch('updateConnectionError', data)
+    })
+
     this.$store.dispatch('localStorageStatus', ls.check())
     ls.fix()
 
@@ -220,10 +221,6 @@ export default {
 
     bus.$on('updateGameDetails', (data) => {
       this.$store.dispatch('updateGameDetails', data)
-    })
-
-    bus.$on('connectionError', (data) => {
-      this.$store.dispatch('updateConnectionError', data)
     })
 
     bus.$on('updateConnections', (data) => {

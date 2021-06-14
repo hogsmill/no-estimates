@@ -986,7 +986,7 @@ module.exports = {
       if (res) {
         const demoConfig = res.demoConfig
         demoConfig.runTo = data.runTo
-        demoConfig.runToCards = data.runTo == 'MVP' ? res.mvpCards : cardsFuns.initialCards().length
+        demoConfig.runToCards = data.runTo == 'MVP' ? res.mvpCards : cardFuns.initialCards().length
         res.demoConfig = demoConfig
         db.gamesCollection.updateOne({'_id': res._id}, {$set: {demoConfig: demoConfig}}, function(err) {
           if (err) throw err

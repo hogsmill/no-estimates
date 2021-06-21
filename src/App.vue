@@ -146,6 +146,7 @@ export default {
       const game = params.getParam('game')
       this.$store.dispatch('updateGameName', game)
       localStorage.setItem('gameName-' + this.lsSuffix, game)
+      bus.$emit('sendLoadGame', {gameName: game})
     }
 
     bus.$on('updateStealth', (data) => {

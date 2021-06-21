@@ -283,7 +283,7 @@ module.exports = {
 
   loadGame: function(db, io, data, debugOn) {
 
-    if (debugOn) { console.log('loadGame') }
+    if (debugOn) { console.log('loadGame', data) }
 
     db.gamesCollection.findOne({gameName: data.gameName}, function(err, res) {
       if (err) throw err

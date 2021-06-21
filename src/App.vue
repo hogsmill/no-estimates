@@ -142,12 +142,16 @@ export default {
       this.$store.dispatch('updateHost', true)
     }
 
+    let gameName
     if (params.getParam('game')) {
-      const game = params.getParam('game')
-      this.$store.dispatch('updateGameName', game)
-      localStorage.setItem('gameName-' + this.lsSuffix, game)
-      console.log('loading', game)
-      bus.$emit('sendLoadGame', {gameName: game})
+      gameName = params.getParam('game')
+      localStorage.setItem('gameName-' + this.lsSuffix, gameName)
+      bus.$emit('sendLoadGame', {gameName: gameName})
+    } else {
+      gameName = localStorage.getItem('gameName-' + this.lsSuffix)
+    }
+    if (gameName) {
+      this.$store.dispatch('updateGameName', gameName)
     }
 
     bus.$on('updateStealth', (data) => {
@@ -155,11 +159,6 @@ export default {
         this.$store.dispatch('updateStealth', data)
       }
     })
-
-    const gameName = localStorage.getItem('gameName-' + this.lsSuffix)
-    if (gameName) {
-      this.$store.dispatch('updateGameName', gameName)
-    }
 
     let myName = localStorage.getItem('myName-' + this.lsSuffix)
     if (myName) {

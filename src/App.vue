@@ -146,6 +146,7 @@ export default {
       const game = params.getParam('game')
       this.$store.dispatch('updateGameName', game)
       localStorage.setItem('gameName-' + this.lsSuffix, game)
+      console.log('loading', game)
       bus.$emit('sendLoadGame', {gameName: game})
     }
 
@@ -202,6 +203,7 @@ export default {
     })
 
     bus.$on('loadGame', (data) => {
+      console.log('load from server', data)
       if (this.gameName == data.gameName) {
         this.$store.dispatch('loadGame', data)
       }

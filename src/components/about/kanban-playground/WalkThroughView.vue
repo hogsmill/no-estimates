@@ -26,8 +26,8 @@
           </p>
           <p>
             This activity is best facilitated by someone familiar with the game,
-            so do get in touch and we can either facilitate a workshop for you,
-            or teach you how to do it yourself.
+            so do <a href="https://agilesimulations.co.uk?pricing">get in touch</a>
+            and we can either facilitate a workshop for you, or teach you how to do it yourself.
           </p>
           <Facilitation />
         </div>

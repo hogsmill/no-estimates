@@ -28,10 +28,11 @@
           </p>
           <p>
             This activity is best facilitated by someone familiar with the game,
-            so do get in touch and we can either facilitate a workshop for you,
-            or teach you how to do it yourself. More details on facilitation can be found at
-            <a href="https://noestimates.wordpress.com/facilitator-guide" target="blank">
-              https://noestimates.wordpress.com/facilitator-guide
+            so do <a href="https://agilesimulations.co.uk?pricing">get in touch</a>
+            and we can either facilitate a workshop for you, or teach you how to do
+            it yourself. Here's a blog about the game from 
+            <a href="https://kanbanzone.com/2021/what-we-learned-from-taking-agile-workshops-online/" target="blank">
+              Kanban Zone
             </a>
           </p>
           <Facilitation />

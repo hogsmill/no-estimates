@@ -19,6 +19,9 @@ export const store = new Vuex.Store({
   state: {
     appType: 'No Estimates',
     thisGame: 'No Estimates',
+    session: null,
+    userName: '',
+    admin: false,
     connections: 0,
     connectionError: null,
     localStorageStatus: true,
@@ -182,6 +185,15 @@ export const store = new Vuex.Store({
     },
     thisGame: (state) => {
       return state.thisGame
+    },
+    getSession: (state) => {
+      return state.session
+    },
+    getUserName: (state) => {
+      return state.userName
+    },
+    getAdmin: (state) => {
+      return state.admin
     },
     getCurrentTab: (state) => {
       return state.currentTab
@@ -467,6 +479,15 @@ export const store = new Vuex.Store({
       state.appType = payload
       state.thisGame = payload
     },
+    updateSession: (state, payload) => {
+      state.session = payload
+    },
+    updateUserName: (state, payload) => {
+      state.userName = payload
+    },
+    updateAdmin: (state, payload) => {
+      state.admin = payload
+    },
     updateCurrentTab: (state, payload) => {
       state.currentTab = payload
     },
@@ -591,6 +612,15 @@ export const store = new Vuex.Store({
   actions: {
     updateAppType: ({ commit }, payload) => {
       commit('updateAppType', payload)
+    },
+    updateSession: ({ commit }, payload) => {
+      commit('updateSession', payload)
+    },
+    updateUserName: ({ commit }, payload) => {
+      commit('updateUserName', payload)
+    },
+    updateAdmin: ({ commit }, payload) => {
+      commit('updateAdmin', payload)
     },
     updateCurrentTab: ({ commit }, payload) => {
       commit('updateCurrentTab', payload)

@@ -1,6 +1,7 @@
 <template>
   <div id="app" class="mb-4">
     <Header />
+    <ClearStorage />
     <ConnectionError />
     <NoEstimatesWalkThrough v-if="appType == 'No Estimates'" />
     <KanbanPlaygroundWalkThrough v-if="appType == 'Kanban Playground'" />
@@ -43,6 +44,7 @@ import params from './lib/params.js'
 import stringFuns from './lib/stringFuns.js'
 
 import Header from './components/Header.vue'
+import ClearStorage from './components/ClearStorage.vue'
 import HostFunctions from './components/HostFunctions.vue'
 import ConnectionError from './components/error/ConnectionError.vue'
 import Report from './components/report/Report.vue'
@@ -66,6 +68,7 @@ export default {
   name: 'App',
   components: {
     Header,
+    ClearStorage,
     HostFunctions,
     ConnectionError,
     FacilitatorView,
@@ -133,7 +136,6 @@ export default {
     })
 
     this.$store.dispatch('localStorageStatus', ls.check())
-    ls.fix()
 
     const appType = appTypeFuns.get()
     this.$store.dispatch('updateAppType', appType)

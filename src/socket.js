@@ -54,10 +54,6 @@ bus.$on('sendDeleteMember', (data) => { socket.emit('sendDeleteMember', data) })
 
 bus.$on('emitHide', (data) => { socket.emit('emitHide', data) })
 
-bus.$on('sendGetGameDetails', (data) => { socket.emit('sendGetGameDetails', data) })
-
-bus.$on('sendGetAvailableGames', (data) => { socket.emit('sendGetAvailableGames', data) })
-
 bus.$on('emitRetro', (data) => { socket.emit('emitRetro', data) })
 
 bus.$on('sendRetroDone', (data) => { socket.emit('sendRetroDone', data) })
@@ -124,8 +120,6 @@ bus.$on('sendUpdateConfig', (data) => { socket.emit('sendUpdateConfig', data) })
 
 bus.$on('sendUpdateTeamActive', (data) => { socket.emit('sendUpdateTeamActive', data) })
 
-bus.$on('sendUpdateGameInclude', (data) => { socket.emit('sendUpdateGameInclude', data) })
-
 bus.$on('sendDeleteGame', (data) => { socket.emit('sendDeleteGame', data) })
 
 bus.$on('sendRunDemoToMvp', (data) => { socket.emit('sendRunDemoToMvp', data) })
@@ -178,15 +172,11 @@ socket.on('loadGame', (data) => { bus.$emit('loadGame', data) })
 
 socket.on('loadTeam', (data) => { bus.$emit('loadTeam', data) })
 
-socket.on('loadMembers', (data) => { bus.$emit('loadMembers', data) })
-
 socket.on('makeCaptain', (data) => { bus.$emit('makeCaptain', data) })
 
 socket.on('updateGameState', (data) => { bus.$emit('updateGameState', data) })
 
 socket.on('updateGames', (data) => { bus.$emit('updateGames', data) })
-
-socket.on('updateGameDetails', (data) => { bus.$emit('updateGameDetails', data) })
 
 socket.on('updateConnections', (data) => { bus.$emit('updateConnections', data) })
 

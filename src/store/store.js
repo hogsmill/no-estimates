@@ -220,9 +220,6 @@ export const store = new Vuex.Store({
     getCurrencies: (state) => {
       return state.currencies
     },
-    getAvailableGames: (state) => {
-      return state.availableGames
-    },
     getGameName: (state) => {
       return state.gameName
     },
@@ -448,15 +445,6 @@ export const store = new Vuex.Store({
     getSourcesOfVariation: (state) => {
       return state.sourcesOfVariation
     },
-    getAvailableGames: (state) => {
-      const games = []
-      for (let i = 0; i < state.games.length; i++) {
-        if (state.games[i].include) {
-          games.push(state.games[i].gameName)
-        }
-      }
-      return games
-    },
     getConnections: (state) => {
       return state.connections
     },
@@ -494,12 +482,6 @@ export const store = new Vuex.Store({
     },
     updateHostId: (state, payload) => {
       state.hostId = payload
-    },
-    loadAvailableGames: (state, payload) => {
-      state.availableGames = payload.games
-    },
-    loadMembers: (state, payload) => {
-      state.members = payload.members
     },
     loadTeam: (state, payload) => {
       state.members = payload.members
@@ -581,13 +563,6 @@ export const store = new Vuex.Store({
     updateGames: (state, payload) => {
       state.games = payload
     },
-    updateGameDetails: (state, payload) => {
-      for (let i = 0; i < state.games.length; i++) {
-        if (state.games[i].gameName == payload.gameName) {
-          state.games[i].admins = payload.details.admins
-        }
-      }
-    },
     updateSourcesOfVariation: (state, payload) => {
       state.sourcesOfVariation = payload
     },
@@ -629,9 +604,6 @@ export const store = new Vuex.Store({
     loadGame: ({ commit }, payload) => {
       commit('loadGame', payload)
     },
-    loadMembers: ({ commit }, payload) => {
-      commit('loadMembers', payload)
-    },
     loadTeam: ({ commit }, payload) => {
       commit('loadTeam', payload)
     },
@@ -655,9 +627,6 @@ export const store = new Vuex.Store({
     },
     updateGames: ({ commit }, payload) => {
       commit('updateGames', payload)
-    },
-    updateGameDetails: ({ commit }, payload) => {
-      commit('updateGameDetails', payload)
     },
     updateSourcesOfVariation: ({ commit }, payload) => {
       commit('updateSourcesOfVariation', payload)

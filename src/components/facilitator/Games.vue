@@ -24,22 +24,14 @@
       <td>
         <table class="games-table">
           <thead>
-            <th>Include?</th>
             <th>Game Name</th>
-            <th>Admins</th>
             <th />
             <th>Last Accessed</th>
           </thead>
           <tbody>
             <tr v-for="(game, index) in games" :key="index">
               <td>
-                <input :id="'game-active-' + idSafe(game)" type="checkbox" :checked="game.include" @click="toggleGameInclude(game)" :disabled="game.gameName == gameName">
-              </td>
-              <td>
                 {{ game.gameName }}
-              </td>
-              <td>
-                {{ game.admins ? game.admins.join(', ') : '' }}
               </td>
               <td>
                 <button class="btn btn-sm btn-site-primary" @click="deleteGame(game)" :disabled="game.gameName == gameName">
@@ -107,10 +99,6 @@ export default {
       const game = document.getElementById('add-new-game').value
       this.id = this.id ? this.id : uuidv4()
       bus.$emit('sendAddGame', {gameName: game, id: this.id})
-    },
-    toggleGameInclude(game) {
-      const include = document.getElementById('game-active-' + this.idSafe(game)).checked
-      bus.$emit('sendUpdateGameInclude', {gameName: game.gameName, include: include})
     },
     deleteGame(game) {
       bus.$emit('sendDeleteGame', {gameName: game.gameName, appType: this.appType})

@@ -23,36 +23,13 @@
           <tr class="rounded" :class="{ 'error': gameNameError }">
             <td>Game Name: </td>
             <td>
-              <div v-if="gameName && !gameNameEditing">{{ gameName }}</div>
-              <input v-if="!gameName || gameNameEditing" type="text" id="game-name" class="form-control" :value="gameName">
-              <div v-if="gameNameEditing && availableGames.length">
-                <select id="available-games" @change="setGameNameFromAvailable()">
-                  <option> -- Select -- </option>
-                  <option v-for="(game, index) in availableGames" :key="index">{{ game }}</option>
-                </select>
-              </div>
-            </td>
-            <td class="button">
-              <button v-if="!gameFromParams()" class="btn btn-sm btn-secondary smaller-font" @click="changeGameName()">
-                Change
-              </button>
-            </td>
-          </tr>
-
-          <!-- My Name -->
-
-          <tr :class="{ 'error': myNameError }">
-            <td>My Name: </td>
-            <td>
-              <div v-if="myName.id && !myNameEditing" class="my-name">{{ myName.name }}</div>
-              <div v-if="!myName.id || myNameEditing" class="my-name-edit">
-                <input type="text" id="my-name" class="form-control" :value="myName.name">
-              </div>
-            </td>
-            <td class="button">
-              <button class="btn btn-sm btn-secondary smaller-font" @click="changeMyName()">
-                Change
-              </button>
+              <span v-if="gameFromParams()">{{ selectedGame.gameName }}</span>
+              <select v-if="!gameFromParams()" id="game-name-select" class="form-control" @change="setSelectedGame()">
+                <option value=""> -- Select -- </option>
+                <option v-for="(game, index) in games" :key="index" :selected="game.gameName == gameName">
+                  {{ game.gameName }}
+                </option>
+              </select>
             </td>
           </tr>
 
@@ -60,19 +37,22 @@
 
           <tr :class="{ 'error': teamNameError }">
             <td>Team: </td>
-            <td>
-              <div v-if="teamName && !teamNameEditing">{{ teamName }}</div>
-              <select v-if="!teamName || teamNameEditing" :class="{ 'hidden': activeTeams.length == 0}" id="team-name-select" class="form-control">
+            <td v-if="selectedGame.teams">
+              <select id="team-name-select" class="form-control">
                 <option value=""> -- Select -- </option>
-                <option v-for="(team, index) in activeTeams" :key="index" :selected="team.name == teamName">
+                <option v-for="(team, index) in activeTeams(selectedGame.teams)" :key="index" :selected="team.name == teamName">
                   {{ team.name }}
                 </option>
               </select>
             </td>
-            <td class="button">
-              <button class="btn btn-sm btn-secondary smaller-font" @click="changeTeamName()">
-                Change
-              </button>
+          </tr>
+
+          <!-- My Name -->
+
+          <tr :class="{ 'error': myNameError }">
+            <td>My Name:</td>
+            <td>
+              <input type="text" id="my-name" class="form-control" :value="myName.name">
             </td>
           </tr>
 
@@ -81,18 +61,14 @@
           <tr :class="{ 'error': myRoleError }">
             <td>My Role: </td>
             <td>
-              <div v-if="myRole && !myRoleEditing">{{ myRole }}</div>
-              <select v-if="!myRole || myRoleEditing" id="role-select" class="form-control">
-                <option value=""> -- Select -- </option>
+              <select id="role-select" class="form-control">
+                <option value="">
+                  -- Select --
+                </option>
                 <option v-for="(role, index) in roles" :key="index" :selected="role == myRole">
                   {{ role }}
                 </option>
               </select>
-            </td>
-            <td class="button">
-              <button class="btn btn-sm btn-secondary smaller-font" @click="changeMyRole()">
-                Change
-              </button>
             </td>
           </tr>
         </table>
@@ -116,13 +92,11 @@ import stringFuns from '../lib/stringFuns.js'
 export default {
   data() {
     return {
-      gameNameEditing: false,
+      gameSetFromParams: false,
+      selectedGame: {},
       gameNameError: false,
-      myNameEditing: false,
       myNameError: false,
-      teamNameEditing: false,
       teamNameError: false,
-      myRoleEditing: false,
       myRoleError: false
     }
   },
@@ -136,23 +110,20 @@ export default {
     admin() {
       return this.$store.getters.getAdmin
     },
+    config() {
+      return this.$store.getters.getConfig
+    },
     gameName() {
       return this.$store.getters.getGameName
+    },
+    teamName() {
+      return this.$store.getters.getTeamName
     },
     myName() {
       return this.$store.getters.getMyName
     },
     capabilities() {
       return this.$store.getters.getCapabilities
-    },
-    teamName() {
-      return this.$store.getters.getTeamName
-    },
-    activeTeams() {
-      return this.$store.getters.getActiveTeams
-    },
-    members() {
-      return this.$store.getters.getMembers
     },
     roles() {
       return this.$store.getters.getRoleNames
@@ -163,15 +134,23 @@ export default {
     currentDay() {
       return this.$store.getters.getCurrentDay
     },
-    availableGames() {
-      return this.$store.getters.getAvailableGames
+    games() {
+      return this.$store.getters.getGames
     }
   },
   created() {
-    this.gameNameEditing = !this.gameName
-    this.myNameEditing = !this.myName.id
-    this.teamNameEditing = !this.teamName
-    this.myRoleEditing = !this.myRole
+    bus.$on('updateGames', (data) => {
+      this.$store.dispatch('updateGames', data)
+      let game = this.gameFromParams()
+      if (game) {
+        this.gameSetFromParams = true
+      } else {
+        game = localStorage.getItem('gameName-' + this.lsSuffix)
+      }
+      if (game) {
+        this.setSelectedGame(game)
+      }
+    })
   },
   methods: {
     show() {
@@ -184,76 +163,47 @@ export default {
     gameFromParams() {
       return params.getParam('game')
     },
+    setSelectedGame(game) {
+      if (!game) {
+        game = document.getElementById('game-name-select').value
+      }
+      if (!game) {
+        this.selectedGame = {}
+      } else {
+        this.selectedGame = this.games.find((g) => {
+          return g.gameName == game
+        })
+      }
+    },
+    activeTeams() {
+      const teams = []
+      for (let i = 0; i < this.selectedGame.teams.length; i++) {
+        if (this.selectedGame.teams[i].include) {
+          teams.push(this.selectedGame.teams[i])
+        }
+      }
+      return teams
+    },
     reset() {
-      this.gameNameEditing = false,
-      this.gameNameError = false,
-      this.myNameEditing = false,
       this.myNameError = false,
-      this.teamNameEditing = false,
       this.teamNameError = false,
-      this.myRoleEditing = false,
       this.myRoleError = false
     },
     canRestructure() {
       return this.currentDay == 1 || this.capabilities.recharting
     },
-    changeGameName() {
-      this.gameNameEditing = true
-      this.gameNameError = false
-    },
-    changeMyName() {
-      this.myNameEditing = true
-      this.myNameError = false
-    },
-    changeTeamName() {
-      this.teamNameEditing = true
-      this.teamNameError = false
-    },
-    changeMyRole() {
-      this.myRoleEditing = true
-      this.myRoleError = false
-    },
-    setGameNameFromAvailable() {
-      const name = document.getElementById('available-games').value
-      document.getElementById('game-name').value = name
-    },
-    getGameName() {
-      let gameName = ''
-      if (document.getElementById('game-name')) {
-        gameName = document.getElementById('game-name').value
-        if (gameName) {
-          gameName = stringFuns.sanitize(gameName)
-        }
-      } else if (this.gameName) {
-        gameName = this.gameName
-      }
-      return gameName
-    },
     getMyName() {
       let myNameData
+      const myName = stringFuns.sanitize(document.getElementById('my-name').value)
       if (this.myName && this.myName.id) {
         myNameData = this.myName
       } else {
         const uuid = uuidv4()
         myNameData = {id: uuid, name: '', captain: false}
       }
+      myNameData.name = myName
       myNameData.admin = this.admin
-      if (document.getElementById('my-name')) {
-        const myName = document.getElementById('my-name').value
-        if (myName) {
-          myNameData.name = stringFuns.sanitize(myName)
-        }
-      }
       return myNameData
-    },
-    getTeamName() {
-      let teamName = ''
-      if (document.getElementById('team-name-select')) {
-        teamName = document.getElementById('team-name-select').value
-      } else {
-        teamName = this.teamName
-      }
-      return teamName
     },
     getMyRole() {
       let myRole = ''
@@ -264,10 +214,10 @@ export default {
       }
       return myRole
     },
-    showErrors(gameName, myName, teamName) {
+    showErrors(gameName, teamName, myName) {
       if (! gameName || gameName == '') { this.gameNameError = true }
-      if (!myName.name || myName.name == '') { this.myNameError = true }
       if (! teamName) { this.teamNameError = true }
+      if (!myName.name || myName.name == '') { this.myNameError = true }
     },
     setLocalStorage(gameName, myName, teamName, myRole) {
       console.log('Setting localStorage', gameName, myName, teamName, myRole)
@@ -277,11 +227,12 @@ export default {
       localStorage.setItem('myRole-' + this.lsSuffix, myRole)
     },
     save() {
+      this.reset()
       const oldTeam = this.teamName
-      const gameName = this.getGameName()
+      const gameName = this.selectedGame.gameName
+      const teamName =  document.getElementById('team-name-select').value
       const myName = this.getMyName()
-      const teamName =  this.getTeamName()
-      const myRole = this.getMyRole()
+      const myRole = document.getElementById('role-select').value
       const data = {
         gameName: gameName,
         teamName: teamName,
@@ -292,8 +243,8 @@ export default {
       if (oldTeam && oldTeam != teamName) {
         data.oldTeam = oldTeam
       }
-      this.showErrors(gameName, myName, teamName)
-      if (this.gameNameError || this.myNameError || this.teamNameError) {
+      this.showErrors(gameName, teamName, myName)
+      if (this.gameNameError || this.teamNameError || this.myNameError) {
         alert('Please set all required fields before saving')
       } else {
         this.setLocalStorage(gameName, myName, teamName, myRole)
@@ -301,7 +252,6 @@ export default {
         this.$store.dispatch('updateMyName', myName)
         this.$store.dispatch('updateTeamName', teamName)
         bus.$emit('sendLoadGame', data)
-        this.reset()
         this.hide()
       }
     },
@@ -319,10 +269,12 @@ export default {
   .setup-table {
     margin: 0 auto 20px auto;
     border: 1px solid #ccc;
+    width: initial;
 
     td {
       height: 45px;
       border: 1px solid #ccc;
+      vertical-align: middle;
 
       div {
         padding: 6px;

@@ -5,7 +5,6 @@
     <GameMessaging />
     <Server />
     <GameDisplay />
-    <GameSetUp />
     <GameParams />
     <Backlog />
     <Delivery />
@@ -23,7 +22,6 @@ import Connections from './facilitator/Connections.vue'
 import GameMessaging from './facilitator/GameMessaging.vue'
 import Server from './facilitator/Server.vue'
 import GameDisplay from './facilitator/GameDisplay.vue'
-import GameSetUp from './facilitator/GameSetUp.vue'
 import GameParams from './facilitator/GameParams.vue'
 import Backlog from './facilitator/Backlog.vue'
 import Delivery from './facilitator/Delivery.vue'
@@ -39,7 +37,6 @@ export default {
     Server,
     GameDisplay,
     GameParams,
-    GameSetUp,
     Backlog,
     Delivery,
     GameState,

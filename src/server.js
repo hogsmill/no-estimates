@@ -115,8 +115,6 @@ MongoClient.connect(url, { useUnifiedTopology: true, maxIdleTimeMS: maxIdleTime 
 
     socket.on('sendCheckServerRestartPassword', (data) => { server.checkServerRestartPassword(db, io, data, 'no-estimates.log', port, debugOn) })
 
-    socket.on('sendGetAvailableGames', (data) => { dbStore.getAvailableGames(db, io, data, debugOn) })
-
     socket.on('sendLoadGame', (data) => { dbStore.loadGame(db, io, data, debugOn) })
 
     socket.on('sendMakeCaptain', (data) => { dbStore.makeCaptain(db, io, data, debugOn) })
@@ -158,7 +156,7 @@ MongoClient.connect(url, { useUnifiedTopology: true, maxIdleTimeMS: maxIdleTime 
 
     socket.on('sendUpdateEffort', (data) => { dbStore.updateEffort(db, io, data, debugOn) })
 
-    socket.on('sendMoveCardToNextColumn', (data) => { console.log('here'); dbStore.moveCardToNextColumn(db, io, data, debugOn) })
+    socket.on('sendMoveCardToNextColumn', (data) => { dbStore.moveCardToNextColumn(db, io, data, debugOn) })
 
     socket.on('sendAddEffortToOthersCard', (data) => { dbStore.addEffortToOthersCard(db, io, data, debugOn) })
 
@@ -187,7 +185,7 @@ MongoClient.connect(url, { useUnifiedTopology: true, maxIdleTimeMS: maxIdleTime 
     // Facilitator View
 
     socket.on('sendAddGame', (data) => { dbStore.addGame(db, io, data, debugOn) })
-    
+
     socket.on('sendPlayersJoinBy', (data) => { dbStore.playersJoinBy(db, io, data, debugOn) })
 
     socket.on('sendUpdateCurrency', (data) => { dbStore.updateCurrency(db, io, data, debugOn) })
@@ -200,13 +198,9 @@ MongoClient.connect(url, { useUnifiedTopology: true, maxIdleTimeMS: maxIdleTime 
 
     socket.on('sendUpdateTeamActive', (data) => { dbStore.updateTeamActive(db, io, data, debugOn) })
 
-    socket.on('sendUpdateGameInclude', (data) => { dbStore.updateGameInclude(db, io, data, debugOn) })
-
     // Game State
 
     socket.on('sendGetGames', (data) => { dbStore.getGames(db, io, data, debugOn) })
-
-    socket.on('sendGetGameDetails', (data) => { dbStore.getGameDetails(db, io, data, debugOn) })
 
     // Results
 

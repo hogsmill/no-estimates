@@ -168,7 +168,6 @@ export default {
     if (myName) {
       myName = JSON.parse(myName)
       this.$store.dispatch('updateMyName', myName)
-      bus.$emit('sendGetAvailableGames', {host: myName})
     }
 
     const teamName = localStorage.getItem('teamName-' + this.lsSuffix)
@@ -193,12 +192,6 @@ export default {
       }
     })
 
-    bus.$on('loadMembers', (data) => {
-      if (this.gameName == data.gameName && this.teamName == data.teamName) {
-        this.$store.dispatch('loadMembers', data)
-      }
-    })
-
     bus.$on('loadTeam', (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         this.$store.dispatch('loadTeam', data)
@@ -215,17 +208,6 @@ export default {
       if (this.gameName == data.gameName) {
         this.$store.dispatch('updateGameState', data)
       }
-    })
-
-    bus.$on('updateGames', (data) => {
-      this.$store.dispatch('updateGames', data)
-      for (let i = 0; i < data.length; i++) {
-        bus.$emit('sendGetGameDetails', {gameName: data[i].gameName})
-      }
-    })
-
-    bus.$on('updateGameDetails', (data) => {
-      this.$store.dispatch('updateGameDetails', data)
     })
 
     bus.$on('updateConnections', (data) => {

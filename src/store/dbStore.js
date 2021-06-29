@@ -281,38 +281,8 @@ module.exports = {
     gameState.update(db, io, data)
   },
 
-  getGameDetails: function(db, io, data, debugOn) {
-
-    if (debugOn) { console.log('getGameDetails', data) }
-
-    db.gameCollection.find({gameName: data.gameName}).toArray(function(err, res) {
-      if (err) throw err
-      if (res.length) {
-        const admins = []
-        for (let r = 0; r < res.length; r++) {
-          const members = res[r].members
-          for (let i = 0; i < members.length; i++) {
-            if (members[i].admin) {
-              admins.push(members[i].name)
-            }
-          }
-        }
-        const details = {
-          admins: admins
-        }
-        io.emit('updateGameDetails', { gameName: data.gameName, details : details})
-      }
-    })
-  },
-
   getGames: function(db, io, data, debugOn) {
     _getGames(db, io, data, debugOn)
-  },
-
-  getAvailableGames: function(db, io, data, debugOn) {
-
-    if (debugOn) { console.log('getAvailableGames', data) }
-
   },
 
   addGame: function(db, io, data, debugOn) {
@@ -916,24 +886,6 @@ module.exports = {
           if (err) throw err
           io.emit('loadGame', res)
           gameState.update(db, io, res)
-        })
-      }
-    })
-  },
-
-  updateGameInclude: function(db, io, data, debugOn) {
-
-    if (debugOn) { console.log('updateGameInclude', data) }
-
-    db.gamesCollection.findOne({gameName: data.gameName}, function(err, res) {
-      if (err) throw err
-      if (res) {
-        res.include = data.include
-        const id = res._id
-        delete res._id
-        db.gamesCollection.updateOne({'_id': id}, {$set: res}, function(err) {
-          if (err) throw err
-          _getGames(db, io, data, debugOn)
         })
       }
     })

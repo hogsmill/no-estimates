@@ -97,9 +97,6 @@ export default {
     }
   },
   computed: {
-    isHost() {
-      return this.$store.getters.getHost
-    },
     gameName() {
       return this.$store.getters.getGameName
     },

@@ -163,6 +163,40 @@ function _getGames(db, io, data, debugOn) {
   })
 }
 
+function _addGame(db, io, data, debugOn) {
+
+  if (debugOn) { console.log('addGame', data) }
+
+  db.gamesCollection.findOne({gameName: data.gameName}, function(err, res) {
+    if (err) throw err
+    if (res) {
+      data.error = 'Game "' + data.gameName + '" exists'
+      io.emit('addGameError', data)
+    } else {
+      const game = newGame(data)
+      game.sourcesOfVariation = sourceFuns.sources()
+      db.gamesCollection.insertOne(game, function(err) {
+        if (err) throw err
+        io.emit('loadGame', game)
+        gameState.update(db, io, data)
+      })
+      const initialTeams = teamFuns.initialTeams()
+      for (let i = 0; i < initialTeams.length; i++) {
+        const teamName = initialTeams[i].name
+        const team = newTeam(data.gameName, teamName, game.config)
+        if (teamName == data.teamName) {
+          team.members = teamFuns.addMember(team.members, data.myName, data.myRole)
+        }
+        db.gameCollection.insertOne(team, function(err) {
+          if (err) throw err
+          io.emit('loadTeam', team)
+          gameState.update(db, io, data)
+        })
+      }
+    }
+  })
+}
+
 function updateTeam(db, io, res) {
   const id = res._id
   delete res._id
@@ -254,17 +288,17 @@ module.exports = {
     db.gameCollection.find({gameName: data.gameName}).toArray(function(err, res) {
       if (err) throw err
       if (res.length) {
-        const hosts = []
+        const admins = []
         for (let r = 0; r < res.length; r++) {
           const members = res[r].members
           for (let i = 0; i < members.length; i++) {
-            if (members[i].host) {
-              hosts.push(members[i].name)
+            if (members[i].admin) {
+              admins.push(members[i].name)
             }
           }
         }
         const details = {
-          hosts: hosts
+          admins: admins
         }
         io.emit('updateGameDetails', { gameName: data.gameName, details : details})
       }
@@ -279,6 +313,10 @@ module.exports = {
 
     if (debugOn) { console.log('getAvailableGames', data) }
 
+  },
+
+  addGame: function(db, io, data, debugOn) {
+    _addGame(db, io, data, debugOn)
   },
 
   loadGame: function(db, io, data, debugOn) {
@@ -315,6 +353,8 @@ module.exports = {
           }
         })
       } else {
+        _addGame(db, io, data, debugOn)
+        /*
         console.log('Created new game \'' + data.gameName + '\'')
         const game = newGame(data)
         game.sourcesOfVariation = sourceFuns.sources()
@@ -336,6 +376,7 @@ module.exports = {
             gameState.update(db, io, data)
           })
         }
+        */
       }
     })
   },
@@ -894,6 +935,38 @@ module.exports = {
           if (err) throw err
           _getGames(db, io, data, debugOn)
         })
+      }
+    })
+  },
+
+  playersJoinBy: function(db, io, data, debugOn) {
+
+    if (debugOn) { console.log('playersJoinBy', data) }
+
+    db.gamesCollection.findOne({gameName: data.gameName}, function(err, res) {
+      if (err) throw err
+      if (res) {
+        const id = res._id
+        delete res._id
+        res.config.playersJoinBy = data.playersJoinBy
+        db.gamesCollection.updateOne({'_id': id}, {$set: res}, function(err) {
+          if (err) throw err
+          io.emit('loadGame', res)
+        })
+      }
+    })
+    db.gameCollection.find({gameName: data.gameName}).toArray(function(err, teamRes) {
+      if (err) throw err
+      if (teamRes.length) {
+        for (let r = 0; r < teamRes.length; r++) {
+          const id = teamRes[r]._id
+          delete teamRes[r]._id
+          teamRes[r].config.playersJoinBy = data.playersJoinBy
+          db.gameCollection.updateOne({'_id': id}, {$set: teamRes[r]}, function(err) {
+            if (err) throw err
+            io.emit('loadTeam', teamRes[r])
+          })
+        }
       }
     })
   },

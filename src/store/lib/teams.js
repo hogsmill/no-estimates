@@ -40,7 +40,7 @@ module.exports = {
   initialTeams: function() {
     return initialTeams
   },
-  
+
   initialEffort: function() {
     return initialEffort
   },
@@ -54,7 +54,7 @@ module.exports = {
         member.name = name.name
         member.captain = name.captain
         member.role = role
-        member.host = name.host
+        member.admin = name.admin
         found = true
       }
       newMembers.push(member)

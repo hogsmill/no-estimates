@@ -11,18 +11,26 @@ if (!prod) {
   asConnStr = 'https://agilesimulations.co.uk:3099'
   connStr = 'https://agilesimulations.co.uk:' + process.env.VUE_APP_PORT
 }
-console.log('Connecting to: ' + asConnStr)
-const asSocket = io(asConnStr)
 console.log('Connecting to: ' + connStr)
 const socket = io(connStr)
 
+const connectToAgileSimulations = location.hostname != 'localhost'
+let asSocket
+if (connectToAgileSimulations) {
+  console.log('Connecting to: ' + asConnStr)
+  asSocket = io(asConnStr)
+}
+
 // Agile Simulations (login)
 
-bus.$on('sendCheckLogin', (data) => { asSocket.emit('sendCheckLogin', data) })
+if (connectToAgileSimulations) {
 
-asSocket.on('loginSuccess', (data) => { bus.$emit('loginSuccess', data) })
+  bus.$on('sendCheckLogin', (data) => { asSocket.emit('sendCheckLogin', data) })
 
-asSocket.on('logout', (data) => { bus.$emit('logout', data) })
+  asSocket.on('loginSuccess', (data) => { bus.$emit('loginSuccess', data) })
+
+  asSocket.on('logout', (data) => { bus.$emit('logout', data) })
+}
 
 // ------------------------------
 
@@ -102,7 +110,11 @@ bus.$on('emitShowSetEstimates', (data) => { socket.emit('emitShowSetEstimates', 
 
 bus.$on('emitBroadcastMessage', (data) => { socket.emit('emitBroadcastMessage', data) })
 
+bus.$on('sendAddGame', (data) => { socket.emit('sendAddGame', data) })
+
 bus.$on('sendGetGames', (data) => { socket.emit('sendGetGames', data) })
+
+bus.$on('sendPlayersJoinBy', (data) => { socket.emit('sendPlayersJoinBy', data) })
 
 bus.$on('sendUpdateStealth', (data) => { socket.emit('sendUpdateStealth', data) })
 
@@ -170,8 +182,6 @@ socket.on('loadMembers', (data) => { bus.$emit('loadMembers', data) })
 
 socket.on('makeCaptain', (data) => { bus.$emit('makeCaptain', data) })
 
-socket.on('updateStealth', (data) => { bus.$emit('updateStealth', data) })
-
 socket.on('updateGameState', (data) => { bus.$emit('updateGameState', data) })
 
 socket.on('updateGames', (data) => { bus.$emit('updateGames', data) })
@@ -211,6 +221,8 @@ socket.on('broadcastMessage', (data) => { bus.$emit('broadcastMessage', data) })
 // Facilitator
 
 // Graphs
+
+socket.on('addGameError', (data) => { bus.$emit('addGameError', data) })
 
 socket.on('showResult', (data) => { bus.$emit('showResult', data) })
 

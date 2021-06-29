@@ -133,6 +133,9 @@ export default {
     appType() {
       return this.$store.getters.appType
     },
+    admin() {
+      return this.$store.getters.getAdmin
+    },
     gameName() {
       return this.$store.getters.getGameName
     },
@@ -234,7 +237,7 @@ export default {
         const uuid = uuidv4()
         myNameData = {id: uuid, name: '', captain: false}
       }
-      myNameData.host = params.isParam('host')
+      myNameData.admin = this.admin
       if (document.getElementById('my-name')) {
         const myName = document.getElementById('my-name').value
         if (myName) {

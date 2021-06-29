@@ -28,13 +28,12 @@ export const store = new Vuex.Store({
     lastaccess: '',
     walkThrough: false,
     currentTab: 'game',
-    host: false,
     hostId: '',
     stealth: false,
     currencies: [],
     gameName: '',
     members: [],
-    myName: {id: '', name: '', captain: false, host: false},
+    myName: {id: '', name: '', captain: false, admin: false},
     myRole: '',
     teamName: '',
     teams: [
@@ -201,9 +200,6 @@ export const store = new Vuex.Store({
     getWalkThrough: (state) => {
       return state.walkThrough
     },
-    getHost: (state) => {
-      return state.host
-    },
     getHostId: (state) => {
       return state.hostId
     },
@@ -283,7 +279,7 @@ export const store = new Vuex.Store({
       let n = 0
       if (state.stealth) {
         for (let i = 0; i < state.members.length; i++) {
-          if (!state.members[i].host) {
+          if (!state.members[i].admin) {
             n = n + 1
           }
         }
@@ -295,7 +291,7 @@ export const store = new Vuex.Store({
     getMembers: (state) => {
       const members = []
       for (let i = 0; i < state.members.length; i++) {
-        if (!(state.stealth && state.members[i].host)) {
+        if (!(state.stealth && state.members[i].admin)) {
           members.push(state.members[i])
         }
       }
@@ -484,6 +480,9 @@ export const store = new Vuex.Store({
       state.userName = payload.userName
       state.admin = payload.loggedInAsAdmin
     },
+    updateAdmin: (state, payload) => {
+      state.admin = payload
+    },
     updateCurrentTab: (state, payload) => {
       state.currentTab = payload
     },
@@ -495,9 +494,6 @@ export const store = new Vuex.Store({
     },
     updateHostId: (state, payload) => {
       state.hostId = payload
-    },
-    updateStealth: (state, payload) => {
-      state.stealth = payload.stealth
     },
     loadAvailableGames: (state, payload) => {
       state.availableGames = payload.games
@@ -588,7 +584,7 @@ export const store = new Vuex.Store({
     updateGameDetails: (state, payload) => {
       for (let i = 0; i < state.games.length; i++) {
         if (state.games[i].gameName == payload.gameName) {
-          state.games[i].hosts = payload.details.hosts
+          state.games[i].admins = payload.details.admins
         }
       }
     },
@@ -626,9 +622,6 @@ export const store = new Vuex.Store({
     },
     updateHostId: ({ commit }, payload) => {
       commit('updateHostId', payload)
-    },
-    updateStealth: ({ commit }, payload) => {
-      commit('updateStealth', payload)
     },
     loadAvailableGame: ({ commit }, payload) => {
       commit('loadAvailableGame', payload)

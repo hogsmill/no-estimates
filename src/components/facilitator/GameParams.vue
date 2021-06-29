@@ -143,7 +143,7 @@
         Stealth
       </td>
       <td colspan="3" class="stealth">
-        <input id="is-stealth" type="checkbox" :checked="stealth" @click="toggleStealth()"> Hosts are in "Stealth" mode?
+        <input id="is-stealth" type="checkbox" :checked="stealth" @click="toggleStealth()"> Admins are in "Stealth" mode?
       </td>
     </tr>
     <tr v-if="showGameParams">

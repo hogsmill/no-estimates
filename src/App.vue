@@ -10,7 +10,7 @@
       <FacilitatorView />
     </div>
     <div v-if="currentTab == 'game'" class="main">
-      <HostFunctions v-if="isHost" />
+      <HostFunctions v-if="admin" />
       <SetGame />
       <SetEstimates v-if="gameName" />
       <GoMobile v-if="allowMobile" />
@@ -24,7 +24,7 @@
         <div class="game-buttons">
           <Report />
           <Chat />
-          <ChatFacilitator v-if="isHost" />
+          <ChatFacilitator v-if="admin" />
         </div>
         <Roles />
         <Message />
@@ -99,8 +99,8 @@ export default {
     lsSuffix() {
       return this.$store.getters.lsSuffix
     },
-    isHost() {
-      return this.$store.getters.getHost
+    admin() {
+      return this.$store.getters.getAdmin
     },
     connectionError() {
       return this.$store.getters.getConnectionError
@@ -113,6 +113,9 @@ export default {
     },
     currentTab() {
       return this.$store.getters.getCurrentTab
+    },
+    stealth() {
+      return this.$store.getters.getStealth
     },
     teamName() {
       return this.$store.getters.getTeamName
@@ -131,6 +134,9 @@ export default {
     }
   },
   created() {
+
+    // General setup
+
     bus.$on('connectionError', (data) => {
       this.$store.dispatch('updateConnectionError', data)
     })
@@ -140,9 +146,11 @@ export default {
     const appType = appTypeFuns.get()
     this.$store.dispatch('updateAppType', appType)
 
-    if (params.isParam('host')) {
-      this.$store.dispatch('updateHost', true)
+    if (location.hostname == 'localhost' && params.isParam('host')) {
+      this.$store.dispatch('updateAdmin', true)
     }
+
+    // Set up game
 
     let gameName
     if (params.getParam('game')) {
@@ -155,12 +163,6 @@ export default {
     if (gameName) {
       this.$store.dispatch('updateGameName', gameName)
     }
-
-    bus.$on('updateStealth', (data) => {
-      if (this.gameName == data.gameName) {
-        this.$store.dispatch('updateStealth', data)
-      }
-    })
 
     let myName = localStorage.getItem('myName-' + this.lsSuffix)
     if (myName) {

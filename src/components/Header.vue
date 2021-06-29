@@ -23,7 +23,7 @@
         <li class="nav-item" :class="{ active: currentTab == 'game' }">
           <a class="nav-link pointer" @click="setCurrentTab('game')">Game</a>
         </li>
-        <li v-if="isHost" class="nav-item" :class="{ active: currentTab == 'facilitator' }">
+        <li v-if="admin" class="nav-item" :class="{ active: currentTab == 'facilitator' }">
           <a class="nav-link pointer" @click="setCurrentTab('facilitator')">Facilitator</a>
         </li>
         <li class="nav-item">
@@ -71,6 +71,11 @@ import bus from '../socket.js'
 import mailFuns from '../lib/mail.js'
 
 export default {
+  data() {
+    return {
+      connectToAgileSimulations: location.hostname != 'localhost'
+    }
+  },
   computed: {
     thisGame() {
       return this.$store.getters.thisGame
@@ -83,9 +88,6 @@ export default {
     },
     admin() {
       return this.$store.getters.getAdmin
-    },
-    isHost() {
-      return this.$store.getters.getHost
     },
     currentTab() {
       return this.$store.getters.getCurrentTab
@@ -112,8 +114,10 @@ export default {
   },
   methods: {
     clearLogin() {
-      const data = {session: '', userName: '', loggedInAsAdmin: false}
-      this.$store.dispatch('updateLogin', data)
+      if (this.connectToAgileSimulations) {
+        const data = {session: '', userName: '', loggedInAsAdmin: false}
+        this.$store.dispatch('updateLogin', data)
+      }
     },
     setCurrentTab(payload) {
       this.$store.dispatch('updateCurrentTab', payload)

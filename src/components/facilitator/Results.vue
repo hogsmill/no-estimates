@@ -17,13 +17,13 @@
       <div class="sources">
         <div v-for="(source, index) in sourcesOfVariation" :key="index">
           <div class="source">
-            <div v-if="isHost" class="source-show">
+            <div v-if="admin" class="source-show">
               <input type="checkbox" :checked="source.show" @click="showSourceOfVariation(source)">
             </div>
-            <div v-if="!isHost && source.show" class="source-show">
+            <div v-if="!admin && source.show" class="source-show">
               <i class="fas fa-exclamation-circle" />
             </div>
-            <div v-if="isHost || source.show" class="source-name">
+            <div v-if="admin || source.show" class="source-name">
               {{ source.name }}
             </div>
           </div>
@@ -370,8 +370,8 @@ export default {
     }
   },
   computed: {
-    isHost() {
-      return this.$store.getters.getHost
+    admin() {
+      return this.$store.getters.getAdmin
     },
     hostId() {
       return this.$store.getters.getHostId

@@ -186,6 +186,10 @@ MongoClient.connect(url, { useUnifiedTopology: true, maxIdleTimeMS: maxIdleTime 
 
     // Facilitator View
 
+    socket.on('sendAddGame', (data) => { dbStore.addGame(db, io, data, debugOn) })
+    
+    socket.on('sendPlayersJoinBy', (data) => { dbStore.playersJoinBy(db, io, data, debugOn) })
+
     socket.on('sendUpdateCurrency', (data) => { dbStore.updateCurrency(db, io, data, debugOn) })
 
     socket.on('sendUpdateConfig', (data) => { dbStore.updateConfig(db, io, data, debugOn) })

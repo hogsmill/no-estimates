@@ -1,9 +1,5 @@
 <template>
   <div class="host-funs">
-    <button class="btn btn-sm btn-outline-secondary smaller-font clear-local-storage" @click="clearLocalStorage()">
-      Clear Local Storage
-    </button>
-    <br>
     <span class="last-access">
       last access: {{ lastAccess() }}
     </span>
@@ -86,14 +82,6 @@ export default {
     },
     lastAccess() {
       return this.lastAccessed ? timeAgo.format(new Date(this.lastAccessed)) : ''
-    },
-    clearLocalStorage() {
-      if (confirm('Clear localStorage?')) {
-        localStorage.removeItem('myName-' + this.lsSuffix)
-        localStorage.removeItem('teamName-' + this.lsSuffix)
-        localStorage.removeItem('myRole-' + this.lsSuffix)
-        localStorage.removeItem('gameName-' + this.lsSuffix)
-      }
     },
     goMobile() {
       this.$store.dispatch('updateCurrentTab', 'mobile')

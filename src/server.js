@@ -115,6 +115,8 @@ MongoClient.connect(url, { useUnifiedTopology: true, maxIdleTimeMS: maxIdleTime 
 
     socket.on('sendCheckServerRestartPassword', (data) => { server.checkServerRestartPassword(db, io, data, 'no-estimates.log', port, debugOn) })
 
+    socket.on('sendCheckSystemWorkshops', (data) => { dbStore.checkSystemWorkshops(db, io, data, debugOn) })
+    
     socket.on('sendLoadGame', (data) => { dbStore.loadGame(db, io, data, debugOn) })
 
     socket.on('sendMakeCaptain', (data) => { dbStore.makeCaptain(db, io, data, debugOn) })

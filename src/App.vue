@@ -152,6 +152,8 @@ export default {
 
     // Set up game
 
+    bus.$emit('sendCheckSystemWorkshops', {appType: appType})
+
     let gameName
     if (params.getParam('game')) {
       gameName = params.getParam('game')

@@ -89,10 +89,39 @@ function makeAMove(db, io, config, data, n) {
   })
 }
 
+function _setUpTeam(db, io, data, debugOn) {
+
+  const names = [
+    {name: 'Allan', id: '1111', captain: true},
+    {name: 'Dolly', id: '2222'},
+    {name: 'Herbert', id: '3333'},
+    {name: 'Mary', id: '4444'}
+  ]
+  const roles = [
+    'Designer',
+    'Developer',
+    'Tester',
+    'Deployer'
+  ]
+
+  if (debugOn) { console.log('  setting up', data.teamName) }
+
+  db.gameCollection.findOne({gameName: data.gameName, teamName: data.teamName}, function(err, teamRes) {
+    if (err) throw err
+    if (teamRes) {
+      let members = []
+      for (let j = 0; j < names.length; j++) {
+        members = teamFuns.addMember(members, names[j], roles[j])
+      }
+      teamRes.members = members
+      updateTeam(db, io, teamRes)
+    }
+  })
+}
+
 function updateTeam(db, io, res) {
   const id = res._id
   delete res._id
-  //db.collection('noEstimates').updateOne({'_id': id}, {$set: res}, function(err) {
   db.gameCollection.updateOne({'_id': id}, {$set: res}, function(err) {
     if (err) throw err
     io.emit('loadTeam', res)
@@ -107,6 +136,27 @@ module.exports = {
 
     if (debugOn) { console.log('setUp', data) }
 
+    db.gamesCollection.find({gameName: data.gameName}).toArray(function(err, teams) {
+      if (err) throw err
+      if (teams.length) {
+        for (let i = 0; i < teams.length; i++) {
+          const teamData = {
+            gameName: data.gameName,
+            teamName: team[i].teamName,
+            include: team[i].include
+          }
+          _setUpTeam(db, io, teamData, debugOn)
+        }
+      }
+    })
+  },
+
+  setUpTeam: function(db, io, data, debugOn) {
+
+    if (debugOn) { console.log('setUpTeam', data) }
+
+    _setUpTeam(db, io, data, debugOn)
+    /*
     const names = [
       {name: 'Allan', id: '1111', captain: true},
       {name: 'Dolly', id: '2222'},
@@ -120,29 +170,24 @@ module.exports = {
       'Deployer'
     ]
 
-    //db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, res) {
-    db.gamesCollection.findOne({gameName: data.gameName}, function(err, res) {
+    db.gameCollection.insertOne({gameName: data.gameName, teamName: res.teams[i].name}, function(err, ) {
       if (err) throw err
-      if (res) {
-        for (let i = 0; i < res.teams.length; i++) {
-          if (res.teams[i].include) {
-            if (debugOn) { console.log('  setting up', res.teams[i].name) }
-            //db.collection('noEstimates').findOne({gameName: data.gameName, teamName: res.teams[i].name}, function(err, teamRes) {
-            db.gameCollection.findOne({gameName: data.gameName, teamName: res.teams[i].name}, function(err, teamRes) {
-              if (err) throw err
-              if (teamRes) {
-                let members = []
-                for (let j = 0; j < names.length; j++) {
-                  members = teamFuns.addMember(members, names[j], roles[j])
-                }
-                teamRes.members = members
-                updateTeam(db, io, teamRes)
-              }
-            })
+      if (res.teams[i].include) {
+        if (debugOn) { console.log('  setting up', res.teams[i].name) }
+        db.gameCollection.findOne({gameName: data.gameName, teamName: res.teams[i].name}, function(err, teamRes) {
+          if (err) throw err
+          if (teamRes) {
+            let members = []
+            for (let j = 0; j < names.length; j++) {
+              members = teamFuns.addMember(members, names[j], roles[j])
+            }
+            teamRes.members = members
+            updateTeam(db, io, teamRes)
           }
-        }
+        })
       }
     })
+    */
   },
 
   startDemoRunning: function(db, io, data, debugOn) {

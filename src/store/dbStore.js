@@ -9,6 +9,7 @@ const dependent = require('./lib/dependent.js')
 const chat = require('./lib/chat.js')
 const gameState = require('./lib/gameState.js')
 const sourceFuns = require('./lib/sources.js')
+const runGame = require('./runGame.js')
 const dbUpdate = require('./db/dbUpdate.js')
 
 function resetGame(game) {
@@ -184,11 +185,24 @@ function _addGame(db, io, data, debugOn) {
       for (let i = 0; i < initialTeams.length; i++) {
         const teamName = initialTeams[i].name
         const team = newTeam(data.gameName, teamName, game.config)
-        if (teamName == data.teamName) {
-          team.members = teamFuns.addMember(team.members, data.myName, data.myRole)
+        if (!data.demo) {
+          if (teamName == data.teamName) {
+            team.members = teamFuns.addMember(team.members, data.myName, data.myRole)
+          }
         }
         db.gameCollection.insertOne(team, function(err) {
           if (err) throw err
+          if (data.demo) {
+            const include = initialTeams.find((t) => {
+              return t.name == team.teamName
+            }).include
+            const teamData = {
+              gameName: data.gameName,
+              teamName: team.teamName,
+              include: include
+            }
+            team.members = runGame.setUpTeam(db, io, teamData, debugOn)
+          }
           io.emit('loadTeam', team)
           gameState.update(db, io, data)
         })
@@ -287,6 +301,24 @@ module.exports = {
 
   addGame: function(db, io, data, debugOn) {
     _addGame(db, io, data, debugOn)
+  },
+
+  checkSystemWorkshops: function(db, io, data, debugOn) {
+
+    if (debugOn) { console.log('checkSystemWorkshops', data) }
+
+    const gameName = 'Demo'
+    db.gamesCollection.findOne({gameName: gameName}, function(err, res) {
+      if (err) throw err
+      if (!res) {
+        const game = {
+          gameName: gameName,
+          demo: true,
+          appType: data.appType
+        }
+        _addGame(db, io, game, debugOn)
+      }
+    })
   },
 
   loadGame: function(db, io, data, debugOn) {

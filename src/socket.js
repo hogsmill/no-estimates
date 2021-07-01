@@ -40,6 +40,8 @@ socket.on('connect_error', (err) => { bus.$emit('connectionError', err) })
 
 bus.$on('sendCheckServerRestartPassword', (data) => { socket.emit('sendCheckServerRestartPassword', data) })
 
+bus.$on('sendCheckSystemWorkshops', (data) => { socket.emit('sendCheckSystemWorkshops', data) })
+
 bus.$on('sendLoadGame', (data) => { socket.emit('sendLoadGame', data) })
 
 bus.$on('sendMakeCaptain', (data) => { socket.emit('sendMakeCaptain', data) })

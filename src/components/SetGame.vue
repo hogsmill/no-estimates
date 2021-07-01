@@ -15,13 +15,15 @@
         </button>
       </div>
       <div class="mt-4">
-        <h4>Game Set Up</h4>
+        <h4>
+          Game Set Up
+        </h4>
         <table class="setup-table">
 
           <!-- Game Name -->
 
           <tr class="rounded" :class="{ 'error': gameNameError }">
-            <td>Game Name: </td>
+            <td>Game Name:</td>
             <td>
               <span v-if="gameFromParams()">{{ selectedGame.gameName }}</span>
               <select v-if="!gameFromParams()" id="game-name-select" class="form-control" @change="setSelectedGame()">
@@ -38,7 +40,7 @@
           <tr :class="{ 'error': teamNameError }">
             <td>Team: </td>
             <td v-if="selectedGame.teams">
-              <select id="team-name-select" class="form-control">
+              <select id="team-name-select" class="form-control" :disabled="!canRestructure()">
                 <option value=""> -- Select -- </option>
                 <option v-for="(team, index) in activeTeams(selectedGame.teams)" :key="index" :selected="team.name == teamName">
                   {{ team.name }}
@@ -61,7 +63,7 @@
           <tr :class="{ 'error': myRoleError }">
             <td>My Role: </td>
             <td>
-              <select id="role-select" class="form-control">
+              <select id="role-select" class="form-control" :disabled="!canRestructure()">
                 <option value="">
                   -- Select --
                 </option>
@@ -190,7 +192,7 @@ export default {
       this.myRoleError = false
     },
     canRestructure() {
-      return this.currentDay == 1 || this.capabilities.recharting
+      return this.admin || this.currentDay == 1 || this.capabilities.recharting
     },
     getMyName() {
       let myNameData

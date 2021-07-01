@@ -86,7 +86,7 @@ export default {
     setShowGames(val) {
       this.showGames = val
       if (val) {
-         bus.$emit('sendGetGames')
+         bus.$emit('sendGetGames', {appType: this.appType})
       }
     },
     idSafe(game) {

@@ -1,59 +1,7 @@
 
-const gameUpdates = [
+const gameUpdates = []
 
-  {name: 'currencies', value: [
-      {name: 'pound', symbol: '£', major: '&pound;', minor: 'p', selected: true},
-      {name: 'euro', symbol: '€', major: '&#8364;', minor: 'c', selected: false},
-      {name: 'dollar', symbol: '$', major: '&dollar;', minor: 'c', selected: false}
-    ]
-  },
-
-  {name: 'graphConfig', value: {
-      'cycleTime': {
-        medium: 15,
-        large: 25
-      },
-    }
-  },
-
-  {name: 'graphConfig', value: {
-      'wip': {
-        useMovingAverage: true,
-        useMoves: true,
-        useDays: true
-      },
-      'cumulativeFlow': {
-        useMoves: true,
-        useDays: true
-      }
-    }
-  },
-
-  {name: 'demoConfig', value: {
-      'runTo': 'MVP',
-      'runToCards': 11
-    }
-  },
-
-  {name: 'config', value: {
-    'noEstimates': {
-    },
-    'kanbanPlayground': {
-      'splitColumns': false,
-      'expediteLane': false,
-      'wipLimits': false,
-      'wipLimitType': 'soft',
-      'wipLimit': 3
-    },
-    }
-  }
-]
-
-const teamUpdates = [
-
-  {name: 'wip', value: []},
-  {name: 'cumulative', value: []}
-]
+const teamUpdates = []
 
 module.exports = {
 

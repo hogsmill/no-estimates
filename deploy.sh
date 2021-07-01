@@ -16,8 +16,9 @@ done
 REPO="https://github.com/hogsmill/no-estimates.git"
 APPS=(
   'no-estimates,noEstimatesGames,noEstimates,3007,No Estimates'
-  'no-estimates-new,noEstimatesNewGames,noEstimatesNew,3020,No Estimates,No Estimates Private,123456'
-  'no-estimates-bandwidth,noEstimatesBandwidthGames,noEstimatesBandwidth,3022,No Estimates,No Estimates Bandwidth,123456'
+  'no-estimates-game-test,noEstimatesGameTestGames,noEstimatesGameTest,3037,No Estimates,No Estimates Game Join Test'
+  'no-estimates-new,noEstimatesNewGames,noEstimatesNew,3020,No Estimates,No Estimates Private'
+  'no-estimates-bandwidth,noEstimatesBandwidthGames,noEstimatesBandwidth,3022,No Estimates,No Estimates Bandwidth'
   'kanban-playground,kanbanPlaygroundGames,kanbanPlayground,3030,Kanban Playground,Kanban Playground'
 
 )
@@ -32,13 +33,12 @@ do
   PORT=`echo $REC | cut -d, -f4`
   APPTYPE=`echo $REC | cut -d, -f5`
   APPNAME=`echo $REC | cut -d, -f6`
-  PASSWORD=`echo $REC | cut -d, -f7`
 
   echo "------------------------------------------------"
   if [ -z "$APPNAME" ]; then
     echo "Installing $APPTYPE:$APP ($GAMECOLLECTION, $COLLECTION, $PORT)"
   else
-    echo "Installing $APPTYPE:$APP ($GAMECOLLECTION, $COLLECTION, $PORT, $APPNAME, $PASSWORD)"
+    echo "Installing $APPTYPE:$APP ($GAMECOLLECTION, $COLLECTION, $PORT, $APPNAME)"
   fi
   echo "------------------------------------------------"
 
@@ -53,9 +53,6 @@ do
   echo "VUE_APP_GAME_COLLECTION=$GAMECOLLECTION" >> $ENVFILE
   if [ ! -z "$APPNAME" ]; then
     echo "VUE_APP_NAME=$APPNAME" >> $ENVFILE
-  fi
-  if [ ! -z $PASSWORD ]; then
-    echo "VUE_APP_PASSWORD=$PASSWORD" >> $ENVFILE
   fi
 
   cd $DIR

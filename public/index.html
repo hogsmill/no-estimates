@@ -30,13 +30,10 @@
     <title>The No Estimates game | Agile simulations</title>
     <script>
       let title = 'No Estimates (Local)'
-      switch(document.location.pathname.replace(/\//g, '')) {
-        case 'kanban-playground':
+      if (document.location.pathname.match(/kanban-playground/)) {
           title = 'Kanban Playground'
-          break
-        case 'no-estimates':
+      } else if (document.location.pathname.match(/no-estimates/)) {
           title = 'The No Estimates Game'
-          break
       }
       document.getElementsByTagName('title')[0].innerHTML = title + ' | Agile Simulations'
     </script>

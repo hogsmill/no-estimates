@@ -847,6 +847,7 @@ module.exports = {
           const message = facilitatorMessages[i]
           if (message.message == data.message.message) {
             message.reply = data.reply
+            message.replySeen = false
           }
           messages.push(message)
         }

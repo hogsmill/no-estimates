@@ -67,9 +67,10 @@
                 </div>
                 <div v-if="chattingTo == 'Facilitators'">
                   <div v-for="(message, index) in facilitatorMessages" :key="index" :class="getMessageClass(message)">
-                    <i v-if="message.source == 'them' && !message.seen" class="fas fa-eye-slash" @click="facilitationMessageSeen(message, index)" />
+                    <i v-if="message.source == 'them' && !message.seen" class="fas fa-eye-slash" />
                     {{ message.message }}
                     <div v-if="message.reply" class="reply">
+                      <i v-if="!message.replySeen" class="fas fa-eye-slash" @click="facilitationReplySeen(facilitatorMessages, index)" />
                       {{ message.reply }}
                     </div>
                   </div>
@@ -150,6 +151,7 @@ export default {
       for (let i = 0; i < this.activeTeams.length; i++) {
         total = total + this.noOfMessages(this.activeTeams[i])
       }
+      total = total + this.noOfFacilitatorMessages()
       return total
     },
     noOfMessages(team) {
@@ -168,7 +170,7 @@ export default {
       let n = 0
       for (let i = 0; i < this.facilitatorMessages.length; i++) {
         const message = this.facilitatorMessages[i]
-        if (message.source == 'them' && !message.seen) {
+        if (message.source == 'them' && !message.replySeen) {
           n = n + 1
         }
       }
@@ -201,6 +203,10 @@ export default {
       messages[index].seen = true
       this.messages[this.chattingTo] = messages
       bus.$emit('sendUpdateMessages', {gameName: this.gameName, teamName: this.teamName, messages: this.messages})
+    },
+    facilitationReplySeen(messages, index) {
+      messages[index].replySeen = true
+      bus.$emit('sendUpdateFacilitatorMessages', {gameName: this.gameName, teamName: this.teamName, messages: messages})
     }
   }
 }

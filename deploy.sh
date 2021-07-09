@@ -17,6 +17,7 @@ REPO="https://github.com/hogsmill/no-estimates.git"
 APPS=(
   'no-estimates,noEstimatesGames,noEstimates,3007,No Estimates'
   'no-estimates-game-test,noEstimatesGameTestGames,noEstimatesGameTest,3037,No Estimates,No Estimates Game Join Test'
+  'no-estimates-funconf,noEstimatesFunconfGames,noEstimatesFunconf,3037,No Estimates,No Estimates Game Join Test'
   'no-estimates-new,noEstimatesNewGames,noEstimatesNew,3020,No Estimates,No Estimates Private'
   'no-estimates-bandwidth,noEstimatesBandwidthGames,noEstimatesBandwidth,3022,No Estimates,No Estimates Bandwidth'
   'kanban-playground,kanbanPlaygroundGames,kanbanPlayground,3030,Kanban Playground,Kanban Playground'

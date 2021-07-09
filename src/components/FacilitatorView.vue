@@ -2,6 +2,7 @@
   <div class="container about">
     <h2>{{ appType }} - <span v-if="stealth">(Stealth)</span> Facilitator View</h2>
     <Connections />
+    <Collections />
     <GameMessaging />
     <Server />
     <GameDisplay />
@@ -18,6 +19,7 @@
 </template>
 
 <script>
+import Collections from './facilitator/Collections.vue'
 import Connections from './facilitator/Connections.vue'
 import GameMessaging from './facilitator/GameMessaging.vue'
 import Server from './facilitator/Server.vue'
@@ -33,6 +35,7 @@ import Utils from './facilitator/Utils.vue'
 export default {
   components: {
     Connections,
+    Collections,
     GameMessaging,
     Server,
     GameDisplay,

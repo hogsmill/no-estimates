@@ -142,8 +142,8 @@ module.exports = {
         for (let i = 0; i < teams.length; i++) {
           const teamData = {
             gameName: data.gameName,
-            teamName: team[i].teamName,
-            include: team[i].include
+            teamName: teams[i].teamName,
+            include: teams[i].include
           }
           _setUpTeam(db, io, teamData, debugOn)
         }
@@ -194,7 +194,6 @@ module.exports = {
 
     if (debugOn) { console.log('startDemoRunning', data) }
 
-    //db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, res) {
     db.gamesCollection.findOne({gameName: data.gameName}, function(err, res) {
       if (err) throw err
       if (res) {
@@ -215,7 +214,6 @@ module.exports = {
 
     if (debugOn) { console.log('startDemoRunning', data) }
 
-    //db.collection('noEstimatesGames').findOne({gameName: data.gameName}, function(err, res) {
     db.gamesCollection.findOne({gameName: data.gameName}, function(err, res) {
       if (err) throw err
       if (res) {

@@ -98,7 +98,7 @@ export default {
     addGame() {
       const game = document.getElementById('add-new-game').value
       this.id = this.id ? this.id : uuidv4()
-      bus.$emit('sendAddGame', {gameName: game, id: this.id})
+      bus.$emit('sendAddGame', {gameName: game, id: this.id, appType: this.appType})
     },
     deleteGame(game) {
       bus.$emit('sendDeleteGame', {gameName: game.gameName, appType: this.appType})

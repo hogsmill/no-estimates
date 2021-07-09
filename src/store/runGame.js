@@ -1,7 +1,7 @@
 
 const run = require('./run/funs.js')
-const dbStore = require('./dbStore.js')
 const teamFuns = require('./lib/teams.js')
+//let dbStore //= require('./dbStore.js') - Why is this needed?
 
 function playThisCard(card, member, cardToPlay) {
   const playCard = cardToPlay ? card.number == cardToPlay.number : true
@@ -47,8 +47,8 @@ function addEffort(db, io, game, card) {
 }
 
 function makeAMove(db, io, config, data, n) {
+
   data.teamName = data.teams[n].name
-  //db.collection('noEstimates').findOne({gameName: data.gameName, teamName: data.teamName}, function(err, game) {
   db.gameCollection.findOne({gameName: data.gameName, teamName: data.teamName}, function(err, game) {
     if (err) throw err
     const urgentCard = run.urgent(game)
@@ -136,16 +136,18 @@ module.exports = {
 
     if (debugOn) { console.log('setUp', data) }
 
-    db.gamesCollection.find({gameName: data.gameName}).toArray(function(err, teams) {
+    db.gamesCollection.findOne({gameName: data.gameName}, function(err, res) {
       if (err) throw err
-      if (teams.length) {
-        for (let i = 0; i < teams.length; i++) {
-          const teamData = {
-            gameName: data.gameName,
-            teamName: teams[i].teamName,
-            include: teams[i].include
+      if (res) {
+        for (let i = 0; i < res.teams.length; i++) {
+          if (res.teams[i].include) {
+            const teamData = {
+              gameName: data.gameName,
+              teamName: res.teams[i].name,
+              include: res.teams[i].include
+            }
+            _setUpTeam(db, io, teamData, debugOn)
           }
-          _setUpTeam(db, io, teamData, debugOn)
         }
       }
     })
@@ -156,38 +158,6 @@ module.exports = {
     if (debugOn) { console.log('setUpTeam', data) }
 
     _setUpTeam(db, io, data, debugOn)
-    /*
-    const names = [
-      {name: 'Allan', id: '1111', captain: true},
-      {name: 'Dolly', id: '2222'},
-      {name: 'Herbert', id: '3333'},
-      {name: 'Mary', id: '4444'}
-    ]
-    const roles = [
-      'Designer',
-      'Developer',
-      'Tester',
-      'Deployer'
-    ]
-
-    db.gameCollection.insertOne({gameName: data.gameName, teamName: res.teams[i].name}, function(err, ) {
-      if (err) throw err
-      if (res.teams[i].include) {
-        if (debugOn) { console.log('  setting up', res.teams[i].name) }
-        db.gameCollection.findOne({gameName: data.gameName, teamName: res.teams[i].name}, function(err, teamRes) {
-          if (err) throw err
-          if (teamRes) {
-            let members = []
-            for (let j = 0; j < names.length; j++) {
-              members = teamFuns.addMember(members, names[j], roles[j])
-            }
-            teamRes.members = members
-            updateTeam(db, io, teamRes)
-          }
-        })
-      }
-    })
-    */
   },
 
   startDemoRunning: function(db, io, data, debugOn) {
@@ -205,6 +175,7 @@ module.exports = {
           }
         }
         data.teams = teams
+        dbStore = require('./dbStore.js') // - Why is this needed
         makeAMove(db, io, res.demoConfig, data, 0)
       }
     })

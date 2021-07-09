@@ -14,7 +14,8 @@
     </div>
     <div v-if="cardComplete() && !config.autoMoveCompleteCards" class="move-card">
       <button class="btn btn-sm btn-site-primary" :disabled="canMoveCard().error" @click="moveCard()"
-              :title="canMoveCard().message ? canMoveCard().message : 'Move card to ' + nextColumn()">
+              :title="canMoveCard().message ? canMoveCard().message : 'Move card to ' + nextColumn()"
+      >
         <i class="fas fa-long-arrow-alt-right" />
       </button>
     </div>

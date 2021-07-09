@@ -196,7 +196,6 @@ export default {
 
     bus.$on('loadTeam', (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
-        console.log(data)
         this.$store.dispatch('loadTeam', data)
       }
     })

@@ -29,6 +29,9 @@
         </div>
         <br>
         Members
+        <br>
+        <i v-if="!showMembers" class="fas fa-users" title="Show members" @click="unHideMembers()" />
+        <i v-if="showMembers" class="fas fa-users-slash" title="Hide members" @click="hideMembers()" />
       </td>
       <td>Autodeploy?</td>
       <td>Current<br>Day</td>
@@ -46,14 +49,15 @@
         {{ team.name }}
       </td>
       <td v-if="showTeamState(team)">
-        <div v-for="(member, m) in team.members" :key="m">
-          <i v-if="member.disabled" class="far fa-square disable-member" :title="'Enable ' + member.name" @click="enableMember(member, team)" />
-          <i v-if="!member.disabled" class="far fa-check-square disable-member" :title="'Disable ' + member.name" @click="disableMember(member, team)" />
-          <i class="fas fa-minus-circle disable-member delete-member" :title="'Delete ' + member.name" @click="deleteMember(member, team)" />
-
-          <b>{{ member.name }}</b>
-          <div class="white rounded-circle member-role" :class="roleClass(member.role)" :title="roleString(member)">
-            {{ effort(member) }}
+        <div v-if="showMembers">
+          <div v-for="(member, m) in team.members" :key="m">
+            <i v-if="member.disabled" class="far fa-square disable-member" :title="'Enable ' + member.name" @click="enableMember(member, team)" />
+            <i v-if="!member.disabled" class="far fa-check-square disable-member" :title="'Disable ' + member.name" @click="disableMember(member, team)" />
+            <i class="fas fa-minus-circle disable-member delete-member" :title="'Delete ' + member.name" @click="deleteMember(member, team)" />
+            <b>{{ member.name }}</b>
+            <div class="white rounded-circle member-role" :class="roleClass(member.role)" :title="roleString(member)">
+              {{ effort(member) }}
+            </div>
           </div>
         </div>
       </td>
@@ -97,6 +101,7 @@ export default {
   data() {
     return {
       showGameState: true,
+      showMembers: true
     }
   },
   computed: {
@@ -125,6 +130,12 @@ export default {
   methods: {
     setShowGameState(val) {
       this.showGameState = val
+    },
+    hideMembers() {
+      this.showMembers = false
+    },
+    unHideMembers() {
+      this.showMembers = true
     },
     showTeamState(team) {
       const include = this.teams.find(function(t) {
@@ -187,6 +198,12 @@ export default {
       vertical-align: middle;
       text-align: center;
       font-weight: bold;
+
+      .fa-users, .fa-users-slash {
+        position: relative;
+        color: #888;
+        margin: 0 2px;
+      }
     }
 
     .restart, .start, .stop {

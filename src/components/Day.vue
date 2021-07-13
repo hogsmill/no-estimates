@@ -196,7 +196,7 @@ export default {
     },
     next() {
       if (this.facilitatorStarts && !this.gameRunning) {
-        alert('Please wait for the game to start')
+        alert('Please wait for the facilitator to start the game')
         return
       }
       if (this.doRetros && !this.retrosDone[this.currentDay] && this.currentDay % this.retroDays == 0) {

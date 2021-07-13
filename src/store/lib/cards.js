@@ -128,23 +128,27 @@ module.exports = {
     let card = workCards.find(function(c) {
       return c.number == currentWorkCard
     })
-    card = newCard(card)
-    if (teams.length < 2) {
-      card.teamDependency = 0
-    }
-    const cardColumn = getCardFirstColumn(card, columns)
-    for (let i = 0; i < columns.length; i++) {
-      const column = columns[i]
-      if (column.name == cardColumn) {
-        const cards = column.cards
-        card.commit = currentDay
-        if (card.teamDependency) {
-          card.dependentOn = selectDependentTeam(teams, teamName)
-        }
-        cards.push(card)
-        column.cards = cards
+    if (!card) {
+      newColumns = columns
+    } else {
+      card = newCard(card)
+      if (teams.length < 2) {
+        card.teamDependency = 0
       }
-      newColumns.push(column)
+      const cardColumn = getCardFirstColumn(card, columns)
+      for (let i = 0; i < columns.length; i++) {
+        const column = columns[i]
+        if (column.name == cardColumn) {
+          const cards = column.cards
+          card.commit = currentDay
+          if (card.teamDependency) {
+            card.dependentOn = selectDependentTeam(teams, teamName)
+          }
+          cards.push(card)
+          column.cards = cards
+        }
+        newColumns.push(column)
+      }
     }
     return newColumns
   },

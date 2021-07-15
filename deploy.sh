@@ -19,7 +19,7 @@ APPS=(
   'no-estimates-game-test,noEstimatesGameTestGames,noEstimatesGameTest,3037,No Estimates,No Estimates Game Join Test'
   'no-estimates-funconf,noEstimatesFunconfGames,noEstimatesFunconf,3042,No Estimates,No Estimates - Funconf 2021'
   'no-estimates-new,noEstimatesNewGames,noEstimatesNew,3020,No Estimates,No Estimates Private'
-  'no-estimates-bandwidth,noEstimatesBandwidthGames,noEstimatesBandwidth,3022,No Estimates,No Estimates Bandwidth'
+  'no-estimates-dex,noEstimatesDexGames,noEstimatesDex,3051,No Estimates,No Estimates Dex'
   'kanban-playground,kanbanPlaygroundGames,kanbanPlayground,3030,Kanban Playground,Kanban Playground'
 
 )

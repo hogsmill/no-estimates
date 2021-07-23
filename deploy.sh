@@ -23,7 +23,7 @@ APPS=(
   'no-estimates-ratesetter,noEstimatesRatesetterGames,noEstimatesRatesetter,3057,No Estimates,No Estimates'
   'kanban-playground,kanbanPlaygroundGames,kanbanPlayground,3030,Kanban Playground,Kanban Playground'
   'kanban-playground-ratesetter,kanbanPlaygroundRatesetterGames,kanbanPlaygroundRatesetter,3058,Kanban Playground,Kanban Playground'
-
+  'billy-bonkers,billyBonkersGames,billyBonkers,3061,Billy Bonkers,Billy Bonkers'
 )
 
 for ((i = 0; i < ${#APPS[@]}; i++))

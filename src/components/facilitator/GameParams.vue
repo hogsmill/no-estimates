@@ -47,7 +47,7 @@
         <input id="expedite-lane" type="checkbox" :checked="config.expediteLane" @click="toggleExpediteLane()">
       </td>
     </tr>
-    <tr v-if="showGameParams && feature('expediteLane')">
+    <tr v-if="showGameParams && feature('autoMoveCompleteCards')">
       <td class="left-col">
         Move complete cards automatically?
       </td>

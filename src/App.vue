@@ -230,6 +230,9 @@ export default {
         case 'Kanban Playground':
           c = 'kanban-playground'
           break
+        case 'Billy Bonkers':
+          c = 'billy-bonkers'
+          break
       }
       return c
     }
@@ -274,7 +277,7 @@ export default {
 
   .board {
 
-    &.no-estimates {
+    &.no-estimates, &.billy-bonkers {
       //
       // Gradient
       //

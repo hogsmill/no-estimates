@@ -179,6 +179,9 @@ export const store = new Vuex.Store({
         case 'Kanban Playground':
           suffix = 'kp'
           break
+        case 'Billy Bonkers':
+          suffix = 'bb'
+          break
       }
       return suffix
     },

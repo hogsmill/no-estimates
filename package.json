@@ -16,7 +16,7 @@
     "is-svg": ">=4.2.2",
     "javascript-time-ago": "^2.3.8",
     "jquery": "^3.6.0",
-    "mongodb": "^3.6.10",
+    "mongodb": "^4.1.0",
     "ps-node": "^0.1.6",
     "qrcode": "^1.4.4",
     "sma": "^0.1.1",

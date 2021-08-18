@@ -24,7 +24,7 @@ APPS=(
   'kanban-playground,kanbanPlaygroundGames,kanbanPlayground,3030,Kanban Playground,Kanban Playground'
   'kanban-playground-ratesetter,kanbanPlaygroundRatesetterGames,kanbanPlaygroundRatesetter,3058,Kanban Playground,Kanban Playground'
   'kanban-playground-eagile,kanbanPlaygroundEverydayAgileGames,kanbanPlaygroundEverydayAgile,3066,Kanban Playground,Kanban Playground'
-  'billy-bonkers,billyBonkersGames,billyBonkers,3061,Billy Bonkers,Billy Bonkers'
+  # 'billy-bonkers,billyBonkersGames,billyBonkers,3061,Billy Bonkers,Billy Bonkers'
 )
 
 for ((i = 0; i < ${#APPS[@]}; i++))

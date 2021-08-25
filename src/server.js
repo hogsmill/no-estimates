@@ -34,6 +34,9 @@ ON_DEATH(function(signal, err) {
   })
 })
 
+global.TextEncoder = require("util").TextEncoder
+global.TextDecoder = require("util").TextDecoder
+
 let httpServer
 let io
 if (!prod) {
@@ -116,7 +119,7 @@ MongoClient.connect(url, { useUnifiedTopology: true, maxIdleTimeMS: maxIdleTime 
     socket.on('sendCheckServerRestartPassword', (data) => { server.checkServerRestartPassword(db, io, data, 'no-estimates.log', port, debugOn) })
 
     socket.on('sendCheckSystemWorkshops', (data) => { dbStore.checkSystemWorkshops(db, io, data, debugOn) })
-    
+
     socket.on('sendLoadGame', (data) => { dbStore.loadGame(db, io, data, debugOn) })
 
     socket.on('sendMakeCaptain', (data) => { dbStore.makeCaptain(db, io, data, debugOn) })

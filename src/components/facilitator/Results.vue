@@ -508,7 +508,6 @@ export default {
         this.wip.data.labels = data.results.labels
         this.wip.data.datasets[0].data = data.results.wip
       }
-      console.log(this.wip.data)
       this.$modal.show('wip')
     },
     showCumulativeFlow(data) {

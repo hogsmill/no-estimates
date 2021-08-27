@@ -113,18 +113,6 @@ function newGame(data) {
       game.config.backlogEffort = false
       game.config.backlogEffortPoints = 1
       break
-    case 'Billy Bonkers':
-      game.config.autoMoveCompleteCards = false
-      game.config.deliveryType = 'revenue'
-      game.config.splitColumns = true
-      game.config.expediteLane = false
-      game.config.wipLimits = true
-      game.config.wipLimitType = 'soft'
-      game.config.wipLimit = 3
-      game.config.backlogGenerated = false
-      game.config.backlogEffort = false
-      game.config.backlogEffortPoints = 1
-      break
   }
 
   return game

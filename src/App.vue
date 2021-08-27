@@ -2,6 +2,7 @@
   <div id="app" class="mb-4">
     <Header />
     <ClearStorage />
+    <RateThisGame />
     <ConnectionError />
     <NoEstimatesWalkThrough v-if="appType == 'No Estimates'" />
     <KanbanPlaygroundWalkThrough v-if="appType == 'Kanban Playground'" />
@@ -44,6 +45,7 @@ import params from './lib/params.js'
 import stringFuns from './lib/stringFuns.js'
 
 import Header from './components/Header.vue'
+import RateThisGame from './components/RateThisGame.vue'
 import ClearStorage from './components/ClearStorage.vue'
 import HostFunctions from './components/HostFunctions.vue'
 import ConnectionError from './components/error/ConnectionError.vue'
@@ -69,6 +71,7 @@ export default {
   components: {
     Header,
     ClearStorage,
+    RateThisGame,
     HostFunctions,
     ConnectionError,
     FacilitatorView,

@@ -19,6 +19,12 @@
         <input type="checkbox" id="allow-mobile" class="form-control" :checked="allowMobile" @click="saveAllowMobile()">
       </td>
     </tr>
+    <tr v-if="showGameParams">
+      <td>Allow Demo?: </td>
+      <td colspan="3" class="left">
+        <input type="checkbox" id="allow-demo" class="form-control" :checked="allowDemo" @click="saveAllowDemo()">
+      </td>
+    </tr>
     <tr v-if="showGameParams && feature('wipLimits')">
       <td class="left-col">
         WIP Limits?
@@ -111,7 +117,7 @@
         Retros
       </td>
       <td class="left">
-        <input id="do-retros" type="checkbox" :checked="doRetros" @click="toggleDoRetros()">
+        <input id="do-retros" type="checkbox" :checked="config.doRetros" @click="toggleDoRetros()">
       </td>
       <td class="left">
         Every <input type="text" id="retro-days" class="form-control" :value="retroDays"> days,
@@ -181,6 +187,9 @@ export default {
     gameName() {
       return this.$store.getters.getGameName
     },
+    appType() {
+      return this.$store.getters.getAppType
+    },
     gameState() {
       return this.$store.getters.getGameState
     },
@@ -192,6 +201,9 @@ export default {
     },
     allowMobile() {
       return this.$store.getters.getAllowMobile
+    },
+    allowDemo() {
+      return this.$store.getters.getAllowDemo
     },
     currency() {
       return this.$store.getters.getCurrency
@@ -219,11 +231,14 @@ export default {
     },
     retroTime() {
       return this.$store.getters.getRetroTime
-    },
+    }
   },
   methods: {
     setShowGameParams(val) {
       this.showGameParams = val
+      if (val) {
+        bus.$emit('sendLoadGame', {gameName: this.gameName, appType: this.appType})
+      }
     },
     feature(feature) {
       return Object.keys(this.config).find(function(k) {
@@ -281,6 +296,10 @@ export default {
     saveAllowMobile() {
       const allowMobile = document.getElementById('allow-mobile').checked
       bus.$emit('sendUpdateConfig', {gameName: this.gameName, field: 'allowMobile', value: allowMobile})
+    },
+    saveAllowDemo() {
+      const allowDemo = document.getElementById('allow-demo').checked
+      bus.$emit('sendUpdateConfig', {gameName: this.gameName, field: 'allowDemo', value: allowDemo})
     },
     changeCurrency() {
       const currency = document.getElementById('currency').value

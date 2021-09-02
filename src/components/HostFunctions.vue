@@ -3,7 +3,7 @@
     <span class="last-access">
       last access: {{ lastAccess() }}
     </span>
-    <div class="run-demo rounded">
+    <div v-if="config.allowDemo" class="run-demo rounded">
       <div class="expand">
         <i v-if="showRunGame" @click="setShowRunGame(false)" title="collapse" class="fas fa-caret-up toggle" />
         <i v-if="!showRunGame" @click="setShowRunGame(true)" title="expand" class="fas fa-caret-down toggle" />
@@ -50,6 +50,9 @@ export default {
   computed: {
     lsSuffix() {
       return this.$store.getters.lsSuffix
+    },
+    config() {
+      return this.$store.getters.getConfig
     },
     gameName() {
       return this.$store.getters.getGameName

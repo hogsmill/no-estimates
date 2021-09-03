@@ -284,14 +284,8 @@ export default {
     graphConfig() {
       return this.$store.getters.getGraphConfig
     },
-    selectedGraphTeam1() {
-      return this.$store.getters.getSelectedGraphTeam1
-    },
-    selectedGraphTeam2() {
-      return this.$store.getters.getSelectedGraphTeam2
-    },
-    selectedGraphTeam3() {
-      return this.$store.getters.getSelectedGraphTeam3
+    selectedGraphTeams() {
+      return this.$store.getters.getSelectedGraphTeams
     }
   },
   created() {
@@ -333,21 +327,25 @@ export default {
       bus.$emit('sendShowSingleTeamResult', {
         hostId: this.hostId,
         gameName: this.gameName,
-        teamName: this.selectedGraphTeam1,
+        teamName: this.selectedGraphTeams[1],
         result: result,
         target: 'game'
       })
     },
     showMultipleTeamsResult(result) {
-      if (!this.selectedGraphTeam1 && !this.selectedGraphTeam2 && !this.selectedGraphTeam2) {
+      let selected = 0
+      for (let i = 0; i < Object.keys(this.selectedGraphTeams).length; i++) {
+        if (this.selectedGraphTeams[i + 1]) {
+          selected = selected + 1
+        }
+      }
+      if (!selected) {
         alert('Please select 1 or more teams to display')
       } else {
         bus.$emit('sendShowMultipleTeamsResult', {
           hostId: this.hostId,
           gameName: this.gameName,
-          team1: this.selectedGraphTeam1,
-          team2: this.selectedGraphTeam2,
-          team3: this.selectedGraphTeam3,
+          teams: this.selectedGraphTeams,
           result: result,
           target: 'game'
         })

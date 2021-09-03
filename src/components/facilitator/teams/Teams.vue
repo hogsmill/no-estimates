@@ -6,7 +6,7 @@
         <option value="">
           -- Select --
         </option>
-        <option v-for="(team, index) in teams" :key="index" :selected="team.name == selectedGraphTeam1">
+        <option v-for="(team, index) in teams" :key="index" :selected="team.name == selectedGraphTeams[1]">
           {{ team.name }}
         </option>
       </select>
@@ -14,35 +14,13 @@
     <div v-if="multiple" class="multiple">
       <table>
         <tr>
-          <td>
-            Select Team 1<br>
-            <select :id="'graph-team-' + graph + '-1'" @change="setSelectedGraphTeam(graph, 1)">
+          <td v-for="(n, index) in Math.min(teams.length, 6)" :key="index">
+            Select Team {{ n }}<br>
+            <select :id="'graph-team-' + graph + '-' + n" @change="setSelectedGraphTeam(graph, n)">
               <option value="">
                 -- Select --
               </option>
-              <option v-for="(team, index) in teams" :key="index" :selected="team.name == selectedGraphTeam1">
-                {{ team.name }}
-              </option>
-            </select>
-          </td>
-          <td>
-            Select Team 2<br>
-            <select :id="'graph-team-' + graph + '-2'" @change="setSelectedGraphTeam(graph, 2)" :disabled="!selectedGraphTeam1">
-              <option value="">
-                -- Select --
-              </option>
-              <option v-for="(team, index) in teams" :key="index" :selected="team.name == selectedGraphTeam2">
-                {{ team.name }}
-              </option>
-            </select>
-          </td>
-          <td>
-            Select Team 3<br>
-            <select :id="'graph-team-' + graph + '-3'" @change="setSelectedGraphTeam(graph, 3)" :disabled="!(selectedGraphTeam1 && selectedGraphTeam2)">
-              <option value="">
-                -- Select --
-              </option>
-              <option v-for="(team, index) in teams" :key="index" :selected="team.name == selectedGraphTeam3">
+              <option v-for="(team, tindex) in teams" :key="tindex" :selected="team.name == selectedGraphTeams[n]">
                 {{ team.name }}
               </option>
             </select>
@@ -63,20 +41,14 @@ export default {
     teams() {
       return this.$store.getters.getActiveTeams
     },
-    selectedGraphTeam1() {
-      return this.$store.getters.getSelectedGraphTeam1
-    },
-    selectedGraphTeam2() {
-      return this.$store.getters.getSelectedGraphTeam2
-    },
-    selectedGraphTeam3() {
-      return this.$store.getters.getSelectedGraphTeam3
+    selectedGraphTeams() {
+      return this.$store.getters.getSelectedGraphTeams
     }
   },
   methods: {
     setSelectedGraphTeam(graph, n) {
       const team = document.getElementById('graph-team-' + graph + '-' + n).value
-      this.$store.dispatch('setSelectedGraphTeam', {team: team, n: n})
+      this.$store.dispatch('setSelectedGraphTeam', {n: n, team: team})
     }
   }
 }

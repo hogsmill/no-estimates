@@ -124,6 +124,14 @@ export const store = new Vuex.Store({
     facilitatorMessages: {},
     config: {},
     sourcesOfVariation: [],
+    selectedGraphTeams: {
+      1: null,
+      2: null,
+      3: null,
+      4: null,
+      5: null,
+      6: null
+    },
     graphConfig: {
       wip: {
         useMovingAverage: true,
@@ -146,9 +154,6 @@ export const store = new Vuex.Store({
       runToCards: 11,
       running: false
     },
-    selectedGraphTeam1: '',
-    selectedGraphTeam2: '',
-    selectedGraphTeam3: '',
     retrosDone: {},
     recharting: false,
     concurrentDevAndTest: false,
@@ -356,14 +361,8 @@ export const store = new Vuex.Store({
     getDemoConfig: (state) => {
       return state.demoConfig
     },
-    getSelectedGraphTeam1: (state) => {
-      return state.selectedGraphTeam1
-    },
-    getSelectedGraphTeam2: (state) => {
-      return state.selectedGraphTeam2
-    },
-    getSelectedGraphTeam3: (state) => {
-      return state.selectedGraphTeam3
+    getSelectedGraphTeams: (state) => {
+      return state.selectedGraphTeams
     },
     getCurrentDay: (state) => {
       return state.currentDay
@@ -547,17 +546,7 @@ export const store = new Vuex.Store({
       state.teamName = payload
     },
     setSelectedGraphTeam: (state, payload) => {
-      switch(payload.n) {
-        case 1:
-          state.selectedGraphTeam1 = payload.team
-          break
-        case 2:
-          state.selectedGraphTeam2 = payload.team
-          break
-        case 3:
-          state.selectedGraphTeam3 = payload.team
-          break
-      }
+      state.selectedGraphTeams[payload.n] = payload.team
     },
     updateGameState: (state, payload) => {
       state.gameState = payload.gameState

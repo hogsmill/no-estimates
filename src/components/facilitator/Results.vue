@@ -71,7 +71,7 @@
       </div>
       <div class="mt-4 wip">
         <h4>
-          Team {{ selectedGraphTeam1 }} WIP Trend - No. of Cards in Play
+          Team {{ selectedGraphTeams[1] }} WIP Trend - No. of Cards in Play
           <span v-if="graphConfig.wip.useMovingAverage">(Moving Average,</span>
           <span v-if="!graphConfig.wip.useMovingAverage">(Raw Data,</span>
           <span v-if="graphConfig.wip.useDays"> per Day)</span>
@@ -96,7 +96,7 @@
       </div>
       <div class="mt-4 cumulative-flow">
         <h4>
-          Team {{ selectedGraphTeam1 }} Cumulative Flow
+          Team {{ selectedGraphTeams[0] }} Cumulative Flow
           <span v-if="graphConfig.cumulativeFlow.useDays">(per Day)</span>
           <span v-if="!graphConfig.cumulativeFlow.useDays">(per Move)</span>
         </h4>
@@ -108,7 +108,7 @@
 
     <!-- Correlation -->
 
-    <modal name="correlation" class="popup" :height="520" :width="920" :classes="['rounded']">
+    <modal name="correlation" class="popup" :height="580" :width="920" :classes="['rounded']">
       <div class="float-right mr-2 mt-1">
         <button type="button" class="close" @click="hide('correlation')" aria-label="Close">
           <span aria-hidden="true">&times;</span>
@@ -132,15 +132,17 @@
             No correlation
           </div>
         </div>
-        <Correlation v-if="selectedGraphTeam1" :team="selectedGraphTeam1" :correlation="correlation1" />
-        <Correlation v-if="selectedGraphTeam2" :team="selectedGraphTeam2" :correlation="correlation2" />
-        <Correlation v-if="selectedGraphTeam3" :team="selectedGraphTeam3" :correlation="correlation3" />
+        <div class="graphs-holder">
+          <div v-for="(n, index) in Object.keys(selectedGraphTeams).length" :key="index">
+            <Correlation v-if="selectedGraphTeams[n]" :team="selectedGraphTeams[n]" :correlation="correlations[n]" />
+          </div>
+        </div>
       </div>
     </modal>
 
     <!-- Flow Efficiency (overall) -->
 
-    <modal name="flow-efficiency" class="popup" :height="520" :width="920" :classes="['rounded']">
+    <modal name="flow-efficiency" class="popup" :height="580" :width="920" :classes="['rounded']">
       <div class="float-right mr-2 mt-1">
         <button type="button" class="close" @click="hide('flow-efficiency')" aria-label="Close">
           <span aria-hidden="true">&times;</span>
@@ -161,9 +163,15 @@
             Worst flow
           </div>
         </div>
-        <FlowEfficiency v-if="selectedGraphTeam1" :team="selectedGraphTeam1" :flow-efficiency="flowEfficiency1" />
-        <FlowEfficiency v-if="selectedGraphTeam2" :team="selectedGraphTeam2" :flow-efficiency="flowEfficiency2" />
-        <FlowEfficiency v-if="selectedGraphTeam3" :team="selectedGraphTeam3" :flow-efficiency="flowEfficiency3" />
+        <div class="graphs-holder">
+          <div v-for="(n, index) in Object.keys(selectedGraphTeams).length" :key="index">
+            <FlowEfficiency v-if="selectedGraphTeams[n]" :team="selectedGraphTeams[n]" :flow-efficiency="flowEfficiencies[n]" />
+            <!--
+            <FlowEfficiency v-if="selectedGraphTeam2" :team="selectedGraphTeam2" :flow-efficiency="flowEfficiency2" />
+            <FlowEfficiency v-if="selectedGraphTeam3" :team="selectedGraphTeam3" :flow-efficiency="flowEfficiency3" />
+            -->
+          </div>
+        </div>
       </div>
     </modal>
 
@@ -177,7 +185,7 @@
       </div>
       <div class="mt-4 flow-efficiency">
         <h4>
-          Flow Efficiency (Selected Cards, Team {{ selectedGraphTeam1 }})
+          Flow Efficiency (Selected Cards, Team {{ selectedGraphTeams[1] }})
         </h4>
         <div class="flow-efficiency-card-key">
           <div class="working-on" /> Worked On
@@ -199,7 +207,7 @@
       </div>
       <div class="mt-4 cycle-time">
         <h4>
-          Team {{ selectedGraphTeam1 }} Cycle Time - Time to complete card in days
+          Team {{ selectedGraphTeams[1] }} Cycle Time - Time to complete card in days
         </h4>
         <table>
           <tr>
@@ -227,7 +235,7 @@
       </div>
       <div class="mt-4 cycle-time">
         <h4>
-          Team {{ selectedGraphTeam1 }} Distribution
+          Team {{ selectedGraphTeams[1] }} Distribution
         </h4>
         <div>
           <BarChart :chartdata="distribution.data" :options="distribution.options" />
@@ -245,7 +253,7 @@
       </div>
       <div class="mt-4 scatter-plot">
         <h4>
-          Team {{ selectedGraphTeam1 }} Scatter Plot
+          Team {{ selectedGraphTeams[1] }} Scatter Plot
         </h4>
         <p>
           <span class="key l75">75%</span> of cards completed in {{ scatterPlot.limits[75] }} days,
@@ -273,7 +281,7 @@
       </div>
       <div class="mt-4 monte-carlo">
         <h4>
-          Team {{ selectedGraphTeam1 }} Monte Carlo: {{ parseInt(graphConfig.monteCarlo.runs).toLocaleString() }} runs to complete {{ monteCarloCards() }} cards
+          Team {{ selectedGraphTeams[1] }} Monte Carlo: {{ parseInt(graphConfig.monteCarlo.runs).toLocaleString() }} runs to complete {{ monteCarloCards() }} cards
         </h4>
         <div class="estimates">
           <div v-if="graphConfig.monteCarlo.runTo == 'Remaining'">
@@ -353,17 +361,28 @@ export default {
       scatterPlot: scatterPlot.config(),
       monteCarlo:monteCarlo.config(),
 
-      correlation1: null,
-      correlation2: null,
-      correlation3: null,
+      correlations: {
+        1: null,
+        2: null,
+        3: null,
+        4: null,
+        5: null,
+        6: null
+      },
 
-      flowEfficiency1: null,
-      flowEfficiency2: null,
-      flowEfficiency3: null,
+      flowEfficiencies: {
+        1: null,
+        2: null,
+        3: null,
+        4: null,
+        5: null,
+        6: null
+      },
 
       flowEfficiencyCard1: null,
       flowEfficiencyCard2: null,
       flowEfficiencyCard3: null,
+
 
       scatterPlotCanvasTop: 80,
       scatterPlotCanvasBottom: 440
@@ -397,14 +416,8 @@ export default {
     sourcesOfVariation() {
       return this.$store.getters.getSourcesOfVariation
     },
-    selectedGraphTeam1() {
-      return this.$store.getters.getSelectedGraphTeam1
-    },
-    selectedGraphTeam2() {
-      return this.$store.getters.getSelectedGraphTeam2
-    },
-    selectedGraphTeam3() {
-      return this.$store.getters.getSelectedGraphTeam3
+    selectedGraphTeams() {
+      return this.$store.getters.getSelectedGraphTeams
     }
   },
   created() {
@@ -473,9 +486,6 @@ export default {
       }
       return max
     },
-    selectedGraphs() {
-
-    },
     showSourcesOfVariation() {
       this.$modal.show('sources-of-variation')
     },
@@ -520,26 +530,18 @@ export default {
       this.$modal.show('cumulative-flow')
     },
     showCorrelation(data) {
-      if (this.selectedGraphTeam1) {
-        this.correlation1 = parseFloat(data.results[0])
-      }
-      if (this.selectedGraphTeam2) {
-        this.correlation2 = parseFloat(data.results[1])
-      }
-      if (this.selectedGraphTeam3) {
-        this.correlation3 = parseFloat(data.results[2])
+      for (let i = 1; i <= Object.keys(this.selectedGraphTeams).length; i++) {
+        if (this.selectedGraphTeams[i]) {
+          this.correlations[i] = parseFloat(data.results[i])
+        }
       }
       this.$modal.show('correlation')
     },
     showFlowEfficiency(data) {
-      if (this.selectedGraphTeam1) {
-        this.flowEfficiency1 = data.results[0] ? parseFloat(data.results[0]) : 0
-      }
-      if (this.selectedGraphTeam2) {
-        this.flowEfficiency2 = data.results[1] ? parseFloat(data.results[1]) : 0
-      }
-      if (this.selectedGraphTeam3) {
-        this.flowEfficiency3 = data.results[2] ? parseFloat(data.results[2]) : 0
+      for (let i = 1; i<= Object.keys(this.selectedGraphTeams).length; i++) {
+        if (this.selectedGraphTeams[i]) {
+          this.flowEfficiencies[i] = data.results[i - 1] ? parseFloat(data.results[i - 1]) : 0
+        }
       }
       this.$modal.show('flow-efficiency')
     },
@@ -642,6 +644,11 @@ export default {
         }
       }
     }
+  }
+
+  .graphs-holder {
+    height: 400px;
+    overflow-y: scroll;
   }
 
   .correlation {

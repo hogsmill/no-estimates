@@ -914,7 +914,6 @@ module.exports = {
         res.teams = teams
         const id = res._id
         delete res._id
-        //db.collection('noEstimatesGames').updateOne({'_id': id}, {$set: res}, function(err) {
         db.gamesCollection.updateOne({'_id': id}, {$set: res}, function(err) {
           if (err) throw err
           io.emit('loadGame', res)

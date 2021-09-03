@@ -7,9 +7,6 @@ do
   if [ "$1" == "-f" ]; then
     FORCE=true
   fi
-  if [ "$1" == "-o" ]; then
-    OUTDATED=false
-  fi
   shift
 done
 
@@ -93,7 +90,7 @@ do
   fi
 
 done
-
-if [ "$OUTDATED" == "true" ]; then
+ps -ef | grep php | grep outdated
+if [ $? -eq 1 ]; then
   php /usr/apps/monitor/src/lib/outdated.php &
 fi

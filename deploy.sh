@@ -18,6 +18,7 @@ APPS=(
   'no-estimates-dex,noEstimatesDexGames,noEstimatesDex,3051,No Estimates,No Estimates Dex'
   'no-estimates-ratesetter,noEstimatesRatesetterGames,noEstimatesRatesetter,3057,No Estimates,No Estimates'
   'no-estimates-eagile,noEstimatesEverydayAgileGames,noEstimatesEverydayAgile,3065,No Estimates,No Estimates'
+  'no-estimates-zoran,noEstimatesZoranGames,noEstimatesZoran,3079,No Estimates,No Estimates'
   'kanban-playground,kanbanPlaygroundGames,kanbanPlayground,3030,Kanban Playground,Kanban Playground'
   'kanban-playground-ratesetter,kanbanPlaygroundRatesetterGames,kanbanPlaygroundRatesetter,3058,Kanban Playground,Kanban Playground'
   'kanban-playground-eagile,kanbanPlaygroundEverydayAgileGames,kanbanPlaygroundEverydayAgile,3066,Kanban Playground,Kanban Playground'
@@ -90,6 +91,7 @@ do
   fi
 
 done
+
 ps -ef | grep php | grep outdated
 if [ $? -eq 1 ]; then
   php /usr/apps/monitor/src/lib/outdated.php &

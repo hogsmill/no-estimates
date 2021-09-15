@@ -278,6 +278,10 @@ export default {
       border: 1px solid #ccc;
       vertical-align: middle;
 
+      span {
+        font-size: 16px;
+      }
+      
       div {
         padding: 6px;
         text-align: left;

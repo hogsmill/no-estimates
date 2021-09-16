@@ -530,20 +530,18 @@ export default {
       this.$modal.show('cumulative-flow')
     },
     showCorrelation(data) {
-      console.log('correlation', data)
       for (let i = 0, j = 1; i < Object.keys(this.selectedGraphTeams).length; i++, j++) {
         if (this.selectedGraphTeams[j]) {
           this.correlations[j] = parseFloat(data.results[i])
-          console.log(this.correlations)
         }
       }
       this.$modal.show('correlation')
     },
     showFlowEfficiency(data) {
       console.log('flow-efficiency', data)
-      for (let i = 1; i<= Object.keys(this.selectedGraphTeams).length; i++) {
-        if (this.selectedGraphTeams[i]) {
-          this.flowEfficiencies[i] = data.results[i - 1] ? parseFloat(data.results[i - 1]) : 0
+      for (let i = 0, j=1; i<= Object.keys(this.selectedGraphTeams).length; i++, j++) {
+        if (this.selectedGraphTeams[j]) {
+          this.flowEfficiencies[j] = data.results[i] ? parseFloat(data.results[i]) : 0
         }
       }
       this.$modal.show('flow-efficiency')

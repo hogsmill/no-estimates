@@ -531,8 +531,8 @@ export default {
     },
     showCorrelation(data) {
       console.log('correlation', data)
-      for (let i = 1; i <= Object.keys(this.selectedGraphTeams).length; i++) {
-        if (this.selectedGraphTeams[i]) {
+      for (let i = 0, j = 1; i < Object.keys(this.selectedGraphTeams).length; i++) {
+        if (this.selectedGraphTeams[j]) {
           this.correlations[i] = parseFloat(data.results[i])
         }
       }

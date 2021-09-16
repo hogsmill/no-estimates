@@ -533,7 +533,7 @@ export default {
       console.log('correlation', data)
       for (let i = 0, j = 1; i < Object.keys(this.selectedGraphTeams).length; i++) {
         if (this.selectedGraphTeams[j]) {
-          this.correlations[i] = parseFloat(data.results[i])
+          this.correlations[j] = parseFloat(data.results[i])
         }
       }
       this.$modal.show('correlation')

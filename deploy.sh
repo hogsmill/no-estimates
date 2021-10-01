@@ -15,6 +15,7 @@ do
 done
 
 REPO="https://github.com/hogsmill/no-estimates.git"
+MAINAPP="no-estimates"
 APPS=(
   'no-estimates,noEstimatesGames,noEstimates,3007,No Estimates'
   'no-estimates-funconf,noEstimatesFunconfGames,noEstimatesFunconf,3042,No Estimates,No Estimates - Funconf 2021'
@@ -96,8 +97,13 @@ do
       kill -9 $SERVER
     fi
   fi
-  rm -rf $DIR/dist
-  rm -rf $DIR/node_modules/.cache
+  if [ $i == 0 ]; then
+      rm -rf $DIR/node_modules/.cache
+    else
+      rm -rf node_modules
+      ln -s ../$MAINAPP/node_modules node_modules
+    fi
+    rm -rf $DIR/dist
 done
 
 ps -ef | grep php | grep outdated

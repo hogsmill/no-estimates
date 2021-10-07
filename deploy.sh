@@ -23,10 +23,12 @@ APPS=(
   'no-estimates-dex,noEstimatesDexGames,noEstimatesDex,3051,No Estimates,No Estimates Dex'
   'no-estimates-ratesetter,noEstimatesRatesetterGames,noEstimatesRatesetter,3057,No Estimates,No Estimates'
   'no-estimates-eagile,noEstimatesEverydayAgileGames,noEstimatesEverydayAgile,3065,No Estimates,No Estimates'
+  'no-estimates-and,noEstimatesAndGames,noEstimatesAnd,3102,No Estimates,No Estimates'
   'no-estimates-zoran,noEstimatesZoranGames,noEstimatesZoran,3079,No Estimates,No Estimates'
   'kanban-playground,kanbanPlaygroundGames,kanbanPlayground,3030,Kanban Playground,Kanban Playground'
   'kanban-playground-ratesetter,kanbanPlaygroundRatesetterGames,kanbanPlaygroundRatesetter,3058,Kanban Playground,Kanban Playground'
   'kanban-playground-eagile,kanbanPlaygroundEverydayAgileGames,kanbanPlaygroundEverydayAgile,3066,Kanban Playground,Kanban Playground'
+  'kanban-playground-and,kanbanPlaygroundAndGames,kanbanPlaygroundAnd,3104,Kanban Playground,Kanban Playground'
 )
 
 for ((i = 0; i < ${#APPS[@]}; i++))

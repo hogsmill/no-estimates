@@ -55,7 +55,7 @@ do
     APPNAME=$MAINNOESTIMATESAPPNAME
   fi
 
-  if [ "$APPTYPE" == "No Estimates" ]; then
+  if [ "$APPTYPE" == "Kanban Playground" ]; then
     BASEAPP=$MAINKANBANAPP
     APP=$MAINKANBANAPP
     COLLECTION=$MAINKANBANCOLLECTION

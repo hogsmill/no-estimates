@@ -45,6 +45,7 @@ do
   REC="${ROUTES[$i]}"
   ROUTE=`echo $REC | cut -d, -f1`
   COLLECTIONSUFFIX=`echo $REC | cut -d, -f2`
+  APPTYPE=`echo $REC | cut -d, -f3`
 
   if [ "$APPTYPE" == "No Estimates" ]; then
     BASEAPP=$MAINNOESTIMATESAPP
@@ -103,9 +104,9 @@ do
 
   echo "------------------------------------------------"
   if [ -z "$APPNAME" ]; then
-    echo "Installing $APPTYPE:$APP ($GAMECOLLECTION, $COLLECTION, $PORT)"
+    echo "Installing $APPTYPE:$APPTYPE ($GAMECOLLECTION, $COLLECTION, $PORT)"
   else
-    echo "Installing $APPTYPE:$APP ($GAMECOLLECTION, $COLLECTION, $PORT, $APPNAME)"
+    echo "Installing $APPTYPE:$APPTYPE ($GAMECOLLECTION, $COLLECTION, $PORT, $APPNAME)"
   fi
   echo "------------------------------------------------"
 

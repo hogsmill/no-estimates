@@ -31,6 +31,7 @@ ROUTES=(
   'ratesetter','Ratesetter','No Estimates'
   'eagile','EverydayAgile','No Estimates'
   'and','And','No Estimates'
+  'richemont','Richemont'
   '','','Kanban Playground'
   'new','New','Kanban Playground'
   'dex','Dex','Kanban Playground'
@@ -39,6 +40,7 @@ ROUTES=(
   'ratesetter','Ratesetter','Kanban Playground'
   'eagile','EverydayAgile','Kanban Playground'
   'and','And','Kanban Playground'
+  'richemont','Richemont'
 )
 
 for ((i = 0; i < ${#ROUTES[@]}; i++))
@@ -72,34 +74,6 @@ do
     GAMECOLLECTION="${GAMECOLLECTION}${COLLECTIONSUFFIX}"
   fi
   let PORT=$BASEPORT+$i
-
-#REPO="https://github.com/hogsmill/no-estimates.git"
-#MAINAPP="no-estimates"
-#APPS=(
-#  'no-estimates,noEstimatesGames,noEstimates,3007,No Estimates'
-#  'no-estimates-funconf,noEstimatesFunconfGames,noEstimatesFunconf,3042,No Estimates,No Estimates - Funconf 2021'
-#  'no-estimates-new,noEstimatesNewGames,noEstimatesNew,3020,No Estimates,No Estimates Private'
-#  'no-estimates-dex,noEstimatesDexGames,noEstimatesDex,3051,No Estimates,No Estimates Dex'
-#  'no-estimates-ratesetter,noEstimatesRatesetterGames,noEstimatesRatesetter,3057,No Estimates,No Estimates'
-#  'no-estimates-eagile,noEstimatesEverydayAgileGames,noEstimatesEverydayAgile,3065,No Estimates,No Estimates'
-#  'no-estimates-and,noEstimatesAndGames,noEstimatesAnd,3112,No Estimates,No Estimates'
-#  'no-estimates-zoran,noEstimatesZoranGames,noEstimatesZoran,3079,No Estimates,No Estimates'
-#  'kanban-playground,kanbanPlaygroundGames,kanbanPlayground,3030,Kanban Playground,Kanban Playground'
-#  'kanban-playground-ratesetter,kanbanPlaygroundRatesetterGames,kanbanPlaygroundRatesetter,3058,Kanban Playground,Kanban Playground'
-#  'kanban-playground-eagile,kanbanPlaygroundEverydayAgileGames,kanbanPlaygroundEverydayAgile,3066,Kanban Playground,Kanban Playground'
-#  'kanban-playground-and,kanbanPlaygroundAndGames,kanbanPlaygroundAnd,3104,Kanban Playground,Kanban Playground'
-#)
-#
-#for ((i = 0; i < ${#APPS[@]}; i++))
-#do
-#  REC="${APPS[$i]}"
-#
-#  APP=`echo $REC | cut -d, -f1`
-#  GAMECOLLECTION=`echo $REC | cut -d, -f2`
-#  COLLECTION=`echo $REC | cut -d, -f3`
-#  PORT=`echo $REC | cut -d, -f4`
-#  APPTYPE=`echo $REC | cut -d, -f5`
-#  APPNAME=`echo $REC | cut -d, -f6`
 
   echo "------------------------------------------------"
   if [ -z "$APPNAME" ]; then

@@ -31,7 +31,7 @@ ROUTES=(
   'ratesetter','Ratesetter','No Estimates'
   'eagile','EverydayAgile','No Estimates'
   'and','And','No Estimates'
-  'richemont','Richemont'
+  'richemont','Richemont','No Estimates'
   '','','Kanban Playground'
   'new','New','Kanban Playground'
   'dex','Dex','Kanban Playground'
@@ -40,7 +40,7 @@ ROUTES=(
   'ratesetter','Ratesetter','Kanban Playground'
   'eagile','EverydayAgile','Kanban Playground'
   'and','And','Kanban Playground'
-  'richemont','Richemont'
+  'richemont','Richemont','Kanban Playground'
 )
 
 for ((i = 0; i < ${#ROUTES[@]}; i++))

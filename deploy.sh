@@ -42,7 +42,7 @@ ROUTES=(
   'eagile','EverydayAgile','Kanban Playground'
   'and','And','Kanban Playground'
   'richemont','Richemont','Kanban Playground'
-  'bud', 'Bud','Kanban Playground'
+  'bud','Bud','Kanban Playground'
 )
 
 for ((i = 0; i < ${#ROUTES[@]}; i++))

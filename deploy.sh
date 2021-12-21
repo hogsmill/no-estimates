@@ -33,7 +33,7 @@ ROUTES=(
   'and','And','No Estimates'
   'richemont','Richemont','No Estimates'
   'bud','Bud','No Estimates'
-  'matt-phillip','Matt Phillip','No Estimates'
+  'mattphillip','MattPhillip','No Estimates'
   '','','Kanban Playground'
   'new','New','Kanban Playground'
   'dex','Dex','Kanban Playground'
@@ -44,7 +44,7 @@ ROUTES=(
   'and','And','Kanban Playground'
   'richemont','Richemont','Kanban Playground'
   'bud','Bud','Kanban Playground'
-  'matt-phillip','Matt Phillip','Kanban Playground'
+  'mattphillip','MattPhillip','Kanban Playground'
 )
 
 for ((i = 0; i < ${#ROUTES[@]}; i++))

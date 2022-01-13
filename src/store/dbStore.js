@@ -694,7 +694,7 @@ module.exports = {
       if (err) throw err
       if (res) {
         const n = columnFuns.getColumnIndex(res.columns, data.column)
-        cardFuns.moveCard(res.columns, res.workCards, data.workCard, n, res.currentDay)
+        cardFuns.moveCard(res.columns, res.workCards, data.workCard, n + 1, res.currentDay)
         const id = res._id
         delete res._id
         db.gameCollection.updateOne({'_id': id}, {$set: res}, function() {

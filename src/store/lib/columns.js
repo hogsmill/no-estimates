@@ -36,7 +36,7 @@ module.exports = {
   getColumnIndex: function(columns, column) {
     let index = 0
     for (let i = 0; i < columns.length; i++) {
-      if (column.name == columns[i].name) {
+      if (column == columns[i].name) {
         index = i
       }
     }

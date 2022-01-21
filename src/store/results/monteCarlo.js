@@ -98,6 +98,7 @@ module.exports = {
 
     // TEMP LOGGING
 
+    const fs = require('fs')
     const os = require('os')
     const prod = os.hostname() == 'agilesimulations' ? true : false
     const logFile = prod ? process.argv[4] : 'server.log'

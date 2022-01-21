@@ -95,6 +95,22 @@ function percentages(counts, days, config) {
 module.exports = {
 
   run: function(cards, config) {
+
+    // TEMP LOGGING
+
+    const prod = os.hostname() == 'agilesimulations' ? true : false
+    const logFile = prod ? process.argv[4] : 'server.log'
+    const cardsJSON = JSON.stringify(cards)
+    const configJSON = JSON.stringify(config)
+    fs.appendFile(logFile, cardsJSON, function (err) {
+      if (err) console.log(logStr)
+    })
+    fs.appendFile(logFile, configJSON, function (err) {
+      if (err) console.log(logStr)
+    })
+    
+    // END
+
     const data = {
       days: [],
       counts: []

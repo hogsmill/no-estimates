@@ -98,6 +98,7 @@ module.exports = {
 
     // TEMP LOGGING
 
+    const os = require('os')
     const prod = os.hostname() == 'agilesimulations' ? true : false
     const logFile = prod ? process.argv[4] : 'server.log'
     const cardsJSON = JSON.stringify(cards)
@@ -108,7 +109,7 @@ module.exports = {
     fs.appendFile(logFile, configJSON, function (err) {
       if (err) console.log(logStr)
     })
-    
+
     // END
 
     const data = {

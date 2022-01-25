@@ -53,6 +53,17 @@
         <input id="expedite-lane" type="checkbox" :checked="config.expediteLane" @click="toggleExpediteLane()">
       </td>
     </tr>
+    <tr v-if="showGameParams && feature('explicitPolicies')">
+      <td class="left-col">
+        Explicit Policies?
+      </td>
+      <td class="policies">
+        <input id="expedite-lane" type="checkbox" :checked="config.expediteLane" @click="toggleExpediteLane()">
+      </td>
+      <td colspan="2" class="policies">
+        Policies Here
+      </td>
+    </tr>
     <tr v-if="showGameParams && feature('autoMoveCompleteCards')">
       <td class="left-col">
         Move complete cards automatically?

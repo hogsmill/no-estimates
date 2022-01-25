@@ -26,7 +26,7 @@ ROUTES=(
   '','','No Estimates'
   'new','New','No Estimates'
   'dex','Dex','No Estimates'
-  'zoran','Zoran',,'No Estimates'
+  'zoran','Zoran','No Estimates'
   'abn','Abn','No Estimates'
   'ratesetter','Ratesetter','No Estimates'
   'eagile','EverydayAgile','No Estimates'

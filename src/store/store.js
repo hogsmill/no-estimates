@@ -1,7 +1,5 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
 
-Vue.use(Vuex)
+import { createStore } from 'vuex'
 
 function setRows(config, state) {
   if (config.expediteLane && config.splitColumns) {
@@ -15,7 +13,7 @@ function setRows(config, state) {
   }
 }
 
-export const store = new Vuex.Store({
+export const store = createStore({
   state: {
     appType: 'No Estimates',
     thisGame: 'No Estimates',
@@ -27,6 +25,31 @@ export const store = new Vuex.Store({
     localStorageStatus: true,
     lastaccess: '',
     walkThrough: false,
+    modals: {
+      'feedback': false,
+      'walkThrough': false,
+      'setCaptain': false,
+      'setEstimates': false,
+      'setGame': false,
+      'report': false,
+      'eventCard': false,
+      'retro': false,
+      'autoDeployComplete': false,
+      'goMobile': false,
+      'results': {
+        'cumulativeFlow': false,
+        'correlation': false,
+        'cycleTime': false,
+        'distribution': false,
+        'flowEfficiency': false,
+        'flowEfficiencyCards': false,
+        'scatterPlot': false,
+        'sourcesOfVariation': false,
+        'valueDelivered': false,
+        'wip': false
+      }
+    },
+    modalData: {},
     currentTab: 'game',
     hostId: '',
     stealth: false,
@@ -198,6 +221,12 @@ export const store = new Vuex.Store({
     getAdmin: (state) => {
       return state.admin
     },
+    getModalData: (state) => {
+      return state.modalData
+    },
+    getModals: (state) => {
+      return state.modals
+    },
     getCurrentTab: (state) => {
       return state.currentTab
     },
@@ -362,6 +391,7 @@ export const store = new Vuex.Store({
       return state.demoConfig
     },
     getSelectedGraphTeams: (state) => {
+      console.log('teams', state.selectedGraphTeams)
       return state.selectedGraphTeams
     },
     getCurrentDay: (state) => {
@@ -472,6 +502,33 @@ export const store = new Vuex.Store({
     updateAdmin: (state, payload) => {
       state.admin = payload
     },
+    setModalData: (state, payload) => {
+      state.modalData = payload
+    },
+    showModal: (state, payload) => {
+      const modals = Object.keys(state.modals)
+      for (let i = 0; i < modals.length; i++) {
+        state.modals[modals[i]] = false
+      }
+      state.modals[payload] = true
+    },
+    hideModal: (state, payload) => {
+      state.modals[payload] = false
+    },
+    showResultModal: (state, payload) => {
+      console.log('Showing', payload.modal)
+      state.modalData = payload.data
+      const modals = Object.keys(state.modals.results)
+      for (let i = 0; i < modals.length; i++) {
+        state.modals.results[modals[i]] = false
+      }
+      state.modals.results[payload.modal] = true
+      console.log(state.modals)
+    },
+    hideResultModal: (state, payload) => {
+      console.log('Hiding', payload)
+      state.modals.results[payload] = false
+    },
     updateCurrentTab: (state, payload) => {
       state.currentTab = payload
     },
@@ -579,6 +636,21 @@ export const store = new Vuex.Store({
     },
     updateAdmin: ({ commit }, payload) => {
       commit('updateAdmin', payload)
+    },
+    setModalData: ({ commit }, payload) => {
+      commit('setModalData', payload)
+    },
+    showModal: ({ commit }, payload) => {
+      commit('showModal', payload)
+    },
+    hideModal: ({ commit }, payload) => {
+      commit('hideModal', payload)
+    },
+    showResultModal: ({ commit }, payload) => {
+      commit('showResultModal', payload)
+    },
+    hideResultModal: ({ commit }, payload) => {
+      commit('hideResultModal', payload)
     },
     updateCurrentTab: ({ commit }, payload) => {
       commit('updateCurrentTab', payload)

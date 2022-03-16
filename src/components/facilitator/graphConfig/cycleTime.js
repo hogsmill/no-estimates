@@ -14,24 +14,28 @@ export default {
         }]
       },
       options: {
+        plugins: {
+          legend: {
+            display: false
+          }
+        },
         scales: {
-          yAxes: [{
-            ticks: {beginAtZero: true, stepSize: 1},
+          y: {
+            beginAtZero: true,
             gridLines: {display: true},
             scaleLabel: {
               display: true,
-              labelString: 'Days to cpmplete'
+              labelString: 'Days to complete'
             }
-          }],
-          xAxes: [{
+          },
+          x: {
             gridLines: {display: false},
             scaleLabel: {
               display: true,
               labelString: 'Card Number'
             }
-          }]
+          }
         },
-        legend: {display: false},
         responsive: true,
         maintainAspectRatio: false
       }

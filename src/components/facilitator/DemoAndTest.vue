@@ -48,19 +48,19 @@ export default {
     createDemo() {
       const uuid = uuidv4()
       const myNameData = {id: uuid, name: this.myName, captain: true}
-      bus.$emit('sendLoadGame', {gameName: this.gameName, teamName: this.teamName, myName: myNameData, myRole: this.myRole})
+      bus.emit('sendLoadGame', {gameName: this.gameName, teamName: this.teamName, myName: myNameData, myRole: this.myRole})
     },
     restartDemo() {
       const restartGame = confirm('Are you sure you want to re-start the demo game?')
       if (restartGame) {
-        bus.$emit('sendRestartGame', {gameName: this.gameName, teamName: this.teamName})
+        bus.emit('sendRestartGame', {gameName: this.gameName, teamName: this.teamName})
       }
     },
     runDemoToMvp() {
-      bus.$emit('sendRunDemoToMvp', {gameName: this.gameName, teamName: this.teamName})
+      bus.emit('sendRunDemoToMvp', {gameName: this.gameName, teamName: this.teamName})
     },
     runDemoToEnd() {
-      bus.$emit('sendRunDemoToEnd', {gameName: this.gameName, teamName: this.teamName})
+      bus.emit('sendRunDemoToEnd', {gameName: this.gameName, teamName: this.teamName})
     }
   }
 }

@@ -120,7 +120,7 @@ MongoClient.connect(url, { useUnifiedTopology: true, maxIdleTimeMS: maxIdleTime 
 
     socket.on('sendCheckSystemWorkshops', (data) => { dbStore.checkSystemWorkshops(db, io, data, debugOn) })
 
-    socket.on('sendLoadGame', (data) => { dbStore.loadGame(db, io, data, debugOn) })
+    socket.on('sendLoadGame', (data) => { console.log('here load server'); dbStore.loadGame(db, io, data, debugOn) })
 
     socket.on('sendMakeCaptain', (data) => { dbStore.makeCaptain(db, io, data, debugOn) })
 

@@ -248,7 +248,7 @@ export default {
     setShowGameParams(val) {
       this.showGameParams = val
       if (val) {
-        bus.$emit('sendLoadGame', {gameName: this.gameName, appType: this.appType})
+        bus.emit('sendLoadGame', {gameName: this.gameName, appType: this.appType})
       }
     },
     feature(feature) {
@@ -259,74 +259,74 @@ export default {
     toggleStealth() {
       const isStealth = document.getElementById('is-stealth').checked
       localStorage.setItem('stealth', isStealth)
-      bus.$emit('sendUpdateStealth', {gameName: this.gameName, stealth: isStealth})
+      bus.emit('sendUpdateStealth', {gameName: this.gameName, stealth: isStealth})
     },
     toggleWipLimits() {
       const wipLimits = document.getElementById('wip-limits').checked
-      bus.$emit('sendUpdateConfig', {gameName: this.gameName, field: 'wipLimits', value: wipLimits})
+      bus.emit('sendUpdateConfig', {gameName: this.gameName, field: 'wipLimits', value: wipLimits})
     },
     toggleWipLimitType(wipLimitType) {
-      bus.$emit('sendUpdateConfig', {gameName: this.gameName, field: 'wipLimitType', value: wipLimitType})
+      bus.emit('sendUpdateConfig', {gameName: this.gameName, field: 'wipLimitType', value: wipLimitType})
     },
     toggleSplitColumns() {
       const splitColumns = document.getElementById('split-columns').checked
-      bus.$emit('sendUpdateConfig', {gameName: this.gameName, field: 'splitColumns', value: splitColumns})
+      bus.emit('sendUpdateConfig', {gameName: this.gameName, field: 'splitColumns', value: splitColumns})
     },
     toggleAutoMoveCompleteCards() {
       const autoMoveCompleteCards = document.getElementById('auto-move-complete-cards').checked
-      bus.$emit('sendUpdateConfig', {gameName: this.gameName, field: 'autoMoveCompleteCards', value: autoMoveCompleteCards})
+      bus.emit('sendUpdateConfig', {gameName: this.gameName, field: 'autoMoveCompleteCards', value: autoMoveCompleteCards})
     },
     toggleExpediteLane() {
       const expediteLane = document.getElementById('expedite-lane').checked
-      bus.$emit('sendUpdateConfig', {gameName: this.gameName, field: 'expediteLane', value: expediteLane})
+      bus.emit('sendUpdateConfig', {gameName: this.gameName, field: 'expediteLane', value: expediteLane})
     },
     toggleDoRetros() {
       const doRetros = document.getElementById('do-retros').checked
-      bus.$emit('sendUpdateConfig', {gameName: this.gameName, field: 'doRetros', value: doRetros})
+      bus.emit('sendUpdateConfig', {gameName: this.gameName, field: 'doRetros', value: doRetros})
     },
     saveRetroDays() {
       const retroDays = document.getElementById('retro-days').value
-      bus.$emit('sendUpdateConfig', {gameName: this.gameName, field: 'retroDays', value: retroDays})
+      bus.emit('sendUpdateConfig', {gameName: this.gameName, field: 'retroDays', value: retroDays})
     },
     toggleRetroTimer() {
       const retroTimer = document.getElementById('retro-timer').checked
-      bus.$emit('sendUpdateConfig', {gameName: this.gameName, field: 'retroTimer', value: retroTimer})
+      bus.emit('sendUpdateConfig', {gameName: this.gameName, field: 'retroTimer', value: retroTimer})
     },
     saveRetroTime() {
       const retroTime = document.getElementById('retro-time').value
-      bus.$emit('sendUpdateConfig', {gameName: this.gameName, field: 'retroTime', value: retroTime})
+      bus.emit('sendUpdateConfig', {gameName: this.gameName, field: 'retroTime', value: retroTime})
     },
     toggleTeamActive(team) {
       const include = document.getElementById('team-active-' + team).checked
-      bus.$emit('sendUpdateTeamActive', {gameName: this.gameName, teamName: team, include: include})
+      bus.emit('sendUpdateTeamActive', {gameName: this.gameName, teamName: team, include: include})
     },
     saveFacilitatorStarts() {
       const facilitatorStarts = document.getElementById('facilitator-starts').checked
-      bus.$emit('sendUpdateConfig', {gameName: this.gameName, field: 'facilitatorStarts', value: facilitatorStarts})
+      bus.emit('sendUpdateConfig', {gameName: this.gameName, field: 'facilitatorStarts', value: facilitatorStarts})
     },
     saveAllowMobile() {
       const allowMobile = document.getElementById('allow-mobile').checked
-      bus.$emit('sendUpdateConfig', {gameName: this.gameName, field: 'allowMobile', value: allowMobile})
+      bus.emit('sendUpdateConfig', {gameName: this.gameName, field: 'allowMobile', value: allowMobile})
     },
     saveAllowDemo() {
       const allowDemo = document.getElementById('allow-demo').checked
-      bus.$emit('sendUpdateConfig', {gameName: this.gameName, field: 'allowDemo', value: allowDemo})
+      bus.emit('sendUpdateConfig', {gameName: this.gameName, field: 'allowDemo', value: allowDemo})
     },
     changeCurrency() {
       const currency = document.getElementById('currency').value
-      bus.$emit('sendUpdateCurrency', {gameName: this.gameName, currency: currency})
+      bus.emit('sendUpdateCurrency', {gameName: this.gameName, currency: currency})
     },
     savePercentageBlocked() {
       const percentageBlocked = document.getElementById('percentage-blocked').value
-      bus.$emit('sendUpdateConfig', {gameName: this.gameName, field: 'percentageBlocked', value: percentageBlocked})
+      bus.emit('sendUpdateConfig', {gameName: this.gameName, field: 'percentageBlocked', value: percentageBlocked})
     },
     saveMvpCards() {
       const mvpCards = document.getElementById('mvp-cards').value
-      bus.$emit('sendUpdateConfig', {gameName: this.gameName, field: 'mvpCards', value: parseInt(mvpCards)})
+      bus.emit('sendUpdateConfig', {gameName: this.gameName, field: 'mvpCards', value: parseInt(mvpCards)})
     },
     savePercentageDeployFail() {
       const percentageDeployFail = document.getElementById('percentage-deploy-fail').value
-      bus.$emit('sendUpdateConfig', {gameName: this.gameName, field: 'percentageDeployFail', value: percentageDeployFail})
+      bus.emit('sendUpdateConfig', {gameName: this.gameName, field: 'percentageDeployFail', value: percentageDeployFail})
     },
     otherCards(team) {
       const _team = this.gameState.find(function(t) {

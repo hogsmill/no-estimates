@@ -6,27 +6,6 @@
     <div v-if="currentWorkCard === false" class="stack-number rounded-circle complete">
       0
     </div>
-
-    <span>
-      <modal name="set-captain" class="popup" :height="190" :classes="['rounded']">
-        <div class="float-right mr-2 mt-1">
-          <button type="button" class="close" @click="hide()" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="mt-4">
-          <h4>You need to nominate a team captain</h4>
-          <p>
-            You need to decide who is going to be team captain, and they then need
-            to click Game Set Up and click the <b>Team Captain</b> button before you
-            start the game
-          </p>
-          <button class="btn btn-sm btn-info" @click="hide()">
-            OK
-          </button>
-        </div>
-      </modal>
-    </span>
   </div>
 </template>
 
@@ -62,10 +41,7 @@ export default {
   },
   methods: {
     show() {
-      this.$modal.show('set-captain')
-    },
-    hide() {
-      this.$modal.hide('set-captain')
+      this.$store.dispatch('showModal', 'setCaptain')
     },
     captain() {
       let captain = false
@@ -86,10 +62,10 @@ export default {
         this.show()
       } else {
         if (currentCard.teamDependency) {
-          bus.$emit('emitHint', {gameName: this.gameName, teamName: this.teamName, hint: 'You can click the chat icon to chat with other teams about dependent work...'})
+          bus.emit('emitHint', {gameName: this.gameName, teamName: this.teamName, hint: 'You can click the chat icon to chat with other teams about dependent work...'})
         }
         if (this.currentWorkCard !== false) {
-          bus.$emit('sendPullInCard', {gameName: this.gameName, teamName: this.teamName, teams: this.teams})
+          bus.emit('sendPullInCard', {gameName: this.gameName, teamName: this.teamName, teams: this.teams})
         }
       }
     }

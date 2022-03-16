@@ -9,6 +9,8 @@ const AppType = {
     } else if (params.getParam('appType')) {
       // To allow appType switching in dev
       appType = params.getParam('appType')
+    } else {
+      appType = 'No Estimates'
     }
     return appType
   }

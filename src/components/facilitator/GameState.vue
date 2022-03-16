@@ -150,30 +150,30 @@ export default {
       return proj + ' / ' + mvp + ' / ' + re
     },
     startGame() {
-      bus.$emit('sendUpdateConfig', {gameName: this.gameName, field: 'gameRunning', value: true})
+      bus.emit('sendUpdateConfig', {gameName: this.gameName, field: 'gameRunning', value: true})
     },
     stopGame() {
-      bus.$emit('sendUpdateConfig', {gameName: this.gameName, field: 'gameRunning', value: false})
+      bus.emit('sendUpdateConfig', {gameName: this.gameName, field: 'gameRunning', value: false})
     },
     restartGame() {
       const restartGame = confirm('Are you sure you want to re-start this game?')
       if (restartGame) {
-        bus.$emit('sendRestartGame', {gameName: this.gameName, stealth: this.stealth})
+        bus.emit('sendRestartGame', {gameName: this.gameName, stealth: this.stealth})
       }
     },
     enableMember(member, team) {
       if (confirm('Enable ' + member.name + ' in team ' + team.name + '?')) {
-        bus.$emit('sendEnableMember', {gameName: this.gameName, teamName: team.name, member: member})
+        bus.emit('sendEnableMember', {gameName: this.gameName, teamName: team.name, member: member})
       }
     },
     disableMember(member, team) {
       if (confirm('Disable ' + member.name + ' in team ' + team.name + '?')) {
-        bus.$emit('sendDisableMember', {gameName: this.gameName, teamName: team.name, member: member})
+        bus.emit('sendDisableMember', {gameName: this.gameName, teamName: team.name, member: member})
       }
     },
     deleteMember(member, team) {
       if (confirm('Delete ' + member.name + ' from team ' + team.name + '?')) {
-        bus.$emit('sendDeleteMember', {gameName: this.gameName, teamName: team.name, member: member})
+        bus.emit('sendDeleteMember', {gameName: this.gameName, teamName: team.name, member: member})
       }
     },
     effort(role) {

@@ -76,7 +76,7 @@ export default {
     }
   },
   created() {
-    bus.$on('addGameError', (data) => {
+    bus.on('addGameError', (data) => {
       if (data.id == this.id) {
         alert(data.error)
       }
@@ -86,7 +86,7 @@ export default {
     setShowGames(val) {
       this.showGames = val
       if (val) {
-         bus.$emit('sendGetGames', {appType: this.appType})
+         bus.emit('sendGetGames', {appType: this.appType})
       }
     },
     idSafe(game) {
@@ -98,10 +98,10 @@ export default {
     addGame() {
       const game = document.getElementById('add-new-game').value
       this.id = this.id ? this.id : uuidv4()
-      bus.$emit('sendAddGame', {gameName: game, id: this.id, appType: this.appType})
+      bus.emit('sendAddGame', {gameName: game, id: this.id, appType: this.appType})
     },
     deleteGame(game) {
-      bus.$emit('sendDeleteGame', {gameName: game.gameName, appType: this.appType})
+      bus.emit('sendDeleteGame', {gameName: game.gameName, appType: this.appType})
     }
   }
 }

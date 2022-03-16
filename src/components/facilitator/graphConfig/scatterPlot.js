@@ -23,8 +23,10 @@ export default {
       },
       options: {
         scales: {
-          xAxes: [{type: 'linear', position: 'bottom', ticks: {beginAtZero: true}}],
-          yAxes: [{ticks: {beginAtZero: true}}]
+          x: {type: 'linear', position: 'bottom', beginAtZero: true},
+          y: {
+            beginAtZero: true
+          }
         },
         tooltips: {
           callbacks: {
@@ -33,7 +35,11 @@ export default {
             }
           }
         },
-        legend: {display: false},
+        plugins: {
+          legend: {
+            display: false
+          }
+        },
         responsive: true,
         maintainAspectRatio: false
       }

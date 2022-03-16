@@ -52,6 +52,12 @@ export default {
     },
     myName() {
       return this.$store.getters.getMyName
+    },
+    gameName() {
+      return this.$store.getters.getGameName
+    },
+    teamName() {
+      return this.$store.getters.getTeamName
     }
   },
   methods: {

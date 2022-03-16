@@ -61,7 +61,7 @@
 </template>
 
 <script>
-import bus from '../../socket.js'
+import bus from '../../../socket.js'
 
 export default {
   data() {
@@ -109,7 +109,7 @@ export default {
     },
     saveEstimate() {
       const estimate = document.getElementById('project-estimate').value
-      bus.$emit('sendUpdateProjectEstimate', {gameName: this.gameName, teamName: this.teamName, projectEstimate: estimate})
+      bus.emit('sendUpdateProjectEstimate', {gameName: this.gameName, teamName: this.teamName, projectEstimate: estimate})
       this.editingEstimate = false
     },
     editMVP() {
@@ -117,7 +117,7 @@ export default {
     },
     saveMVP() {
       const estimate = document.getElementById('mvp-estimate').value
-      bus.$emit('sendUpdateMVPEstimate', {gameName: this.gameName, teamName: this.teamName, mvpEstimate: estimate})
+      bus.emit('sendUpdateMVPEstimate', {gameName: this.gameName, teamName: this.teamName, mvpEstimate: estimate})
       this.editingMVP = false
     },
     editReEstimate() {
@@ -125,7 +125,7 @@ export default {
     },
     saveReEstimate() {
       const estimate = document.getElementById('re-estimate').value
-      bus.$emit('sendUpdateReEstimate', {gameName: this.gameName, teamName: this.teamName, reEstimate: estimate})
+      bus.emit('sendUpdateReEstimate', {gameName: this.gameName, teamName: this.teamName, reEstimate: estimate})
       this.editingReEstimate = false
     }
   }

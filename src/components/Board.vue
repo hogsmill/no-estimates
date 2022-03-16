@@ -1,6 +1,5 @@
 <template>
   <div class="board-container">
-    <EventCard />
     <div class="game-board">
       <table class="board-table rounded">
         <thead>
@@ -86,7 +85,6 @@ import OtherSkills from './board/OtherSkills.vue'
 import WipLabel from './board/WipLabel.vue'
 import WipHeader from './board/WipHeader.vue'
 import WorkCardStack from './board/WorkCardStack.vue'
-import EventCard from './board/EventCard.vue'
 import Column from './board/Column.vue'
 
 export default {
@@ -96,8 +94,41 @@ export default {
     WipLabel,
     WipHeader,
     WorkCardStack,
-    Column,
-    EventCard
+    Column
+  },
+  data() {
+    return {
+      cycleTime: {
+        data: {
+          labels: [],
+          datasets: [{
+            backgroundColor: '',
+            pointBackgroundColor: 'white',
+            borderWidth: 1,
+            pointBorderColor: '#249EBF',
+            data: []
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true,
+              gridLines: {display: true}
+            },
+            x: {
+              gridLines: {display: false}
+            }
+          },
+          plugins: {
+            legend: {
+              display: false
+            }
+          },
+          responsive: true,
+          maintainAspectRatio: false
+        }
+      }
+    }
   },
   computed: {
     config() {
@@ -120,7 +151,34 @@ export default {
     },
     columns() {
       return this.$store.getters.getColumns
+    },
+    currentEventCard() {
+      return this.$store.getters.getCurrentEventCard
+    },
+    graphConfig() {
+      return this.$store.getters.getGraphConfig
     }
+  },
+  created() {
+    bus.on('showEventCard', (data) => {
+      if (this.gameName == data.gameName && this.teamName == data.teamName) {
+        if (this.currentEventCard.function == 'Show Cycle Time') {
+          bus.emit('sendShowSingleTeamResult', {gameName: this.gameName, teamName: this.teamName, result: 'cycle-time', target: 'event-card'})
+        } else {
+          this.$store.dispatch('showModal', 'eventCard')
+        }
+      }
+    })
+
+    bus.on('showResult', (data) => {
+      if (this.gameName == data.gameName && this.teamName == data.teamName && data.target == 'event-card') {
+        switch(data.result) {
+          case 'cycle-time':
+            this.setCycleTimeData(data)
+            break
+        }
+      }
+    })
   },
   methods: {
     columnClass(column) {
@@ -202,7 +260,22 @@ export default {
         column.name == 'deploy'
     },
     startAutoDeploy() {
-      bus.$emit('sendStartAutoDeploy', {gameName: this.gameName, teamName: this.teamName})
+      bus.emit('sendStartAutoDeploy', {gameName: this.gameName, teamName: this.teamName})
+    },
+    setCycleTimeData(data) {
+      this.cycleTime.data.datasets[0].backgroundColor = []
+      for (let i = 0; i < data.results.effort.length; i++) {
+        if (data.results.effort[i] < this.graphConfig.cycleTime.medium) {
+          this.cycleTime.data.datasets[0].backgroundColor.push('cadetblue')
+        } else if (data.results.effort[i] < this.graphConfig.cycleTime.large) {
+          this.cycleTime.data.datasets[0].backgroundColor.push('olive')
+        } else {
+          this.cycleTime.data.datasets[0].backgroundColor.push('darkorange')
+        }
+      }
+      this.cycleTime.data.labels = data.results.ids
+      this.cycleTime.data.datasets[0].data = data.results.days
+      this.$store.dispatch('showResultModal', {modal: 'eventGraph', data: this.cycleTime})
     }
   }
 }

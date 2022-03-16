@@ -39,7 +39,7 @@ export default {
     }
   },
   created() {
-    bus.$on('serverRestartPasswordError', () => {
+    bus.on('serverRestartPasswordError', () => {
       this.serverRestartPasswordError = true
     })
   },
@@ -52,7 +52,7 @@ export default {
       if (confirm('Are you sure you want to restart the server?')) {
         const password = document.getElementById('server-message').value
         document.getElementById('server-message').value = ''
-        bus.$emit('sendCheckServerRestartPassword', password)
+        bus.emit('sendCheckServerRestartPassword', password)
       }
     }
   }

@@ -43,7 +43,7 @@ export default {
       if (!wip.match(/^[0-9]+$/)) {
         alert('Please enter a number for WIP')
       } else {
-        bus.$emit('sendSetColumnWip', {gameName: this.gameName, teamName: this.teamName, column: column, wipLimit: wip})
+        bus.emit('sendSetColumnWip', {gameName: this.gameName, teamName: this.teamName, column: column, wipLimit: wip})
         this.editingWip = ''
       }
     }

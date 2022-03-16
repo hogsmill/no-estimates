@@ -57,7 +57,7 @@ export default {
       const message = document.getElementById('gameMessageText').value
       const sendTo =  document.getElementById('sendTo').value
       if (message) {
-        bus.$emit('emitBroadcastMessage', {gameName: this.gameName, message: message, sendTo: sendTo})
+        bus.emit('emitBroadcastMessage', {gameName: this.gameName, message: message, sendTo: sendTo})
       }
     }
   }

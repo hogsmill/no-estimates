@@ -45,54 +45,24 @@ export default {
           },
         },
         scales: {
-          xAxes: [{
+          x: {
             stacked: true,
             gridLines: {
               display: false,
             }
-          }],
-          yAxes: [{
+          },
+          y: {
             stacked: true,
             ticks: {
               beginAtZero: true,
             },
             type: 'linear',
-          }]
+          }
         },
         responsive: true,
         maintainAspectRatio: false,
         legend: { position: 'bottom' },
       }
     }
-
-/*
-    return {
-      data: {
-        labels: [],
-        datasets: [{
-          label: 'No. of Cards that took this many days',
-          backgroundColor: '#f87979',
-          pointBackgroundColor: 'white',
-          borderWidth: 1,
-          pointBorderColor: '#249EBF',
-          data: []
-        }]
-      },
-      options: {
-        scales: {
-          yAxes: [{
-            ticks: {beginAtZero: true, stepSize: 1},
-            gridLines: {display: true}
-          }],
-          xAxes: [{
-            gridLines: {display: false}
-          }]
-        },
-        legend: {display: true},
-        responsive: true,
-        maintainAspectRatio: false
-      }
-    }
-*/
   }
 }

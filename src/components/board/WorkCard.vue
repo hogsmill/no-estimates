@@ -193,8 +193,8 @@ export default {
           self.$store.dispatch('updateMessage', '')
         }, 2000)
       } else {
-        bus.$emit('emitUpdatePersonEffort', {gameName: this.gameName, teamName: this.teamName, workCard: workCard, name: this.myName, column: column})
-        bus.$emit('sendUpdateEffort', {
+        bus.emit('emitUpdatePersonEffort', {gameName: this.gameName, teamName: this.teamName, workCard: workCard, name: this.myName, column: column})
+        bus.emit('sendUpdateEffort', {
           gameName: this.gameName,
           teamName: this.teamName,
           name: this.myName,
@@ -212,7 +212,7 @@ export default {
       return columnFuns.canMoveCardToNextColumn(this.workCard, this.column, this.columns, this.config.wipLimits, this.config.wipLimitType)
     },
     moveCard() {
-      bus.$emit('sendMoveCardToNextColumn', {gameName: this.gameName, teamName: this.teamName, workCard: this.workCard, column: this.column})
+      bus.emit('sendMoveCardToNextColumn', {gameName: this.gameName, teamName: this.teamName, workCard: this.workCard, column: this.column})
     }
   }
 }

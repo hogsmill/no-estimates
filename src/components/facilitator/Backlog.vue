@@ -64,15 +64,15 @@ export default {
     },
     toggleBacklogGenerated() {
       const backlogGenerated = document.getElementById('backlog-generated').checked
-      bus.$emit('sendUpdateConfig', {gameName: this.gameName, field: 'backlogGenerated', value: backlogGenerated})
+      bus.emit('sendUpdateConfig', {gameName: this.gameName, field: 'backlogGenerated', value: backlogGenerated})
     },
     toggleBacklogEffort() {
       const backlogEffort = document.getElementById('backlog-effort').checked
-      bus.$emit('sendUpdateConfig', {gameName: this.gameName, field: 'backlogEffort', value: backlogEffort})
+      bus.emit('sendUpdateConfig', {gameName: this.gameName, field: 'backlogEffort', value: backlogEffort})
     },
     setBacklogEffort() {
       const backlogEffortPoints = document.getElementById('backlog-effort-points').value
-      bus.$emit('sendUpdateConfig', {gameName: this.gameName, field: 'backlogEffortPoints', value: backlogEffortPoints})
+      bus.emit('sendUpdateConfig', {gameName: this.gameName, field: 'backlogEffortPoints', value: backlogEffortPoints})
     }
   }
 }

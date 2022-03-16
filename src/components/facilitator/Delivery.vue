@@ -55,7 +55,7 @@ export default {
     },
     setDeliveryType() {
       const deliveryType = document.getElementById('delivery-type').value
-      bus.$emit('sendUpdateConfig', {gameName: this.gameName, field: 'deliveryType', value: deliveryType})
+      bus.emit('sendUpdateConfig', {gameName: this.gameName, field: 'deliveryType', value: deliveryType})
     }
   }
 }

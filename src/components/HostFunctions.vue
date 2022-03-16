@@ -90,22 +90,22 @@ export default {
       this.$store.dispatch('updateCurrentTab', 'mobile')
     },
     setRunTo(runTo) {
-      bus.$emit('sendSetDemoRunTo', {gameName: this.gameName, runTo: runTo})
+      bus.emit('sendSetDemoRunTo', {gameName: this.gameName, runTo: runTo})
     },
     setUpGame() {
-      bus.$emit('sendSetupRunGame', {gameName: this.gameName})
+      bus.emit('sendSetupRunGame', {gameName: this.gameName})
     },
     startRun() {
-      bus.$emit('sendStartDemoRunning', {gameName: this.gameName})
+      bus.emit('sendStartDemoRunning', {gameName: this.gameName})
     },
     stopRun() {
-      bus.$emit('sendStopDemoRunning', {gameName: this.gameName})
+      bus.emit('sendStopDemoRunning', {gameName: this.gameName})
     },
     restartGame() {
       const restartGame = confirm('Are you sure you want to re-start this game?')
       if (restartGame) {
-        bus.$emit('sendStopDemoRunning', {gameName: this.gameName})
-        bus.$emit('sendRestartGame', {gameName: this.gameName, stealth: this.stealth})
+        bus.emit('sendStopDemoRunning', {gameName: this.gameName})
+        bus.emit('sendRestartGame', {gameName: this.gameName, stealth: this.stealth})
       }
     },
   }

@@ -15,7 +15,7 @@
         <button class="btn btn-sm btn-site-primary" @click="showGameResult('sources-of-variation')">
           Show
         </button>
-        <button class="btn btn-sm btn-site-primary" @click="hideResult('sources-of-variation')">
+        <button class="btn btn-sm btn-site-primary" @click="hideResult('sourcesOfVariation')">
           Hide
         </button>
         Sources of Variation
@@ -308,7 +308,7 @@ export default {
       this.showMonteCarloConfig = val
     },
     showGameResult(result) {
-      bus.$emit('sendShowGameResult', {
+      bus.emit('sendShowGameResult', {
         hostId: this.hostId,
         gameName: this.gameName,
         result: result,
@@ -316,7 +316,7 @@ export default {
       })
     },
     showAllTeamsResult(result) {
-      bus.$emit('sendShowAllTeamsResult', {
+      bus.emit('sendShowAllTeamsResult', {
         hostId: this.hostId,
         gameName: this.gameName,
         result: result,
@@ -324,7 +324,7 @@ export default {
       })
     },
     showSingleTeamResult(result) {
-      bus.$emit('sendShowSingleTeamResult', {
+      bus.emit('sendShowSingleTeamResult', {
         hostId: this.hostId,
         gameName: this.gameName,
         teamName: this.selectedGraphTeams[1],
@@ -342,7 +342,7 @@ export default {
       if (!selected) {
         alert('Please select 1 or more teams to display')
       } else {
-        bus.$emit('sendShowMultipleTeamsResult', {
+        bus.emit('sendShowMultipleTeamsResult', {
           hostId: this.hostId,
           gameName: this.gameName,
           teams: this.selectedGraphTeams,
@@ -352,27 +352,27 @@ export default {
       }
     },
     hideResult(result) {
-      this.$modal.hide(result)
+      this.$store.dispatch('hideModal', result)
     },
     setWipUseMovingAverage(val) {
-      bus.$emit('sendSetWipUseMovingAverage', {gameName: this.gameName, value: val})
+      bus.emit('sendSetWipUseMovingAverage', {gameName: this.gameName, value: val})
     },
     setWipUseDays(val) {
-      bus.$emit('sendSetWipUseDays', {gameName: this.gameName, value: val})
+      bus.emit('sendSetWipUseDays', {gameName: this.gameName, value: val})
     },
     setCumulativeFlowUseDays(val) {
-      bus.$emit('sendSetCumulativeFlowUseDays', {gameName: this.gameName, value: val})
+      bus.emit('sendSetCumulativeFlowUseDays', {gameName: this.gameName, value: val})
     },
     saveCardSize(size) {
       const val = document.getElementById('card-size-' + size).value
-      bus.$emit('sendSetCardSize', {gameName: this.gameName, size: size, value: val})
+      bus.emit('sendSetCardSize', {gameName: this.gameName, size: size, value: val})
     },
     saveMonteCarloRuns() {
       const runs = document.getElementById('monte-carlo-runs').value
-      bus.$emit('sendSetMonteCarloRuns', {gameName: this.gameName, runs: runs})
+      bus.emit('sendSetMonteCarloRuns', {gameName: this.gameName, runs: runs})
     },
     saveMonteCarloRunTo(runTo) {
-      bus.$emit('sendSetMonteCarloRunTo', {gameName: this.gameName, runTo: runTo})
+      bus.emit('sendSetMonteCarloRunTo', {gameName: this.gameName, runTo: runTo})
     }
   }
 }

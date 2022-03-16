@@ -15,23 +15,27 @@ export default {
       },
       options: {
         scales: {
-          yAxes: [{
-            ticks: {beginAtZero: true, stepSize: 1},
+          y: {
+            beginAtZero: true,
             gridLines: {display: true},
             scaleLabel: {
               display: true,
               labelString: 'Number of cards'
             }
-          }],
-          xAxes: [{
+          },
+          x: {
             gridLines: {display: false},
             scaleLabel: {
               display: true,
               labelString: 'Number of days to complete'
             }
-          }]
+          }
         },
-        legend: {display: false},
+        plugins: {
+          legend: {
+            display: false
+          }
+        },
         responsive: true,
         maintainAspectRatio: false
       }

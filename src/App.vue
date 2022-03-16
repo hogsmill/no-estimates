@@ -4,8 +4,6 @@
     <ClearStorage />
     <RateThisGame />
     <ConnectionError />
-    <NoEstimatesWalkThrough v-if="appType == 'No Estimates'" />
-    <KanbanPlaygroundWalkThrough v-if="appType == 'Kanban Playground'" />
     <Results />
     <div v-if="currentTab == 'facilitator'">
       <FacilitatorView />
@@ -15,6 +13,7 @@
       <SetGame />
       <SetEstimates v-if="gameName" />
       <GoMobile v-if="allowMobile" />
+      <WalkThrough />
       <Status />
       <div class="container board" :class="appTypeBoard()">
         <h3 class="board-title">
@@ -33,6 +32,7 @@
         <Board />
       </div>
     </div>
+    <Modals />
   </div>
 </template>
 
@@ -45,11 +45,12 @@ import params from './lib/params.js'
 import stringFuns from './lib/stringFuns.js'
 
 import Header from './components/Header.vue'
+import Modals from './components/Modals.vue'
 import RateThisGame from './components/RateThisGame.vue'
 import ClearStorage from './components/ClearStorage.vue'
 import HostFunctions from './components/HostFunctions.vue'
 import ConnectionError from './components/error/ConnectionError.vue'
-import Report from './components/report/Report.vue'
+import Report from './components/Report.vue'
 import Results from './components/facilitator/Results.vue'
 import GoMobile from './components/GoMobile.vue'
 import SetGame from './components/SetGame.vue'
@@ -57,8 +58,7 @@ import SetEstimates from './components/SetEstimates.vue'
 import Status from './components/Status.vue'
 import Message from './components/Message.vue'
 import FacilitatorView from './components/FacilitatorView.vue'
-import NoEstimatesWalkThrough from './components/about/no-estimates/WalkThroughView.vue'
-import KanbanPlaygroundWalkThrough from './components/about/kanban-playground/WalkThroughView.vue'
+import WalkThrough from './components/WalkThrough.vue'
 
 import Roles from './components/Roles.vue'
 import Day from './components/Day.vue'
@@ -70,13 +70,13 @@ export default {
   name: 'App',
   components: {
     Header,
+    Modals,
     ClearStorage,
     RateThisGame,
     HostFunctions,
     ConnectionError,
     FacilitatorView,
-    NoEstimatesWalkThrough,
-    KanbanPlaygroundWalkThrough,
+    WalkThrough,
     GoMobile,
     SetGame,
     SetEstimates,
@@ -140,7 +140,7 @@ export default {
 
     // General setup
 
-    bus.$on('connectionError', (data) => {
+    bus.on('connectionError', (data) => {
       this.$store.dispatch('updateConnectionError', data)
     })
 
@@ -155,13 +155,13 @@ export default {
 
     // Set up game
 
-    bus.$emit('sendCheckSystemWorkshops', {appType: appType})
+    bus.emit('sendCheckSystemWorkshops', {appType: appType})
 
     let gameName
     if (params.getParam('game')) {
       gameName = params.getParam('game')
       localStorage.setItem('gameName-' + this.lsSuffix, gameName)
-      bus.$emit('sendLoadGame', {gameName: gameName, appType: appType})
+      bus.emit('sendLoadGame', {gameName: gameName, appType: appType})
     } else {
       gameName = localStorage.getItem('gameName-' + this.lsSuffix)
     }
@@ -185,11 +185,17 @@ export default {
     window.onload = function() {
       const appType = appTypeFuns.get()
       if (gameName && myName && teamName && appType) {
-        bus.$emit('sendLoadGame', {gameName: gameName, teamName: teamName, myName: myName, myRole: myRole, appType: appType})
+        bus.emit('sendLoadGame', {gameName: gameName, teamName: teamName, myName: myName, myRole: myRole, appType: appType})
       }
     }
 
-    bus.$on('makeCaptain', (data) => {
+    // Walk Through
+
+    if (params.isParam('walkThrough')) {
+      this.$store.dispatch('showModal', 'walkThrough')
+    }
+
+    bus.on('makeCaptain', (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         const myName = JSON.parse(localStorage.getItem('myName-' + this.lsSuffix))
         myName.captain = data.myName.id == myName.id
@@ -197,27 +203,33 @@ export default {
       }
     })
 
-    bus.$on('loadTeam', (data) => {
+    bus.on('loadTeam', (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
         this.$store.dispatch('loadTeam', data)
       }
     })
 
-    bus.$on('loadGame', (data) => {
+    bus.on('loadGame', (data) => {
       if (this.gameName == data.gameName) {
         this.$store.dispatch('loadGame', data)
       }
     })
 
-    bus.$on('updateGameState', (data) => {
+    bus.on('updateGameState', (data) => {
       if (this.gameName == data.gameName) {
         this.$store.dispatch('updateGameState', data)
       }
     })
 
-    bus.$on('updateConnections', (data) => {
+    bus.on('updateConnections', (data) => {
       this.$store.dispatch('updateConnectionError', null)
       this.$store.dispatch('updateConnections', data)
+    })
+
+    bus.on('hide', (data) => {
+      if (this.gameName == data.gameName && this.teamName == data.teamName) {
+        this.$store.dispatch('hideModal', data.popup)
+      }
     })
   },
   methods: {

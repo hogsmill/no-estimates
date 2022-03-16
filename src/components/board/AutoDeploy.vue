@@ -50,25 +50,18 @@ export default {
     }
   },
   created() {
-    const self = this
-    bus.$on('autoDeployComplete', (data) => {
+    bus.on('autoDeployComplete', (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
-        self.$modal.show('autodeploy-complete-popup')
+        this.$store.dispatch('showModal', 'autoDeployComplete')
       }
     })
   },
   methods: {
-    show() {
-      this.$modal.show('autodeploy-complete-popup')
-    },
-    hide() {
-      this.$modal.hide('autodeploy-complete-popup')
-    },
     addAutoDeployEffort() {
       const effort = roles.iHaveRole('deploy', this.myRole, this.myOtherRoles) ? 1 : 2
       if (this.myEffort.available >= effort) {
-        bus.$emit('sendIncrementAutoDeploy', {gameName: this.gameName, teamName: this.teamName, name: this.myName, effort: effort})
-        bus.$emit('emitUpdatePersonAutoDeployEffort', {gameName: this.gameName, teamName: this.teamName, name: this.myName})
+        bus.emit('sendIncrementAutoDeploy', {gameName: this.gameName, teamName: this.teamName, name: this.myName, effort: effort})
+        bus.emit('emitUpdatePersonAutoDeployEffort', {gameName: this.gameName, teamName: this.teamName, name: this.myName})
       } else {
         this.$store.dispatch('updateMessage', 'No effort available (Autodeploy)')
         const self = this

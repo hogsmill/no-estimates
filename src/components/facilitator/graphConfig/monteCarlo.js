@@ -23,15 +23,19 @@ export default {
       },
       options: {
         scales: {
-          yAxes: [{
-            ticks: {beginAtZero: true},
+          y: {
+            beginAtZero: true,
             gridLines: {display: true}
-          }],
-          xAxes: [{
+          },
+          x: {
             gridLines: {display: false}
-          }]
+          }
         },
-        legend: {display: false},
+        plugins: {
+          legend: {
+            display: false
+          }
+        },
         responsive: true,
         maintainAspectRatio: false
       }

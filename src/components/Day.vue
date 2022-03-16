@@ -10,49 +10,14 @@
           {{ day }}
         </div>
         <span> . . . </span>
-        <button class="btn btn-sm btn-info next" :disabled="!myName.captain" @click="next()"
-                :title="myName.captain ? 'Click to move to next day' : 'Only team captains can advance the day'"
+        <button
+          class="btn btn-sm btn-info next" :disabled="!myName.captain" @click="next()"
+          :title="myName.captain ? 'Click to move to next day' : 'Only team captains can advance the day'"
         >
           Next
         </button>
       </div>
     </div>
-
-    <modal name="retro" class="popup" :height="480" :classes="['rounded']">
-      <div class="mt-4">
-        <h2>
-          Retro!
-          <span v-if="retroTimer">{{ retroClock() }}</span>
-        </h2>
-        <div class="retro-div">
-          <div class="retro-img-div rounded">
-            <div class="retro-img" />
-          </div>
-          <div class="retro-text">
-            <h5 class="rounded">
-              Why not take {{ retroTimeString() }} to reflect on how it's gone so far?
-            </h5>
-            <p v-if="currency">
-              You have delivered {{ completed() }} cards, and
-              {{ currency.symbol }}{{ total() }} of value in
-              {{ currentDay }} days. You could maybe discuss:
-            </p>
-            <ul>
-              <li>What's gone well?</li>
-              <li>What's gone not so well?</li>
-              <li>What can the team do better?</li>
-            </ul>
-            <p>
-              You may also want to reconsider your project estimate. Click the <b>Set
-                Estimates</b> button if you want to update it.
-            </p>
-          </div>
-        </div>
-        <button class="btn btn-sm btn-info" @click="hide()">
-          OK
-        </button>
-      </div>
-    </modal>
   </div>
 </template>
 
@@ -60,12 +25,6 @@
 import bus from '../socket.js'
 
 export default {
-  data() {
-    return {
-      retroTimeLeft: 0,
-      retroTimerRunning: false
-    }
-  },
   computed: {
     gameName() {
       return this.$store.getters.getGameName
@@ -78,12 +37,6 @@ export default {
     },
     currentDay() {
       return this.$store.getters.getCurrentDay
-    },
-    currentWorkCard() {
-      return this.$store.getters.getCurrentWorkCard
-    },
-    columns() {
-      return this.$store.getters.getColumns
     },
     facilitatorStarts() {
       return this.$store.getters.getFacilitatorStarts
@@ -99,83 +52,18 @@ export default {
     },
     retrosDone() {
       return this.$store.getters.getRetrosDone
-    },
-    retroTimer() {
-      return this.$store.getters.getRetroTimer
-    },
-    retroTime() {
-      return this.$store.getters.getRetroTime
-    },
-    currency() {
-      return this.$store.getters.getCurrency
-    },
-    workCards() {
-      return this.$store.getters.getWorkCards
     }
   },
   created() {
-    const self = this
-    bus.$on('retro', (data) => {
+    bus.on('retro', (data) => {
       if (this.gameName == data.gameName && this.teamName == data.teamName) {
-        self.show()
-      }
-    })
-
-    bus.$on('hide', (data) => {
-      if (this.gameName == data.gameName && this.teamName == data.teamName) {
-        self.$modal.hide(data.popup)
+        this.show()
       }
     })
   },
   methods: {
-    setRetroTime(t) {
-      this.retroTimeLeft = t
-      if (this.retroTimerRunning && t > 0) {
-        const self = this
-        window.setTimeout(function() {
-          self.setRetroTime(t - 1)
-        }, 1000)
-      }
-    },
-    retroClock() {
-      const minutes = parseInt(this.retroTimeLeft / 60)
-      let seconds = this.retroTimeLeft - (minutes * 60)
-      if (seconds < 10) {
-        seconds = '0' + seconds
-      }
-      return minutes + ':' + seconds
-    },
     show() {
-      this.retroTimerRunning = true
-      this.setRetroTime(this.retroTime * 60)
-      this.$modal.show('retro')
-    },
-    hide() {
-      this.retroTimerRunning = false
-      bus.$emit('emitHide', {gameName: this.gameName, teamName: this.teamName, popup: 'retro'})
-    },
-    retroTimeString() {
-      if (!this.retroTimer) {
-        return 'a few minutes'
-      } else if (this.retroTime == 1) {
-        return 'a minute'
-      } else {
-        return this.retroTime + ' minutes'
-      }
-    },
-    total() {
-      let total = 0
-      for (let i = 0; i < this.workCards.length; i++) {
-        if (this.workCards[i].value) {
-          total += this.workCards[i].value
-        }
-      }
-      return total
-    },
-    completed() {
-      return this.columns.find(function(c) {
-        return c.name == 'done'
-      }).cards.length
+      this.$store.dispatch('showModal', 'retro')
     },
     getClass(day) {
       if (day < this.currentDay) {
@@ -200,11 +88,11 @@ export default {
         return
       }
       if (this.doRetros && !this.retrosDone[this.currentDay] && this.currentDay % this.retroDays == 0) {
-        bus.$emit('emitRetro', {gameName: this.gameName, teamName: this.teamName})
-        bus.$emit('sendRetroDone', {gameName: this.gameName, teamName: this.teamName, currentDay: this.currentDay})
+        bus.emit('emitRetro', {gameName: this.gameName, teamName: this.teamName})
+        bus.emit('sendRetroDone', {gameName: this.gameName, teamName: this.teamName, currentDay: this.currentDay})
       } else {
-        this.hide()
-        bus.$emit('emitShowEventCard', {gameName: this.gameName, teamName: this.teamName})
+        bus.emit('emitHide', {gameName: this.gameName, teamName: this.teamName, popup: 'retro'})
+        bus.emit('emitShowEventCard', {gameName: this.gameName, teamName: this.teamName})
       }
     }
   }

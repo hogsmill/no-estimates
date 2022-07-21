@@ -181,6 +181,7 @@ function _addGame(db, io, data, debugOn) {
         io.emit('loadGame', game)
         gameState.update(db, io, data)
       })
+      _getGames(db, io, data, debugOn)
       const initialTeams = teamFuns.initialTeams()
       for (let i = 0; i < initialTeams.length; i++) {
         const teamName = initialTeams[i].name

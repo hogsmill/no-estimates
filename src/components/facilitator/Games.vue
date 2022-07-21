@@ -81,6 +81,9 @@ export default {
         alert(data.error)
       }
     })
+    bus.on('updateGames', (data) => {
+      this.$store.dispatch('updateGames', data)
+    })
   },
   methods: {
     setShowGames(val) {

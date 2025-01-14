@@ -25,25 +25,10 @@ MAINKANBANAPPNAME="Kanban Playground"
 ROUTES=(
   '','','No Estimates'
   'new','New','No Estimates'
-  'dex','Dex','No Estimates'
-  'zoran','Zoran','No Estimates'
   'abn','Abn','No Estimates'
-  'ratesetter','Ratesetter','No Estimates'
-  'eagile','EverydayAgile','No Estimates'
-  'and','And','No Estimates'
-  'richemont','Richemont','No Estimates'
-  'bud','Bud','No Estimates'
   'mattphillip','MattPhillip','No Estimates'
   '','','Kanban Playground'
   'new','New','Kanban Playground'
-  'dex','Dex','Kanban Playground'
-  'zoran','Zoran','Kanban Playground'
-  'abn','Abn','Kanban Playground'
-  'ratesetter','Ratesetter','Kanban Playground'
-  'eagile','EverydayAgile','Kanban Playground'
-  'and','And','Kanban Playground'
-  'richemont','Richemont','Kanban Playground'
-  'bud','Bud','Kanban Playground'
   'mattphillip','MattPhillip','Kanban Playground'
 )
 
@@ -116,20 +101,20 @@ do
 
   npm install --legacy-peer-deps
   npm run build
-  if [ ! -d /var/www/html/$APP/ ]; then
-    mkdir /var/www/html/$APP
+  if [ ! -d /var/www/html/agilesimulations/$APP/ ]; then
+    mkdir /var/www/html/agilesimulations/$APP
   fi
-  if [ -d /var/www/html/$APP/css ]; then
-    rm /var/www/html/$APP/css/*
+  if [ -d /var/www/html/agilesimulations/$APP/css ]; then
+    rm /var/www/html/agilesimulations/$APP/css/*
   else
-    mkdir /var/www/html/$APP/css
+    mkdir /var/www/html/agilesimulations/$APP/css
   fi
-  if [ -d /var/www/html/$APP/js ]; then
-    rm /var/www/html/$APP/js/*
+  if [ -d /var/www/html/agilesimulations/$APP/js ]; then
+    rm /var/www/html/agilesimulations/$APP/js/*
   else
-    mkdir /var/www/html/$APP/js
+    mkdir /var/www/html/agilesimulations/$APP/js
   fi
-  cp -R dist/* /var/www/html/$APP
+  cp -R dist/* /var/www/html/agilesimulations/$APP
   if [ -f "src/server.js" ]; then
     SERVER=`ps -ef | grep server.js | grep "/$APP/" | awk {'print $2'}`
     if [ "$SERVER" != "" ]; then

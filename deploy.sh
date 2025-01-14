@@ -25,7 +25,6 @@ MAINKANBANAPPNAME="Kanban Playground"
 ROUTES=(
   '','','No Estimates'
   'new','New','No Estimates'
-  'abn','Abn','No Estimates'
   'mattphillip','MattPhillip','No Estimates'
   '','','Kanban Playground'
   'new','New','Kanban Playground'
